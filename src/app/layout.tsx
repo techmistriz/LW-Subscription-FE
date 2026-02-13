@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/app/components/Header/Header";
-import Footer from "./components/Footer/Footer";
-import ScrollToTop from "./components/ScrollToTop";
-import ScrollProvider from "./providers"; // ✅ NEW
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
+import ScrollProvider from "./providers"; //  NEW
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -28,11 +28,10 @@ export default function RootLayout({
       >
         <ScrollProvider>
           {" "}
-          {/*  Scroll to top on navigation */}
           <Header />
           {children}
           <Footer />
-          <ScrollToTop /> {/*  Your floating button */}
+          <ScrollToTop />
         </ScrollProvider>
       </body>
     </html>
