@@ -1,0 +1,357 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Search,
+  Menu,
+  User,
+  NewspaperIcon,
+  X,
+  User2,
+  LogOut,
+} from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
+
+import SearchOverlay from "../SearchOverlay";
+import { categories } from "@/lib/api/categories";
+import { NavSkeleton } from "../Skeletons/skeleton";
+
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export default function Header() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [navCategories, setNavCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    // 1. Try stored user data first (faster, more reliable)
+    const userData = localStorage.getItem("user_data");
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        setIsLoggedIn(true);
+        setUsername(`${user.first_name} ${user.last_name}`.trim());
+        return;
+      } catch {
+        localStorage.removeItem("user_data");
+      }
+    }
+
+    // 2. Fallback to JWT token
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+      try {
+        let payloadStr = token.split(".")[1];
+        payloadStr += "=".repeat((4 - (payloadStr.length % 4)) % 4);
+        const payload = JSON.parse(atob(payloadStr));
+        setIsLoggedIn(true);
+        setUsername(
+          payload.username ||
+            payload.name ||
+            payload.email ||
+            payload.sub ||
+            "User",
+        );
+      } catch {
+        localStorage.removeItem("auth_token");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await categories();
+
+        setNavCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+        setNavCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = searchOpen ? "hidden" : "auto";
+  }, [searchOpen]);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const isActive = (slug: string) =>
+    pathname === `/category/${slug}` ||
+    pathname.startsWith(`/category/${slug}/`);
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("user_data");
+    setIsLoggedIn(false);
+    setUsername("");
+    window.location.href = "/";
+  };
+
+  return (
+    <>
+      <header className="border-b border-gray-300 bg-white text-black">
+        <div className="relative flex items-center h-24 max-w-6xl mx-auto px-3">
+          {/* ... LEFT SIDE (unchanged) ... */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3 lg:hidden">
+              <button onClick={() => setOpen(true)}>
+                <Menu size={20} />
+              </button>
+              <button onClick={() => setSearchOpen(true)}>
+                <Search size={18} />
+              </button>
+            </div>
+            <div className="hidden lg:flex items-center gap-6 ">
+              <button
+                onClick={() => setOpen(true)}
+                className="flex items-center gap-2  text-[#333333]"
+              >
+                <Menu />
+                <span className="hover:text-[#c9060a] cursor-pointer">
+                  Explore
+                </span>
+              </button>
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <Search size={18} />
+                <span className="hover:text-[#c9060a]  text-[#333333] cursor-pointer">
+                  Search
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Center Logo (unchanged) */}
+          <div className="absolute left-1/2 -translate-x-1/2 h-15 w-47.5 flex items-center">
+            <Link href="/">
+              <Image
+                src="https://lexwitness.com/wp-content/themes/lexwitness/images/main-logo.jpg"
+                alt="Lex Witness Logo"
+                width={190}
+                height={60}
+                style={{ width: "170px", height: "auto" }}
+                priority
+              />
+            </Link>
+          </div>
+
+          {/* MOBILE RIGHT - CONDITIONAL */}
+          <div className="flex items-center gap-4 hover:text-[#c9060a] lg:hidden mx-auto ml-auto">
+            {isLoggedIn ? (
+              <>
+                <button onClick={handleLogout} title="Logout">
+                  <LogOut size={20} />
+                </button>
+                <button title={username}>
+                  <User size={20} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/register">
+                  <NewspaperIcon size={20} />
+                </Link>
+                <Link href="/sign-in">
+                  <User size={20} />
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* RIGHT ICONS – DESKTOP - CONDITIONAL  */}
+          <div className="absolute right-5 top-20 md:top-1/2 -translate-y-1/2 flex items-center gap-3">
+            {isLoggedIn ? (
+              <>
+                {/* Username + Logout */}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 "
+                  title="Logout"
+                >
+                  <LogOut size={20} />
+                  <span className="hidden hover:text-[#c9060a] cursor-pointer lg:inline text-md text-[#333] truncate max-w-30">
+                    Logout
+                  </span>
+                </button>
+                <div className="flex items-center gap-1">
+                  <User size={20} />
+                  <span className="hidden cursor-pointer lg:inline text-md text-[#333] hover:text-[#c9060a] truncate max-w-25">
+                    {username}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link href="/register" className="flex items-center gap-1 ">
+                  <NewspaperIcon size={18} />
+                  <span className="hidden lg:inline text-md hover:text-[#c9060a] text-[#333]">
+                    Subscribe
+                  </span>
+                </Link>
+                <Link href="/sign-in" className="flex items-center gap-1 ">
+                  <User size={20} />
+                  <span className="hidden lg:inline text-md hover:text-[#c9060a] text-[#333]">
+                    Sign In
+                  </span>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* NAV (unchanged) */}
+        <nav className="border-t border-gray-300 bg-gray-100">
+          {loading ? (
+            <NavSkeleton />
+          ) : (
+            <ul className="flex gap-6 h-12 items-center font-medium max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden">
+              {navCategories.map((item, index) => {
+                const active = isActive(item.slug);
+                return (
+                  <li key={`${item.slug}-${index}`} className="shrink-0">
+                    <Link
+                      href={`/category/${item.slug}`}
+                      className={`hover:text-[#c9060a] transition-colors ${
+                        active
+                          ? "text-[#c9060a] border-b-2 border-[#c9060a] pb-1"
+                          : "text-[#333]"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </nav>
+      </header>
+
+      {/* MOBILE SIDEBAR - CONDITIONAL */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/60 z-40"
+        />
+      )}
+
+      <aside
+        className={`fixed top-0 left-0 h-full w-65 sm:w-70 lg:w-75 bg-[#333333] text-white z-50 flex flex-col transform transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-600">
+          <Image
+            src="https://lexwitness.com/wp-content/themes/lexwitness/images/favicon.png"
+            alt=""
+            width={38}
+            height={38}
+          />
+          <button onClick={() => setOpen(false)}>
+            <X size={22} className="text-white cursor-pointer" />
+          </button>
+        </div>
+
+        <nav className="flex flex-col h-full overflow-y-scroll ">
+          <ul className="flex flex-col text-sm font-medium">
+            {navCategories.map((item, index) => {
+              const active = isActive(item.slug);
+              return (
+                <li key={`${item.slug}-${index}`}>
+                  <Link
+                    href={`/category/${item.slug}`}
+                    onClick={() => setOpen(false)}
+                    className={`block px-4 py-3 border-b border-gray-600 transition ${
+                      active
+                        ? "bg-[#3a3a3a] text-[#c9060a]"
+                        : "hover:bg-[#3a3a3a]"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          {/* MOBILE BOTTOM - CONDITIONAL  */}
+          <div className="mt-auto bg-[#545454] border-t border-gray-600">
+            <div className="flex items-center justify-between px-4 py-3">
+              {/* LEFT SIDE (Login / Logout) */}
+              <div className="flex items-center gap-2">
+                <User2 />
+                {isLoggedIn ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setOpen(false);
+                    }}
+                    className="hover:text-[#c9060a] transition duration-300"
+                  >
+                    Logout ({username})
+                  </button>
+                ) : (
+                  <Link
+                    href="/sign-in"
+                    onClick={() => setOpen(false)}
+                    className="hover:text-[#c9060a] transition duration-300"
+                  >
+                    Sign-in
+                  </Link>
+                )}
+              </div>
+
+              {/* RIGHT SIDE (Social Icons) */}
+              <div className="flex items-center gap-3">
+                <a
+                  href=" #facebook"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#c9060a] transition duration-300"
+                >
+                  <Facebook size={20} />
+                </a>
+
+                <a
+                  href="#instagram"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#c9060a] transition duration-300"
+                >
+                  <Instagram size={20} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </aside>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
+  );
+}
