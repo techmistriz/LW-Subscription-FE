@@ -11,6 +11,7 @@ import { getCategoryBySlug } from "@/lib/api/services/categories";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import Pagination from "@/components/Pagination/Pagination";
 import PageLoader from "@/components/Loader/PageLoader";
+import { Year } from "@/types";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 const bannerImg: React.CSSProperties = {
@@ -38,7 +39,7 @@ export default function CategoryPage() {
   const [yearOpen, setYearOpen] = useState(false);
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [years, setYears] = useState<{ id: number; name: number }[]>([]);
+  const [years, setYears] = useState<Year[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -113,7 +114,7 @@ export default function CategoryPage() {
     async function loadYears() {
       try {
         const yearsData = await getYears();
-        setYears(yearsData.data || []);
+        setYears(yearsData || []);
       } catch (error) {
         console.error("Failed to load years:", error);
         setYears([]);

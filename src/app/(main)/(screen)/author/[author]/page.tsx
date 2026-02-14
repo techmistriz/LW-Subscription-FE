@@ -106,7 +106,7 @@ export default function AuthorPage() {
   const loadYears = useCallback(async () => {
     try {
       const yearsData = await getYears();
-      setYears(yearsData.data || []);
+      setYears(yearsData || []);
     } catch (error) {
       console.error("Error loading years:", error);
     }

@@ -1,10 +1,15 @@
-import { request } from "@/lib/api/request";
 import { Year } from "@/types";
+import api from "../axios";
 
 export const getYears = async (): Promise<Year[]> => {
-  const response = await request<Year[]>("GET", "/years");
+  try {
+    const response = await api.get("/years");
 
-  if (!response.status) return [];
+    const result = response.data;
 
-  return response.data;
+    return result?.data ?? result ?? [];
+  } catch (error) {
+    console.error("Error fetching years:", error);
+    return [];
+  }
 };

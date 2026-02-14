@@ -1,21 +1,9 @@
+import { PaginatedResponse,  } from "@/types/api";
 import api from "../axios";
 import { Magazine } from "@/types";
 // Types
 
-interface Paging {
-  current_page: number;
-  last_page: number;
-  total: number;
-}
 
-interface PaginationMeta {
-  paging: Paging;
-}
-
-interface PaginatedResponse<T> {
-  data: T[];
-  meta: PaginationMeta;
-}
 
 export async function getMagazines(
   year_id?: number,
@@ -34,16 +22,18 @@ export async function getMagazines(
     return response.data;
   } catch (error) {
     console.error("Error fetching magazines:", error);
-    return {
-      data: [],
-      meta: {
-        paging: {
-          current_page: 1,
-          last_page: 1,
-          total: 0,
-        },
-      },
-    };
+  return {
+  data: [],
+  meta: {
+    paging: {
+      current_page: 1,
+      last_page: 1,
+      total: 0,
+      per_page: per_page, // FIX
+    },
+  },
+};
+
   }
 }
 

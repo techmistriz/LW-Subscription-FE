@@ -13,9 +13,18 @@ export type ApiResponse<T = unknown> =
       errors?: Record<string, string[]>;
     };
 
-export interface PaginationMeta {
+export interface Paging {
   current_page: number;
   last_page: number;
-  per_page: number;
   total: number;
+  per_page: number;
+}
+
+export interface PaginationMeta {
+  paging: Paging;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
 }

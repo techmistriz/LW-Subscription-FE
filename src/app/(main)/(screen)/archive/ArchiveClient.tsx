@@ -14,11 +14,11 @@ import {
   Year,
   Article,
   Author,
-  PaginationMeta,
   Category,
   ArticleCategory,
 } from "@/types";
 import PageLoader from "@/components/Loader/PageLoader";
+import { PaginatedResponse, PaginationMeta } from "@/types/api";
 
 /**
  * ArchivePage component - Displays articles with filtering by year, category, author, and search
@@ -67,6 +67,8 @@ export default function ArchivePage() {
   const hasActiveFilters =
     selectedYearId || selectedCategoryId || selectedAuthorId || searchTerm;
   const totalPages = meta?.paging?.last_page ?? 1;
+    console.log(totalPages)
+
 
   // UTILITY FUNCTIONS
   const capitalizeFirst = (str: string = "") =>
@@ -105,7 +107,7 @@ export default function ArchivePage() {
         getAuthors(),
         getCategories(),
       ]);
-      setYears(yearsRes.data || []);
+      setYears(yearsRes || []);
       setAuthors(authorsRes || []);
       setCategories(categoriesRes || []);
     } catch (error) {

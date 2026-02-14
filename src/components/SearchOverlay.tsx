@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthorListItem } from "@/lib/api/services/author";
+import { AuthorListItem, Year } from "@/types";
 import { X, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
@@ -28,7 +28,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   const [authorId, setAuthorId] = useState<number | undefined>();
 
   // Data state
-  const [years, setYears] = useState<any[]>([]);
+  const [years, setYears] = useState<Year[]>([]);
   const [authors, setAuthors] = useState<AuthorListItem[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
 
@@ -46,7 +46,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           getAuthors(),
           getCategories(),
         ]);
-        setYears(yearsRes.data || []);
+        setYears(yearsRes || []);
         setAuthors(authorsRes || []);
         setCategories(categoriesRes || []);
       } finally {

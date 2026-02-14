@@ -6,7 +6,7 @@ import { getMagazines } from "@/lib/api/services/magazines";
 import { getYears } from "@/lib/api/services/years";
 import { MagazineSkeleton } from "@/components/Skeletons/magazineSkeleton";
 import Pagination from "@/components/Pagination/Pagination";
-import { Magazine } from "@/types";
+import { Magazine, Year } from "@/types";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 const bannerImg: React.CSSProperties = {
@@ -27,7 +27,7 @@ export default function MagazinesPage({
   // State management
   const [magazines, setMagazines] = useState<Magazine[]>([]);
   const [loading, setLoading] = useState(false);
-  const [years, setYears] = useState<{ id: number; name: number }[]>([]);
+  const [years, setYears] = useState<Year[]>([]);
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
   const [yearOpen, setYearOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -72,7 +72,7 @@ export default function MagazinesPage({
     async function loadYears() {
       try {
         const yearsData = await getYears();
-        setYears(yearsData.data || []);
+        setYears(yearsData || []);
       } catch (error) {
         console.error("Failed to load years:", error);
         setYears([]);
