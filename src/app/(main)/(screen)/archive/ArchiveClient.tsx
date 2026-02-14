@@ -18,6 +18,7 @@ import {
   Category,
   ArticleCategory,
 } from "@/types";
+import PageLoader from "@/components/Loader/PageLoader";
 
 /**
  * ArchivePage component - Displays articles with filtering by year, category, author, and search
@@ -161,6 +162,7 @@ export default function ArchivePage() {
    * Clear all filters and navigate to default archive view
    */
   const handleClearFilters = () => {
+    setLoading(true);
     setSelectedYearId(undefined);
     setSelectedCategoryId(undefined);
     setSelectedAuthorId(undefined);
@@ -171,6 +173,7 @@ export default function ArchivePage() {
    * Apply selected filters to URL params and trigger fetch
    */
   const handleApplyFilters = () => {
+    setLoading(true);
     const params = new URLSearchParams();
     if (selectedYearId) params.set("year_id", selectedYearId.toString());
     if (selectedCategoryId)
@@ -190,19 +193,6 @@ export default function ArchivePage() {
     fetchArticles();
   }, [fetchArticles]);
 
-  // Full page loading state
-  if (loading && articles.length === 0) {
-    return (
-      <section className="bg-white min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#c9060a] mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">Loading archive...</p>
-        </div>
-      </section>
-    );
-  }
-
-  // RENDER
   return (
     <section className="bg-white">
       {/* Banner Section */}
@@ -291,10 +281,10 @@ export default function ArchivePage() {
         {/* Clear Button */}
         <button
           onClick={handleClearFilters}
-          className="bg-gray-500 text-white px-8 py-2 transition-all"
+          className="bg-gray-500 text-white px-8 py-2 transition-all cursor-pointer"
           disabled={loading || !hasActiveFilters}
         >
-          {loading ? "Clearing..." : "Clear"}
+          Clear
         </button>
       </div>
 
@@ -302,25 +292,12 @@ export default function ArchivePage() {
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-4 py-12">
         {/* Articles List */}
         <div className="lg:col-span-9 space-y-6 relative">
-          {/* Overlay loading spinner */}
-          {loading && articles.length > 0 && (
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
-              <div className="text-center p-6">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#c9060a] mx-auto mb-2" />
-                <p className="text-sm text-gray-600">Updating...</p>
-              </div>
-            </div>
-          )}
-
-          {/* Empty state */}
-          {articles.length === 0 && !loading ? (
-            <p className="col-span-full text-center text-[#333333] py-12">
-              {hasActiveFilters
-                ? `No articles found for "${searchTerm || "selected filters"}"`
-                : "No articles available"}
-            </p>
+          {/* First Load Full Loader */}
+          {loading && articles.length === 0 ? (
+            <PageLoader />
+          ) : articles.length === 0 ? (
+            <div className="text-center py-10">No articles found.</div>
           ) : (
-            /* Article list */
             articles.map((article) => (
               <article
                 key={article.id}
@@ -341,7 +318,7 @@ export default function ArchivePage() {
 
                 {/* Article Content */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold leading-tight line-clamp-2 mb-2 cursor-pointer  transition-colors">
+                  <h3 className="text-xl font-semibold leading-tight line-clamp-2 mb-2">
                     <Link
                       href={`/category/${getCategorySlug(article.category)}/${article.slug}`}
                     >
@@ -349,11 +326,10 @@ export default function ArchivePage() {
                     </Link>
                   </h3>
 
-                  {/* Meta Info */}
                   <p className="text-[#333333] border-b border-gray-300 text-sm py-1 mb-3">
                     <Link
                       href={`/author/${getAuthorSlug(article.author)}`}
-                      className="text-[#c9060a] font-medium  "
+                      className="text-[#c9060a] font-medium"
                     >
                       {typeof article.author === "string"
                         ? article.author
@@ -362,17 +338,15 @@ export default function ArchivePage() {
                     | {article.publish_date || "N/A"}
                   </p>
 
-                  {/* Excerpt */}
                   <p className="text-[#333333] line-clamp-2 text-sm leading-relaxed mb-4">
                     {article.short_description ||
                       article.excerpt ||
                       "No description available."}
                   </p>
 
-                  {/* Read More */}
                   <Link
                     href={`/${article.slug}`}
-                    className="text-[#c9060a] text-sm inline-flex items-center gap-1 font-medium  "
+                    className="text-[#c9060a] text-sm font-medium"
                   >
                     Read More
                   </Link>
@@ -382,11 +356,13 @@ export default function ArchivePage() {
           )}
 
           {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            lastPage={totalPages}
-            loading={loading}
-          />
+          {!loading && articles.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              lastPage={totalPages}
+              loading={loading}
+            />
+          )}
         </div>
 
         {/* Right Sidebar */}

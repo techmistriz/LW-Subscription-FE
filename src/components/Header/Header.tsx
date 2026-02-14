@@ -89,7 +89,7 @@ export default function Header() {
     };
     fetchData();
   }, []);
-console.log("nav",navCategories)
+  console.log("nav", navCategories);
   useEffect(() => {
     document.body.style.overflow = searchOpen ? "hidden" : "auto";
   }, [searchOpen]);
@@ -114,73 +114,67 @@ console.log("nav",navCategories)
     localStorage.removeItem("user_data");
     setIsLoggedIn(false);
     setUsername("");
-   router.push("/");
+    router.push("/");
   };
 
   return (
     <>
       <header className="border-b border-gray-300 bg-white text-black">
-     <div className="relative flex items-center justify-between h-24 max-w-6xl mx-auto px-4">
+        <div className="relative flex items-center justify-between h-24 max-w-6xl mx-auto px-4">
+          {/* LEFT — Explore */}
+          <div className="flex items-center">
+            <button
+              onClick={() => setOpen(true)}
+              className="flex items-center gap-2 text-[#333]"
+            >
+              <Menu size={20} />
+              <span className="hidden lg:inline hover:text-[#c9060a]">
+                Explore
+              </span>
+            </button>
+          </div>
 
-  {/* LEFT — Explore */}
-  <div className="flex items-center">
-    <button
-      onClick={() => setOpen(true)}
-      className="flex items-center gap-2 text-[#333]"
-    >
-      <Menu size={20} />
-      <span className="hidden lg:inline hover:text-[#c9060a]">
-        Explore
-      </span>
-    </button>
-  </div>
+          {/* CENTER — Logo */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Link href="/">
+              <Image
+                src="https://lexwitness.com/wp-content/themes/lexwitness/images/main-logo.jpg"
+                alt="Lex Witness Logo"
+                width={170}
+                height={60}
+                priority
+              />
+            </Link>
+          </div>
 
-  {/* CENTER — Logo */}
-  <div className="absolute left-1/2 -translate-x-1/2">
-    <Link href="/">
-      <Image
-        src="https://lexwitness.com/wp-content/themes/lexwitness/images/main-logo.jpg"
-        alt="Lex Witness Logo"
-        width={170}
-        height={60}
-        priority
-      />
-    </Link>
-  </div>
+          {/* RIGHT — Search + User */}
+          <div className="flex items-center gap-4">
+            {/* Search */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 text-[#333]"
+            >
+              <Search size={20} />
+              <span className="hidden lg:inline hover:text-[#c9060a]">
+                Search
+              </span>
+            </button>
 
-  {/* RIGHT — Search + User */}
-  <div className="flex items-center gap-4">
+            {/* Logged In User */}
+            {isLoggedIn && (
+              <>
+                <button onClick={handleLogout} title="Logout">
+                  <LogOut size={20} />
+                </button>
 
-    {/* Search */}
-    <button
-      onClick={() => setSearchOpen(true)}
-      className="flex items-center gap-2 text-[#333]"
-    >
-      <Search size={20} />
-      <span className="hidden lg:inline hover:text-[#c9060a]">
-        Search
-      </span>
-    </button>
-
-    {/* Logged In User */}
-    {isLoggedIn && (
-      <>
-        <button onClick={handleLogout} title="Logout">
-          <LogOut size={20} />
-        </button>
-
-        <div className="hidden lg:flex items-center gap-1">
-          <User size={20} />
-          <span className="text-sm truncate max-w-28">
-            {username}
-          </span>
+                <div className="hidden lg:flex items-center gap-1">
+                  <User size={20} />
+                  <span className="text-sm truncate max-w-28">{username}</span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </>
-    )}
-
-  </div>
-</div>
-
 
         {/* NAV (unchanged) */}
         <nav className="border-t border-gray-300 bg-gray-100">

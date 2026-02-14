@@ -10,6 +10,7 @@ import { getYears } from "@/lib/api/services/years";
 import { getCategoryBySlug } from "@/lib/api/services/categories";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import Pagination from "@/components/Pagination/Pagination";
+import PageLoader from "@/components/Loader/PageLoader";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 const bannerImg: React.CSSProperties = {
@@ -25,7 +26,7 @@ const bannerImg: React.CSSProperties = {
 export default function CategoryPage() {
   const { category } = useParams();
   const categorySlug = category as string;
-  const router = useRouter();
+  // const router = useRouter();
 
   // Derive category display names from slug
   const categoryName = categorySlug?.replace(/-/g, " ") || "";
@@ -50,14 +51,13 @@ export default function CategoryPage() {
       if (!categoryId) return;
 
       setLoading(true);
+
       try {
         const response = await getPosts({
           category_id: Number(categoryId),
           year_id,
           page,
         });
-
-        // console.log("CategoryPost Pagination META:", response.meta);
 
         setPosts(response.data ?? []);
         setLastPage(response.meta?.paging?.last_page ?? 1);
@@ -77,29 +77,32 @@ export default function CategoryPage() {
     async function loadCategory() {
       if (!categorySlug) return;
 
+      setLoading(true); // ✅ move here
+      setCategoryId(null);
+
       try {
         const category = await getCategoryBySlug(categorySlug);
 
         if (!category?.id) {
-          console.error("Category not found for slug:", categorySlug);
-          router.replace("/404");
+          setPosts([]);
+          setLoading(false);
           return;
         }
 
         setCategoryId(Number(category.id));
       } catch (error) {
         console.error("Failed to load category:", error);
-        router.replace("/404");
+        setPosts([]);
+        setLoading(false);
       }
     }
 
     loadCategory();
-  }, [categorySlug, router]);
+  }, [categorySlug]);
 
   // Fetch posts when category changes
   useEffect(() => {
     if (categoryId) {
-      setPosts([]);
       setCurrentPage(1);
       fetchPosts(undefined, 1);
     }
@@ -142,13 +145,6 @@ export default function CategoryPage() {
   const handleApplyFilter = () => {
     fetchPosts(selectedYearId ?? undefined, 1);
   };
-
-  // Show loading state while fetching category
-  if (!categoryId && loading) {
-    return (
-      <div className="py-20 text-center text-gray-500">Loading category...</div>
-    );
-  }
 
   // Generate image URL for posts
   const getImageUrl = (image?: string) => {
@@ -215,7 +211,7 @@ export default function CategoryPage() {
 
             <button
               onClick={handleApplyFilter}
-              disabled={loading}
+              // disabled={loading}
               className="border px-15 py-2 text-white bg-[#c9060a] hover:bg-[#333] cursor-pointer disabled:opacity-50"
             >
               Filter
@@ -223,19 +219,17 @@ export default function CategoryPage() {
           </div>
 
           {/* Results summary */}
-          <div className="mb-6 text-sm text-gray-500">
+          {/* <div className="mb-6 text-sm text-gray-500">
             Showing {posts.length} of {posts.length} articles
             {selectedYearLabel && ` for ${selectedYearLabel}`}
-          </div>
+          </div> */}
 
           {/* Articles list */}
           <div className="space-y-6">
-            {posts.length === 0 ? (
-              <p className="col-span-full text-center text-[#333333] py-12">
-                {selectedYearLabel
-                  ? `No magazines found for ${selectedYearLabel}`
-                  : "No magazines found"}
-              </p>
+            {loading ? (
+              <PageLoader />
+            ) : posts.length === 0 ? (
+              <div>No articles found.</div>
             ) : (
               posts.map((article) => {
                 const imageUrl = getImageUrl(article.image);

@@ -310,8 +310,8 @@ export default function ArticleDetailPage() {
             <>
               <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
               <div className="w-10 h-1 bg-[#c9060a]" />
-              <div className="border border-gray-300 mt-2 p-6 flex gap-4   transition-none hover:shadow-[0_-6px_15px_rgba(0,0,0,0.15),0_6px_15px_rgba(0,0,0,0.15)]">
-                <div className="relative w-24 h-24 overflow-hidden bg-gray-200 shrink-0 rounded-full">
+              <div className="border border-gray-300 mt-2 p-4 flex gap-4   transition-none hover:shadow-[0_-6px_15px_rgba(0,0,0,0.15),0_6px_15px_rgba(0,0,0,0.15)]">
+                <div className="relative w-24 h-24 overflow-hidden bg-gray-200 shrink-0 ">
                   <Image
                     src={getAuthorAvatar(
                       article.author.avatar,
@@ -322,7 +322,7 @@ export default function ArticleDetailPage() {
                     className="object-cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0 my-auto">
+                <div className="flex-1 min-w-0 ">
                   <h4 className="font-semibold text-base mb-2">
                     {article.author.name.toUpperCase()}
                   </h4>

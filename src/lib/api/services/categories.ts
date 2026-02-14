@@ -7,7 +7,7 @@ export async function getCategories(): Promise<Category[]> {
 
   if (!response?.status) return [];
 
-  // ✅ Extract nested data correctly
+  // Extract nested data correctly
   return response.data?.data ?? [];
 }
 
