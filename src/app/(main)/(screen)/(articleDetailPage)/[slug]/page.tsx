@@ -113,7 +113,7 @@ export default function ArticleDetailPage() {
               .filter((post) => post.slug !== article.slug)
               .map((post) => [post.id, post]),
           ).values(),
-        ).slice(0, 3);
+        ).slice(0, 4);
 
         setRelatedPosts(uniqueRelatedPosts);
       } catch (error) {
@@ -138,9 +138,7 @@ export default function ArticleDetailPage() {
     }
   }, []);
 
-  // Load article when slug changes
-
-  // Load related posts when article loads
+  
 
   // Loading skeleton
   if (loading) {

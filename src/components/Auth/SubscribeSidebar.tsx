@@ -53,17 +53,17 @@ function SubscribeSidebar() {
 
   return (
     <div>
-      <h2 className="font-bold text-xl">SUBSCRIBE US</h2>
+      <h2 className="font-bold text-2xl">SUBSCRIBE US</h2>
       <div className="w-15 h-1 bg-[#c9060a] mb-3"></div>
 
-      <div className="bg-[#2f2f2f] p-4 w-full">
-        <div className="min-h-6 mt-3 ">
+      <div className="bg-[#2f2f2f] p-4 w-64 h-80" >
+        <div className="min-h-6  ">
           {message && <p className="text-white text-sm mb-1">{message}</p>}
           {error && <p className="text-white text-sm mb-1">{error}</p>}
         </div>
         <form onSubmit={handleSubmit}>
           <input
-            className="w-full mb-3 p-2 bg-white text-black text-sm"
+            className="w-full h-12 mb-5 p-2 bg-white text-black text-sm"
             placeholder="Enter Your Name"
             required
             type="text"
@@ -74,7 +74,7 @@ function SubscribeSidebar() {
           />
 
           <input
-            className="w-full mb-3 p-2 bg-white text-black text-sm"
+            className="w-full h-12 mb-5 p-2 bg-white text-black text-sm"
             placeholder="Enter Your Email"
             required
             type="email"
@@ -85,7 +85,7 @@ function SubscribeSidebar() {
           />
 
           <input
-            className="w-full mb-3 p-2 bg-white text-black text-sm"
+            className="w-full h-12 mb-6 p-2 bg-white text-black text-sm"
             placeholder="Enter Your Mobile No."
             required
             type="tel"
@@ -99,7 +99,7 @@ function SubscribeSidebar() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#c9060a] border cursor-pointer text-white w-full py-2 text-sm hover:bg-[#444] disabled:opacity-50"
+            className="bg-[#c9060a] w-1/2 border flex justify-center cursor-pointer text-white  py-3 mx-auto text-sm hover:bg-[#444] disabled:opacity-50"
           >
             {loading ? "Submitting..." : "Submit"}
           </button>

@@ -10,15 +10,11 @@ import { getAuthors } from "@/lib/api/services/author";
 import { getCategories } from "@/lib/api/services/categories";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import Pagination from "@/components/Pagination/Pagination";
-import {
-  Year,
-  Article,
-  Author,
-  Category,
-  ArticleCategory,
-} from "@/types";
+import { Year, Article, Author, Category, ArticleCategory } from "@/types";
 import PageLoader from "@/components/Loader/PageLoader";
 import { PaginatedResponse, PaginationMeta } from "@/types/api";
+import Banner from "@/components/Common/Banner";
+import PostList from "@/components/Common/PostList";
 
 /**
  * ArchivePage component - Displays articles with filtering by year, category, author, and search
@@ -67,8 +63,7 @@ export default function ArchivePage() {
   const hasActiveFilters =
     selectedYearId || selectedCategoryId || selectedAuthorId || searchTerm;
   const totalPages = meta?.paging?.last_page ?? 1;
-    console.log(totalPages)
-
+  console.log(totalPages);
 
   // UTILITY FUNCTIONS
   const capitalizeFirst = (str: string = "") =>
@@ -195,22 +190,16 @@ export default function ArchivePage() {
     fetchArticles();
   }, [fetchArticles]);
 
+  const emptyMessage = searchTerm
+  ? `No results found for "${searchTerm}".`
+  : hasActiveFilters
+  ? "No posts found for the selected filters."
+  : "No posts available.";
+
   return (
     <section className="bg-white">
       {/* Banner Section */}
-      <section className="py-12 bg-cover bg-center" style={bannerImg}>
-        <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-white text-2xl font-bold">
-            {capitalizeAll(urlSlug ?? "archive")}
-          </h1>
-          <p className="text-sm text-gray-200">
-            <Link href="/" className="text-[#c9060a]">
-              Home
-            </Link>{" "}
-            | {capitalizeFirst(urlSlug ?? "archive")}
-          </p>
-        </div>
-      </section>
+      <Banner title={urlSlug ?? "archive"} />
 
       {/* Filter Controls */}
       <div className="max-w-6xl px-4 mx-auto py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
@@ -294,68 +283,12 @@ export default function ArchivePage() {
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-4 py-12">
         {/* Articles List */}
         <div className="lg:col-span-9 space-y-6 relative">
-          {/* First Load Full Loader */}
-          {loading && articles.length === 0 ? (
-            <PageLoader />
-          ) : articles.length === 0 ? (
-            <div className="text-center py-10">No articles found.</div>
-          ) : (
-            articles.map((article) => (
-              <article
-                key={article.id}
-                className="flex gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
-              >
-                {/* Article Image */}
-                <div className="relative w-45 h-30 shrink-0 overflow-hidden rounded">
-                  <Link href={`/${article.slug}`}>
-                    <Image
-                      src={getPostImageUrl(article.image)}
-                      alt={article.title}
-                      fill
-                      className="object-cover"
-                      sizes="180px"
-                    />
-                  </Link>
-                </div>
-
-                {/* Article Content */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold leading-tight line-clamp-2 mb-2">
-                    <Link
-                      href={`/category/${getCategorySlug(article.category)}/${article.slug}`}
-                    >
-                      {article.title}
-                    </Link>
-                  </h3>
-
-                  <p className="text-[#333333] border-b border-gray-300 text-sm py-1 mb-3">
-                    <Link
-                      href={`/author/${getAuthorSlug(article.author)}`}
-                      className="text-[#c9060a] font-medium"
-                    >
-                      {typeof article.author === "string"
-                        ? article.author
-                        : (article.author?.name ?? "Admin")}
-                    </Link>{" "}
-                    | {article.publish_date || "N/A"}
-                  </p>
-
-                  <p className="text-[#333333] line-clamp-2 text-sm leading-relaxed mb-4">
-                    {article.short_description ||
-                      article.excerpt ||
-                      "No description available."}
-                  </p>
-
-                  <Link
-                    href={`/${article.slug}`}
-                    className="text-[#c9060a] text-sm font-medium"
-                  >
-                    Read More
-                  </Link>
-                </div>
-              </article>
-            ))
-          )}
+          <PostList
+            posts={articles}
+            loading={loading}
+            postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
+             emptyMessage={emptyMessage}
+          />
 
           {/* Pagination */}
           {!loading && articles.length > 0 && (

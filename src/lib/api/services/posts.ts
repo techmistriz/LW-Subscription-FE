@@ -1,5 +1,4 @@
 import api from "@/lib/api/axios";
-import { Search } from "lucide-react";
 
 // Unified Posts API - Single source of truth
 interface GetPostsParams {

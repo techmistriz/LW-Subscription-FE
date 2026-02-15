@@ -14,10 +14,10 @@ export default function LatestIssue({ magazine }: Props) {
   return (
     <div>
       {/* Section header */}
-      <h3 className="text-2xl text-[#333333] font-semibold tracking-wide">
+      <h3 className="text-2xl text-[#333333] font-semibold tracking-wide mt-2">
         LATEST EDITION
       </h3>
-      <div className="w-14 h-1 bg-[#c9060a] mt-1 mb-6"></div>
+      <div className="w-14 h-1 bg-[#c9060a] mt-1 mb-4"></div>
 
       {/* Magazine cover */}
       <Link href={`/magazines/${magazine.slug}`}>
@@ -35,7 +35,7 @@ export default function LatestIssue({ magazine }: Props) {
       </Link>
 
       {/* Title */}
-      <p className="text-sm my-3 text-start">{magazine.title}</p>
+      {/* <p className="text-sm my-3 text-start">{magazine.title}</p> */}
 
       <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-4"></div>
     </div>

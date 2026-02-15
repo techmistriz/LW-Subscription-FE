@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { registerUser } from "@/lib/auth/auth";
+import Banner from "../Common/Banner";
 
 const bannerImg: React.CSSProperties = {
   backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
@@ -115,20 +116,7 @@ export default function RegisterForm() {
 
   return (
     <main className="bg-white">
-      <section
-        className="py-12 bg-cover bg-center flex items-center"
-        style={bannerImg}
-      >
-        <div className="max-w-6xl mx-auto w-full px-4 flex justify-between items-center">
-          <h1 className="text-white text-2xl font-bold uppercase">Subscribe</h1>
-          <p className="text-sm text-gray-200">
-            <Link href="/" className="text-[#c9060a]">
-              Home
-            </Link>{" "}
-            | Subscribe
-          </p>
-        </div>
-      </section>
+       <Banner title={"subscribe"} />
 
       {/*CONTENT*/}
       <section className="py-20">

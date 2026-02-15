@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Post } from "./service";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_POSTS_BASE_URL ||
-  "https://admin.lexwitness.com/uploads/posts";
+  process.env.NEXT_PUBLIC_POSTS_BASE_URL ;
 
 export function MiddleCards({ posts }: { posts: Post[] }) {
   if (!posts?.length) return null;
@@ -27,6 +26,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
               src={imageUrl}
               alt={post.title || "Post image"}
               fill
+              priority={false}
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />

@@ -6,22 +6,30 @@ interface PaginationProps {
   currentPage: number;
   lastPage: number;
   loading?: boolean;
+  onPageChange?: (page: number) => void;
 }
 
 export default function Pagination({
   currentPage,
   lastPage,
   loading = false,
+    onPageChange,
 }: PaginationProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
   const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  if (onPageChange) {
+    onPageChange(page); // 👈 use custom handler
+    return;
+  }
+
+  const params = new URLSearchParams(searchParams.toString());
+  params.set("page", page.toString());
+  router.push(`${pathname}?${params.toString()}`);
+};
+
 
   if (lastPage <= 1) return null;
 
