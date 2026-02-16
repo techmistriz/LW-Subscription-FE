@@ -120,7 +120,7 @@ export default function Header() {
   return (
     <>
       <header className="border-b border-gray-300 bg-white text-black">
-        <div className="relative flex items-center justify-between h-24 max-w-6xl mx-auto px-4">
+        <div className="relative flex items-center justify-between h-25 max-w-6xl mx-auto px-4">
           {/* LEFT — Explore */}
           <div className="flex items-center">
             <button
@@ -142,7 +142,7 @@ export default function Header() {
                 alt="Lex Witness Logo"
                 width={190}
                 height={80}
-                className="w-auto h-17.5"
+                className="w-47.5 h-auto"
                 priority
               />
             </Link>

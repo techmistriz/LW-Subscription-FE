@@ -16,6 +16,9 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Lex Witness Magazines",
   description: "Latest legal magazines and publications",
+   icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
