@@ -4,7 +4,7 @@ import Image from "next/image";
 const Footer = () => {
   return (
     <footer className="bg-[#2f2f2f] text-gray-300">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
         {/* TOP GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           {/* LEFT */}
@@ -12,19 +12,19 @@ const Footer = () => {
             <Image
               src="https://lexwitness.com/wp-content/themes/lexwitness/images/logo-white.png"
               alt="Lex Witness"
-              width={192}
-              height={48}
-              className="mb-4 w-48 h-12 object-contain -ml-10"
+              width={200}
+              height={68}
+              className="mb-4 w-48 h-15 object-contain -ml-6"
               priority
             />
 
            
 
-            <h3 className="text-white font-semibold mb-2">
+            <h3 className="text-white text-[18px] font-semibold mb-2">
               ABOUT <span className="text-[#c9060a]">WITNESS</span>
             </h3>
 
-            <p className="text-sm leading-relaxed text-gray-400">
+            <p className="text-sm leading-relaxed text-[#E2E2E2]">
               For over 10 years, since its inception in 2009 as a monthly, Lex
               Witness has become India’s most credible platform for the legal
               luminaries to opine, comment and share their views. more...
@@ -68,7 +68,7 @@ const Footer = () => {
 
           {/* MIDDLE */}
           <div className="lg:col-span-4">
-            <h3 className="text-white font-semibold mb-4">
+            <h3 className="text-white font-semibold text-[18px] mb-4">
               THE LEX WITNESS SUMMITS LEGACY
             </h3>
 
@@ -93,7 +93,7 @@ const Footer = () => {
                 <li key={i}>
                   <p className="text-gray-200">{title}</p>
                   <p className="text-[#c9060a] text-xs">
-                    {link} | 8 Years & Counting
+                    {link} <span className="text-[#E2E2E2]">| 8 Years & Counting</span>
                   </p>
                 </li>
               ))}
@@ -102,9 +102,9 @@ const Footer = () => {
 
           {/* RIGHT */}
           <div className="lg:col-span-4">
-            <h3 className="text-white font-semibold mb-4">EXPLORE FURTHER!</h3>
+            <h3 className="text-white font-semibold text-[18px] mb-4">EXPLORE FURTHER!</h3>
 
-            <p className="text-sm leading-relaxed text-gray-400">
+            <p className="text-sm leading-relaxed text-[#E2E2E2]">
               We at Lex Witness strategically assist firms in reaching out to
               the relevant audience sets through various knowledge sharing
               initiatives. Here are some more info decks for you to know us
@@ -114,7 +114,7 @@ const Footer = () => {
         </div>
 
         {/* BOTTOM */}
-        <div className="border-t border-gray-600 mt-12 pt-6 text-sm text-center md:flex md:justify-center md:gap-6">
+        <div className="border-t border-gray-600 mt-12 py-6 text-[14px] text-[#E2E2E2] text-center md:flex md:justify-center md:gap-6">
           <p>
             © 2020 Lex Witness – India’s 1st Magazine On Legal & Corporate
             Affairs

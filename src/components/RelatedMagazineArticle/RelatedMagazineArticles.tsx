@@ -44,13 +44,13 @@ export default function RelatedMagazineArticles({ articles }: Props) {
               {/* Article title */}
               <Link
                 href={`/${article.slug}`}
-                className="font-semibold leading-snug border-b border-gray-300 pb-1 block transition-colors  "
+                className="font-semibold text-[15px] leading-snug border-b border-gray-300 pb-1 block transition-colors  "
               >
                 {article.title}
               </Link>
 
               {/* Article excerpt */}
-              <p className="text-xs text-[#333333] mt-2 line-clamp-2">
+              <p className="text-[15px] font-normal text-[#333333] mt-2 line-clamp-2">
                 {article.short_description || "No description available"}
               </p>
 

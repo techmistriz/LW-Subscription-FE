@@ -20,7 +20,7 @@ export async function getPosts({
   author_id,
   magazine_id,
   page = 1,
-  per_page = 10,
+  per_page = 5,
 }: GetPostsParams = {}) {
   const params: any = {
     page,

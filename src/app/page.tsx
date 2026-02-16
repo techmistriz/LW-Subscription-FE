@@ -52,7 +52,7 @@ export default async function HomePage() {
 
   return (
     <main className="bg-white">
-      <section className="max-w-6xl mx-auto px-4 pt-6">
+      <section className="max-w-6xl mx-auto px-4 pt-5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
           <BigFeature post={latestPosts} />
           <MiddleCards posts={latest2Posts} />

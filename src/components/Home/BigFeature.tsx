@@ -34,7 +34,7 @@ export default function BigFeature({ post }: { post?: Post }) {
 
       <div className="absolute bottom-6 left-6 right-6 text-white z-10">
         <Link href={`/${post.slug}`}>
-          <h2 className="text-2xl font-semibold leading-snug">{post.title}</h2>
+          <h2 className="text-[20px] font-medium  leading-7.5">{post.title}</h2>
         </Link>
         <p className="text-sm mt-2 opacity-90">{post.publish_date}</p>
         <p className="text-sm mt-1 opacity-80">By {post.author?.name}</p>

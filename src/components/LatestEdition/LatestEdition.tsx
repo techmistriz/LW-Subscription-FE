@@ -14,8 +14,8 @@ export default function LatestEdition({ magazines }: Props) {
   return (
     <section className="max-w-6xl mx-auto px-4 my-10">
       {/* Section header */}
-      <div className="text-center mb-10">
-        <h2 className="text-2xl text-[#333333] font-semibold tracking-wide">
+      <div className="text-center mb-8">
+        <h2 className="text-[22px] text-[#333333] font-bold tracking-wide">
           LATEST EDITIONS
         </h2>
         <div className="w-14 h-1.5 bg-[#c9060a] mx-auto mt-1"></div>
@@ -26,7 +26,7 @@ export default function LatestEdition({ magazines }: Props) {
           <Link
             key={magazine.id}
             href={`/magazines/${magazine.slug}`}
-            className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center transition-all hover:shadow-gray-400 hover:shadow-md cursor-pointer"
+            className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center  hover:shadow-gray-400 hover:shadow-md cursor-pointer"
           >
             <div className="relative w-full aspect-3/4">
               <Image
@@ -53,7 +53,7 @@ export default function LatestEdition({ magazines }: Props) {
       <div className="flex justify-center items-center mt-8">
         <Link
           href="/magazines"
-          className="bg-[#c9060a] border border-white text-white text-lg px-6 py-2 hover:bg-[#a00508] transition-colors"
+          className="bg-[#c9060a] border border-white text-white text-[16px] font-normal px-6 py-2 transition-colors"
         >
           View All Editions
         </Link>

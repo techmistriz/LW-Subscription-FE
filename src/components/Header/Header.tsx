@@ -140,8 +140,8 @@ export default function Header() {
               <Image
                 src="https://lexwitness.com/wp-content/themes/lexwitness/images/main-logo.jpg"
                 alt="Lex Witness Logo"
-                width={170}
-                height={60}
+                width={190}
+                height={80}
                 priority
               />
             </Link>
@@ -181,7 +181,7 @@ export default function Header() {
           {loading ? (
             <NavSkeleton />
           ) : (
-            <ul className="flex gap-6 h-12 items-center font-medium max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden">
+            <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden">
               {navCategories.map((item, index) => {
                 const active = isActive(item.slug);
                 return (

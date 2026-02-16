@@ -86,11 +86,11 @@ export default function PostList({
               </Link>
             </h3>
 
-            <p className="text-sm text-[#333333] mb-2 border-b border-gray-200 pb-2">
+            <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
               {typeof article.author === "object" ? (
                 <Link
                   href={`/author/${article.author?.slug}`}
-                  className="text-[#c9060a] font-medium "
+                  className="text-[#c9060a]  "
                 >
                   {article.author?.name}
                 </Link>
@@ -108,7 +108,7 @@ export default function PostList({
 
             <Link
               href={`/${article.slug}`}
-              className="text-[#c9060a] text-sm font-medium inline-flex items-center gap-1"
+              className="text-[#c9060a] text-sm font-normal inline-flex items-center gap-1"
             >
               Read More
             </Link>
