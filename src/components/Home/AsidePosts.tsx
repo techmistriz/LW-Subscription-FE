@@ -3,18 +3,27 @@ import { Post } from "./service";
 
 export default function AsidePosts({ posts }: { posts: Post[] }) {
   return (
-    <aside className="lg:col-span-3 border border-gray-200 p-3 text-sm">
-      {posts.map((post) => (
+    <aside className="lg:col-span-3 border border-gray-200 px-3 text-sm">
+      {posts.map((post, index) => (
         <div key={post.id}>
-          <p className="text-[#c9060a] mt-1 text-[14px] font-medium">{post.category?.name}</p>
+          <p className="text-[#c9060a] mt-1 text-[14px] font-medium">
+            {post.category?.name}
+          </p>
+
           <Link href={`/${post.slug}`}>
             <p className="text-[#333333] text-[14px] font-medium cursor-pointer hover:text-black transition">
               {post.title}
             </p>
           </Link>
 
-          <p className="text-gray-400 text-[12px] font-medium mt-1">{post.publish_date}</p>
-          <hr className="mt-2 border-dashed border-gray-200" />
+          <p className="text-gray-400 text-[12px] font-medium mt-1">
+            {post.publish_date}
+          </p>
+
+          {/* Show HR only if NOT last item */}
+          {index !== posts.length - 1 && (
+            <hr className="mt-2 border-dashed border-gray-200" />
+          )}
         </div>
       ))}
     </aside>

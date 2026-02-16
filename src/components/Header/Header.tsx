@@ -254,7 +254,7 @@ export default function Header() {
           <div className="mt-auto bg-[#545454] border-t border-gray-600">
             <div className="flex items-center justify-between px-4 py-3">
               {/* LEFT SIDE (Login / Logout) */}
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <User2 />
                 {isLoggedIn ? (
                   <button
@@ -275,10 +275,10 @@ export default function Header() {
                     Sign-in
                   </Link>
                 )}
-              </div>
+              </div> */}
 
               {/* RIGHT SIDE (Social Icons) */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 ml-auto">
                 <a
                   href=" #facebook"
                   rel="noopener noreferrer"

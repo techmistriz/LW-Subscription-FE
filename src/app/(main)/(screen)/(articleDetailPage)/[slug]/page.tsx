@@ -246,7 +246,7 @@ export default function ArticleDetailPage() {
                 href="#facebook"
                 rel="noopener noreferrer"
                 aria-label="Share on Facebook"
-                className="w-8 h-6 bg-[#c9060a] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
+                className="w-6 h-6 bg-[#1877F2] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
               >
                 <Facebook size={16} />
               </a>
@@ -255,7 +255,7 @@ export default function ArticleDetailPage() {
                 href="#twitter"
                 rel="noopener noreferrer"
                 aria-label="Share on Twitter"
-                className="w-8 h-6 bg-[#c9060a] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
+                className="w-6 h-6 bg-[#1DA1F2]  text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
               >
                 <Twitter size={16} />
               </a>
@@ -264,7 +264,7 @@ export default function ArticleDetailPage() {
                 href="#linkedIn"
                 rel="noopener noreferrer"
                 aria-label="Share on LinkedIn"
-                className="w-8 h-6 bg-[#c9060a] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
+                className="w-6 h-6 bg-[#0A66C2] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
               >
                 <Linkedin size={16} />
               </a>
@@ -272,7 +272,7 @@ export default function ArticleDetailPage() {
               <button
                 onClick={handleShare}
                 aria-label="Share this article"
-                className="w-8 h-6 bg-[#c9060a] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
+                className="w-6 h-6 bg-gray-500 hover:bg-gray-700 text-white flex items-center justify-center cursor-pointer transition-all duration-200"
               >
                 <Share2 size={16} />
               </button>
