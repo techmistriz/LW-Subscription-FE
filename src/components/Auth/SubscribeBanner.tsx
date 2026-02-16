@@ -31,13 +31,9 @@ function SubscribeBanner() {
 
   // Auto hide alert after 3 seconds
   useEffect(() => {
-    if (alert) {
-      const timer = setTimeout(() => {
-        setAlert(null);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
+    if (!alert) return;
+    const timer = setTimeout(() => setAlert(null), 3000);
+    return () => clearTimeout(timer);
   }, [alert]);
 
   const validate = () => {
@@ -64,15 +60,24 @@ function SubscribeBanner() {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
 
-    // remove error while typing
-    setErrors({ ...errors, [e.target.name]: "" });
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Remove error while typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     setLoading(true);
@@ -96,72 +101,61 @@ function SubscribeBanner() {
     }
   };
 
+  const InputField = ({
+    name,
+    type,
+    placeholder,
+    maxLength,
+  }: {
+    name: keyof FormData;
+    type: string;
+    placeholder: string;
+    maxLength?: number;
+  }) => (
+    <div className="flex flex-col w-full lg:w-80">
+      <input
+        className="border p-3 bg-white text-black disabled:opacity-50"
+        placeholder={placeholder}
+        type={type}
+        name={name}
+        value={form[name]}
+        onChange={handleChange}
+        maxLength={maxLength}
+        disabled={loading}
+      />
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-1">{errors[name]}</span>
+      )}
+    </div>
+  );
+
   return (
-    <section className="mt-10 bg-[#333333] py-12 px-4">
+    <section className="mt-10 bg-[#333333] py-12 mx-auto px-4">
       <div className="max-w-5xl mx-auto text-center">
         <h2 className="font-bold text-white text-2xl">SUBSCRIBE US</h2>
-        <div className="w-10 h-1 bg-[#c9060a] mx-auto mt-2"></div>
+        <div className="w-15 h-1 bg-[#c9060a] mx-auto mt-1"></div>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="mt-6 flex flex-col gap-4 lg:flex-row">
-            {/* Name */}
-            <div className="flex flex-col w-full lg:w-80">
-              <input
-                className="border p-3 bg-white text-black disabled:opacity-50"
-                placeholder="Enter Your Name"
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              {errors.name && (
-                <span className="text-red-500 text-sm mt-1">{errors.name}</span>
-              )}
-            </div>
+          <div className="mt-6 flex flex-col mx-auto gap-4 lg:flex-row">
+            <InputField name="name" type="text" placeholder="Enter Your Name" />
 
-            {/* Email */}
-            <div className="flex flex-col w-full lg:w-80">
-              <input
-                className="border p-3 bg-white text-black disabled:opacity-50"
-                placeholder="Enter Your Email Address"
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              {errors.email && (
-                <span className="text-red-500 text-sm mt-1">
-                  {errors.email}
-                </span>
-              )}
-            </div>
+            <InputField
+              name="email"
+              type="email"
+              placeholder="Enter Your Email Address"
+            />
 
-            {/* Contact */}
-            <div className="flex flex-col w-full lg:w-80">
-              <input
-                className="border p-3 bg-white text-black disabled:opacity-50"
-                placeholder="Enter Your Mobile No."
-                type="tel"
-                name="contact"
-                value={form.contact}
-                maxLength={10}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              {errors.contact && (
-                <span className="text-red-500 text-sm mt-1">
-                  {errors.contact}
-                </span>
-              )}
-            </div>
+            <InputField
+              name="contact"
+              type="tel"
+              placeholder="Enter Your Mobile No."
+              maxLength={10}
+            />
           </div>
 
-          {/* Submit */}
-          <div className="flex justify-center mt-6 ">
+          <div className="flex justify-center mt-6">
             <button
-              className="bg-[#c9060a] text-white px-10 py-3 hover:bg-[#222] disabled:opacity-50 cursor-pointer border border-white"
+              className="bg-[#c9060a] text-white px-15 py-2.5 hover:bg-[#222] disabled:opacity-50 cursor-pointer border border-white"
               type="submit"
               disabled={loading}
             >
@@ -169,13 +163,12 @@ function SubscribeBanner() {
             </button>
           </div>
 
-          {/* Alert Box */}
           {alert && (
             <div
-              className={`mt-6 border px-4 py-3 text-sm ${
+              className={`mt-6 border w-1/2 mx-auto px-4 py-2 text-sm ${
                 alert.type === "success"
                   ? "border-green-500 text-green-400"
-                  : "border-yellow-500 text-yellow-400"
+                  : "border-red-500 text-gray-400"
               }`}
             >
               {alert.message}

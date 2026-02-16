@@ -45,7 +45,7 @@ export default function EditorPicks() {
   };
 
   return (
-    <section className="max-w-6xl mx-auto px-4 mb-20">
+    <section className="max-w-6xl mx-auto px-4 mb-12">
       <div className="text-center mb-10">
         <h2 className="text-2xl text-[#333333] font-semibold tracking-wide">
           EDITOR PICKS
