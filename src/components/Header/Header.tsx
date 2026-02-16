@@ -128,7 +128,7 @@ export default function Header() {
               className="flex items-center gap-2 text-[#333]"
             >
               <Menu size={20} />
-              <span className="hidden lg:inline hover:text-[#c9060a]">
+              <span className="hidden text lg:inline hover:text-[#c9060a]">
                 Explore
               </span>
             </button>
@@ -149,14 +149,14 @@ export default function Header() {
           </div>
 
           {/* RIGHT — Search + User */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mr-5 lg:ml-0">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
               className="flex items-center gap-2 text-[#333]"
             >
               <Search size={20} />
-              <span className="hidden lg:inline hover:text-[#c9060a]">
+              <span className="hidden  lg:inline hover:text-[#c9060a]">
                 Search
               </span>
             </button>
