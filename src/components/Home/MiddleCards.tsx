@@ -48,13 +48,13 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
             {/* Content (exact pattern as BigFeature) */}
             <div className="absolute bottom-3 left-6 right-6 text-white z-10">
               <Link href={`/${post.slug}`}>
-                <h2 className="text-md  leading-snug text-white">
+                <h2 className="text-[14px]  leading-snug text-white">
                   {post.title}
                 </h2>
               </Link>
 
-              <p className="text-sm mt-2 opacity-90">
-                {/* {post.publish_date} */}
+              <p className="text-xs mt-2 opacity-90">
+                {post.publish_date}
               </p>
             </div>
           </div>
