@@ -67,21 +67,20 @@ export default function PostList({
           key={article.id}
           className="flex gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
         >
-<div className="w-[180px] h-[120px] shrink-0 overflow-hidden">
-  <Link
-    href={`/${article.slug}`}
-    className="relative block w-full h-full"
-  >
-    <Image
-      src={getImageUrl(article.image)}
-      alt={article.title}
-      fill
-      className="object-cover"
-      sizes="180px"
-    />
-  </Link>
-</div>
-
+          <div className="w-[180px] h-[120px] shrink-0 overflow-hidden">
+            <Link
+              href={`/${article.slug}`}
+              className="relative block w-full h-full"
+            >
+              <Image
+                src={getImageUrl(article.image)}
+                alt={article.title}
+                fill
+                className="object-cover"
+                sizes="180px"
+              />
+            </Link>
+          </div>
 
           <div className="flex-1 min-w-0">
             <h3 className="text-[18px]  font-semibold leading-tight line-clamp-2 mb-2">

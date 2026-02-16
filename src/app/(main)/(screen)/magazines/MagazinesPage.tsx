@@ -119,7 +119,7 @@ export default function MagazinesPage({
       {/* Main content */}
       <div className="max-w-6xl mx-auto px-4">
         {/* Page header */}
-        <h2 className="mt-6 text-2xl font-bold">ALL EDITIONS MAGAZINE</h2>
+        <h2 className="mt-6 text-2xl font-semibold text-[#333]">ALL EDITIONS MAGAZINE</h2>
         <div className="w-14 h-1.5 bg-[#c9060a] mt-1"></div>
 
         {/* Filter controls */}
@@ -130,6 +130,8 @@ export default function MagazinesPage({
           onApply={handleApplyFilter}
           // disabled={loading || !authorId}
         />
+              <hr className="border-gray-200 mb-6" />
+
 
         {/* Magazines grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">

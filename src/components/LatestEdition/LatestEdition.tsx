@@ -42,7 +42,7 @@ export default function LatestEdition({ magazines }: Props) {
             </div>
 
             <div className="px-3 py-3 text-center">
-              <h3 className="text-sm font-medium leading-snug">
+              <h3 className="text-sm font-normal leading-snug">
                 {magazine.title}
               </h3>
             </div>
