@@ -13,7 +13,7 @@ export default function LatestIssue({ magazine, showTitle = true }: Props) {
 
   return (
     <div>
-      <h3 className="text-2xl text-[#333333] font-medium tracking-wide mt-2">
+      <h3 className="text-2xl text-[#333333] font-semibold tracking-wide mt-2">
         LATEST EDITION
       </h3>
       <div className="w-14 h-1 bg-[#c9060a] mt-1 mb-4"></div>
