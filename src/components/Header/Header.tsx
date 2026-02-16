@@ -138,10 +138,11 @@ export default function Header() {
           <div className="absolute left-1/2 -translate-x-1/2">
             <Link href="/">
               <Image
-                src="https://lexwitness.com/wp-content/themes/lexwitness/images/main-logo.jpg"
+                src="/main-logo.jpg"
                 alt="Lex Witness Logo"
                 width={190}
                 height={80}
+                className="w-auto h-17.5"
                 priority
               />
             </Link>

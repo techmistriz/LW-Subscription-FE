@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { toTitleCase } from "@/lib/utils/helper";
+import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
 import { getPosts } from "@/lib/api/services/posts";
 import { getAuthors } from "@/lib/api/services/author";
 import { getYears } from "@/lib/api/services/years";
@@ -137,9 +137,7 @@ export default function AuthorPage() {
           {loading ? (
             <PageLoader />
           ) : !authorId ? (
-            <div className="py-10 text-center text-gray-200">
-              loading..
-            </div>
+            <div className="py-10 text-center text-gray-200">loading..</div>
           ) : (
             <>
               <PostList
@@ -173,5 +171,3 @@ export default function AuthorPage() {
     </section>
   );
 }
-
-

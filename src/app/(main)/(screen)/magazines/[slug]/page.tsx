@@ -1,9 +1,12 @@
-import { getLatestMagazines, getSingleMagazine } from "@/lib/api/services/magazines";
+import {
+  getLatestMagazines,
+  getSingleMagazine,
+} from "@/lib/api/services/magazines";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import RelatedPosts from "./RelatedPosts";
-import { stripInlineStyles } from "@/lib/utils/helper";
+import { stripInlineStyles } from "@/lib/utils/helper/toTitleCase";
 import LatestEdition from "@/components/LatestEdition/LatestEdition";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";

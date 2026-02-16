@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { toTitleCase } from "@/lib/utils/helper";
+import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
 import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
 import { getCategoryBySlug } from "@/lib/api/services/categories";

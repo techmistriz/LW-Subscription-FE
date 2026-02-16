@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
-import { stripInlineStyles, toTitleCase } from "@/lib/utils/helper";
+import { stripInlineStyles, toTitleCase } from "@/lib/utils/helper/toTitleCase";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
@@ -332,43 +332,42 @@ export default function ArticleDetailPage() {
           )}
 
           {/* Related articles section */}
-       {relatedPosts.length > 0 && (
-  <div className="lg:col-span-12 mt-16 mb-8">
-    <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
-    <div className="w-10 h-1 bg-[#c9060a] mb-4" />
+          {relatedPosts.length > 0 && (
+            <div className="lg:col-span-12 mt-16 mb-8">
+              <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
+              <div className="w-10 h-1 bg-[#c9060a] mb-4" />
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-      {relatedPosts.map((post) => (
-        <Link
-          key={post.id}
-          href={`/${post.slug}`}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                {relatedPosts.map((post) => (
+                  <Link
+                    key={post.id}
+                    href={`/${post.slug}`}
                     className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-start transition-none hover:shadow-gray-400 hover:shadow-md cursor-pointer group"
-        >
-          <div className="h-40 w-full relative bg-white">
-            <Image
-              src={getImageUrl(post.image)}
-              alt={post.title}
-              fill
-              className="object-cover"
-              sizes="300px"
-            />
-          </div>
+                  >
+                    <div className="h-40 w-full relative bg-white">
+                      <Image
+                        src={getImageUrl(post.image)}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="300px"
+                      />
+                    </div>
 
-          <div className="px-3 text[14px] font-semibold py-4 text-start border-t border-gray-400 w-full">
-            <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800 hover:text-[#c9060a] transition-colors">
-              {post.title}
-            </h4>
+                    <div className="px-3 text[14px] font-semibold py-4 text-start border-t border-gray-400 w-full">
+                      <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800 hover:text-[#c9060a] transition-colors">
+                        {post.title}
+                      </h4>
 
-            <p className="text-[#c9060a] text-sm mt-2 font-normal">
-              {post.author?.name || "Lex Witness Bureau"}
-            </p>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </div>
-)}
-
+                      <p className="text-[#c9060a] text-sm mt-2 font-normal">
+                        {post.author?.name || "Lex Witness Bureau"}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </article>
 
         {/* Right sidebar */}
