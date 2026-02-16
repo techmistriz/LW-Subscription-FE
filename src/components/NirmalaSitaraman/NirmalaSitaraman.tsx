@@ -9,17 +9,17 @@ function NirmalaSitaraman() {
       </h2>
       <div className="w-12 h-1 bg-[#c9060a] mt-1 mb-5"></div>
 
-      <div className="border border-gray-300 bg-[#F8F8F8] p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+      <div className=" w-75 border border-gray-300 bg-[#F8F8F8] p-2 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
         <div className="w-20 h-20 shrink-0">
           <Image
             src="https://lexwitness.com/wp-content/themes/lexwitness/images/n-s.png"
             alt="Nirmala Sitharaman"
             width={80}
             height={80}
-            className="object-cover rounded-full w-full h-full"
+            className="object-cover  w-full h-full"
           />
         </div>
-        <p className="font-medium text-sm border-b border-gray-300 pb-2 sm:pb-0 sm:mt-0">
+        <p className="font-medium text-sm  border-b border-gray-300 pb-2 sm:pb-0 sm:mt-0 self-start">
           Nirmala Sitharaman
         </p>
       </div>

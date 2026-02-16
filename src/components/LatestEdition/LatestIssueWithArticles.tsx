@@ -23,7 +23,7 @@ export default function LatestIssueWithArticles({ magazine, articles }: Props) {
       {/* LEFT COLUMN */}
       <div className="lg:col-span-3 order-1">
         <LatestIssue magazine={magazine} />
-        <p className="text-sm text-gray-400 my-3 leading-relaxed">
+        <p className="text-[13px] font-normal text-[#333] my-1  leading-relaxed">
           A Photo Feature on Judgements, Laws & Bills
         </p>
         <Link

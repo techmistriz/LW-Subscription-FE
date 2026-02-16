@@ -35,6 +35,7 @@ export default async function HomePage() {
     skipId: latestSingle?.id,
     limit: 5,
   });
+  console.log(latestFive)
 
   // Fetch related articles
   let articles: any[] = [];

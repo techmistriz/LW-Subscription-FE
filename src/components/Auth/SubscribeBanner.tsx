@@ -159,9 +159,9 @@ function SubscribeBanner() {
           </div>
 
           {/* Submit */}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 ">
             <button
-              className="bg-[#c9060a] text-white px-10 py-3 hover:bg-[#222] disabled:opacity-50"
+              className="bg-[#c9060a] text-white px-10 py-3 hover:bg-[#222] disabled:opacity-50 cursor-pointer border border-white"
               type="submit"
               disabled={loading}
             >

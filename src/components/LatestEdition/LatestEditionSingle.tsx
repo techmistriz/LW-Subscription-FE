@@ -35,9 +35,9 @@ export default function LatestIssue({ magazine }: Props) {
       </Link>
 
       {/* Title */}
-      {/* <p className="text-sm my-3 text-start">{magazine.title}</p> */}
+      <p className="text-[15px] font-semibold my-2 text-start">{magazine.title}</p>
 
-      <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-4"></div>
+      <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
     </div>
   );
 }

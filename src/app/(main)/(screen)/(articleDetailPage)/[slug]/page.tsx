@@ -113,7 +113,7 @@ export default function ArticleDetailPage() {
               .filter((post) => post.slug !== article.slug)
               .map((post) => [post.id, post]),
           ).values(),
-        ).slice(0, 4);
+        ).slice(0, 3);
 
         setRelatedPosts(uniqueRelatedPosts);
       } catch (error) {
@@ -137,8 +137,6 @@ export default function ArticleDetailPage() {
       setShareUrl(window.location.href);
     }
   }, []);
-
-  
 
   // Loading skeleton
   if (loading) {
@@ -334,39 +332,43 @@ export default function ArticleDetailPage() {
           )}
 
           {/* Related articles section */}
-          {relatedPosts.length > 0 && (
-            <div className="mt-16 mb-8">
-              <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
-              <div className="w-10 h-1 bg-[#c9060a] mb-4" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 ">
-                {relatedPosts.map((post) => (
-                  <Link
-                    key={post.id}
-                    href={`/${post.slug}`}
-                    className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center transition-none hover:shadow-gray-400 hover:shadow-md cursor-pointer group"
-                  >
-                    <div className="h-32 w-full relative bg-white">
-                      <Image
-                        src={getImageUrl(post.image)}
-                        alt={post.title}
-                        fill
-                        className="object-contain p-2 group-hover:scale-105 transition-transform duration-200"
-                        sizes="200px"
-                      />
-                    </div>
-                    <div className="px-3 py-4 text-center border-t border-gray-300 w-full">
-                      <h4 className="text-sm font-medium leading-snug line-clamp-2 text-gray-800 group-hover:text-[#c9060a] transition-colors">
-                        {post.title}
-                      </h4>
-                      <p className="text-[#c9060a] text-xs mt-2 font-medium">
-                        {post.author?.name || "Lex Witness Bureau"}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+       {relatedPosts.length > 0 && (
+  <div className="lg:col-span-12 mt-16 mb-8">
+    <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
+    <div className="w-10 h-1 bg-[#c9060a] mb-4" />
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+      {relatedPosts.map((post) => (
+        <Link
+          key={post.id}
+          href={`/${post.slug}`}
+                    className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-start transition-none hover:shadow-gray-400 hover:shadow-md cursor-pointer group"
+        >
+          <div className="h-40 w-full relative bg-white">
+            <Image
+              src={getImageUrl(post.image)}
+              alt={post.title}
+              fill
+              className="object-cover"
+              sizes="300px"
+            />
+          </div>
+
+          <div className="px-3 text[14px] font-semibold py-4 text-start border-t border-gray-400 w-full">
+            <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800 hover:text-[#c9060a] transition-colors">
+              {post.title}
+            </h4>
+
+            <p className="text-[#c9060a] text-sm mt-2 font-normal">
+              {post.author?.name || "Lex Witness Bureau"}
+            </p>
+          </div>
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
+
         </article>
 
         {/* Right sidebar */}
