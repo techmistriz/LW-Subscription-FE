@@ -41,9 +41,11 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
             />
 
             {/* Category */}
-            <span className="absolute top-0 left-0 bg-[#c9060a] text-white text-sm px-4 py-1 z-10">
+            <Link
+            href={`/category/${post?.category?.slug}`}
+            className="absolute top-0 left-0 bg-[#c9060a] text-white text-sm px-4 py-1 z-10">
               {post.category?.name}
-            </span>
+            </Link>
 
             {/* Content (exact pattern as BigFeature) */}
             <div className="absolute bottom-3 left-6 right-6 text-white z-10">
