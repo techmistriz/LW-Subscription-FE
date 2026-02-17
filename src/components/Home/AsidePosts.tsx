@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { Post } from "./service";
+import { Category } from "@/types";
+
 
 export default function AsidePosts({ posts }: { posts: Post[] }) {
   return (
-    <aside className="lg:col-span-3 border border-gray-200 px-3 text-sm">
+    <aside className="lg:col-span-3 border border-gray-200 px-3 py-3text-sm">
       {posts.map((post, index) => (
         <div key={post.id}>
-          <p className="text-[#c9060a] mt-1 text-[14px] font-medium">
+          <Link 
+          href={`/category/${post?.category?.slug}`}
+          className="text-[#c9060a] mt-1 text-[14px] font-medium">
             {post.category?.name}
-          </p>
+          </Link>
 
           <Link href={`/${post.slug}`}>
             <p className="text-[#333333] text-[14px] font-medium cursor-pointer hover:text-black transition">

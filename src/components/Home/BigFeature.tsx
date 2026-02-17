@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Post } from "./service";
 import Link from "next/link";
 const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
+
+
 export default function BigFeature({ post }: { post?: Post }) {
   if (!post) return null;
 
@@ -28,16 +30,22 @@ export default function BigFeature({ post }: { post?: Post }) {
             "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 30%, rgba(0,0,0,0.4) 60%, transparent 100%)",
         }}
       />
-      <span className="absolute top-0 left-0 bg-[#c9060a] text-white text-lg px-4 py-1 z-10">
+      <Link 
+      href={`/category/${post?.category?.slug}`}
+      className="absolute top-0 left-0 bg-[#c9060a] text-white text-lg px-4 py-1 z-10">
         {post.category?.name}
-      </span>
+      </Link>
 
       <div className="absolute bottom-6 left-6 right-6 text-white z-10">
         <Link href={`/${post.slug}`}>
           <h2 className="text-[20px] font-medium  leading-7.5">{post.title}</h2>
         </Link>
         <p className="text-sm mt-2 opacity-90">{post.publish_date}</p>
+        <Link
+        href={`/author/${post?.author?.slug}`}
+        >
         <p className="text-sm mt-1 opacity-80">By {post.author?.name}</p>
+        </Link>
       </div>
     </div>
   );

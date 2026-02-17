@@ -26,12 +26,12 @@ interface Category {
   slug: string;
 }
 
-export default function Header() {
+export default function Header({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [navCategories, setNavCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [navCategories, setNavCategories] = useState<Category[]>([]);
+  // const [loading, setLoading] = useState(true);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -73,23 +73,23 @@ export default function Header() {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const data = await getCategories();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const data = await getCategories();
 
-        setNavCategories(data);
-      } catch (error) {
-        console.error("Failed to load categories:", error);
-        setNavCategories([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-  console.log("nav", navCategories);
+  //       setNavCategories(data);
+  //     } catch (error) {
+  //       console.error("Failed to load categories:", error);
+  //       setNavCategories([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+  // console.log("nav", navCategories);
   useEffect(() => {
     document.body.style.overflow = searchOpen ? "hidden" : "auto";
   }, [searchOpen]);
@@ -179,11 +179,9 @@ export default function Header() {
 
         {/* NAV (unchanged) */}
         <nav className="border-t border-gray-300 bg-gray-100">
-          {loading ? (
-            <NavSkeleton />
-          ) : (
+        
             <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden">
-              {navCategories.map((item, index) => {
+              {categories.map((item, index) => {
                 const active = isActive(item.slug);
                 return (
                   <li key={`${item.slug}-${index}`} className="shrink-0">
@@ -201,7 +199,7 @@ export default function Header() {
                 );
               })}
             </ul>
-          )}
+          
         </nav>
       </header>
 
@@ -230,7 +228,7 @@ export default function Header() {
 
         <nav className="flex flex-col h-full overflow-y-scroll ">
           <ul className="flex flex-col text-sm font-medium">
-            {navCategories.map((item, index) => {
+            {categories.map((item, index) => {
               const active = isActive(item.slug);
               return (
                 <li key={`${item.slug}-${index}`}>
