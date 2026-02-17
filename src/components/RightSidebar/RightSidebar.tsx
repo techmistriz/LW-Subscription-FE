@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SubscribeSidebar from "../Auth/SubscribeSidebar";
+import SubscribeSidebar from "../../features/Auth/SubscribeSidebar";
 import SidebarAdvertisement from "../SidebarAdvertisment/SidebarAdvertisement";
 import LatestEditionSingle from "../LatestEdition/LatestEditionSingle";
 import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
@@ -20,7 +20,9 @@ function RightSidebar() {
 
   return (
     <aside className="lg:col-span-3 space-y-8">
-      {magazine && <LatestEditionSingle magazine={magazine} showTitle={false} />}
+      {magazine && (
+        <LatestEditionSingle magazine={magazine} showTitle={false} />
+      )}
       <SubscribeSidebar />
       <SidebarAdvertisement />
     </aside>

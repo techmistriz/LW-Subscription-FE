@@ -1,10 +1,8 @@
-import SignInForm from '@/components/Auth/SignInForm'
-import React from 'react'
+import SignInForm from "@/features/Auth/SignInForm";
+import React from "react";
 
 function page() {
-  return (
-   <SignInForm/>
-  )
+  return <SignInForm />;
 }
 
-export default page
+export default page;

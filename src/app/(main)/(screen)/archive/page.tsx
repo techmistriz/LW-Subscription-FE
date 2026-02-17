@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ArchiveClient from "./ArchiveClient";
+import ArchiveClient from "../../../../features/archive/ArchiveClient";
 
 export default function ArchivePage() {
   return (

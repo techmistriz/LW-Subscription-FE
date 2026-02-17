@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 import HomeHeroSkeleton from "@/components/Home/HomeHeroSkeleton";
-import SubscribeBanner from "@/components/Auth/SubscribeBanner";
+import SubscribeBanner from "@/features/Auth/SubscribeBanner";
 import LatestEdition from "@/components/LatestEdition/LatestEdition";
 import LatestIssueWithArticles from "@/components/LatestEdition/LatestIssueWithArticles";
 import BigFeature from "@/components/Home/BigFeature";

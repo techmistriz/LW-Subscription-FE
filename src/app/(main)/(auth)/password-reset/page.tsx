@@ -1,10 +1,8 @@
-import PasswordResetForm from '@/components/Auth/PasswordResetForm'
-import React from 'react'
+import PasswordResetForm from "@/features/Auth/PasswordResetForm";
+import React from "react";
 
 function page() {
-  return (
-  <PasswordResetForm/>
-  )
+  return <PasswordResetForm />;
 }
 
-export default page
+export default page;

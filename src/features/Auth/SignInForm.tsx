@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, FormEvent } from "react";
 import { loginUser } from "@/lib/auth/auth";
-import Banner from "../Common/Banner";
+import Banner from "../../components/Common/Banner";
 
 const bannerImg: React.CSSProperties = {
   backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
@@ -40,7 +40,7 @@ export default function SignInForm() {
 
   return (
     <main className="bg-white">
-          <Banner title={"sign In"} />
+      <Banner title={"sign In"} />
 
       {/* FORM SECTION */}
       <section className="py-10">

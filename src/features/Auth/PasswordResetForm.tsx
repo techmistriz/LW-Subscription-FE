@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { forgotPassword } from "@/lib/auth/auth";
-import Banner from "../Common/Banner";
+import Banner from "../../components/Common/Banner";
 
 const bannerImg: React.CSSProperties = {
   backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
@@ -39,7 +39,7 @@ export default function PasswordResetForm() {
 
   return (
     <main className="bg-white">
-       <Banner title={"Password Reset"} />
+      <Banner title={"Password Reset"} />
 
       <section className="py-10">
         <div className="max-w-4xl mx-auto text-center px-4">
