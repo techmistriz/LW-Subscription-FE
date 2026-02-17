@@ -23,7 +23,7 @@ export default function CategoryPage() {
   const categoryTitle = toTitleCase(categoryName);
 
   const [loading, setLoading] = useState(true);
-  const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
+  const [selectYear, setselectYear] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [years, setYears] = useState<Year[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
@@ -32,7 +32,7 @@ export default function CategoryPage() {
 
   // Fetch posts
   const fetchPosts = useCallback(
-    async (year_id?: number, page: number = 1) => {
+    async (year?: number, page: number = 1) => {
       if (!categoryId) return;
 
       setLoading(true);
@@ -40,7 +40,7 @@ export default function CategoryPage() {
       try {
         const response = await getPosts({
           category_id: categoryId,
-          year_id,
+          year,
           page,
         });
 
@@ -108,11 +108,11 @@ export default function CategoryPage() {
   }, []);
 
   const handleApplyFilter = () => {
-    fetchPosts(selectedYearId ?? undefined, 1);
+    fetchPosts(selectYear ?? undefined, 1);
   };
 
   const handlePageChange = (page: number) => {
-    fetchPosts(selectedYearId ?? undefined, page);
+    fetchPosts(selectYear ?? undefined, page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -124,8 +124,8 @@ export default function CategoryPage() {
         <div className="lg:col-span-9">
           <YearFilter
             years={years}
-            selectedYear={selectedYearId}
-            onSelect={setSelectedYearId}
+            selectedYear={selectYear}
+            onSelect={setselectYear}
             onApply={handleApplyFilter}
             // disabled={loading}
           />
@@ -135,9 +135,9 @@ export default function CategoryPage() {
             loading={loading}
             postBaseUrl={postBaseUrl}
             emptyMessage={
-              selectedYearId
+              selectYear
                 ? `No posts available in ${
-                    years.find((y) => y.id === selectedYearId)?.name
+                    years.find((y) => y === selectYear)
                   } for ${categoryTitle}.`
                 : `No posts available in ${categoryTitle}.`
             }

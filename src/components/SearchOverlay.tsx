@@ -23,7 +23,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
 
   // Form state
   const [titleSearch, setTitleSearch] = useState("");
-  const [yearId, setYearId] = useState<number | undefined>();
+  const [year, setYearId] = useState<number | undefined>();
   const [categoryId, setCategoryId] = useState<number | undefined>();
   const [authorId, setAuthorId] = useState<number | undefined>();
 
@@ -76,13 +76,13 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   const handleFilterSearch = useCallback(() => {
     const params = new URLSearchParams();
 
-    if (yearId) params.append("year_id", yearId.toString());
+    if (year) params.append("year", year.toString());
     if (categoryId) params.append("category_id", categoryId.toString());
     if (authorId) params.append("author_id", authorId.toString());
 
     onClose();
     router.push(`/archive?${params.toString()}`);
-  }, [yearId, categoryId, authorId, onClose, router]);
+  }, [year, categoryId, authorId, onClose, router]);
 
   // Handle Enter key press for title search
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -125,7 +125,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Year filter */}
           <select
-            value={yearId ?? ""}
+            value={year ?? ""}
             onChange={(e) =>
               setYearId(e.target.value ? Number(e.target.value) : undefined)
             }
@@ -137,11 +137,11 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             </option>
             {years.map((year) => (
               <option
-                key={year.id}
-                value={year.id}
+                key={year}
+                value={year}
                 className="text-white bg-black"
               >
-                {year.name}
+                {year}
               </option>
             ))}
           </select>

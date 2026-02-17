@@ -6,7 +6,7 @@ import { Magazine } from "@/types";
 
 
 export async function getMagazines(
-  year_id?: number,
+  year?: number,
   page: number = 1,
   limit: number = 10,
   per_page: number = 10,
@@ -14,11 +14,12 @@ export async function getMagazines(
   try {
     const params: Record<string, number> = { page, limit, per_page };
 
-    if (year_id) {
-      params.year_id = year_id;
+    if (year) {
+      params.year = year;
     }
 
     const response = await api.get("/magazines", { params });
+    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error fetching magazines:", error);

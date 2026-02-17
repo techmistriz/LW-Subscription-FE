@@ -6,10 +6,11 @@ export const getYears = async (): Promise<Year[]> => {
     const response = await api.get("/years");
 
     const result = response.data;
-
+console.log(result)
     return result?.data ?? result ?? [];
   } catch (error) {
     console.error("Error fetching years:", error);
     return [];
   }
 };
+

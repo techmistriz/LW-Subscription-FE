@@ -36,10 +36,13 @@ export interface Article {
 }
 
 // YEAR
-export interface Year {
-  id: number;
-  name: string;
-}
+// export interface Year {
+//   id: number;
+//   name: string;
+// }
+
+export type Year = number;
+export type YearResponse = Year[] 
 
 // MAGAZINE
 export interface Magazine {

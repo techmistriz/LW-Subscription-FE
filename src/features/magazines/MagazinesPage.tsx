@@ -44,10 +44,10 @@ export default function MagazinesPage({
 
   // Fetch magazines with optional year filter and pagination
   const fetchMagazines = useCallback(
-    async (year_id?: number, pageNumber: number = 1) => {
+    async (year?: number, pageNumber: number = 1) => {
       setLoading(true);
       try {
-        const result = await getMagazines(year_id, pageNumber);
+        const result = await getMagazines(year, pageNumber);
         // console.log("MAG API RESULT:", result);
 
         // console.log("Magazine Pagination META:", result.meta);
@@ -111,8 +111,9 @@ export default function MagazinesPage({
   };
 
   const selectedYearLabel = selectedYearId
-    ? years.find((y) => y.id === selectedYearId)?.name
+    ? years.find((y) => y === selectedYearId)
     : null;
+    
 
   return (
     <section className="pb-8">

@@ -39,8 +39,8 @@ export default function ArchivePage() {
   const [loading, setLoading] = useState(false);
 
    //  READ URL QUERY PARAMETERS
-  const yearId = searchParams.get("year_id")
-    ? Number(searchParams.get("year_id"))
+  const year = searchParams.get("year")
+    ? Number(searchParams.get("year"))
     : undefined;
 
   const categoryId = searchParams.get("category_id")
@@ -55,7 +55,7 @@ export default function ArchivePage() {
   const searchTerm = searchParams.get("search") || "";
 
     //  LOCAL FILTER STATE (UI CONTROL)
-  const [selectedYearId, setSelectedYearId] = useState<number | undefined>(yearId);
+  const [selectedYearId, setSelectedYearId] = useState<number | undefined>(year);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(categoryId);
   const [selectedAuthorId, setSelectedAuthorId] = useState<number | undefined>(authorId);
 
@@ -101,9 +101,9 @@ export default function ArchivePage() {
       }
 
       // 2️. Apply filters if present
-      if (yearId || categoryId || authorId) {
+      if (year || categoryId || authorId) {
         const response = await getPosts({
-          year_id: yearId,
+          year: year,
           category_id: categoryId,
           author_id: authorId,
           page: currentPage,
@@ -126,7 +126,7 @@ export default function ArchivePage() {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, yearId, categoryId, authorId, currentPage]);
+  }, [searchTerm, year, categoryId, authorId, currentPage]);
 
     //  CLEAR FILTERS, Resets state and navigates to base archive
   const handleClearFilters = () => {
@@ -142,7 +142,7 @@ export default function ArchivePage() {
     setLoading(true);
     const params = new URLSearchParams();
 
-    if (selectedYearId) params.set("year_id", selectedYearId.toString());
+    if (selectedYearId) params.set("year", selectedYearId.toString());
     if (selectedCategoryId)
       params.set("category_id", selectedCategoryId.toString());
     if (selectedAuthorId)
@@ -190,8 +190,8 @@ export default function ArchivePage() {
         >
           <option value="">All Years</option>
           {years.map((year) => (
-            <option key={year.id} value={year.id}>
-              {year.name}
+            <option key={year} value={year}>
+              {year}
             </option>
           ))}
         </select>

@@ -4,7 +4,7 @@ import api from "@/lib/api/axios";
 interface GetPostsParams {
   search?: string;
   category_id?: number;
-  year_id?: number;
+  year?: number;
   author_id?: number;
   magazine_id?: number;
   page?: number;
@@ -16,11 +16,11 @@ interface GetPostsParams {
 export async function getPosts({
   search,
   category_id,
-  year_id: yearId,
+  year,
   author_id,
   magazine_id,
   page = 1,
-  per_page = 5,
+  per_page = 3,
 }: GetPostsParams = {}) {
   const params: any = {
     page,
@@ -28,7 +28,7 @@ export async function getPosts({
     ...(magazine_id && { magazine_id }), // Only include if exists
     ...(search && { search }),
     ...(category_id && { category_id }),
-    ...(yearId && { year_id: yearId }),
+    ...(year && { year}),
     ...(author_id && { author_id }),
   };
 
