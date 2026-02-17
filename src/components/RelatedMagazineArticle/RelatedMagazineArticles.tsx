@@ -27,14 +27,20 @@ export default function RelatedMagazineArticles({ articles }: Props) {
           className="flex gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
         >
           {/* Article thumbnail */}
-          <Link href={`/${article.slug}`}>
+          <Link
+            href={`/${article.slug}`}
+            className="relative w-[110px] h-[80px] shrink-0 mt-1 block"
+          >
             <Image
-              src={article.image ? `${postImageBaseUrl}/${article.image}` : "/placeholder.jpg"}
+              src={
+                article.image
+                  ? `${postImageBaseUrl}/${article.image}`
+                  : "/placeholder.jpg"
+              }
               alt={article.title || "Article thumbnail"}
-              width={110}
-              height={80}
-              className="object-cover shrink-0 mt-1"
+              fill
               sizes="110px"
+              className="object-cover "
             />
           </Link>
 

@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
@@ -10,24 +8,29 @@ import { getAuthors } from "@/lib/api/services/author";
 import { getCategories } from "@/lib/api/services/categories";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import Pagination from "@/components/Pagination/Pagination";
-import { Year, Article, Author, Category, ArticleCategory } from "@/types";
-import PageLoader from "@/components/Loader/PageLoader";
-import { PaginatedResponse, PaginationMeta } from "@/types/api";
+import { Year, Article, Author, Category } from "@/types";
+import { PaginationMeta } from "@/types/api";
 import Banner from "@/components/Common/Banner";
 import PostList from "@/components/Common/PostList";
 
 /**
- * ArchivePage component - Displays articles with filtering by year, category, author, and search
- * Supports pagination and maintains URL state for all filters
+ * ArchivePage
+ *
+ * Displays all articles with:
+ * - Filtering (Year, Category, Author)
+ * - Search support
+ * - Pagination
+ * - URL state synchronization
  */
 export default function ArchivePage() {
-  // HOOKS
+
+  //     ROUTER & URL PARAMS
   const params = useParams<{ slug?: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlSlug = params.slug as string | undefined;
 
-  // STATE
+//     COMPONENT STATE
   const [articles, setArticles] = useState<Article[]>([]);
   const [years, setYears] = useState<Year[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -35,66 +38,35 @@ export default function ArchivePage() {
   const [meta, setMeta] = useState<PaginationMeta>();
   const [loading, setLoading] = useState(false);
 
-  // Parse URL parameters
+   //  READ URL QUERY PARAMETERS
   const yearId = searchParams.get("year_id")
     ? Number(searchParams.get("year_id"))
     : undefined;
+
   const categoryId = searchParams.get("category_id")
     ? Number(searchParams.get("category_id"))
     : undefined;
+
   const authorId = searchParams.get("author_id")
     ? Number(searchParams.get("author_id"))
     : undefined;
+
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchTerm = searchParams.get("search") || "";
 
-  // Local filter state for UI controls
-  const [selectedYearId, setSelectedYearId] = useState<number | undefined>(
-    yearId,
-  );
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    number | undefined
-  >(categoryId);
-  const [selectedAuthorId, setSelectedAuthorId] = useState<number | undefined>(
-    authorId,
-  );
+    //  LOCAL FILTER STATE (UI CONTROL)
+  const [selectedYearId, setSelectedYearId] = useState<number | undefined>(yearId);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(categoryId);
+  const [selectedAuthorId, setSelectedAuthorId] = useState<number | undefined>(authorId);
 
-  // COMPUTED VALUES
+  // Determines if any filter or search is active
   const hasActiveFilters =
     selectedYearId || selectedCategoryId || selectedAuthorId || searchTerm;
+
+  // Total pages from API response
   const totalPages = meta?.paging?.last_page ?? 1;
-  console.log(totalPages);
 
-  // UTILITY FUNCTIONS
-  const capitalizeFirst = (str: string = "") =>
-    str.charAt(0).toUpperCase() + str.slice(1);
-  const capitalizeAll = (str: string = "") => str.toUpperCase();
-
-  const getCategorySlug = (category?: ArticleCategory) =>
-    typeof category === "string" ? category : category?.slug || "";
-
-  const getAuthorSlug = (author?: Author | string) =>
-    typeof author === "string"
-      ? author
-      : (author?.slug ?? author?.name ?? "admin");
-
-  const getPostImageUrl = (image?: string) =>
-    !image
-      ? "/placeholder.jpg"
-      : image.startsWith("http")
-        ? image
-        : `${process.env.NEXT_PUBLIC_POSTS_BASE_URL}/${image}`;
-
-  const bannerImg: React.CSSProperties = {
-    backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  };
-
-  // DATA FETCHING FUNCTIONS
-  /**
-   * Load filter dropdown options (years, authors, categories) once on mount
-   */
+    //  LOAD FILTER DROPDOWN DATA, (Runs once on mount)
   const loadFilterData = useCallback(async () => {
     try {
       const [yearsRes, authorsRes, categoriesRes] = await Promise.all([
@@ -102,6 +74,7 @@ export default function ArchivePage() {
         getAuthors(),
         getCategories(),
       ]);
+
       setYears(yearsRes || []);
       setAuthors(authorsRes || []);
       setCategories(categoriesRes || []);
@@ -110,24 +83,24 @@ export default function ArchivePage() {
     }
   }, []);
 
-  /**
-   * Fetch articles based on current filters/search/page
-   */
+    //  FETCH ARTICLES, Runs when filters/search/page changes
   const fetchArticles = useCallback(async () => {
     setLoading(true);
+
     try {
-      // 1. Search takes precedence
+      // 1️. Search takes priority over filters
       if (searchTerm.trim()) {
         const response = await getPosts({
           search: searchTerm.trim(),
           page: currentPage,
         });
+
         setArticles(response.data || []);
         setMeta(response.meta || undefined);
         return;
       }
 
-      // 2. Filters (year/category/author)
+      // 2️. Apply filters if present
       if (yearId || categoryId || authorId) {
         const response = await getPosts({
           year_id: yearId,
@@ -135,15 +108,15 @@ export default function ArchivePage() {
           author_id: authorId,
           page: currentPage,
         });
+
         setArticles(response.data || []);
         setMeta(response.meta || undefined);
         return;
       }
 
-      // 3. Default: all posts with pagination
-      const response = await getPosts({
-        page: currentPage,
-      });
+      // 3. Default: fetch all posts
+      const response = await getPosts({ page: currentPage });
+
       setArticles(response.data || []);
       setMeta(response.meta || undefined);
     } catch (error) {
@@ -155,9 +128,7 @@ export default function ArchivePage() {
     }
   }, [searchTerm, yearId, categoryId, authorId, currentPage]);
 
-  /**
-   * Clear all filters and navigate to default archive view
-   */
+    //  CLEAR FILTERS, Resets state and navigates to base archive
   const handleClearFilters = () => {
     setLoading(true);
     setSelectedYearId(undefined);
@@ -166,39 +137,42 @@ export default function ArchivePage() {
     router.push("/archive");
   };
 
-  /**
-   * Apply selected filters to URL params and trigger fetch
-   */
+    //  APPLY FILTERS, Updates URL query params
   const handleApplyFilters = () => {
     setLoading(true);
     const params = new URLSearchParams();
+
     if (selectedYearId) params.set("year_id", selectedYearId.toString());
     if (selectedCategoryId)
       params.set("category_id", selectedCategoryId.toString());
-    if (selectedAuthorId) params.set("author_id", selectedAuthorId.toString());
+    if (selectedAuthorId)
+      params.set("author_id", selectedAuthorId.toString());
+
     router.push(`/archive?${params.toString()}`);
   };
 
-  // EFFECTS
-  // Load filter options once on mount
+    
+  // Load dropdown data once
   useEffect(() => {
     loadFilterData();
   }, [loadFilterData]);
 
-  // Fetch articles when URL params change
+  // Refetch posts when URL params change
   useEffect(() => {
     fetchArticles();
   }, [fetchArticles]);
 
+   //  EMPTY STATE MESSAGE
   const emptyMessage = searchTerm
-  ? `No results found for "${searchTerm}".`
-  : hasActiveFilters
-  ? "No posts found for the selected filters."
-  : "No posts available.";
+    ? `No results found for "${searchTerm}".`
+    : hasActiveFilters
+    ? "No posts found for the selected filters."
+    : "No posts available.";
 
+  //   RENDER
   return (
     <section className="bg-white">
-      {/* Banner Section */}
+      {/* Page Banner */}
       <Banner title={urlSlug ?? "archive"} />
 
       {/* Filter Controls */}
@@ -208,7 +182,7 @@ export default function ArchivePage() {
           value={selectedYearId?.toString() ?? ""}
           onChange={(e) =>
             setSelectedYearId(
-              e.target.value ? Number(e.target.value) : undefined,
+              e.target.value ? Number(e.target.value) : undefined
             )
           }
           className="bg-white border border-gray-300 px-4 py-2"
@@ -227,7 +201,7 @@ export default function ArchivePage() {
           value={selectedCategoryId?.toString() ?? ""}
           onChange={(e) =>
             setSelectedCategoryId(
-              e.target.value ? Number(e.target.value) : undefined,
+              e.target.value ? Number(e.target.value) : undefined
             )
           }
           className="bg-white border border-gray-300 px-4 py-2"
@@ -246,7 +220,7 @@ export default function ArchivePage() {
           value={selectedAuthorId?.toString() ?? ""}
           onChange={(e) =>
             setSelectedAuthorId(
-              e.target.value ? Number(e.target.value) : undefined,
+              e.target.value ? Number(e.target.value) : undefined
             )
           }
           className="bg-white border border-gray-300 px-4 py-2"
@@ -260,7 +234,7 @@ export default function ArchivePage() {
           ))}
         </select>
 
-        {/* Search Button */}
+        {/* Apply Filters Button */}
         <button
           onClick={handleApplyFilters}
           className="bg-[#c9060a] cursor-pointer text-white px-8 py-2 font-semibold transition-all min-w-25"
@@ -269,7 +243,7 @@ export default function ArchivePage() {
           {loading ? "Searching..." : "Search"}
         </button>
 
-        {/* Clear Button */}
+        {/* Clear Filters Button */}
         <button
           onClick={handleClearFilters}
           className="bg-gray-500 text-white px-8 py-2 transition-all cursor-pointer"
@@ -279,15 +253,14 @@ export default function ArchivePage() {
         </button>
       </div>
 
-      {/* Main Content Grid */}
+      {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-4 py-12">
-        {/* Articles List */}
         <div className="lg:col-span-9 space-y-6 relative">
           <PostList
             posts={articles}
             loading={loading}
             postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
-             emptyMessage={emptyMessage}
+            emptyMessage={emptyMessage}
           />
 
           {/* Pagination */}
@@ -300,7 +273,7 @@ export default function ArchivePage() {
           )}
         </div>
 
-        {/* Right Sidebar */}
+        {/* Sidebar */}
         <RightSidebar />
       </div>
     </section>

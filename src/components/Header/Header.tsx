@@ -136,13 +136,12 @@ export default function Header({ categories }: { categories: Category[] }) {
 
           {/* CENTER — Logo */}
           <div className="absolute left-1/2 -translate-x-1/2">
-            <Link href="/">
+            <Link href="/" className="relative w-[190px] h-[80px] block">
               <Image
                 src="/main-logo.jpg"
                 alt="Lex Witness Logo"
-                width={190}
-                height={80}
-                className="w-47.5 h-auto"
+                fill
+                className="object-contain"
                 priority
               />
             </Link>
@@ -179,27 +178,25 @@ export default function Header({ categories }: { categories: Category[] }) {
 
         {/* NAV (unchanged) */}
         <nav className="border-t border-gray-300 bg-gray-100">
-        
-            <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden">
-              {categories.map((item, index) => {
-                const active = isActive(item.slug);
-                return (
-                  <li key={`${item.slug}-${index}`} className="shrink-0">
-                    <Link
-                      href={`/category/${item.slug}`}
-                      className={`hover:text-[#c9060a] transition-colors ${
-                        active
-                          ? "text-[#c9060a] border-b-2 border-[#c9060a] pb-1"
-                          : "text-[#333]"
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          
+          <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent lg:[scrollbar-width:none] lg:[-ms-overflow-style:none] lg:[&::-webkit-scrollbar]:hidden">
+            {categories.map((item, index) => {
+              const active = isActive(item.slug);
+              return (
+                <li key={`${item.slug}-${index}`} className="shrink-0">
+                  <Link
+                    href={`/category/${item.slug}`}
+                    className={`hover:text-[#c9060a] transition-colors ${
+                      active
+                        ? "text-[#c9060a] border-b-2 border-[#c9060a] pb-1"
+                        : "text-[#333]"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
       </header>
 
