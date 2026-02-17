@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 
+import HomeHeroSkeleton from "@/components/Home/HomeHeroSkeleton";
 import SubscribeBanner from "@/components/Auth/SubscribeBanner";
 import LatestEdition from "@/components/LatestEdition/LatestEdition";
 import LatestIssueWithArticles from "@/components/LatestEdition/LatestIssueWithArticles";
@@ -24,26 +25,22 @@ export const revalidate = 60;
 
 // Lazy load non-critical components
 const EditorPicks = dynamic(
-  () => import("@/components/EditorPick's/EditorPicks")
+  () => import("@/components/EditorPick's/EditorPicks"),
 );
 
 const Advertisement = dynamic(
-  () => import("@/components/HomeAdvertisment/advertisement")
+  () => import("@/components/HomeAdvertisment/advertisement"),
 );
 
 export default async function HomePage() {
   //  Parallel initial fetch
-  const [
-    latestPosts,
-    latest2Posts,
-    latest4Post,
-    latestSingle,
-  ] = await Promise.all([
-    get1LatestPost(),
-    get2LatestPost(),
-    get4LatestPost(),
-    getLatestSingleMagazines(),
-  ]);
+  const [latestPosts, latest2Posts, latest4Post, latestSingle] =
+    await Promise.all([
+      get1LatestPost(),
+      get2LatestPost(),
+      get4LatestPost(),
+      getLatestSingleMagazines(),
+    ]);
 
   // Run remaining requests in parallel (if possible)
   const [latestFive, postsResponse] = await Promise.all([
@@ -61,17 +58,29 @@ export default async function HomePage() {
 
   const articles = Array.isArray(postsResponse)
     ? postsResponse
-    : postsResponse?.data ?? [];
+    : (postsResponse?.data ?? []);
 
   return (
     <main className="bg-white">
       {/* Top Section */}
-      <section className="max-w-6xl mx-auto px-4 pt-5">
+      {/* <section className="max-w-6xl mx-auto px-4 pt-5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
           <BigFeature post={latestPosts} />
           <MiddleCards posts={latest2Posts} />
           <AsidePosts posts={latest4Post} />
         </div>
+      </section> */}
+
+      <section className="max-w-6xl mx-auto px-4 pt-5">
+        {latestPosts && latest2Posts?.length && latest4Post?.length ? (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
+            <BigFeature post={latestPosts} />
+            <MiddleCards posts={latest2Posts} />
+            <AsidePosts posts={latest4Post} />
+          </div>
+        ) : (
+          <HomeHeroSkeleton />
+        )}
       </section>
 
       {/* Advertisement */}

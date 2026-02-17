@@ -5,6 +5,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollProvider from "./providers";
+import { getCategories } from "@/lib/api/services/categories";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -15,20 +16,24 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Lex Witness | India's 1st Magazine on Legal & Corporate Affairs",
-    description: "Latest legal magazines and publications",
-   icons: {
+  description: "Latest legal magazines and publications",
+  icons: {
     icon: "/favicon.ico",
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
+  const categories = await getCategories();
+
   return (
-    <html lang="en" className={poppins.variable} suppressHydrationWarning>
-      <body className="antialiased" suppressHydrationWarning>
+    <html lang="en" className={poppins.variable}>
+      <body className="antialiased">
         <ScrollProvider>
-          <Header />
+          <Header categories={categories} />
           {children}
           <Footer />
           <ScrollToTop />
