@@ -1,35 +1,51 @@
 import Link from "next/link";
 import { Post } from "./service";
-import { Category } from "@/types";
-
 
 export default function AsidePosts({ posts }: { posts: Post[] }) {
+  if (!posts?.length) return null;
+
   return (
-    <aside className="lg:col-span-3 border border-gray-200 px-3 py-3text-sm">
-      {posts.map((post, index) => (
-        <div key={post.id}>
-          <Link 
-          href={`/category/${post?.category?.slug}`}
-          className="text-[#c9060a] mt-1 text-[14px] font-medium">
-            {post.category?.name}
-          </Link>
+    <aside className="lg:col-span-3 border border-gray-200 px-3 pt-3 text-sm">
+      {posts.map((post, index) => {
+        const categorySlug = post.category?.slug;
+        const postSlug = post.slug;
 
-          <Link href={`/${post.slug}`}>
-            <p className="text-[#333333] text-[14px] font-medium cursor-pointer hover:text-black transition">
-              {post.title}
-            </p>
-          </Link>
+        return (
+          <div key={post.id} className="pb-2">
+            
+            {/* Category */}
+            {categorySlug && (
+              <Link
+                href={`/category/${categorySlug}`}
+                className="text-[#c9060a] text-[14px] font-medium"
+              >
+                {post.category?.name}
+              </Link>
+            )}
 
-          <p className="text-gray-400 text-[12px] font-medium mt-1">
-            {post.publish_date}
-          </p>
+            {/* Title */}
+            {postSlug && (
+              <Link href={`/${postSlug}`}>
+                <p className="text-[#333333] text-[14px] font-normal cursor-pointer hover:text-black transition-colors">
+                  {post.title}
+                </p>
+              </Link>
+            )}
 
-          {/* Show HR only if NOT last item */}
-          {index !== posts.length - 1 && (
-            <hr className="mt-2 border-dashed border-gray-200" />
-          )}
-        </div>
-      ))}
+            {/* Date */}
+            {post.publish_date && (
+              <p className="text-gray-400 text-[12px] font-medium">
+                {post.publish_date}
+              </p>
+            )}
+
+            {/* Divider */}
+            {index !== posts.length - 1 && (
+              <hr className="mt-2 border-dashed border-gray-200" />
+            )}
+          </div>
+        );
+      })}
     </aside>
   );
 }
