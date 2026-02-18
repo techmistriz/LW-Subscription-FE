@@ -8,16 +8,14 @@ import {
   Search,
   Menu,
   User,
-  NewspaperIcon,
   X,
-  User2,
   LogOut,
 } from "lucide-react";
 import { Facebook, Instagram } from "lucide-react";
 
 import SearchOverlay from "../SearchOverlay";
-import { getCategories } from "@/lib/api/services/categories";
-import { NavSkeleton } from "../Skeletons/skeleton";
+// import { getCategories } from "@/lib/api/services/categories";
+// import { NavSkeleton } from "../Skeletons/skeleton";
 import { useRouter } from "next/navigation";
 
 interface Category {
