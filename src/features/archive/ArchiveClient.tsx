@@ -128,29 +128,29 @@ export default function ArchivePage() {
     }
   }, [searchTerm, year, categoryId, authorId, currentPage]);
 
-    //  CLEAR FILTERS, Resets state and navigates to base archive
-  const handleClearFilters = () => {
-    setLoading(true);
-    setSelectedYearId(undefined);
-    setSelectedCategoryId(undefined);
-    setSelectedAuthorId(undefined);
-    router.push("/archive");
-  };
-
-    //  APPLY FILTERS, Updates URL query params
+  
+  
+  //  APPLY FILTERS, Updates URL query params
   const handleApplyFilters = () => {
-    setLoading(true);
     const params = new URLSearchParams();
-
+    
     if (selectedYearId) params.set("year", selectedYearId.toString());
     if (selectedCategoryId)
       params.set("category_id", selectedCategoryId.toString());
     if (selectedAuthorId)
       params.set("author_id", selectedAuthorId.toString());
-
+    
     router.push(`/archive?${params.toString()}`);
   };
-
+  
+  //  CLEAR FILTERS, Resets state and navigates to base archive
+const handleClearFilters = () => {
+setSelectedYearId(undefined);
+setSelectedCategoryId(undefined);
+setSelectedAuthorId(undefined);
+router.push("/archive");
+};
+  
     
   // Load dropdown data once
   useEffect(() => {
