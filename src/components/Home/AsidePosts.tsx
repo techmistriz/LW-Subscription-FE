@@ -26,7 +26,7 @@ export default function AsidePosts({ posts }: { posts: Post[] }) {
             {/* Title */}
             {postSlug && (
               <Link href={`/${postSlug}`}>
-                <p className="text-[#333333] text-[14px] font-normal cursor-pointer hover:text-black transition-colors">
+                <p className="text-[#333333] text-[14px] font-normal cursor-pointer hover:text-black transition-colors line-clamp-2">
                   {post.title}
                 </p>
               </Link>
