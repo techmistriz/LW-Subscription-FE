@@ -57,7 +57,7 @@ export default function PostList({
       </div>
     );
   }
-
+console.log(posts)
   return (
     <div className="space-y-6">
       <hr className="border-gray-200" />
@@ -68,18 +68,33 @@ export default function PostList({
           className="flex gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
         >
           <div className="w-[180px] h-[120px] shrink-0 overflow-hidden">
-            <Link
-              href={`/${article.slug}`}
-              className="relative block w-full h-full"
-            >
-              <Image
-                src={getImageUrl(article.image)}
-                alt={article.title}
-                fill
-                className="object-cover"
-                sizes="180px"
-              />
-            </Link>
+            {article.image ? (
+              <Link
+                href={`/${article.slug}`}
+                className="relative block w-full h-full"
+              >
+                <Image
+                  src={getImageUrl(article.image)}
+                  alt={article.title}
+                  fill
+                  className="object-cover"
+                  sizes="180px"
+                />
+              </Link>
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <div className="w-22 h-16 bg-gray-300 rounded-sm flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-8 h-8 text-gray-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 4a1 1 0 110 2 1 1 0 010-2zm-2 7l3-4 2 3 3-4 4 5H5z" />
+                  </svg>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex-1 min-w-0">
