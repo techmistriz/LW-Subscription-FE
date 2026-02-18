@@ -187,7 +187,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                     href={`/category/${item.slug}`}
                     className={`hover:text-[#c9060a] transition-colors ${
                       active
-                        ? "text-[#c9060a] border-b-2 border-[#c9060a] pb-1"
+                        ? "text-[#c9060a]  border-[#c9060a] pb-1"
                         : "text-[#333]"
                     }`}
                   >

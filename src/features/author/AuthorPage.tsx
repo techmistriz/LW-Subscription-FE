@@ -14,10 +14,6 @@ import YearFilter from "@/components/Common/YearFilter";
 import PostList from "@/components/Common/PostList";
 import Pagination from "@/components/Pagination/Pagination";
 
-interface Year {
-  id: number;
-  name: number | string;
-}
 
 interface Post {
   id: number;
@@ -45,7 +41,7 @@ export default function AuthorPage() {
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [years, setYears] = useState<Year[]>([]);
+  const [years, setYears] = useState<number[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
@@ -148,7 +144,7 @@ export default function AuthorPage() {
                 emptyMessage={
                   selectedYear
                     ? `${authorTitle} has not published any posts in ${
-                        years.find((y) => y.id === selectedYear)?.name
+                        years.find((y) => y === selectedYear)
                       }`
                     : `${authorTitle} has not published any posts yet`
                 }
