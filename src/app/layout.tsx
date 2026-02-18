@@ -6,6 +6,7 @@ import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollProvider from "./providers";
 import { getCategories } from "@/lib/api/services/categories";
+import LoaderOverlay from "@/components/LoaderOverlay/LoaderOverlay";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default async function RootLayout({
       <body className="antialiased">
         <ScrollProvider>
           <Header categories={categories} />
+        {/* <LoaderOverlay/> */}
           {children}
           <Footer />
           <ScrollToTop />
