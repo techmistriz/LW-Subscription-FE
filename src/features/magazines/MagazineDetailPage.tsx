@@ -55,6 +55,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       ? stripInlineStyles(data.description)
       : "<p>Description not available.</p>";
 
+      console.log(magazine)
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
       {/* Main magazine content */}
@@ -79,11 +80,15 @@ export default async function MagazineDetailPage({ params }: Props) {
           </div>
 
           {/* Magazine details */}
-          <div className="space-y-4 flex-1">
-            <h1 className="font-semibold text-2xl">
-              {data.magazine_name || data.title}
+          <div className="space-y-2 -mt-18 flex-1">
+            {data.magazine_name && (
+              <h1 className="font-semibold text-2xl">
+              {data.magazine_name}
             </h1>
-            <p className="border-b border-gray-300 text-lg">{data.title}</p>
+            )}
+            <p className=" border-gray-300 text-lg">{data.title}</p>
+            <hr className="h-0.5 bg-gray-300 border-0" />
+
             <p className="text-[#c9060a]">Magazine Details</p>
 
             {/* Magazine description */}

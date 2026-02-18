@@ -9,7 +9,7 @@ export async function getMagazines(
   year?: number,
   page: number = 1,
   limit: number = 10,
-  per_page: number = 10,
+  per_page: number = 20,
 ): Promise<PaginatedResponse<Magazine>> {
   try {
     const params: Record<string, number> = { page, limit, per_page };

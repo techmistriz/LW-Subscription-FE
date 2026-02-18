@@ -34,7 +34,7 @@ const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 export default function AuthorPage() {
   const params = useParams();
   const authorSlug = params?.author as string;
-
+console.log(authorSlug)
   const authorName = authorSlug?.replace(/-/g, " ") || "";
   const authorTitle = toTitleCase(authorName);
 
