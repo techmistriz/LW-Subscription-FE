@@ -171,10 +171,10 @@ export default function ArticleDetailPage() {
   }
 
   // Generate image URL with fallback
-  const getImageUrl = (image?: string) => {
-    if (!image) return "/placeholder.jpg";
-    return image.startsWith("http") ? image : `${postBaseUrl}/${image}`;
-  };
+  // const getImageUrl = (image?: string) => {
+  //   if (!image) return "/placeholder.jpg";
+  //   return image.startsWith("http") ? image : `${postBaseUrl}/${image}`;
+  // };
 
   // Generate author avatar URL
   const getAuthorAvatar = (avatar?: string, name?: string) => {
@@ -214,8 +214,6 @@ export default function ArticleDetailPage() {
   const categoryTitle = toTitleCase(
     article.category?.slug || (category as string) || "",
   );
-
-
 
   return (
     <section className="bg-white">
@@ -282,16 +280,22 @@ export default function ArticleDetailPage() {
           </div>
 
           {/* Featured image */}
-          <div className="relative w-full h-100 mt-3 mb-6   overflow-hidden">
-            <Image
-              src={getImageUrl(article.image)}
-              alt={article.title || "article img"}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 800px"
-            />
-          </div>
+          {article.image && (
+            <div className="relative w-full h-[400px] mt-3 mb-6 overflow-hidden">
+              <Image
+                src={
+                  article.image.startsWith("http")
+                    ? article.image
+                    : `${postBaseUrl}/${article.image}`
+                }
+                alt={article.title || "article image"}
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 100vw, 800px"
+              />
+            </div>
+          )}
 
           {/* Article content */}
           <div
@@ -344,20 +348,39 @@ export default function ArticleDetailPage() {
                   <Link
                     key={post.id}
                     href={`/${post.slug}`}
-                    className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-start transition-none hover:shadow-gray-400 hover:shadow-md cursor-pointer group"
+                    className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-start hover:shadow-gray-400 hover:shadow-md cursor-pointer group"
                   >
                     <div className="h-40 w-full relative bg-white">
-                      <Image
-                        src={getImageUrl(post.image)}
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                        sizes="300px"
-                      />
+                      {post.image ? (
+                        <Image
+                          src={
+                            post.image.startsWith("https")
+                              ? post.image
+                              : `${postBaseUrl}/${post.image}`
+                          }
+                          alt={post.title}
+                          fill
+                          className="object-cover"
+                          sizes="300px"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                          <div className="w-20 h-14 bg-gray-300 rounded-sm flex items-center justify-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-8 h-8 text-gray-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 4a1 1 0 110 2 1 1 0 010-2zm-2 7l3-4 2 3 3-4 4 5H5z" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="px-3 text[14px] font-semibold py-4 text-start border-t border-gray-400 w-full">
-                      <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800 hover:text-[#c9060a] transition-colors">
+                    <div className="px-3 py-4 text-start border-t border-gray-400 w-full">
+                      <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800 group-hover:text-[#c9060a] transition-colors">
                         {post.title}
                       </h4>
 

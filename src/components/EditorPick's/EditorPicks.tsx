@@ -39,7 +39,7 @@ export default function EditorPicks() {
     fetchPosts();
   }, []);
 
-  console.log(posts)
+  console.log(posts);
   const getImageUrl = (image?: string) => {
     if (!image) return "/placeholder.jpg";
     return image.startsWith("http") ? image : `${postBaseUrl}/${image}`;
@@ -66,18 +66,17 @@ export default function EditorPicks() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 cursor-pointer">
           {posts.map((item) => (
             <Link key={item.id} href={`/${item.slug}`}>
-             <EditorPickCard
-  img={
-    item.image
-      ? item.image.startsWith("http")
-        ? item.image
-        : `${postBaseUrl}/${item.image}`
-      : undefined
-  }
-  title={item.title}
-  author={item?.author?.name || ""}
-/>
-
+              <EditorPickCard
+                img={
+                  item.image
+                    ? item.image.startsWith("http")
+                      ? item.image
+                      : `${postBaseUrl}/${item.image}`
+                    : undefined
+                }
+                title={item.title}
+                author={item?.author?.name || ""}
+              />
             </Link>
           ))}
         </div>
