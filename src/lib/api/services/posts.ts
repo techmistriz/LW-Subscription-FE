@@ -36,7 +36,7 @@ export async function getPosts({
 
   const response = await api.get("/posts", { params });
 
-  // console.log("Posts API response:", response.data);
+  console.log("Posts API response:", response.data);
   return response.data;
 }
 
@@ -87,17 +87,17 @@ export async function getRelatedPosts(params: {
 
 // Editor picks posts (limited 5)
 export async function getEditorPicksPosts(params?: {
-  search?: string;
+  category_id?: number;
   limit?: number;
 }) {
   const response = await api.get("/posts", {
     params: {
-      search: params?.search ?? "Editor's Pick",
+      category_id: 5 ,
       limit: params?.limit ?? 5,
       latest: 1,
     },
   });
-
+console.log(response.data)
   return response.data?.data || [];
 }
 
