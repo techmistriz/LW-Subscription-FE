@@ -1,24 +1,19 @@
 "use client";
 
-
 import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { getMagazines } from "@/lib/api/services/magazines";
 import { getYears } from "@/lib/api/services/years";
-import { MagazineSkeleton } from "@/components/Skeletons/magazineSkeleton";
+// import { MagazineSkeleton } from "@/components/Skeletons/magazineSkeleton";
 import Pagination from "@/components/Pagination/Pagination";
 import { Magazine, Year } from "@/types";
 import Banner from "@/components/Common/Banner";
 import YearFilter from "@/components/Common/YearFilter";
+import PageLoader from "@/components/Loader/PageLoader";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
-const bannerImg: React.CSSProperties = {
-  backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-};
 
 /**
  * MagazinesPage component displays all magazine editions with year filtering
@@ -48,10 +43,6 @@ export default function MagazinesPage({
       setLoading(true);
       try {
         const result = await getMagazines(year, pageNumber);
-        // console.log("MAG API RESULT:", result);
-
-        // console.log("Magazine Pagination META:", result.meta);
-
         setMagazines(result.data ?? []);
         setLastPage(result.meta?.paging?.last_page ?? 1);
         setPage(result.meta?.paging?.current_page ?? 1);
@@ -100,12 +91,6 @@ export default function MagazinesPage({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filter handlers
-  const handleYearSelect = (yearId: number | null) => {
-    setSelectedYearId(yearId);
-    setYearOpen(false);
-  };
-
   const handleApplyFilter = () => {
     fetchMagazines(selectedYearId ?? undefined, 1);
   };
@@ -113,7 +98,6 @@ export default function MagazinesPage({
   const selectedYearLabel = selectedYearId
     ? years.find((y) => y === selectedYearId)
     : null;
-    
 
   return (
     <section className="pb-8">
@@ -123,7 +107,9 @@ export default function MagazinesPage({
       {/* Main content */}
       <div className="max-w-6xl mx-auto px-4">
         {/* Page header */}
-        <h2 className="mt-6 text-2xl font-semibold text-[#333]">ALL EDITIONS MAGAZINE</h2>
+        <h2 className="mt-6 text-2xl font-semibold text-[#333]">
+          ALL EDITIONS MAGAZINE
+        </h2>
         <div className="w-14 h-1.5 bg-[#c9060a] mt-1"></div>
 
         {/* Filter controls */}
@@ -134,16 +120,20 @@ export default function MagazinesPage({
           onApply={handleApplyFilter}
           // disabled={loading || !authorId}
         />
-              <hr className="border-gray-200 mb-6" />
-
+        <hr className="border-gray-200 mb-6" />
 
         {/* Magazines grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {loading ? (
+          {/* {loading ? (
             // Loading skeleton
             Array.from({ length: 10 }).map((_, i) => (
               <MagazineSkeleton key={i} />
-            ))
+            )) */}
+
+          {loading ? (
+            <div className="col-span-full flex justify-center py-16">
+              <PageLoader />
+            </div>
           ) : magazines.length === 0 ? (
             // Empty state
             <p className="col-span-full text-center text-[#333333] py-12">
