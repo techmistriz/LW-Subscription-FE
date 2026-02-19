@@ -10,6 +10,8 @@ import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
 import { stripInlineStyles, toTitleCase } from "@/lib/utils/helper/toTitleCase";
 import TestimonialCard from "@/components/Verdict/Verdict";
 import { Article } from "@/types";
+import { Author } from "@/types";
+
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function ArticleDetailPage() {
@@ -187,9 +189,15 @@ export default function ArticleDetailPage() {
     }
   };
 
-  const categoryTitle = toTitleCase(
-    article.category?.slug || (category as string) || "",
-  );
+const categoryTitle = toTitleCase(
+  article.category
+    ? typeof article.category === "string"
+      ? article.category
+      : article.category.slug
+    : category || ""
+);
+
+
   console.log("Singlepage", article);
 
   return (
@@ -318,24 +326,22 @@ export default function ArticleDetailPage() {
               <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
               <div className="w-10 h-1 bg-[#c9060a]" />
               <div className="border border-gray-300 mt-2 p-4 flex gap-4   transition-none hover:shadow-[0_-6px_15px_rgba(0,0,0,0.15),0_6px_15px_rgba(0,0,0,0.15)]">
-                <div className="relative w-24 h-24 overflow-hidden bg-gray-200 shrink-0 ">
-                  <Image
-                    src={getAuthorAvatar(
-                      article.author.avatar,
-                      article.author.name,
-                    )}
-                    alt={article.author.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+               <div className="relative w-24 h-24 overflow-hidden bg-gray-200 shrink-0 ">
+  <Image
+    src={getAuthorAvatar(article.author?.avatar, article.author?.name)}
+    alt={article.author?.name || "Author"}
+    fill
+    className="object-cover"
+  />
+</div>
+
                 <div className="flex-1 min-w-0 ">
                   <h4 className="font-semibold text-base mb-2">
                     {article.author.name.toUpperCase()}
                   </h4>
                   <p className="text-xs text-[#333333] leading-5">
                     {article.author.bio ||
-                      `${article.author.name} is a contributor at Lex Witness.`}
+                      `${article.author.name || "Author"} is a contributor at Lex Witness.`}
                   </p>
                 </div>
               </div>

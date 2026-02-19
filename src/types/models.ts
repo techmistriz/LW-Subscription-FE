@@ -96,6 +96,8 @@ export interface Author {
   description: string;
   slug: string;
   image?: string;
+  avatar?:string;
+  bio?: string;
   role_id: string;
   title: string;
   excerpt?: string;
