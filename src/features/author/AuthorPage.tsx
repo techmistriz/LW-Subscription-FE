@@ -71,7 +71,7 @@ console.log(authorSlug)
         const response = await getPosts({
           author_id: authorId,
           page,
-          ...(year ? { year_id: year } : {}),
+          ...(year ? { year } : {}),
         });
         console.log(response);
 

@@ -65,9 +65,9 @@ console.log(posts)
       {posts.map((article) => (
         <div
           key={article.id}
-          className="flex gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
+          className="flex flex-col lg:flex-row gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
         >
-          <div className="w-[180px] h-[120px] shrink-0 overflow-hidden">
+          <div className="w-full h-55 lg:w-45 lg:h-30 shrink-0 overflow-hidden">
             {article.image ? (
               <Link
                 href={`/${article.slug}`}

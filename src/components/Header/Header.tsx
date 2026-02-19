@@ -71,23 +71,7 @@ export default function Header({ categories }: { categories: Category[] }) {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const data = await getCategories();
-
-  //       setNavCategories(data);
-  //     } catch (error) {
-  //       console.error("Failed to load categories:", error);
-  //       setNavCategories([]);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-  // console.log("nav", navCategories);
+   
   useEffect(() => {
     document.body.style.overflow = searchOpen ? "hidden" : "auto";
   }, [searchOpen]);

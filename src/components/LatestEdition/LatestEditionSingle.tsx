@@ -20,7 +20,7 @@ export default function LatestIssue({ magazine, showTitle = true }: Props) {
 
       <Link
         href={`/magazines/${magazine.slug}`}
-        className="block relative w-[255px] aspect-[3/4]"
+        className="block relative w-full aspect-3/4"
       >
         <Image
           src={

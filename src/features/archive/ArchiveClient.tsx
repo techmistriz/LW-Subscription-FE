@@ -23,14 +23,13 @@ import PostList from "@/components/Common/PostList";
  * - URL state synchronization
  */
 export default function ArchivePage() {
-
   //     ROUTER & URL PARAMS
   const params = useParams<{ slug?: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlSlug = params.slug as string | undefined;
 
-//     COMPONENT STATE
+  //     COMPONENT STATE
   const [articles, setArticles] = useState<Article[]>([]);
   const [years, setYears] = useState<Year[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -38,7 +37,7 @@ export default function ArchivePage() {
   const [meta, setMeta] = useState<PaginationMeta>();
   const [loading, setLoading] = useState(false);
 
-   //  READ URL QUERY PARAMETERS
+  //  READ URL QUERY PARAMETERS
   const year = searchParams.get("year")
     ? Number(searchParams.get("year"))
     : undefined;
@@ -54,10 +53,16 @@ export default function ArchivePage() {
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchTerm = searchParams.get("search") || "";
 
-    //  LOCAL FILTER STATE (UI CONTROL)
-  const [selectedYearId, setSelectedYearId] = useState<number | undefined>(year);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(categoryId);
-  const [selectedAuthorId, setSelectedAuthorId] = useState<number | undefined>(authorId);
+  //  LOCAL FILTER STATE (UI CONTROL)
+  const [selectedYearId, setSelectedYearId] = useState<number | undefined>(
+    year,
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >(categoryId);
+  const [selectedAuthorId, setSelectedAuthorId] = useState<number | undefined>(
+    authorId,
+  );
 
   // Determines if any filter or search is active
   const hasActiveFilters =
@@ -66,7 +71,7 @@ export default function ArchivePage() {
   // Total pages from API response
   const totalPages = meta?.paging?.last_page ?? 1;
 
-    //  LOAD FILTER DROPDOWN DATA, (Runs once on mount)
+  //  LOAD FILTER DROPDOWN DATA, (Runs once on mount)
   const loadFilterData = useCallback(async () => {
     try {
       const [yearsRes, authorsRes, categoriesRes] = await Promise.all([
@@ -83,7 +88,7 @@ export default function ArchivePage() {
     }
   }, []);
 
-    //  FETCH ARTICLES, Runs when filters/search/page changes
+  //  FETCH ARTICLES, Runs when filters/search/page changes
   const fetchArticles = useCallback(async () => {
     setLoading(true);
 
@@ -128,30 +133,26 @@ export default function ArchivePage() {
     }
   }, [searchTerm, year, categoryId, authorId, currentPage]);
 
-  
-  
   //  APPLY FILTERS, Updates URL query params
   const handleApplyFilters = () => {
     const params = new URLSearchParams();
-    
+
     if (selectedYearId) params.set("year", selectedYearId.toString());
     if (selectedCategoryId)
       params.set("category_id", selectedCategoryId.toString());
-    if (selectedAuthorId)
-      params.set("author_id", selectedAuthorId.toString());
-    
+    if (selectedAuthorId) params.set("author_id", selectedAuthorId.toString());
+
     router.push(`/archive?${params.toString()}`);
   };
-  
+
   //  CLEAR FILTERS, Resets state and navigates to base archive
-const handleClearFilters = () => {
-setSelectedYearId(undefined);
-setSelectedCategoryId(undefined);
-setSelectedAuthorId(undefined);
-router.push("/archive");
-};
-  
-    
+  const handleClearFilters = () => {
+    setSelectedYearId(undefined);
+    setSelectedCategoryId(undefined);
+    setSelectedAuthorId(undefined);
+    router.push("/archive");
+  };
+
   // Load dropdown data once
   useEffect(() => {
     loadFilterData();
@@ -162,12 +163,12 @@ router.push("/archive");
     fetchArticles();
   }, [fetchArticles]);
 
-   //  EMPTY STATE MESSAGE
+  //  EMPTY STATE MESSAGE
   const emptyMessage = searchTerm
     ? `No results found for "${searchTerm}".`
     : hasActiveFilters
-    ? "No posts found for the selected filters."
-    : "No posts available.";
+      ? "No posts found for the selected filters."
+      : "No posts available.";
 
   //   RENDER
   return (
@@ -182,13 +183,13 @@ router.push("/archive");
           value={selectedYearId?.toString() ?? ""}
           onChange={(e) =>
             setSelectedYearId(
-              e.target.value ? Number(e.target.value) : undefined
+              e.target.value ? Number(e.target.value) : undefined,
             )
           }
           className="bg-white border border-gray-300 px-4 py-2"
           disabled={loading}
         >
-          <option value="">All Years</option>
+          <option value="">Select Year</option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -201,13 +202,13 @@ router.push("/archive");
           value={selectedCategoryId?.toString() ?? ""}
           onChange={(e) =>
             setSelectedCategoryId(
-              e.target.value ? Number(e.target.value) : undefined
+              e.target.value ? Number(e.target.value) : undefined,
             )
           }
           className="bg-white border border-gray-300 px-4 py-2"
           disabled={loading}
         >
-          <option value="">All Categories</option>
+          <option value="">Select Category</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -220,13 +221,13 @@ router.push("/archive");
           value={selectedAuthorId?.toString() ?? ""}
           onChange={(e) =>
             setSelectedAuthorId(
-              e.target.value ? Number(e.target.value) : undefined
+              e.target.value ? Number(e.target.value) : undefined,
             )
           }
           className="bg-white border border-gray-300 px-4 py-2"
           disabled={loading}
         >
-          <option value="">All Authors</option>
+          <option value="">Select Author</option>
           {authors.map((author) => (
             <option key={author.id} value={author.id}>
               {author.name}

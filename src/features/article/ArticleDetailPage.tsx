@@ -350,7 +350,7 @@ export default function ArticleDetailPage() {
                     href={`/${post.slug}`}
                     className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-start hover:shadow-gray-400 hover:shadow-md cursor-pointer group"
                   >
-                    <div className="h-40 w-full relative bg-white">
+                    <div className="h-60 lg:h-40 w-full relative bg-white">
                       {post.image ? (
                         <Image
                           src={
@@ -380,7 +380,7 @@ export default function ArticleDetailPage() {
                     </div>
 
                     <div className="px-3 py-4 text-start border-t border-gray-400 w-full">
-                      <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800 group-hover:text-[#c9060a] transition-colors">
+                      <h4 className="text-base font-medium leading-snug line-clamp-2 text-gray-800  transition-colors">
                         {post.title}
                       </h4>
 

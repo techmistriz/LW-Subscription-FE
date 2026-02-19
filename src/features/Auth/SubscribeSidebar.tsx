@@ -56,7 +56,7 @@ function SubscribeSidebar() {
       <h2 className="font-bold text-2xl">SUBSCRIBE US</h2>
       <div className="w-15 h-1 bg-[#c9060a] mb-3"></div>
 
-      <div className="bg-[#2f2f2f] p-4 w-64 h-80" >
+      <div className="w-full bg-[#2f2f2f] p-4 h-80" >
         <div className="min-h-6  ">
           {message && <p className="text-white text-sm mb-1">{message}</p>}
           {error && <p className="text-white text-sm mb-1">{error}</p>}
