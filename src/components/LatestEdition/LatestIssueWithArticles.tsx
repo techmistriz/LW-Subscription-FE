@@ -42,7 +42,7 @@ export default function LatestIssueWithArticles({ magazine, articles }: Props) {
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="-my-8 lg:col-span-3 order-2 lg:order-3 lg:-ml-3.75">
+      <div className="-my-8  lg:col-span-3 order-2 lg:order-3 lg:-ml-3.75 lg:mt-2">
         <NirmalaSitaraman />
       </div>
     </div>

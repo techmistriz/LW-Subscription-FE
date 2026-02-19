@@ -12,7 +12,7 @@ export default function LatestEdition({ magazines }: Props) {
   if (!magazines?.length) return null;
 
   return (
-    <section className="max-w-6xl mx-auto px-4 my-10">
+    <section className="max-w-6xl mx-auto px-4 my-10 lg:mt-8">
       {/* Section header */}
       <div className="text-center mb-8">
         <h2 className="text-[22px] text-[#333333] font-bold tracking-wide">

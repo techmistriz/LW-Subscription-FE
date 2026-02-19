@@ -1,4 +1,4 @@
-import ArticleDetailPage from '@/features/article/ArticleDetailPage'
+import ArticleDetailPage from '@/features/articleDetailPage/ArticleDetailPage'
 import React from 'react'
 
 function page() {

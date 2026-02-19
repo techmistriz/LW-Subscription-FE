@@ -94,7 +94,7 @@ export default async function HomePage() {
 
       {/* Latest Issue */}
       {latestSingle && (
-        <section className="max-w-6xl mx-auto px-4 py-10">
+        <section className="max-w-6xl mx-auto px-4 py-10 lg:pb-0">
           <LatestIssueWithArticles
             magazine={latestSingle}
             articles={articles}
