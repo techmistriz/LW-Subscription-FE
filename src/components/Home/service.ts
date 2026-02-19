@@ -31,7 +31,6 @@ export const get1LatestPost = async () => {
       latest: 1,
     },
   });
-  // console.log(response)
 
   return response.data?.data?.[0] || response.data?.[0] || null;
 };
@@ -58,6 +57,5 @@ export const get4LatestPost = async () => {
     },
   });
 
-  // console.log("skip 3", response)
   return response?.data?.data || [];
 };

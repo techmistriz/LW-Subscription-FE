@@ -65,9 +65,7 @@ export default function YearFilter({
               maxHeight: "250px", // Exactly 5 years (32px each)
               overflowY: "auto",
               width: "188px",
-              // left:0,
-              // right:0,
-              // boxSizing: 'border-box'
+           
             }}
           >
             <div
@@ -99,7 +97,7 @@ export default function YearFilter({
       <button
         onClick={onApply}
         disabled={disabled}
-        className="bg-[#c9060a] lg:w-47 -mt-5 cursor-pointer text-white px-6 py-2  hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="bg-[#c9060a] lg:w-47 -mt-5 lg:mt-0 cursor-pointer text-white px-6 py-2  hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Filter
       </button>

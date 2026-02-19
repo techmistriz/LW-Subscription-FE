@@ -19,7 +19,7 @@ export default function RelatedMagazineArticles({ articles }: Props) {
       {articles.slice(0, 3).map((article) => (
         <div
           key={article.id}
-          className="flex flex-col md:flex-row gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
+          className="flex flex-col  md:flex-row gap-4 border-b border-dashed border-gray-300 pb-6 last:border-b-0"
         >
           {/* Article thumbnail */}
           <Link

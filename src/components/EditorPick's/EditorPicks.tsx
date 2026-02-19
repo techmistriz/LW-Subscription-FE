@@ -39,11 +39,6 @@ export default function EditorPicks() {
     fetchPosts();
   }, []);
 
-  console.log(posts);
-  const getImageUrl = (image?: string) => {
-    if (!image) return "/placeholder.jpg";
-    return image.startsWith("http") ? image : `${postBaseUrl}/${image}`;
-  };
 
   return (
     <section className="max-w-6xl mx-auto px-4 mb-12">

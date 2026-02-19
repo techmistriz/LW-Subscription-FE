@@ -36,7 +36,6 @@ export async function getPosts({
 
   const response = await api.get("/posts", { params });
 
-  console.log("Posts API response:", response.data);
   return response.data;
 }
 
@@ -97,7 +96,6 @@ export async function getEditorPicksPosts(params?: {
       latest: 1,
     },
   });
-console.log(response.data)
   return response.data?.data || [];
 }
 

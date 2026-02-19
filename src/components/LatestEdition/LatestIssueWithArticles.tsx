@@ -19,7 +19,7 @@ export default function LatestIssueWithArticles({ magazine, articles }: Props) {
   if (!magazine) return null;
 
   return (
-    <div className="w-full space-y-12 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-8 px-4">
+    <div className="w-full space-y-12 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-2 px-4">
       {/* LEFT COLUMN */}
       <div className="lg:col-span-3 order-1">
         <LatestIssue magazine={magazine} />
@@ -42,7 +42,7 @@ export default function LatestIssueWithArticles({ magazine, articles }: Props) {
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="lg:col-span-3 order-2 lg:order-3 lg:-ml-8.75">
+      <div className="-my-8 lg:col-span-3 order-2 lg:order-3 lg:-ml-3.75">
         <NirmalaSitaraman />
       </div>
     </div>

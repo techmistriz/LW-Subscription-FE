@@ -19,7 +19,6 @@ export async function getMagazines(
     }
 
     const response = await api.get("/magazines", { params });
-    console.log(response)
     return response.data;
   } catch (error) {
     console.error("Error fetching magazines:", error);
