@@ -21,19 +21,46 @@ export type ArticleCategory =
 // ARTICLE
 export interface Article {
   id: number;
-  name?: string; //  fixed (was number)
   title: string;
   slug: string;
+
+  name?: string;
   image?: string;
-  published_at?: string;
-  authorId?: number;
+
   publish_date?: string;
+  published_at?: string;
   date?: string;
-  category?: ArticleCategory;
-  author?: Author;
+
   short_description?: string;
   excerpt?: string;
+
+  content?: string;
+  description?: string | null;
+
+  category?: ArticleCategory;
+  category_id?: number;
+
+  author?: Author;
+  authorId?: number;
+  author_id?: number;
+
+  magazine_id?: number;
+
+  // ✅ Reader Feedbacks (for verdict type posts)
+  reader_feedbacks?: ReaderFeedback[] | null;
 }
+
+
+export interface ReaderFeedback {
+  id: number;
+  reader_name: string;
+  reader_designation: string;
+  reader_feedback: string;
+  status?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
 
 // YEAR
 // export interface Year {

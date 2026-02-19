@@ -1,37 +1,40 @@
 // components/TestimonialCard.tsx
-import React from "react"
-import { Testimonial } from "@/types/testimonial"
+import React from "react";
+import { Testimonial } from "@/types/testimonial";
+import Image from "next/image";
 
 interface Props {
-  data: Testimonial
+  data: Testimonial;
 }
 
 export default function TestimonialCard({ data }: Props) {
   return (
     <div className="relative bg-gray-100 rounded-xl p-10 max-w-4xl mx-auto">
-      
-      {/* Quote Icon Left */}
-      <span className="absolute top-6 left-6 text-red-600 text-5xl font-bold">
-        &ldquo;
-      </span>
+      {/* Left Quote Image */}
+      <div className="absolute top-10 left-6">
+        <Image src="/quote-left.png" alt="Quote" width={30} height={30} />
+      </div>
 
-      {/* Quote Icon Right */}
-      <span className="absolute bottom-6 right-6 text-red-600 text-5xl font-bold">
-        &rdquo;
-      </span>
+      {/* Right Quote Image */}
+      <div className="absolute top-10 right-6 rotate-180">
+        <Image src="/quote-right.png" alt="Quote" width={30} height={30} />
+      </div>
 
-      <p className="text-gray-700 text-lg leading-relaxed mb-8 whitespace-pre-line">
-        {data.quote}
+      <p className="text-gray-700 italic text-md leading-relaxed  w-180 ml-6 mb-2 whitespace-pre-line wrap-break-word">
+        {data.reader_feedback}
       </p>
 
       <div>
-        <h4 className="font-semibold text-gray-900 text-lg">
-          {data.author}
+        <h4 className="font-semibold ml-6 text-gray-900 text-md">
+          {data.reader_name}
         </h4>
-        <p className="text-gray-600">
-          {data.designation} {data.company && `• ${data.company}`}
-        </p>
+
+        {data.reader_designation && (
+          <p className="text-gray-600 ml-6 text-xs">
+            {data.reader_designation}
+          </p>
+        )}
       </div>
     </div>
-  )
+  );
 }

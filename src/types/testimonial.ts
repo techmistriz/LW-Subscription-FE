@@ -1,11 +1,7 @@
 // types/testimonial.ts
 
 export interface Testimonial {
-  id?: string;            
-  quote: string;        
-  author: string;         
-  designation?: string;   
-  company?: string;       
-  image?: string;         
-  createdAt?: string;     
+  reader_feedback: string;
+  reader_name: string;
+  reader_designation?: string;
 }

@@ -43,6 +43,7 @@ export async function getPosts({
 export async function getArticleBySlug(slug: string) {
   try {
     const response = await api.get(`/posts/${slug}`);
+    console.log(response)
     return response.data.data || response.data.post || response.data;
   } catch (error) {
     console.error("getArticleBySlug error:", error);

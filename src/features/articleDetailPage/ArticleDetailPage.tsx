@@ -9,28 +9,8 @@ import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
 import { stripInlineStyles, toTitleCase } from "@/lib/utils/helper/toTitleCase";
 import TestimonialCard from "@/components/Verdict/Verdict";
-
+import { Article } from "@/types";
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
-
-interface Article {
-  id: number;
-  title: string;
-  slug: string;
-  content?: string;
-  description?: string;
-  image?: string;
-  publish_date?: string;
-  published_at?: string;
-  category?: { slug?: string };
-  category_id?: number;
-  author_id?: number;
-  magazine_id?: number;
-  author?: {
-    name: string;
-    avatar?: string;
-    bio?: string;
-  };
-}
 
 export default function ArticleDetailPage() {
   const { category, slug } = useParams<{ category: string; slug: string }>();
@@ -210,6 +190,7 @@ export default function ArticleDetailPage() {
   const categoryTitle = toTitleCase(
     article.category?.slug || (category as string) || "",
   );
+  console.log("Singlepage", article);
 
   return (
     <section className="bg-white">
@@ -294,42 +275,42 @@ export default function ArticleDetailPage() {
           )}
 
           {/* Article content */}
-          <div
+          {/* <div
             className="text-sm text-[#333333] leading-7 space-y-4 prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{
               __html: stripInlineStyles(
                 article.description || article.content || "",
               ),
             }}
-          />
+          /> */}
 
-          {/* {article.category?.slug === "verdict" ? (
-            <div className="space-y-8">
-              {(Array.isArray(article.description)
-                ? article.description
-                : [article.description]
-              ).map((item: any, index: number) => (
-                <TestimonialCard
-                  key={index}
-                  data={{
-                    quote: item?.quote || item || "",
-                    author: item?.author?.name || item?.author || "Anonymous",
-                    designation: item?.designation,
-                    company: item?.company,
-                  }}
-                />
-              ))}
-            </div>
-          ) : (
-            <div
-              className="text-sm text-[#333333] leading-7 space-y-4 prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{
-                __html: stripInlineStyles(
-                  article.description || article.content || "",
-                ),
-              }}
-            />
-          )} */}
+          <>
+            {/* Testimonials */}
+            {Array.isArray(article.reader_feedbacks) &&
+              article.reader_feedbacks.length > 0 && (
+                <div className="space-y-8 my-10">
+                  {article.reader_feedbacks.map((item) => (
+                    <TestimonialCard
+                      key={item.id}
+                      data={{
+                        reader_feedback: item.reader_feedback,
+                        reader_name: item.reader_name,
+                        reader_designation: item.reader_designation,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+            {/* Description */}
+            {article.description && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: stripInlineStyles(article.description),
+                }}
+              />
+            )}
+          </>
 
           {/* Author section */}
           {article.author && (
