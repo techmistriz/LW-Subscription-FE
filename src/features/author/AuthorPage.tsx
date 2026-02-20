@@ -45,7 +45,7 @@ export default function AuthorPage() {
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
 
-  // 🔹 Load Author
+  //  Load Author
   const loadAuthor = useCallback(async () => {
     if (!authorSlug) return;
 
@@ -59,7 +59,7 @@ export default function AuthorPage() {
     }
   }, [authorSlug]);
 
-  // 🔹 Fetch Posts
+  //  Fetch Posts
   const fetchPosts = useCallback(
     async (page: number = 1, year: number | null = null) => {
       if (!authorId) return;
@@ -87,7 +87,7 @@ export default function AuthorPage() {
     [authorId],
   );
 
-  // 🔹 Load Years
+  //  Load Years
   const loadYears = useCallback(async () => {
     try {
       const data = await getYears();
@@ -108,7 +108,7 @@ export default function AuthorPage() {
     }
   }, [authorId, fetchPosts]);
 
-  // 🔹 Apply Filter (Manual)
+  //  Apply Filter (Manual)
   const handleApplyFilter = () => {
     fetchPosts(1, selectedYear);
   };

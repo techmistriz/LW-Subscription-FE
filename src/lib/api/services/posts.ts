@@ -9,7 +9,8 @@ interface GetPostsParams {
   magazine_id?: number;
   page?: number;
   limit?: number;
-  per_page?:number
+  per_page?:number;
+  latest?:number;
 }
 
 // Main posts fetch - handles ALL search/filter cases
@@ -21,6 +22,7 @@ export async function getPosts({
   magazine_id,
   page = 1,
   per_page = 10,
+  latest=1,
 }: GetPostsParams = {}) {
   const params: any = {
     page,
@@ -30,6 +32,7 @@ export async function getPosts({
     ...(category_id && { category_id }),
     ...(year && { year}),
     ...(author_id && { author_id }),
+    latest
   };
 
   // console.log("Posts API params:", params); // Debug log
