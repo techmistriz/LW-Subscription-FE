@@ -21,7 +21,7 @@ export default function Pagination({
 
   const handlePageChange = (page: number) => {
   if (onPageChange) {
-    onPageChange(page); // 👈 use custom handler
+    onPageChange(page); //  use custom handler
     return;
   }
 
