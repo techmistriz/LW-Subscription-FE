@@ -5,11 +5,6 @@ import { useState, FormEvent } from "react";
 import { loginUser } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
 
-const bannerImg: React.CSSProperties = {
-  backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-};
 
 export default function SignInForm() {
   const [email, setEmail] = useState("");

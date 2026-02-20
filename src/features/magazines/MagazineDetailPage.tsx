@@ -18,10 +18,8 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-
 export default async function MagazineDetailPage({ params }: Props) {
   const { slug } = await params;
-
 
   let magazine;
   let latestMagazines = [];
@@ -81,9 +79,7 @@ export default async function MagazineDetailPage({ params }: Props) {
           {/* Magazine details */}
           <div className="space-y-2 -mt-18 flex-1">
             {data.magazine_name && (
-              <h1 className="font-semibold text-2xl">
-              {data.magazine_name}
-            </h1>
+              <h1 className="font-semibold text-2xl">{data.magazine_name}</h1>
             )}
             <p className=" border-gray-300 text-lg">{data.title}</p>
             <hr className="h-0.5 bg-gray-300 border-0" />

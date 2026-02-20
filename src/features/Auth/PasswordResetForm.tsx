@@ -1,15 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { forgotPassword } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
 
-const bannerImg: React.CSSProperties = {
-  backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-};
 
 export default function PasswordResetForm() {
   const [email, setEmail] = useState("");

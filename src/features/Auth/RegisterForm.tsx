@@ -4,23 +4,7 @@ import Link from "next/link";
 import { useState, FormEvent, ChangeEvent } from "react";
 import { registerUser } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
-
-const bannerImg: React.CSSProperties = {
-  backgroundImage: `url(${process.env.NEXT_PUBLIC_BANNER_BASE_URL})`,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-};
-
-interface FormData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-  contact: string;
-  plan: string;
-  auto_renew: boolean;
-}
+import { FormData } from "@/types";
 
 const initialFormState: FormData = {
   first_name: "",

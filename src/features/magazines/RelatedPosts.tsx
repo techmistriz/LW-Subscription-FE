@@ -44,7 +44,9 @@ export default function RelatedPosts({ magazineId }: { magazineId: number }) {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-4">
           <PageLoader />
-          <span className="mt-4 text-gray-500 text-lg">Loading articles...</span>
+          <span className="mt-4 text-gray-500 text-lg">
+            Loading articles...
+          </span>
         </div>
       ) : posts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
