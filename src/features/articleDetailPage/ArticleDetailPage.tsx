@@ -10,14 +10,13 @@ import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
 import { stripInlineStyles, toTitleCase } from "@/lib/utils/helper/toTitleCase";
 import TestimonialCard from "@/components/Verdict/Verdict";
 import { Article } from "@/types";
-import { Author } from "@/types";
-
+import "./style.css"
+import { formatArticleHTML } from "@/lib/utils/helper/formatArticle";
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function ArticleDetailPage() {
   const { category, slug } = useParams<{ category: string; slug: string }>();
-  console.log(category);
-  console.log(slug);
+
   // Article data states
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
@@ -265,7 +264,7 @@ export default function ArticleDetailPage() {
 
           {/* Featured image */}
           {article.image && (
-            <div className="relative w-full h-[400px] mt-3 mb-6 overflow-hidden">
+            <div className="relative w-full mt-3 mb-6">
               <Image
                 src={
                   article.image.startsWith("http")
@@ -273,10 +272,10 @@ export default function ArticleDetailPage() {
                     : `${postBaseUrl}/${article.image}`
                 }
                 alt={article.title || "article image"}
-                fill
-                className="object-cover"
+                width={1200} // approximate image width
+                height={800} // approximate image height
+                className="w-full h-auto object-cover"
                 priority
-                sizes="(max-width: 768px) 100vw, 800px"
               />
             </div>
           )}
@@ -293,30 +292,31 @@ export default function ArticleDetailPage() {
 
           <>
             {/* Testimonials */}
-            {Array.isArray(article.reader_feedbacks) &&
-              article.reader_feedbacks.length > 0 && (
-                <div className="space-y-8 my-10">
-                  {article.reader_feedbacks.map((item) => (
-                    <TestimonialCard
-                      key={item.id}
-                      data={{
-                        reader_feedback: item.reader_feedback,
-                        reader_name: item.reader_name,
-                        reader_designation: item.reader_designation,
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-
-            {/* Description */}
-            {article.description && (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: stripInlineStyles(article.description),
+              {Array.isArray(article.reader_feedbacks) &&
+        article.reader_feedbacks.length > 0 && (
+          <div className="my-12 space-y-8">
+            {article.reader_feedbacks.map((item: any) => (
+              <TestimonialCard
+                key={item.id}
+                data={{
+                  reader_feedback: item.reader_feedback,
+                  reader_name: item.reader_name,
+                  reader_designation: item.reader_designation,
                 }}
               />
-            )}
+            ))}
+          </div>
+        )}
+
+      {/* Article Description */}
+      {article.description && (
+        <div
+          className="article-content text-[15px] font-normal leading-7 text-gray-800"
+          dangerouslySetInnerHTML={{
+            __html: formatArticleHTML(article.description),
+          }}
+        />
+      )}
           </>
 
           {/* Author section */}
@@ -352,7 +352,7 @@ export default function ArticleDetailPage() {
 
           {/* Related articles section */}
           {relatedPosts.length > 0 && (
-            <div className="lg:col-span-12 mt-16 mb-8">
+            <div className="lg:col-span-12  my-8">
               <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
               <div className="w-10 h-1 bg-[#c9060a] mb-4" />
 
