@@ -9,7 +9,7 @@ interface TestimonialProps {
 }
 
 export default function TestimonialCard({ data }: TestimonialProps) {
-  if (!data) return null; // Safety check
+  if (!data) return null;
 
   return (
     <div className="relative bg-gray-100 rounded-xl p-6 sm:p-8 md:p-10 max-w-4xl mx-auto">
@@ -38,7 +38,7 @@ export default function TestimonialCard({ data }: TestimonialProps) {
       </p>
 
       {/* Author */}
-      <div className="ml-4 sm:ml-6 md:ml-6">
+      <div className="ml-5 sm:ml-6 md:ml-6">
         <h4 className="font-semibold text-gray-900 text-sm sm:text-md md:text-lg">
           {data.reader_name || "Anonymous"}
         </h4>

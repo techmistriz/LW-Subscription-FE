@@ -4,13 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Search,
-  Menu,
-  User,
-  X,
-  LogOut,
-} from "lucide-react";
+import { Search, Menu, User, X, LogOut } from "lucide-react";
 import { Facebook, Instagram } from "lucide-react";
 
 import SearchOverlay from "../SearchOverlay";
@@ -71,7 +65,6 @@ export default function Header({ categories }: { categories: Category[] }) {
     }
   }, []);
 
-   
   useEffect(() => {
     document.body.style.overflow = searchOpen ? "hidden" : "auto";
   }, [searchOpen]);

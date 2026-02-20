@@ -133,7 +133,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             disabled={loading}
           >
             <option className="text-black" value="">
-              All Years
+              Select Year
             </option>
             {years.map((year) => (
               <option
@@ -156,7 +156,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             disabled={loading}
           >
             <option className="text-black" value="">
-              All Categories
+              Select Category
             </option>
             {categories.map((category) => (
               <option
@@ -179,7 +179,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             disabled={loading}
           >
             <option className="text-black" value="">
-              All Authors
+              Select Author
             </option>
             {authors.map((author) => (
               <option

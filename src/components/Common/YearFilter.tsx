@@ -62,7 +62,7 @@ export default function YearFilter({
           <div
             className="absolute w-full bg-white border border-gray-300 shadow-lg z-10"
             style={{
-              maxHeight: "250px", // Exactly 5 years (32px each)
+              maxHeight: "260px", // Exactly 5 years (32px each)
               overflowY: "auto",
               width: "188px",
            

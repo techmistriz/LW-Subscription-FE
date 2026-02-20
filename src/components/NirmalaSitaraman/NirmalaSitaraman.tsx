@@ -1,4 +1,3 @@
-// ✅ NirmalaSitaraman.tsx - Fully Responsive
 import Image from 'next/image'
 
 function NirmalaSitaraman() {

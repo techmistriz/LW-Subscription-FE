@@ -1,24 +1,12 @@
 import api from "@/lib/api/axios";
-
-export interface Author {
-  id: number;
-  name: string;
-  email?: string;
-  slug?: string;
-  image?: string;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  slug?:string;
-}
+import { Author } from "@/types";
+import { Category } from "@/types";
 
 export interface Post {
   id: number;
   title: string;
   slug?: string;
-  image?: string; // ✅ ADD THIS
+  image?: string; 
   publish_date?: string;
   category?: Category;
   author?: Author;
