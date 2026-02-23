@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { Linkedin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -34,18 +35,27 @@ const Footer = () => {
 
             {/* Social */}
             <div className="flex gap-3 mt-2">
-              {["X", "X", "X"].map((item, i) => (
+              {/* {["X", "X", "X"].map((item, i) => (
                 <span
                   key={i}
                   className="border w-7 h-7 flex items-center justify-center text-xs"
                 >
                   {item}
                 </span>
-              ))}
+              ))} */}
+
+               <a
+                href="#linkedIn"
+                rel="noopener noreferrer"
+                aria-label="Share on LinkedIn"
+                className="w-6 h-6 bg-[#0A66C2] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
+              >
+                <Linkedin size={16} />
+              </a>
             </div>
 
             {/* App Buttons */}
-            <div className="flex gap-3 mt-5 flex-wrap">
+            {/* <div className="flex gap-3 mt-5 flex-wrap">
               <Image
                 src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
                 alt="Get it on Google Play"
@@ -63,7 +73,7 @@ const Footer = () => {
                 className="h-10 w-auto object-contain ml-4"
                 priority
               />
-            </div>
+            </div> */}
           </div>
 
           {/* MIDDLE */}

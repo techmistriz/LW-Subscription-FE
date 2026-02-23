@@ -15,7 +15,7 @@ export interface Post {
   slug: string;
   title: string;
   image?: string;
-  author?: Author | string;
+  author?: Author;
   publish_date?: string;
   short_description?: string;
   date?: string;
@@ -105,18 +105,14 @@ export default function PostList({
             </h3>
 
             <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
-              {typeof article.author === "object" ? (
+              {article.author && (
                 <Link
-                  href={`/author/${article.author?.slug}`}
-                  className="text-[#c9060a]  "
+                  href={`/author/${article.author.slug}`}
+                  className="text-[#c9060a]"
                 >
-                  {article.author?.name}
+                  {article.author.name}
                 </Link>
-              ) : (
-                <span className="text-[#c9060a] font-medium">
-                  {article.author || fallbackAuthorName || "Admin"}
-                </span>
-              )}{" "}
+              )}
               | {article.publish_date || article.date || "N/A"}
             </p>
 

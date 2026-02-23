@@ -36,7 +36,7 @@ export default function Pagination({
   const maxVisible = 7; // show first 7 pages like screenshot
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-10 text-sm">
+    <div className="flex items-center justify-center gap-2 my-8 text-sm">
       <span className="mr-2 text-[#333]">Pages:</span>
 
       {/* First Pages */}

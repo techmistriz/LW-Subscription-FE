@@ -103,7 +103,7 @@ export default function Header({ categories }: { categories: Category[] }) {
               className="flex items-center gap-2 text-[#333]"
             >
               <Menu size={20} />
-              <span className="hidden text lg:inline hover:text-[#c9060a]">
+              <span className="hidden text lg:inline hover:text-[#c9060a] cursor-pointer">
                 Explore
               </span>
             </button>
@@ -130,7 +130,7 @@ export default function Header({ categories }: { categories: Category[] }) {
               className="flex items-center gap-2 text-[#333]"
             >
               <Search size={20} />
-              <span className="hidden  lg:inline hover:text-[#c9060a]">
+              <span className="hidden  lg:inline hover:text-[#c9060a] cursor-pointer">
                 Search
               </span>
             </button>
