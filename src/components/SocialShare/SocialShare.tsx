@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Twitter, Linkedin, Share2 } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Share2, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -16,23 +16,32 @@ export default function SocialShare({ title }: Props) {
     }
   }, []);
 
-  const handleShare = async () => {
-    if (!shareUrl) return;
 
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title,
-          url: shareUrl,
-        });
-      } else {
-        await navigator.clipboard.writeText(shareUrl);
-        alert("Link copied!");
-      }
-    } catch (error) {
-      console.error("Share failed:", error);
-    }
-  };
+
+  // const handleShare = async () => {
+  //   if (!shareUrl) return;
+
+  //   try {
+  //     if (navigator.share) {
+  //       await navigator.share({
+  //         title,
+  //         url: shareUrl,
+  //       });
+  //     } else {
+  //       await navigator.clipboard.writeText(shareUrl);
+  //       alert("Link copied!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Share failed:", error);
+  //   }
+  // };
+
+  const handleWhatsAppShare = () => {
+  const url = typeof window !== "undefined" ? window.location.href : "";
+  const text = `${title} - ${url}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(whatsappUrl, "_blank");
+};
 
   return (
     <div className="flex gap-2">
@@ -72,13 +81,21 @@ export default function SocialShare({ title }: Props) {
         <Twitter size={16} />
       </a>
 
-      {/* Native Share */}
+      {/* Native Share
       <button
         onClick={handleShare}
         className="w-6 h-6 bg-gray-500 text-white flex items-center justify-center cursor-pointer hover:bg-[#c9060a]"
       >
         <Share2 size={16} />
-      </button>
+      </button> */}
+
+      {/* whatsapp */}
+     <button
+  onClick={handleWhatsAppShare}
+  className="w-6 h-6 bg-[#25D366] text-white flex items-center justify-center cursor-pointer hover:bg-[#1ebe5d]"
+>
+  <MessageCircle size={16} />
+</button>
     </div>
   );
 }
