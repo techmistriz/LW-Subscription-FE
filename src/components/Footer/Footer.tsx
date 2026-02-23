@@ -34,25 +34,21 @@ const Footer = () => {
             <p className="mt-4 text-sm">Connect Us:</p>
 
             {/* Social */}
-            <div className="flex gap-3 mt-2">
-              {/* {["X", "X", "X"].map((item, i) => (
-                <span
-                  key={i}
-                  className="border w-7 h-7 flex items-center justify-center text-xs"
-                >
-                  {item}
-                </span>
-              ))} */}
-
-               <a
-                href="#linkedIn"
-                rel="noopener noreferrer"
-                aria-label="Share on LinkedIn"
-                className="w-6 h-6 bg-[#0A66C2] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
-              >
-                <Linkedin size={16} />
-              </a>
-            </div>
+             <div className="flex lg:mt-2 gap-3">
+                    <a
+                      href="#linkedin"
+                      className="w-6 h-6 flex items-center justify-center  border border-[#0A66C2] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+                      </svg>
+                    </a>
+                  </div>
 
             {/* App Buttons */}
             {/* <div className="flex gap-3 mt-5 flex-wrap">
