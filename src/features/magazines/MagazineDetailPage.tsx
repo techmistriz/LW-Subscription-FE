@@ -15,7 +15,7 @@ const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
  * Magazine detail page displaying single magazine edition with related posts
  */
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 };
 
 export default async function MagazineDetailPage({ params }: Props) {
@@ -28,7 +28,6 @@ export default async function MagazineDetailPage({ params }: Props) {
     magazine = await getSingleMagazine(slug);
 
     const data = magazine;
-
     latestMagazines = await getLatestMagazines({
       skipId: data.id,
       limit: 5,
@@ -112,7 +111,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       </section>
 
       {/* Related content sections */}
-      <RelatedPosts magazineId={Number(data.id)} />
+      <RelatedPosts posts={data.posts} />
       <LatestEdition magazines={latestMagazines} />
     </section>
   );
