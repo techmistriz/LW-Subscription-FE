@@ -7,11 +7,12 @@ import Image from "next/image";
 import Link from "next/link";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
-import { stripInlineStyles, toTitleCase } from "@/lib/utils/helper/toTitleCase";
-import TestimonialCard from "@/components/Verdict/Verdict";
+import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
+import TestimonialCard from "@/components/Testimonial/Testimonial";
 import { Article } from "@/types";
-import "./style.css"
+import "./style.css";
 import { formatArticleHTML } from "@/lib/utils/helper/formatArticle";
+import SocialShare from "@/components/SocialShare/SocialShare";
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function ArticleDetailPage() {
@@ -37,7 +38,7 @@ export default function ArticleDetailPage() {
 
       try {
         const articleData = await getArticleBySlug(slug as string);
-
+        console.log(articleData);
         if (!active) return;
 
         if (articleData) {
@@ -203,9 +204,11 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <article className="lg:col-span-9">
           {/* Category breadcrumb */}
-          <p className="text-[#c9060a] text-lg   capitalize  mb-2">
-            {categoryTitle}
-          </p>
+          <Link href={`/category/${article.category?.slug}`}>
+            <p className="text-[#c9060a] text-lg uppercase cursor-pointer mb-2">
+              {categoryTitle}
+            </p>
+          </Link>
 
           {/* Article title */}
           <h1 className="text-2xl lg:text-2xl font-bold leading-snug">
@@ -216,50 +219,18 @@ export default function ArticleDetailPage() {
           {/* Meta and social sharing */}
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#333333]">
-              <span className="text-[#c9060a] font-medium">
+              <Link
+                href={`/author/${article.author?.slug}`}
+                className="text-[#c9060a] font-medium"
+              >
                 {article.author?.name || "Lex Witness Bureau"}
-              </span>{" "}
+              </Link>{" "}
               |{" "}
               {article.publish_date || article.published_at || "November 2025"}
             </p>
 
             {/* Social sharing buttons */}
-            <div className="flex gap-2">
-              <a
-                href="#facebook"
-                rel="noopener noreferrer"
-                aria-label="Share on Facebook"
-                className="w-6 h-6 bg-[#1877F2] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
-              >
-                <Facebook size={16} />
-              </a>
-
-              <a
-                href="#twitter"
-                rel="noopener noreferrer"
-                aria-label="Share on Twitter"
-                className="w-6 h-6 bg-[#1DA1F2]  text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
-              >
-                <Twitter size={16} />
-              </a>
-
-              <a
-                href="#linkedIn"
-                rel="noopener noreferrer"
-                aria-label="Share on LinkedIn"
-                className="w-6 h-6 bg-[#0A66C2] text-white flex items-center justify-center   hover:bg-[#a00508] transition-all duration-200"
-              >
-                <Linkedin size={16} />
-              </a>
-
-              <button
-                onClick={handleShare}
-                aria-label="Share this article"
-                className="w-6 h-6 bg-gray-500 hover:bg-gray-700 text-white flex items-center justify-center cursor-pointer transition-all duration-200"
-              >
-                <Share2 size={16} />
-              </button>
-            </div>
+         <SocialShare title={article.title}/>
           </div>
 
           {/* Featured image */}
@@ -292,32 +263,37 @@ export default function ArticleDetailPage() {
 
           <>
             {/* Testimonials */}
-              {Array.isArray(article.reader_feedbacks) &&
-        article.reader_feedbacks.length > 0 && (
-          <div className="my-12 space-y-8">
-            {article.reader_feedbacks.map((item: any) => (
-              <TestimonialCard
-                key={item.id}
-                data={{
-                  reader_feedback: item.reader_feedback,
-                  reader_name: item.reader_name,
-                  reader_designation: item.reader_designation,
+            {Array.isArray(article.reader_feedbacks) &&
+              article.reader_feedbacks.length > 0 && (
+                <div className="my-12 space-y-8">
+                  {article.reader_feedbacks.map((item: any) => (
+                    <TestimonialCard
+                      key={item.id}
+                      data={{
+                        reader_feedback: item.reader_feedback,
+                        reader_name: item.reader_name,
+                        reader_designation: item.reader_designation,
+                        text_alignment: item.text_alignment || "left", // use alignment from API
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+            {/* Article Description */}
+            {article.description && (
+              <div
+                className="article-content text-[15px] font-normal leading-7 text-gray-800"
+                dangerouslySetInnerHTML={{
+                  __html: formatArticleHTML(article.description),
                 }}
               />
-            ))}
-          </div>
-        )}
-
-      {/* Article Description */}
-      {article.description && (
-        <div
-          className="article-content text-[15px] font-normal leading-7 text-gray-800"
-          dangerouslySetInnerHTML={{
-            __html: formatArticleHTML(article.description),
-          }}
-        />
-      )}
+            )}
           </>
+          {/* SocialShare */}
+        <div className="flex justify-end mt-6">
+  <SocialShare title={article.title} />
+</div>
 
           {/* Author section */}
           {article.author && (
