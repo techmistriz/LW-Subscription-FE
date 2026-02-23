@@ -53,9 +53,9 @@ export default function LatestEdition({ magazines }: Props) {
       <div className="flex justify-center items-center mt-8">
         <Link
           href="/magazines"
-          className="bg-[#c9060a] border border-white text-white text-[16px] font-normal px-7 py-2.5 transition-colors"
+          className="bg-[#c9060a] border border-white text-white text-[16px] font-normal px-7 py-2.5 transition-colors hover:bg-[#333]"
         >
-          View All Editions
+          VIEW ALL EDITIONS
         </Link>
       </div>
     </section>

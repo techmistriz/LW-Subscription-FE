@@ -43,7 +43,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
             {/* Category */}
             <Link
             href={`/category/${post?.category?.slug}`}
-            className="absolute top-0 left-0 bg-[#c9060a] text-white text-sm px-4 py-1 z-10">
+           className="absolute top-0 left-0 bg-[#c90609b9] text-white text-xs px-1 py-1 z-10">
               {post.category?.name}
             </Link>
 

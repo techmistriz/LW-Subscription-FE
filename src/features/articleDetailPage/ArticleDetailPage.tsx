@@ -12,6 +12,7 @@ import { Article } from "@/types";
 import "./style.css";
 import { formatArticleHTML } from "@/lib/utils/helper/formatArticle";
 import SocialShare from "@/components/SocialShare/SocialShare";
+import { Linkedin } from "lucide-react";
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function ArticleDetailPage() {
@@ -114,8 +115,6 @@ export default function ArticleDetailPage() {
     };
   }, [article]);
 
-
-
   // Loading skeleton
   if (loading) {
     return (
@@ -177,7 +176,7 @@ export default function ArticleDetailPage() {
             }`}
           >
             {" "}
-            <p className="text-[#c9060a] text-lg uppercase cursor-pointer mb-2">
+            <p className="text-[#c9060a] font-semibold text-lg uppercase cursor-pointer mb-2">
               {categoryTitle}
             </p>
           </Link>
@@ -189,21 +188,24 @@ export default function ArticleDetailPage() {
           <div className="w-10 h-1 bg-[#c9060a] mb-1" />
 
           {/* Meta and social sharing */}
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-[#333333]">
-              <Link
-                href={`/author/${article.author?.slug}`}
-                className="text-[#c9060a] font-medium"
-              >
-                {article.author?.name || "Lex Witness Bureau"}
-              </Link>{" "}
-              |{" "}
-              {article.publish_date || article.published_at || "November 2025"}
-            </p>
+         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+  {/* Author and date */}
+  <p className="text-sm text-[#333333]">
+    <Link
+      href={`/author/${article.author?.slug}`}
+      className="text-[#c9060a] font-medium"
+    >
+      {article.author?.name || "Lex Witness Bureau"}
+    </Link>{" "}
+    |{" "}
+    {article.publish_date || article.published_at || "November 2025"}
+  </p>
 
-            {/* Social sharing buttons */}
-            <SocialShare title={article.title} />
-          </div>
+  {/* Social sharing buttons */}
+  <div className="flex sm:justify-end">
+    <SocialShare title={article.title} />
+  </div>
+</div>
 
           {/* Featured image */}
           {article.image && (
@@ -263,9 +265,9 @@ export default function ArticleDetailPage() {
             )}
           </>
           {/* SocialShare */}
-          <div className="flex justify-end mt-6">
+          {/* <div className="flex justify-end mt-6">
             <SocialShare title={article.title} />
-          </div>
+          </div> */}
 
           {/* Author section */}
           {article.author && (
@@ -293,6 +295,21 @@ export default function ArticleDetailPage() {
                     {article.author.bio ||
                       `${article.author.name || "Author"} is a contributor at Lex Witness.`}
                   </p>
+                  <div className="flex lg:mt-5 -pt-1 gap-4">
+                    <a
+                      href="#linkedin"
+                      className="w-6 h-6 flex items-center justify-center  border border-[#0A66C2] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             </>

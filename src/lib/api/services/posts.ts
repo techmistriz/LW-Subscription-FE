@@ -70,6 +70,7 @@ export async function getPostsByMagazine(magazineId: number) {
   const res = await api.get("/posts", {
     params: { magazine_id: magazineId },
   });
+  console.log(res.data.data)
   return res.data.data || [];
 }
 

@@ -32,7 +32,7 @@ export default function BigFeature({ post }: { post?: Post }) {
       />
       <Link 
       href={`/category/${post?.category?.slug}`}
-      className="absolute top-0 left-0 bg-[#c9060a] text-white text-lg px-4 py-1 z-10">
+      className="absolute top-0 left-0 bg-[#c90609b9] text-white text-md px-2 py-1 z-10">
         {post.category?.name}
       </Link>
 

@@ -159,7 +159,7 @@ function SubscribeBanner() {
               type="submit"
               disabled={loading}
             >
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? "SUBMITTING..." : "SUBMIT"}
             </button>
           </div>
 

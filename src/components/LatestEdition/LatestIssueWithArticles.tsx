@@ -21,18 +21,21 @@ export default function LatestIssueWithArticles({ magazine, articles }: Props) {
   return (
     <div className="w-full space-y-12 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-2 px-4">
       {/* LEFT COLUMN */}
-      <div className="lg:col-span-3 order-1">
-        <LatestIssue magazine={magazine} />
-        <p className="text-[13px] font-normal text-[#333] my-1  leading-relaxed">
-          A Photo Feature on Judgements, Laws & Bills
-        </p>
-        <Link
-          href="/register"
-          className="block w-full bg-[#c9060a] text-white text-center py-3 px-4 text-[12px] font-normal hover:bg-[#333]"
-        >
-          SUBSCRIBE NOW!
-        </Link>
-      </div>
+     <div className="lg:col-span-3 order-1">
+  <LatestIssue magazine={magazine} />
+  <p className="text-[13px] font-normal text-[#333] my-1 leading-relaxed">
+    {magazine.magazine_name || "A Photo Feature on Judgements, Laws & Bills"}
+  </p>
+  <Link href="/register">
+    <button
+      className="bg-[#c9060a] text-white px-4 py-2.5 border-2 border-white hover:bg-[#222] disabled:opacity-50 cursor-pointer block mx-auto"
+      type="submit"
+      // disabled={loading}
+    >
+      SUBSCRIBE NOW!
+    </button>
+  </Link>
+</div>
 
       {/* CENTER COLUMN */}
       <div className="lg:col-span-6 order-3 lg:order-2 px-2 sm:px-4 md:mt-15 lg:mt-15">

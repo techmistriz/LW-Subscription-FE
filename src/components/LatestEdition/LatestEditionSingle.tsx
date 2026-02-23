@@ -36,7 +36,7 @@ export default function LatestIssue({ magazine, showTitle = true }: Props) {
       </Link>
 
       {showTitle && (
-        <p className="text-[15px] font-medium my-2 text-start">
+        <p className="text-[18px] font-semibold my-2 text-start">
           {magazine.title}
         </p>
       )}

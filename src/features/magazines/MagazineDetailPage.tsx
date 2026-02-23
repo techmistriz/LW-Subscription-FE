@@ -26,7 +26,7 @@ export default async function MagazineDetailPage({ params }: Props) {
 
   try {
     magazine = await getSingleMagazine(slug);
-
+console.log(magazine)
     const data = magazine;
     latestMagazines = await getLatestMagazines({
       skipId: data.id,
