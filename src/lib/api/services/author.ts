@@ -1,5 +1,5 @@
 import { request } from "@/lib/api/request";
-import { Author, Article } from "@/types";
+import { Author } from "@/types";
 //  GET ALL AUTHORS
 export async function getAuthors(): Promise<Author[]> {
   const response = await request<any>("GET", "/authors");

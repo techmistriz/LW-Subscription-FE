@@ -1,56 +1,110 @@
+// =========================
 // POST
+// =========================
+// Base Post type (shared fields)
 export interface Post {
   id: number;
   title: string;
   slug: string;
   published_at?: string;
-  author?: string;
-  page?: number;
   publish_date?: string;
+  image?: string;
+  author?: Author | string;
+
+  short_description?: string; // ✅ make optional
+  date?: string;
+  excerpt?: string;
 }
 
-// CATEGORY
-export type ArticleCategory =
-  | {
-      id: number;
-      name: string;
-      slug: string;
-    }
-  | string;
-
-// ARTICLE
-export interface Article {
-  id: number;
-  title: string;
-  slug: string;
-
-  name?: string;
-  image?: string;
-
-  publish_date?: string;
-  published_at?: string;
-  date?: string;
-
+// Article extends Post
+export interface Article extends Post {
+  content?: string;
   short_description?: string;
   excerpt?: string;
-
-  content?: string;
   description?: string | null;
 
-  category?: ArticleCategory;
+  category?: ArticleCategoryType;
   category_id?: number;
 
-  author?: Author;
-  authorId?: number;
   author_id?: number;
+  author_slug?: string;
 
   magazine_id?: number;
-
-  // ✅ Reader Feedbacks (for verdict type posts)
   reader_feedbacks?: ReaderFeedback[] | null;
 }
 
+// =========================
+// CATEGORY
+// =========================
+export interface ArticleCategory {
+  id: number;
+  name: string;
+  slug?: string;
+}
 
+// In some APIs, category may be a string
+export type ArticleCategoryType = ArticleCategory | string;
+
+// =========================
+// AUTHOR
+// =========================
+export interface Author {
+  id: number;
+  name: string;
+  slug?: string;
+  email?: string;
+  description?: string;
+  image?: string;
+  avatar?: string;
+  bio?: string;
+  role_id?: string;
+  title?: string;
+  excerpt?: string;
+  publishedAt?: string;
+}
+
+export interface AuthorListItem {
+  id: number;
+  name: string;
+  slug?: string;
+}
+
+// =========================
+// ARTICLE
+// =========================
+// export interface Article {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   search?: string;
+
+//   content?: string;
+//   short_description?: string;
+//   excerpt?: string;
+//   description?: string | null;
+  
+//   published_at?: string;
+//   publish_date?: string;
+//   date?: string;
+
+//   image?: string;
+//   category?: ArticleCategoryType;
+//   category_id?: number;
+
+//   author?: Author | string;
+//   authorId?: number;
+//   author_id?: number;
+//   author_slug?: string;
+
+//   magazine_id?: number;
+
+//   // Reader Feedbacks (for verdict type posts)
+//   reader_feedbacks?: ReaderFeedback[] | null;
+// }
+
+// =========================
+// READER FEEDBACK
+// =========================
 export interface ReaderFeedback {
   id: number;
   reader_name: string;
@@ -61,57 +115,38 @@ export interface ReaderFeedback {
   updated_at?: string;
 }
 
-
-// YEAR
-// export interface Year {
-//   id: number;
-//   name: string;
-// }
-
-export type Year = number;
-export type YearResponse = Year[] 
-
+// =========================
 // MAGAZINE
+// =========================
 export interface Magazine {
-  posts: Article[];
-  id: number; //  better to keep number unless backend sends string
+  id: number;
   slug: string;
   title: string;
   image?: string;
   magazine_name?: string;
   description?: string;
+
+  posts: Article[];
 }
 
-// CATEGORY
+// =========================
+// CATEGORY (general purpose)
+// =========================
 export interface Category {
   id: number;
   name: string;
-  slug: string;
+  slug?: string;
 }
 
-// AUTHOR
-export interface Author {
-  id: number;
-  name: string;
-  email: string;
-  description: string;
-  slug: string;
-  image?: string;
-  avatar?:string;
-  bio?: string;
-  role_id: string;
-  title: string;
-  excerpt?: string;
-  publishedAt?: string;
-}
+// =========================
+// YEAR
+// =========================
+export type Year = number;
+export type YearResponse = Year[];
 
-export interface AuthorListItem {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-// AUTH
+// =========================
+// AUTH / FORM DATA
+// =========================
 export interface RegisterForm {
   first_name: string;
   last_name: string;
@@ -121,13 +156,7 @@ export interface RegisterForm {
   contact: string;
 }
 
-export interface FormData {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-  contact: string;
+export interface FormData extends RegisterForm {
   plan: string;
   auto_renew: boolean;
 }

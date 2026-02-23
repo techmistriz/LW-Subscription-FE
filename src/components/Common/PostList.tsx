@@ -3,24 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import PageLoader from "@/components/Loader/PageLoader";
-
-interface Author {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-export interface Post {
-  id: number;
-  slug: string;
-  title: string;
-  image?: string;
-  author?: Author;
-  publish_date?: string;
-  short_description?: string;
-  date?: string;
-  excerpt?: string;
-}
+import { Post, Author } from "@/types";
 
 interface PostListProps {
   posts: Post[];
@@ -104,17 +87,24 @@ export default function PostList({
               </Link>
             </h3>
 
-            <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
-              {article.author && (
-                <Link
-                  href={`/author/${article.author.slug}`}
-                  className="text-[#c9060a]"
-                >
-                  {article.author.name}
-                </Link>
-              )}
-              | {article.publish_date || article.date || "N/A"}
-            </p>
+           <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
+  {article.author && (
+    typeof article.author === "string" ? (
+      <span className="text-[#c9060a]">
+        {article.author}
+      </span>
+    ) : (
+      <Link
+        href={`/author/${article.author.slug}`}
+        className="text-[#c9060a]"
+      >
+        {article.author.name}
+      </Link>
+    )
+  )}
+  {" | "}
+  {article.publish_date || article.date || "N/A"}
+</p>
 
             <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-relaxed">
               {article.short_description || "No description available"}

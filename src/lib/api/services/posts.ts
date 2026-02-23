@@ -55,24 +55,24 @@ export async function getArticleBySlug(slug: string) {
 }
 
 // Single article by ID
-export async function getArticleById(id: number) {
-  try {
-    const response = await api.get(`/posts/${id}`);
-    return response.data.post || response.data.data || response.data;
-  } catch (error: any) {
-    console.error("getArticleById failed:", error.response?.status);
-    return null;
-  }
-}
+// export async function getArticleById(id: number) {
+//   try {
+//     const response = await api.get(`/posts/${id}`);
+//     return response.data.post || response.data.data || response.data;
+//   } catch (error: any) {
+//     console.error("getArticleById failed:", error.response?.status);
+//     return null;
+//   }
+// }
 
 // Magazine posts (no pagination)
-export async function getPostsByMagazine(magazineId: number) {
-  const res = await api.get("/posts", {
-    params: { magazine_id: magazineId },
-  });
-  console.log(res.data.data)
-  return res.data.data || [];
-}
+// export async function getPostsByMagazine(magazineId: number) {
+//   const res = await api.get("/posts", {
+//     params: { magazine_id: magazineId },
+//   });
+//   console.log(res.data.data)
+//   return res.data.data || [];
+// }
 
 // Related posts (limited)
 export async function getRelatedPosts(params: {
@@ -116,60 +116,60 @@ export interface Magazine {
   };
 }
 
-export async function getLatestSinglePosts(): Promise<Magazine | null> {
-  try {
-    const response = await api.get("/posts", {
-      params: {
-        page: 1,
-        limit: 1,
-        sort: "created_at",
-        latest: 1,
-      },
-    });
+// export async function getLatestSinglePosts(): Promise<Magazine | null> {
+//   try {
+//     const response = await api.get("/posts", {
+//       params: {
+//         page: 1,
+//         limit: 1,
+//         sort: "created_at",
+//         latest: 1,
+//       },
+//     });
 
-    const result = response.data;
+//     const result = response.data;
 
-    // Adjust according to your backend structure
-    const posts = result?.data?.data ?? result?.data ?? result ?? [];
-    // console.log(posts[0]);
-    return posts[0] ?? null; //  return first latest post
-  } catch (error) {
-    console.error("Error fetching latest post:", error);
-    return null;
-  }
-}
+//     // Adjust according to your backend structure
+//     const posts = result?.data?.data ?? result?.data ?? result ?? [];
+//     // console.log(posts[0]);
+//     return posts[0] ?? null; //  return first latest post
+//   } catch (error) {
+//     console.error("Error fetching latest post:", error);
+//     return null;
+//   }
+// }
 
 // Article interface
-export interface Article {
-  id: number;
-  title: string;
-  search: string;
-  slug: string;
-  author_id: number;
-  author_slug?: string;
-  content: string;
-  published_at: string;
-  image?: string;
-  short_description?: string;
-  excerpt?: string;
-  publish_date?: string;
-  category?: ArticleCategory;
-  author?: Author | string;
-}
+// export interface Article {
+//   id: number;
+//   title: string;
+//   search: string;
+//   slug: string;
+//   author_id: number;   
+//   author_slug?: string;
+//   content: string;
+//   published_at: string;
+//   image?: string;
+//   short_description?: string;
+//   excerpt?: string;
+//   publish_date?: string;
+//   category?: ArticleCategory;
+//   author?: Author | string;
+// }
 
-export interface ArticleCategory {
-  id: number;
-  name: string;
-  slug?: string;
-}
+// export interface ArticleCategory {
+//   id: number;
+//   name: string;
+//   slug?: string;
+// }
 
-export interface Category {
-  id: number;
-  name: string;
-}
+// export interface Category {
+//   id: number;
+//   name: string;
+// }
 
-export interface Author {
-  id: number;
-  name: string;
-  slug?: string;
-}
+// export interface Author {
+//   id: number;
+//   name: string;
+//   slug?: string;
+// }
