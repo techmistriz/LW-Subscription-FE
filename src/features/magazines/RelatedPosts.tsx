@@ -55,9 +55,11 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
                 {article.title}
               </h3>
 
-              <span className="mt-auto text-sm text-[#c9060a] font-medium">
-                {article.category?.name || "Uncategorized"}
-              </span>
+             <span className="mt-auto text-sm text-[#c9060a] font-medium">
+  {typeof article.category === "string"
+    ? article.category
+    : article.category?.name || "Uncategorized"}
+</span>
             </div>
           </Link>
         ))}

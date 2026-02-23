@@ -1,8 +1,7 @@
 import MagazineDetailPage from "@/features/magazines/MagazineDetailPage";
-import React from "react";
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: { slug: string }; // ✅ plain object, not a Promise
 };
 
 export default function Page({ params }: Props) {

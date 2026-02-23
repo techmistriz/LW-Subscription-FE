@@ -73,6 +73,7 @@ export type YearResponse = Year[]
 
 // MAGAZINE
 export interface Magazine {
+  posts: Article[];
   id: number; //  better to keep number unless backend sends string
   slug: string;
   title: string;

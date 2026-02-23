@@ -17,19 +17,16 @@ const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 type Props = {
   params: { slug: string };
 };
-
 export default async function MagazineDetailPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug } = await params; 
 
   let magazine;
   let latestMagazines = [];
 
   try {
     magazine = await getSingleMagazine(slug);
-console.log(magazine)
-    const data = magazine;
     latestMagazines = await getLatestMagazines({
-      skipId: data.id,
+      skipId: magazine.id,
       limit: 5,
     });
   } catch (error) {
@@ -37,19 +34,13 @@ console.log(magazine)
     notFound();
   }
 
-  const data = magazine;
-
-  // Validate required data exists
-  if (!data?.title) {
+  if (!magazine?.title) {
     notFound();
   }
 
-  // Safe description rendering with fallback
   const safeDescription =
-    data.description &&
-    typeof data.description === "string" &&
-    data.description.trim()
-      ? stripInlineStyles(data.description)
+    magazine.description && magazine.description.trim()
+      ? stripInlineStyles(magazine.description)
       : "<p>Description not available.</p>";
 
   return (
@@ -62,11 +53,11 @@ console.log(magazine)
             <div className="relative w-full aspect-3/4">
               <Image
                 src={
-                  data.image
-                    ? `${magazineBaseUrl}/${data.image}`
+                  magazine.image
+                    ? `${magazineBaseUrl}/${magazine.image}`
                     : "/placeholder.jpg"
                 }
-                alt={data.title || "Magazine cover"}
+                alt={magazine.title || "Magazine cover"}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 33vw"
@@ -77,10 +68,10 @@ console.log(magazine)
 
           {/* Magazine details */}
           <div className="space-y-2 -mt-18 flex-1">
-            {data.magazine_name && (
-              <h1 className="font-semibold text-2xl">{data.magazine_name}</h1>
+            {magazine.magazine_name && (
+              <h1 className="font-semibold text-2xl">{magazine.magazine_name}</h1>
             )}
-            <p className=" border-gray-300 text-lg">{data.title}</p>
+            <p className=" border-gray-300 text-lg">{magazine.title}</p>
             <hr className="h-0.5 bg-gray-300 border-0" />
 
             <p className="text-[#c9060a]">Magazine Details</p>
@@ -111,7 +102,7 @@ console.log(magazine)
       </section>
 
       {/* Related content sections */}
-      <RelatedPosts posts={data.posts} />
+      <RelatedPosts posts={magazine.posts} />
       <LatestEdition magazines={latestMagazines} />
     </section>
   );
