@@ -1,6 +1,5 @@
 "use client";
 
-import { Facebook, Twitter, Linkedin, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -22,7 +21,7 @@ export default function ArticleDetailPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [shareUrl, setShareUrl] = useState("");
+  // const [shareUrl, setShareUrl] = useState("");
 
   // Load main article by slug
   useEffect(() => {
@@ -115,12 +114,7 @@ export default function ArticleDetailPage() {
     };
   }, [article]);
 
-  // Initialize share URL on mount
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setShareUrl(window.location.href);
-    }
-  }, []);
+
 
   // Loading skeleton
   if (loading) {
@@ -160,35 +154,6 @@ export default function ArticleDetailPage() {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "")}&background=eee&color=000&size=128`;
   };
 
-  // Handle social sharing
-  const handleShare = async () => {
-    if (!shareUrl) return;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: article.title,
-          url: shareUrl,
-        });
-      } else {
-        await navigator.clipboard.writeText(shareUrl);
-        // Using a more modern notification approach
-        if (typeof window !== "undefined") {
-          const toast = document.createElement("div");
-          toast.textContent = "Link copied to clipboard!";
-          toast.className =
-            "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50";
-          document.body.appendChild(toast);
-          setTimeout(() => {
-            document.body.removeChild(toast);
-          }, 3000);
-        }
-      }
-    } catch (error) {
-      console.error("Share failed:", error);
-    }
-  };
-
   const categoryTitle = toTitleCase(
     article.category
       ? typeof article.category === "string"
@@ -204,7 +169,14 @@ export default function ArticleDetailPage() {
       <div className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <article className="lg:col-span-9">
           {/* Category breadcrumb */}
-          <Link href={`/category/${article.category?.slug}`}>
+          <Link
+            href={`/category/${
+              typeof article.category === "string"
+                ? article.category
+                : article.category?.slug
+            }`}
+          >
+            {" "}
             <p className="text-[#c9060a] text-lg uppercase cursor-pointer mb-2">
               {categoryTitle}
             </p>
@@ -230,7 +202,7 @@ export default function ArticleDetailPage() {
             </p>
 
             {/* Social sharing buttons */}
-         <SocialShare title={article.title}/>
+            <SocialShare title={article.title} />
           </div>
 
           {/* Featured image */}
@@ -291,9 +263,9 @@ export default function ArticleDetailPage() {
             )}
           </>
           {/* SocialShare */}
-        <div className="flex justify-end mt-6">
-  <SocialShare title={article.title} />
-</div>
+          <div className="flex justify-end mt-6">
+            <SocialShare title={article.title} />
+          </div>
 
           {/* Author section */}
           {article.author && (
