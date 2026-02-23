@@ -101,7 +101,7 @@ function SubscribeSidebar() {
             disabled={loading}
             className="bg-[#c9060a] w-1/2 border flex justify-center cursor-pointer text-white  py-3 mx-auto text-sm hover:bg-[#444] disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "SUBMITTING..." : "SUBMIT"}
           </button>
         </form>
       </div>

@@ -28,9 +28,9 @@ export default function LatestIssueWithArticles({ magazine, articles }: Props) {
         </p>
         <Link
           href="/register"
-          className="block w-full bg-[#c9060a] text-white text-center py-3 px-4 text-[12px] font-normal"
+          className="block w-full bg-[#c9060a] text-white text-center py-3 px-4 text-[12px] font-normal hover:bg-[#333]"
         >
-          Subscribe Now For Subscription
+          SUBSCRIBE NOW!
         </Link>
       </div>
 
