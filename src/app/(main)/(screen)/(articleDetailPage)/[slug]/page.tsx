@@ -9,45 +9,40 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   if (!article) {
     return {
-      title: "Article Not Found | Lex Witness",
-      description: "The requested article could not be found.",
+      title: 'Article Not Found | Lex Witness',
     };
   }
 
-  const imageUrl = article.image?.startsWith("http")
-    ? article.image
-    : article.image
-    ? `${process.env.NEXT_PUBLIC_POSTS_BASE_URL || 'https://lwsubscription.vercel.app/api'}${article.image}`
-    : "https://lwsubscription.vercel.app/default-og-image.jpg";
-
+  // ✅ Clean image URL - NO console.log
+  let imageUrl = 'https://lwsubscription.vercel.app/default-og-image.jpg';
+  
+  if (article.image) {
+    const postsBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || 'https://lwsubscription.vercel.app';
+    imageUrl = article.image.startsWith('http') 
+      ? article.image 
+      : `${postsBaseUrl.replace(/\/$/, '')}/${article.image.replace(/^\//, '')}`;
+  }
+console.log(imageUrl)
   return {
     title: article.title,
-    description: article.description?.slice(0, 160) || "Lex Witness article",
-    // CRITICAL: These make images/titles work on ALL platforms
     openGraph: {
       title: article.title,
-      description: article.description?.slice(0, 160) || "Lex Witness article",
-      url: `https://lwsubscription.vercel.app/${article.slug}`, // ABSOLUTE URL
-      siteName: "Lex Witness",
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: article.title,
-        },
-      ],
-      locale: 'en_US',
-      type: 'article',
+      images: [{
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+      }],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
-      description: article.description?.slice(0, 160) || "Lex Witness article",
       images: [imageUrl],
     },
   };
 }
+
+
+
 
 
 
