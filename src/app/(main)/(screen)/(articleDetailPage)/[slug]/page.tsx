@@ -27,14 +27,16 @@ export async function generateMetadata({
 
   return {
     title: article.title,
-    openGraph: {
-      title: article.title,
-      images: [{ 
-        url: imageUrl, 
-        width: 1200, 
-        height: 630 
-      }],
-    },
+   openGraph: {
+  title: article.title,
+  images: [{
+    url: imageUrl,
+    width: 1200,      // ✅ LinkedIn requires
+    height: 630,      // ✅ Exact aspect ratio
+    type: 'image/jpeg' // ✅ Forces JPG detection
+  }],
+},
+
     twitter: {
       card: "summary_large_image",
       title: article.title,
