@@ -44,6 +44,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function Page({ params }: Props) {
-  return <ArticleDetailPage slug={params.slug} />;
+export default async function Page({ params }: Props) {
+  const article = await getArticleBySlug(params.slug);
+
+  if (!article) {
+    return <div>Article Not Found</div>;
+  }
+
+  return <ArticleDetailPage />;
 }
