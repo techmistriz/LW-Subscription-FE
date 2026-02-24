@@ -2,33 +2,47 @@
 import ArticleDetailPage from "@/features/articleDetailPage/ArticleDetailPage";
 import { getArticleBySlug } from "@/lib/api/services/posts";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  // Fetch article server-side using your Axios wrapper
+// Server-side metadata generation
+export async function generateMetadata({ params }: any) {
   const article = await getArticleBySlug(params.slug);
 
   if (!article) {
+    // Fallback metadata for not found
     return {
       title: "Article Not Found | Lex Witness",
-      description: "The requested article was not found.",
+      description: "The requested article could not be found.",
       openGraph: {
         title: "Article Not Found | Lex Witness",
-        description: "The requested article was not found.",
-        images: [{ url: "https://lexwitness.com/default-og-image.jpg", width: 1200, height: 630 }],
+        description: "The requested article could not be found.",
+        url: "https://lexwitness.com/",
+        siteName: "Lex Witness",
+        images: [
+          {
+            url: "https://lexwitness.com/default-og-image.jpg",
+            width: 1200,
+            height: 630,
+          },
+        ],
+        type: "website",
       },
       twitter: {
         card: "summary_large_image",
         title: "Article Not Found | Lex Witness",
+        description: "The requested article could not be found.",
         images: ["https://lexwitness.com/default-og-image.jpg"],
       },
     };
   }
 
-  // Determine the absolute image URL
+  // Absolute image URL fallback
   const imageUrl =
     article.image?.startsWith("http")
       ? article.image
-      : `${process.env.NEXT_PUBLIC_POSTS_BASE_URL}${article.image}` || "https://lexwitness.com/default-og-image.jpg";
+      : article.image
+      ? `${process.env.NEXT_PUBLIC_POSTS_BASE_URL}${article.image}`
+      : "https://lexwitness.com/default-og-image.jpg";
 
+  // Metadata for LinkedIn, Twitter, etc.
   return {
     title: { absolute: article.title },
     description: article.description?.slice(0, 160) || "Lex Witness article",
@@ -55,7 +69,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-// Keep page as a server component (do NOT use "use client" here)
+// Server component page
 export default function Page() {
   return <ArticleDetailPage />;
 }
