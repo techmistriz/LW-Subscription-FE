@@ -1,5 +1,6 @@
 // Add this at the top of your page.tsx file
 import ArticleDetailPage from '@/features/articleDetailPage/ArticleDetailPage';
+import { getArticleBySlug } from '@/lib/api/services/posts';
 import { Metadata } from 'next';
 
 // Replace your entire generateMetadata function with this:
