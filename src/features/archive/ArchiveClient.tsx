@@ -1,35 +1,20 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
 import { getAuthors } from "@/lib/api/services/author";
 import { getCategories } from "@/lib/api/services/categories";
-import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import Pagination from "@/components/Pagination/Pagination";
 import { Year, Article, Author, Category } from "@/types";
 import { PaginationMeta } from "@/types/api";
-import Banner from "@/components/Common/Banner";
 import PostList from "@/components/Common/PostList";
 
-/**
- * ArchivePage
- *
- * Displays all articles with:
- * - Filtering (Year, Category, Author)
- * - Search support
- * - Pagination
- * - URL state synchronization
- */
 export default function ArchivePage() {
-  //     ROUTER & URL PARAMS
-  const params = useParams<{ slug?: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const urlSlug = params.slug as string | undefined;
 
-  //     COMPONENT STATE
   const [articles, setArticles] = useState<Article[]>([]);
   const [years, setYears] = useState<Year[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -37,23 +22,20 @@ export default function ArchivePage() {
   const [meta, setMeta] = useState<PaginationMeta>();
   const [loading, setLoading] = useState(false);
 
-  //  READ URL QUERY PARAMETERS
+  // URL Params
   const year = searchParams.get("year")
     ? Number(searchParams.get("year"))
     : undefined;
-
   const categoryId = searchParams.get("category_id")
     ? Number(searchParams.get("category_id"))
     : undefined;
-
   const authorId = searchParams.get("author_id")
     ? Number(searchParams.get("author_id"))
     : undefined;
-
   const currentPage = Number(searchParams.get("page")) || 1;
   const searchTerm = searchParams.get("search") || "";
 
-  //  LOCAL FILTER STATE (UI CONTROL)
+  // Local state for dropdowns
   const [selectedYearId, setSelectedYearId] = useState<number | undefined>(
     year,
   );
@@ -64,14 +46,10 @@ export default function ArchivePage() {
     authorId,
   );
 
-  // Determines if any filter or search is active
   const hasActiveFilters =
     selectedYearId || selectedCategoryId || selectedAuthorId || searchTerm;
-
-  // Total pages from API response
   const totalPages = meta?.paging?.last_page ?? 1;
 
-  //  LOAD FILTER DROPDOWN DATA, (Runs once on mount)
   const loadFilterData = useCallback(async () => {
     try {
       const [yearsRes, authorsRes, categoriesRes] = await Promise.all([
@@ -79,7 +57,6 @@ export default function ArchivePage() {
         getAuthors(),
         getCategories(),
       ]);
-
       setYears(yearsRes || []);
       setAuthors(authorsRes || []);
       setCategories(categoriesRes || []);
@@ -88,64 +65,41 @@ export default function ArchivePage() {
     }
   }, []);
 
-  //  FETCH ARTICLES, Runs when filters/search/page changes
   const fetchArticles = useCallback(async () => {
     setLoading(true);
-
     try {
-      // 1️. Search takes priority over filters
-      if (searchTerm.trim()) {
-        const response = await getPosts({
-          search: searchTerm.trim(),
-          page: currentPage,
-        });
-
-        setArticles(response.data || []);
-        setMeta(response.meta || undefined);
-        return;
-      }
-
-      // 2️. Apply filters if present
-      if (year || categoryId || authorId) {
-        const response = await getPosts({
-          year: year,
-          category_id: categoryId,
-          author_id: authorId,
-          page: currentPage,
-        });
-
-        setArticles(response.data || []);
-        setMeta(response.meta || undefined);
-        return;
-      }
-
-      // 3. Default: fetch all posts
-      const response = await getPosts({ page: currentPage });
-
+      const response = await getPosts({
+        search: searchTerm.trim() || undefined,
+        year: year,
+        category_id: categoryId,
+        author_id: authorId,
+        page: currentPage,
+      });
       setArticles(response.data || []);
       setMeta(response.meta || undefined);
     } catch (error) {
-      console.error("Fetch articles error:", error);
       setArticles([]);
-      setMeta(undefined);
     } finally {
       setLoading(false);
     }
   }, [searchTerm, year, categoryId, authorId, currentPage]);
 
-  //  APPLY FILTERS, Updates URL query params
+  useEffect(() => {
+    loadFilterData();
+  }, [loadFilterData]);
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
+
   const handleApplyFilters = () => {
     const params = new URLSearchParams();
-
     if (selectedYearId) params.set("year", selectedYearId.toString());
     if (selectedCategoryId)
       params.set("category_id", selectedCategoryId.toString());
     if (selectedAuthorId) params.set("author_id", selectedAuthorId.toString());
-
     router.push(`/archive?${params.toString()}`);
   };
 
-  //  CLEAR FILTERS, Resets state and navigates to base archive
   const handleClearFilters = () => {
     setSelectedYearId(undefined);
     setSelectedCategoryId(undefined);
@@ -153,32 +107,10 @@ export default function ArchivePage() {
     router.push("/archive");
   };
 
-  // Load dropdown data once
-  useEffect(() => {
-    loadFilterData();
-  }, [loadFilterData]);
-
-  // Refetch posts when URL params change
-  useEffect(() => {
-    fetchArticles();
-  }, [fetchArticles]);
-
-  //  EMPTY STATE MESSAGE
-  const emptyMessage = searchTerm
-    ? `No results found for "${searchTerm}".`
-    : hasActiveFilters
-      ? "No posts found for the selected filters."
-      : "No posts available.";
-
-  //   RENDER
   return (
-    <section className="bg-white">
-      {/* Page Banner */}
-      <Banner title={urlSlug ?? "archive"} />
-
-      {/* Filter Controls */}
-      <div className="max-w-6xl px-4 mx-auto py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
-        {/* Year Filter */}
+    <>
+      {/* Filter Controls Wrapper */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4">
         <select
           value={selectedYearId?.toString() ?? ""}
           onChange={(e) =>
@@ -186,18 +118,16 @@ export default function ArchivePage() {
               e.target.value ? Number(e.target.value) : undefined,
             )
           }
-          className="bg-white border border-gray-300 px-4 py-2"
-          disabled={loading}
+          className="bg-white border border-gray-300 px-2 py-2 outline-none"
         >
           <option value="">Select Year</option>
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
             </option>
           ))}
         </select>
 
-        {/* Category Filter */}
         <select
           value={selectedCategoryId?.toString() ?? ""}
           onChange={(e) =>
@@ -205,18 +135,16 @@ export default function ArchivePage() {
               e.target.value ? Number(e.target.value) : undefined,
             )
           }
-          className="bg-white border border-gray-300 px-4 py-2"
-          disabled={loading}
+          className="bg-white border border-gray-300 px-2 py-2 outline-none"
         >
           <option value="">Select Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
             </option>
           ))}
         </select>
 
-        {/* Author Filter */}
         <select
           value={selectedAuthorId?.toString() ?? ""}
           onChange={(e) =>
@@ -224,59 +152,55 @@ export default function ArchivePage() {
               e.target.value ? Number(e.target.value) : undefined,
             )
           }
-          className="bg-white border border-gray-300 px-4 py-2"
-          disabled={loading}
+          className="bg-white border border-gray-300 px-2 py-2 outline-none"
         >
           <option value="">Select Author</option>
-          {authors.map((author) => (
-            <option key={author.id} value={author.id}>
-              {author.name}
+          {authors.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
             </option>
           ))}
         </select>
 
-        {/* Apply Filters Button */}
         <button
           onClick={handleApplyFilters}
-          className="bg-[#c9060a] cursor-pointer text-white px-8 py-2 font-semibold transition-all min-w-25"
+          className="bg-[#c9060a] text-white px-6 py-2 font-semibold hover:bg-red-700 transition-colors w-65 cursor-pointer"
           disabled={loading}
         >
           {loading ? "Searching..." : "Search"}
         </button>
 
-        {/* Clear Filters Button */}
-        <button
+        {/* <button
           onClick={handleClearFilters}
-          className="bg-gray-500 text-white px-8 py-2 transition-all cursor-pointer"
+          className="bg-gray-500 text-white px-8 py-2 hover:bg-gray-600 transition-colors"
           disabled={loading || !hasActiveFilters}
         >
           Clear
-        </button>
+        </button> */}
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-4 py-1">
-        <div className="lg:col-span-9 space-y-6 relative">
-          <PostList
-            posts={articles}
-            loading={loading}
-            postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
-            emptyMessage={emptyMessage}
-          />
+      <PostList
+        posts={articles}
+        loading={loading}
+        postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
+        emptyMessage={
+          searchTerm ? `No results for "${searchTerm}"` : "No posts found."
+        }
+      />
 
-          {/* Pagination */}
-          {!loading && articles.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              lastPage={totalPages}
-              loading={loading}
-            />
-          )}
-        </div>
-
-        {/* Sidebar */}
-        <RightSidebar />
-      </div>
-    </section>
+      {!loading && articles.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          lastPage={totalPages}
+          loading={loading}
+          onPageChange={(page) => {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("page", page.toString());
+            router.push(`/archive?${params.toString()}`);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+      )}
+    </>
   );
 }

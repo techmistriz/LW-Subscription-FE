@@ -61,12 +61,15 @@ export interface Author {
   title?: string;
   excerpt?: string;
   publishedAt?: string;
+  linkedin: string;
 }
 
 export interface AuthorListItem {
   id: number;
   name: string;
   slug?: string;
+    linkedin: string;
+
 }
 
 // =========================

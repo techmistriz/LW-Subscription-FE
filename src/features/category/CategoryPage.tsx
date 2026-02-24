@@ -118,43 +118,43 @@ export default function CategoryPage() {
 
   return (
     <section className="bg-white">
-      <Banner title={categoryTitle} />
+      {/* <Banner title={categoryTitle} /> */}
 
-      <div className="max-w-6xl mx-auto px-4 py-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-9">
-          <YearFilter
-            years={years}
-            selectedYear={selectYear}
-            onSelect={setselectYear}
-            onApply={handleApplyFilter}
-            // disabled={loading}
-          />
+      {/* <div className="max-w-6xl mx-auto px-4 py-1 grid grid-cols-1 lg:grid-cols-12 gap-8"> */}
+      {/* <div className="lg:col-span-9"> */}
+      <YearFilter
+        years={years}
+        selectedYear={selectYear}
+        onSelect={setselectYear}
+        onApply={handleApplyFilter}
+        // disabled={loading}
+      />
 
-          <PostList
-            posts={posts}
-            loading={loading}
-            postBaseUrl={postBaseUrl}
-            emptyMessage={
-              selectYear
-                ? `No posts available in ${
-                    years.find((y) => y === selectYear)
-                  } for ${categoryTitle}.`
-                : `No posts available in ${categoryTitle}.`
-            }
-          />
+      <PostList
+        posts={posts}
+        loading={loading}
+        postBaseUrl={postBaseUrl}
+        emptyMessage={
+          selectYear
+            ? `No posts available in ${years.find(
+                (y) => y === selectYear,
+              )} for ${categoryTitle}.`
+            : `No posts available in ${categoryTitle}.`
+        }
+      />
 
-          {!loading && posts.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              lastPage={lastPage}
-              loading={loading}
-              onPageChange={handlePageChange}
-            />
-          )}
-        </div>
+      {!loading && posts.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          lastPage={lastPage}
+          loading={loading}
+          onPageChange={handlePageChange}
+        />
+      )}
+      {/* </div> */}
 
-        <RightSidebar />
-      </div>
+      {/* <RightSidebar /> */}
+      {/* // </div> */}
     </section>
   );
 }

@@ -14,19 +14,20 @@ import YearFilter from "@/components/Common/YearFilter";
 import PostList from "@/components/Common/PostList";
 import Pagination from "@/components/Pagination/Pagination";
 
-
+// Post interface matching your API + Author normalization
 interface Post {
   id: number;
   slug: string;
   title: string;
   image?: string;
+  publish_date?: string;
+  short_description?: string;
   author?: {
     id: number;
     name: string;
     slug: string;
-  };
-  publish_date?: string;
-  short_description?: string;
+    linkedin: string; // ✅ ensure linkedin exists
+  } | string;
 }
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
@@ -45,7 +46,7 @@ export default function AuthorPage() {
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
 
-  //  Load Author
+  // Load Author
   const loadAuthor = useCallback(async () => {
     if (!authorSlug) return;
 
@@ -59,7 +60,7 @@ export default function AuthorPage() {
     }
   }, [authorSlug]);
 
-  //  Fetch Posts
+  // Fetch Posts
   const fetchPosts = useCallback(
     async (page: number = 1, year: number | null = null) => {
       if (!authorId) return;
@@ -73,7 +74,16 @@ export default function AuthorPage() {
           ...(year ? { year } : {}),
         });
 
-        setPosts(response.data ?? []);
+        // Normalize posts so each author has a linkedin
+        const normalizedPosts = (response.data ?? []).map((post: Post) => ({
+          ...post,
+          author:
+            post.author && typeof post.author !== "string"
+              ? { ...post.author, linkedin: post.author.linkedin || "" }
+              : post.author,
+        }));
+
+        setPosts(normalizedPosts);
         setLastPage(response.meta?.paging?.last_page ?? 1);
         setCurrentPage(page);
       } catch (error) {
@@ -84,10 +94,10 @@ export default function AuthorPage() {
         setLoading(false);
       }
     },
-    [authorId],
+    [authorId]
   );
 
-  //  Load Years
+  // Load Years
   const loadYears = useCallback(async () => {
     try {
       const data = await getYears();
@@ -108,59 +118,51 @@ export default function AuthorPage() {
     }
   }, [authorId, fetchPosts]);
 
-  //  Apply Filter (Manual)
+  // Apply Year Filter
   const handleApplyFilter = () => {
     fetchPosts(1, selectedYear);
   };
 
   return (
     <section className="bg-white">
-      <Banner title={authorName} />
+      <div className="lg:col-span-9">
+        <YearFilter
+          years={years}
+          selectedYear={selectedYear}
+          onSelect={setSelectedYear}
+          onApply={handleApplyFilter}
+        />
 
-      <div className="max-w-6xl mx-auto px-4 my-1 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-9">
-          <YearFilter
-            years={years}
-            selectedYear={selectedYear}
-            onSelect={setSelectedYear}
-            onApply={handleApplyFilter}
-            // disabled={loading || !authorId}
-          />
+        {loading ? (
+          <PageLoader />
+        ) : !authorId ? (
+          <div className="py-10 text-center text-gray-200">loading..</div>
+        ) : (
+          <>
+            <PostList
+              posts={posts}
+              fallbackAuthorName={authorTitle}
+              postBaseUrl={postBaseUrl}
+              loading={loading}
+              emptyMessage={
+                selectedYear
+                  ? `${authorTitle} has not published any posts in ${years.find(
+                      (y) => y === selectedYear
+                    )}`
+                  : `${authorTitle} has not published any posts yet`
+              }
+            />
 
-          {/* CONTENT AREA */}
-          {loading ? (
-            <PageLoader />
-          ) : !authorId ? (
-            <div className="py-10 text-center text-gray-200">loading..</div>
-          ) : (
-            <>
-              <PostList
-                posts={posts}
-                fallbackAuthorName={authorTitle}
-                postBaseUrl={postBaseUrl}
+            {lastPage > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                lastPage={lastPage}
                 loading={loading}
-                emptyMessage={
-                  selectedYear
-                    ? `${authorTitle} has not published any posts in ${
-                        years.find((y) => y === selectedYear)
-                      }`
-                    : `${authorTitle} has not published any posts yet`
-                }
+                onPageChange={(page) => fetchPosts(page, selectedYear)}
               />
-
-              {lastPage > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  lastPage={lastPage}
-                  loading={loading}
-                  onPageChange={(page) => fetchPosts(page, selectedYear)}
-                />
-              )}
-            </>
-          )}
-        </div>
-
-        <RightSidebar />
+            )}
+          </>
+        )}
       </div>
     </section>
   );
