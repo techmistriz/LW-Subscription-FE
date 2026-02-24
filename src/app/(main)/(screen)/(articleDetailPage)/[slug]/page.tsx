@@ -1,31 +1,26 @@
 import ArticleDetailPage from "@/features/articleDetailPage/ArticleDetailPage";
 import { getArticleBySlug } from "@/lib/api/services/posts";
-import { Metadata } from "next";
 
-type Props = {
-  params: { slug: string };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+// 👇 ADD THIS HERE (top level, outside component)
+export async function generateMetadata({ params }: any) {
   const article = await getArticleBySlug(params.slug);
 
   if (!article) {
     return {
-      title: "Article Not Found",
+      title: "Article Not Found | Lex Witness",
     };
   }
 
-  const imageUrl = article.image
-    ? `${process.env.NEXT_PUBLIC_POSTS_BASE_URL}${article.image}`
-    : "https://yourdomain.com/default-og.jpg";
+  const imageUrl = article.image?.startsWith("http")
+    ? article.image
+    : `${process.env.NEXT_PUBLIC_POSTS_BASE_URL}/${article.image}`;
 
   return {
     title: article.title,
-    description: article.short_description || article.excerpt,
+    description: article.description?.slice(0, 160),
     openGraph: {
       title: article.title,
-      description: article.short_description || article.excerpt,
-      url: `https://yourdomain.com/articles/${params.slug}`,
+      description: article.description?.slice(0, 160),
       images: [
         {
           url: imageUrl,
@@ -38,18 +33,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: article.title,
-      description: article.short_description || article.excerpt,
+      description: article.description?.slice(0, 160),
       images: [imageUrl],
     },
   };
 }
 
-export default async function Page({ params }: Props) {
-  const article = await getArticleBySlug(params.slug);
-
-  if (!article) {
-    return <div>Article Not Found</div>;
-  }
-
+// 👇 Keep page as Server Component (NO "use client")
+export default function Page() {
   return <ArticleDetailPage />;
 }
