@@ -13,6 +13,7 @@ import "./style.css";
 import { formatArticleHTML } from "@/lib/utils/helper/formatArticle";
 import SocialShare from "@/components/SocialShare/SocialShare";
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
 
 export default function ArticleDetailPage() {
   const { category, slug } = useParams<{ category: string; slug: string }>();
@@ -234,17 +235,7 @@ export default function ArticleDetailPage() {
             </div>
           )}
 
-          {/* Article content */}
-          {/* <div
-            className="text-sm text-[#333333] leading-7 space-y-4 prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: stripInlineStyles(
-                article.description || article.content || "",
-              ),
-            }}
-          /> */}
-
-          <>
+                 <>
             {/* Testimonials */}
             {Array.isArray(article.reader_feedbacks) &&
               article.reader_feedbacks.length > 0 && (
@@ -273,58 +264,66 @@ export default function ArticleDetailPage() {
               />
             )}
           </>
-          {/* SocialShare */}
-          {/* <div className="flex justify-end mt-6">
-            <SocialShare title={article.title} />
-          </div> */}
+       
+      {/* Author section */}
+{article.author && typeof article.author !== "string" && (
+  <>
+    <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
+    <div className="w-10 h-1 bg-[#c9060a]" />
 
-          {/* Author section */}
-          {article.author && typeof article.author !== "string" && (
-            <>
-              <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
-              <div className="w-10 h-1 bg-[#c9060a]" />
+    <div className="border border-gray-300 mt-2 p-4 flex gap-4">
+      {/* Author Avatar */}
+      <div className="relative w-24 h-24 overflow-hidden bg-gray-200 shrink-0">
+        <Image
+          src={
+            article.author?.image
+              ? article.author.image.startsWith("http")
+                ? article.author.image // full URL from API
+                : `${authorImg}${article.author.image}` // prepend base URL if relative
+              : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  article.author.name || "Author"
+                )}&background=eee&color=000&size=128` // fallback avatar
+          }
+          alt={article.author.name}
+          fill
+          className="object-cover"
+        />
+      </div>
 
-              <div className="border border-gray-300 mt-2 p-4 flex gap-4">
-                <div className="relative w-24 h-24 overflow-hidden bg-gray-200 shrink-0">
-                  <Image
-                    src={getAuthorAvatar(
-                      article.author.avatar,
-                      article.author.name,
-                    )}
-                    alt={article.author.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="font-semibold text-base mb-2">
+          {article.author.name.toUpperCase()}
+        </h4>
 
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-base mb-2">
-                    {article.author.name.toUpperCase()}
-                  </h4>
+        <p className="text-xs text-[#333333] leading-5">
+          {article.author.bio ||
+            `${article.author.name} is a contributor at Lex Witness.`}
+        </p>
 
-                  <p className="text-xs text-[#333333] leading-5">
-                    {article.author.bio ||
-                      `${article.author.name} is a contributor at Lex Witness.`}
-                  </p>
-                    <div className="flex lg:mt-6 -pt-1 gap-4">
-                    <a
-                      href="#linkedin"
-                      className="w-7 h-5 flex items-center justify-center  border border-[#2e86dd] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+        {/* LinkedIn */}
+        {article.author.linkedin && (
+          <div className="flex lg:mt-6 gap-4">
+            <a
+              href={article.author.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-7 h-5 flex items-center justify-center border border-[#2e86dd] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+              </svg>
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  </>
+)}
 
           {/* Related articles section */}
           {relatedPosts.length > 0 && (
