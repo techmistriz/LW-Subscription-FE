@@ -38,7 +38,6 @@ export async function getPosts({
   // console.log("Posts API params:", params); // Debug log
 
   const response = await api.get("/posts", { params });
-console.log(response.data)
   return response.data;
 }
 
@@ -46,7 +45,6 @@ console.log(response.data)
 export async function getArticleBySlug(slug: string) {
   try {
     const response = await api.get(`/posts/${slug}`);
-    console.log(response)
     return response.data.data || response.data.post || response.data;
   } catch (error) {
     console.error("getArticleBySlug error:", error);

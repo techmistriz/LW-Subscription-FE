@@ -37,7 +37,6 @@ export default function ArticleDetailPage() {
 
       try {
         const articleData = await getArticleBySlug(slug as string);
-        console.log(articleData);
         if (!active) return;
 
         if (articleData) {
@@ -163,8 +162,6 @@ export default function ArticleDetailPage() {
   }
 
   const categoryTitle = toTitleCase(rawCategory);
-
-  console.log("Singlepage", article);
 
   return (
     <section className="bg-white">

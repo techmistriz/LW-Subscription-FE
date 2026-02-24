@@ -25,7 +25,6 @@ export const getYears = async (): Promise<Year[]> => {
   const response = await request<{ data: Year[] }>("GET", "/years");
 
   if (response.status) {
-    console.log("YEARS RAW:", response.data.data);
     return response.data.data ?? [];
   }
 

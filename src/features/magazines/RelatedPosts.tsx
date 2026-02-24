@@ -20,7 +20,6 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
     );
   }
 
-  console.log(posts)
   return (
     <section className="max-w-6xl mx-auto px-4 my-10">
       <div className="text-center mb-10">

@@ -202,12 +202,13 @@ export default function Header({ categories }: { categories: Category[] }) {
               <li key={`${item.slug}-${index}`} className="shrink-0">
                 <Link
                   href={`/category/${item.slug}`}
-                  className={`hover:text-[#c9060a] transition-colors ${
-                    item.slug && isActive(item.slug)
-                      ? "text-[#c9060a] border-[#c9060a] pb-1"
-                      : "text-[#333]"
-                  }`}
+                 className={`hover:text-[#c9060a] transition-colors ${
+  item.slug && isActive(item.slug)
+    ? "text-[#c9060a] border-[#c9060a] pb-1"
+    : "text-[#333]"
+}`}
                 >
+                  
                   {item.name}
                 </Link>
               </li>
@@ -249,12 +250,12 @@ export default function Header({ categories }: { categories: Category[] }) {
                   href={`/category/${item.slug}`}
                   onClick={() => setOpen(false)}
                   className={`block px-4 py-3 border-b border-gray-600 transition ${
-                    item.slug && isActive(item.slug)
-                      ? "text-[#c9060a] border-[#c9060a] pb-1"
-                      : "text-[#333]"
+                item.slug &&     isActive(item.slug)
+                      ? "bg-[#3a3a3a] text-[#c9060a]"
+                      : "hover:bg-[#3a3a3a]"
                   }`}
                 >
-                  {item.name}
+               {item.name}
                 </Link>
               </li>
             ))}
