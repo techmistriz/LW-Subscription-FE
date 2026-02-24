@@ -1,20 +1,26 @@
 import Image from "next/image";
 
+type TextAlignment = "left" | "right" | "center";
+
 interface TestimonialProps {
   data: {
     reader_feedback?: string;
     reader_name?: string;
     reader_designation?: string;
-    text_alignment?: "left" | "right"; // new field
+    text_alignment?: TextAlignment; // new field
   };
 }
-
 export default function TestimonialCard({ data }: TestimonialProps) {
   if (!data) return null;
 
   // Text alignment classes
-  const textAlignClass =
-    data.text_alignment === "right" ? "text-right" : "text-left";
+  const alignment = data.text_alignment ?? "left";
+
+  const textAlignClass = {
+    left: "text-left",
+    right: "text-right",
+    center: "text-center",
+  }[alignment];
 
   return (
     <div className="relative bg-gray-100 rounded-xl p-6 sm:p-8 md:p-10 max-w-4xl mx-auto">
