@@ -306,10 +306,10 @@ export default function ArticleDetailPage() {
                     {article.author.bio ||
                       `${article.author.name} is a contributor at Lex Witness.`}
                   </p>
-                    <div className="flex lg:mt-5 -pt-1 gap-4">
+                    <div className="flex lg:mt-6 -pt-1 gap-4">
                     <a
                       href="#linkedin"
-                      className="w-6 h-6 flex items-center justify-center  border border-[#2e86dd] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
+                      className="w-7 h-5 flex items-center justify-center  border border-[#2e86dd] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
                     >
                       <svg
                         className="w-4 h-4"

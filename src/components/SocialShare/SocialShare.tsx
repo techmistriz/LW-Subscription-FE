@@ -11,7 +11,7 @@ export default function SocialShare({ title }: Props) {
   const shareUrl =
     typeof window !== "undefined" ? window.location.href : "";
   return (
-  <div className="flex gap-2">
+  <div className="flex gap-1">
   {/* LinkedIn */}
   <a
     href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
@@ -19,7 +19,7 @@ export default function SocialShare({ title }: Props) {
     )}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-7 h-7 flex items-center justify-center  border border-[#0A66C2] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
+    className="w-10 h-6 flex items-center justify-center  border border-[#0A66C2] text-[#0A66C2] transition-all duration-300 hover:bg-[#0A66C2] hover:text-white"
   >
     <svg
       className="w-4 h-4"
@@ -38,7 +38,7 @@ export default function SocialShare({ title }: Props) {
   )}`}
   target="_blank"
   rel="noopener noreferrer"
-  className="w-7 h-7 flex items-center justify-center  border border-[#1877F2] text-[#1877F2] transition-all duration-300 hover:bg-[#1877F2] hover:text-white"
+  className="w-10 h-6 flex items-center justify-center  border border-[#1877F2] text-[#1877F2] transition-all duration-300 hover:bg-[#1877F2] hover:text-white"
 >
   <FaFacebookF className="w-4 h-4" />
 </a>
@@ -50,7 +50,7 @@ export default function SocialShare({ title }: Props) {
   )}&text=${encodeURIComponent(title)}`}
   target="_blank"
   rel="noopener noreferrer"
-  className="w-7 h-7 flex items-center justify-center  border border-[#1DA1F2] text-[#1DA1F2] transition-all duration-300 hover:bg-[#1DA1F2] hover:text-white"
+  className="w-10 h-6 flex items-center justify-center text-black  border border-b-cyan-950  transition-all hover:scale-105 ease-in-out duration-300 hover:bg-black hover:text-white"
 >
   <FaXTwitter className="w-4 h-4" />
 </a>
@@ -60,7 +60,7 @@ export default function SocialShare({ title }: Props) {
     href={`https://wa.me/?text=${encodeURIComponent(`${title} - ${shareUrl}`)}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="w-7 h-7 flex items-center justify-center  border border-[#25D366] text-[#25D366] transition-all duration-300 hover:bg-[#25D366] hover:text-white"
+    className="w-10 h-6 flex items-center justify-center  border border-[#25D366] text-[#25D366] transition-all duration-300 hover:bg-[#25D366] hover:text-white"
   >
     <svg
       className="w-4 h-4"

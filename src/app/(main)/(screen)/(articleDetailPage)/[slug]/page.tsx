@@ -31,9 +31,9 @@ export async function generateMetadata({
   title: article.title,
   images: [{
     url: imageUrl,
-    width: 1200,      // ✅ LinkedIn requires
-    height: 630,      // ✅ Exact aspect ratio
-    type: 'image/jpeg' // ✅ Forces JPG detection
+    width: 1200,      //  LinkedIn requires
+    height: 630,      //  Exact aspect ratio
+    type: 'image/jpeg' // Forces JPG detection
   }],
 },
 
