@@ -1,18 +1,14 @@
 "use client";
 
-import SubscriptionCarousel from "@/components/Crausel";
 import PricingCard from "@/components/PricingCard/Pricing";
 import {
-  getLatestMagazines,
   getLatestSingleMagazines,
-  getMagazines,
 } from "@/lib/api/services/magazines";
 import { Magazine } from "@/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function SubscriptionPage() {
-  const [magazines, setMagazines] = useState<Magazine[]>([]);
   const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
 
   // Fetch magazines
@@ -20,8 +16,6 @@ export default function SubscriptionPage() {
     const fetchData = async () => {
       try {
         const single = await getLatestSingleMagazines();
-        const allMagazines = await getMagazines();
-        setMagazines(allMagazines.data || []);
         setSingleMagazine(single);
       } catch (error) {
         console.error("Error fetching magazines:", error);
@@ -99,14 +93,7 @@ export default function SubscriptionPage() {
       {/* PRICING */}
       <PricingCard />     
 
-      {/* MAGAZINE CAROUSEL */}
-      {magazines.length > 0 && (
-        <section className="py-20 bg-white overflow-visible">
-          <SubscriptionCarousel magazines={magazines} />
-        </section>
-      )}
-
-      {/* FAQ */}
+     
     
     </div>
   );
