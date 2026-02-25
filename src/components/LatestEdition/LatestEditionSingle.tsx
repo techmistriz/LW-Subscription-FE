@@ -11,6 +11,7 @@ type Props = {
 export default function LatestIssue({ magazine, showTitle = true }: Props) {
   if (!magazine) return null;
 
+  const data = magazine?.magazine ?? magazine;
   return (
     <div>
       <h3 className="text-2xl text-[#333333] font-semibold tracking-wide mt-2">
@@ -24,11 +25,11 @@ export default function LatestIssue({ magazine, showTitle = true }: Props) {
       >
         <Image
           src={
-            magazine.image
-              ? `${magazineBaseUrl}/${magazine.image}`
+            data?.image && magazineBaseUrl
+              ? `${magazineBaseUrl.replace(/\/$/, "")}/${data.image}`
               : "/placeholder.jpg"
           }
-          alt={magazine.title || "Latest magazine edition"}
+          alt={data?.title || "Latest magazine edition"}
           fill
           className="object-cover hover:shadow-md transition-shadow"
           sizes="300px"
@@ -37,7 +38,7 @@ export default function LatestIssue({ magazine, showTitle = true }: Props) {
 
       {showTitle && (
         <p className="text-[18px] font-semibold my-2 text-start">
-          {magazine.title}
+          {data.title}
         </p>
       )}
 

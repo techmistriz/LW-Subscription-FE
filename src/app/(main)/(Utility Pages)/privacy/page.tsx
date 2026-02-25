@@ -9,21 +9,7 @@ const PrivacyPage = () => {
     <section>
 <Banner title='privacy policy'/>
     <div className="min-h-screen bg-gray-50">
-      {/* Header - Tighter */}
-      <div className="bg-white border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl font-normal text-gray-900 mb-3 tracking-tight">
-              Privacy Policy
-            </h1>
-            <p className="text-base text-gray-600 mb-3">LexWitness.com</p>
-            {/* <div className="bg-indigo-50 border-l-4 border-indigo-400 pl-4 py-2 inline-block">
-              <span className="text-sm text-indigo-800">Effective Date: {effectiveDate}</span>
-            </div> */}
-          </div>
-        </div>
-      </div>
-
+     
       {/* Main Content - Much tighter spacing */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         
@@ -130,44 +116,9 @@ const PrivacyPage = () => {
           </div>
         </section>
 
-        {/* Contact - Tighter */}
-        <section className="space-y-3 bg-white rounded-xl p-6 border border-gray-200">
-          <h2 className="text-xl text-gray-900 text-lg">11. Contact Information</h2>
-          <div className="grid md:grid-cols-2 gap-6 text-sm">
-            <div className="space-y-1">
-              <p className="text-gray-900 font-normal">Data Protection Officer</p>
-              <p className="text-gray-700">privacy@lexwitness.com</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-900 font-normal">Registered Address</p>
-              <p className="text-gray-700">Hashtsāl, Delhi, India</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Navigation - Tighter */}
-        <div className="text-center pt-6 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link href="/" className="px-6 py-2  text-[#333] text-sm  ">
-              ← Back to Home
-            </Link>
-            {/* <Link href="/terms" className="px-6 py-2 bg-[#333] text-[#333] text-sm  hover:bg-[#c9060a]">
-              Terms and Conditions
-            </Link> */}
-          </div>
-        </div>
       </div>
 
-      {/* Footer - Tighter */}
-      <footer className="bg-white border-t border-gray-200 mt-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
- <p className="text-sm text-gray-500">
-              © 2026 LexWitness. All rights reserved. |{' '}
-              <Link href="/terms" className="text-blue-600 hover:text-blue-700 underline">
-                Terms&Conditions
-              </Link>
-            </p>        </div>
-      </footer>
+     
     </div>
     </section>
   );

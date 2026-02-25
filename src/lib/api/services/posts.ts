@@ -21,7 +21,7 @@ export async function getPosts({
   author_id,
   magazine_id,
   page = 1,
-  per_page = 4,
+  per_page = 10 ,
   // latest,
 }: GetPostsParams = {}) {
   const params: any = {
@@ -35,7 +35,6 @@ export async function getPosts({
     // latest
   };
 
-  // console.log("Posts API params:", params); // Debug log
 
   const response = await api.get("/posts", { params });
   return response.data;

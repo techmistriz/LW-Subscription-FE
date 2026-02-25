@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
 import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
 import TestimonialCard from "@/components/Testimonial/Testimonial";
@@ -23,7 +22,7 @@ export default function ArticleDetailPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [shareUrl, setShareUrl] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(true); // Replace with real subscription check
 
   // Load main article by slug
   useEffect(() => {
@@ -39,7 +38,6 @@ export default function ArticleDetailPage() {
 
       try {
         const articleData = await getArticleBySlug(slug as string);
-        console.log(articleData);
         if (!active) return;
 
         if (articleData) {
@@ -133,6 +131,10 @@ export default function ArticleDetailPage() {
   }
 
   // Article not found
+  // if (!article) {
+  //   notFound();
+  // }
+
   if (!article) {
     return (
       <section className="bg-white min-h-screen flex items-center justify-center">
@@ -148,12 +150,6 @@ export default function ArticleDetailPage() {
     );
   }
 
-  // Generate author avatar URL
-  const getAuthorAvatar = (avatar?: string, name?: string) => {
-    if (avatar) return avatar;
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "")}&background=eee&color=000&size=128`;
-  };
-
   let rawCategory = "";
 
   if (article.category) {
@@ -165,8 +161,6 @@ export default function ArticleDetailPage() {
   }
 
   const categoryTitle = toTitleCase(rawCategory);
-
-  console.log("Singlepage", article);
 
   return (
     <section className="bg-white">
@@ -262,14 +256,33 @@ export default function ArticleDetailPage() {
             )}
 
           {/* Article Description */}
-          {article.description && (
-            <div
-              className="article-content text-[15px] font-normal leading-7 text-gray-800"
-              dangerouslySetInnerHTML={{
-                __html: formatArticleHTML(article.description),
-              }}
-            />
-          )}
+          <div className="my-6">
+            {isSubscribed ? (
+              <div
+                className="article-content text-[15px] font-normal leading-7 text-gray-800"
+                dangerouslySetInnerHTML={{
+                  __html: formatArticleHTML(article.description || ""),
+                }}
+              />
+            ) : (
+              <div className="p-6 bg-white  border-2 border-gray-100  text-center">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-3">
+                  Subscribe to Read Full Article
+                </h2>
+                <p className="text-gray-700 mb-4 text-[14px]">
+                  This article is available only for our subscribed readers.
+                  Subscribe now to unlock full access and weekly premium
+                  content.
+                </p>
+                <Link
+                  href="/subscription"
+                  className="inline-block bg-[#c9060a] text-white px-6 py-3  font-normal hover:bg-[#333] transition"
+                >
+                  Subscribe Now
+                </Link>
+              </div>
+            )}
+          </div>
         </>
 
         {/* Author section */}
@@ -380,10 +393,6 @@ export default function ArticleDetailPage() {
           </div>
         )}
       </article>
-
-      {/* Right sidebar */}
-      {/* <RightSidebar /> */}
-      {/* </div> */}
     </section>
   );
 }

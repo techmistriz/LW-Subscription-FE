@@ -118,10 +118,6 @@ export default function CategoryPage() {
 
   return (
     <section className="bg-white">
-      {/* <Banner title={categoryTitle} /> */}
-
-      {/* <div className="max-w-6xl mx-auto px-4 py-1 grid grid-cols-1 lg:grid-cols-12 gap-8"> */}
-      {/* <div className="lg:col-span-9"> */}
       <YearFilter
         years={years}
         selectedYear={selectYear}
@@ -151,10 +147,6 @@ export default function CategoryPage() {
           onPageChange={handlePageChange}
         />
       )}
-      {/* </div> */}
-
-      {/* <RightSidebar /> */}
-      {/* // </div> */}
     </section>
   );
 }

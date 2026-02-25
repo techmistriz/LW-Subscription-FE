@@ -1,9 +1,7 @@
-import { PaginatedResponse,  } from "@/types/api";
+import { PaginatedResponse } from "@/types/api";
 import api from "../axios";
-import { Magazine } from "@/types";
+import { Magazine, Post } from "@/types";
 // Types
-
-
 
 export async function getMagazines(
   year?: number,
@@ -22,18 +20,17 @@ export async function getMagazines(
     return response.data;
   } catch (error) {
     console.error("Error fetching magazines:", error);
-  return {
-  data: [],
-  meta: {
-    paging: {
-      current_page: 1,
-      last_page: 1,
-      total: 0,
-      per_page: per_page, // FIX
-    },
-  },
-};
-
+    return {
+      data: [],
+      meta: {
+        paging: {
+          current_page: 1,
+          last_page: 1,
+          total: 0,
+          per_page: per_page, // FIX
+        },
+      },
+    };
   }
 }
 
@@ -84,8 +81,8 @@ export async function getLatestMagazines(options?: {
       params: {
         page: 1,
         limit: options?.limit ?? 5,
-        latest: 1, // ensure sorted latest
-        skip_id: options?.skipId,
+        latest: 1,
+        skip_id: options?.skipId, // skip by id
       },
     });
 
@@ -119,4 +116,19 @@ export async function getLatestSingleMagazines(): Promise<Magazine | null> {
   }
 }
 
+type LatestEditionResponse = {
+  magazine: Magazine;
+  posts: Post[];
+};
 
+export async function latestEdition(): Promise<LatestEditionResponse | null> {
+  try {
+    const response = await api.get("/homepage-latest-edition");
+    const result = response.data;
+
+    return result.data; // now matches { magazine, posts }
+  } catch (error) {
+    console.error("Error fetching latest magazine:", error);
+    return null;
+  }
+}

@@ -6,8 +6,8 @@ const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
 
 export default function BigFeature({ post }: { post?: Post }) {
   if (!post) return null;
-
-  const imageUrl = post.image ? `${baseUrl}/${post.image}` : "/placeholder.jpg";
+  
+  const imageUrl = post.image ? `${baseUrl}${post.image}` : "/placeholder.jpg";
 
   return (
     <div

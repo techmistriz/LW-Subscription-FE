@@ -8,6 +8,8 @@ import { getAuthors } from "@/lib/api/services/author";
 import { getCategories } from "@/lib/api/services/categories";
 import Pagination from "@/components/Pagination/Pagination";
 import { Year, Article, Author, Category } from "@/types";
+import { Post } from "@/types";
+import { ReactNode } from "react";
 import { PaginationMeta } from "@/types/api";
 import PostList from "@/components/Common/PostList";
 
@@ -100,12 +102,18 @@ export default function ArchivePage() {
     router.push(`/archive?${params.toString()}`);
   };
 
-  const handleClearFilters = () => {
-    setSelectedYearId(undefined);
-    setSelectedCategoryId(undefined);
-    setSelectedAuthorId(undefined);
-    router.push("/archive");
-  };
+  // const handleClearFilters = () => {
+  //   setSelectedYearId(undefined);
+  //   setSelectedCategoryId(undefined);
+  //   setSelectedAuthorId(undefined);
+  //   router.push("/archive");
+  // };
+
+
+const posts: Post[] = articles.map(a => ({
+  ...a,
+  content: a.content ? <>{a.content}</> : <></>, // ensure content is always ReactNode
+}));
 
   return (
     <>
@@ -179,14 +187,14 @@ export default function ArchivePage() {
         </button> */}
       </div>
 
-      <PostList
-        posts={articles}
-        loading={loading}
-        postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
-        emptyMessage={
-          searchTerm ? `No results for "${searchTerm}"` : "No posts found."
-        }
-      />
+    <PostList
+  posts={posts} // ✅ use mapped array
+  loading={loading}
+  postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
+  emptyMessage={
+    searchTerm ? `No results for "${searchTerm}"` : "No posts found."
+  }
+/>
 
       {!loading && articles.length > 0 && (
         <Pagination

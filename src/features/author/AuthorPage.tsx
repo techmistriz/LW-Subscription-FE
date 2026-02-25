@@ -7,28 +7,29 @@ import { getPosts } from "@/lib/api/services/posts";
 import { getAuthors } from "@/lib/api/services/author";
 import { getYears } from "@/lib/api/services/years";
 
-import RightSidebar from "@/components/RightSidebar/RightSidebar";
 import PageLoader from "@/components/Loader/PageLoader";
-import Banner from "@/components/Common/Banner";
 import YearFilter from "@/components/Common/YearFilter";
 import PostList from "@/components/Common/PostList";
 import Pagination from "@/components/Pagination/Pagination";
+import { Post } from "@/types/models";
 
 // Post interface matching your API + Author normalization
-interface Post {
-  id: number;
-  slug: string;
-  title: string;
-  image?: string;
-  publish_date?: string;
-  short_description?: string;
-  author?: {
-    id: number;
-    name: string;
-    slug: string;
-    linkedin: string; // ✅ ensure linkedin exists
-  } | string;
-}
+// interface Post {
+//   id: number;
+//   slug: string;
+//   title: string;
+//   image?: string;
+//   publish_date?: string;
+//   short_description?: string;
+//   author?:
+//     | {
+//         id: number;
+//         name: string;
+//         slug: string;
+//         linkedin: string; // ensure linkedin exists
+//       }
+//     | string;
+// }
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
@@ -94,7 +95,7 @@ export default function AuthorPage() {
         setLoading(false);
       }
     },
-    [authorId]
+    [authorId],
   );
 
   // Load Years
@@ -123,6 +124,11 @@ export default function AuthorPage() {
     fetchPosts(1, selectedYear);
   };
 
+  const postsWithContent: Post[] = posts.map((p) => ({
+    ...p,
+    content: p.content ? <>{p.content}</> : <></>,
+  }));
+
   return (
     <section className="bg-white">
       <div className="lg:col-span-9">
@@ -140,15 +146,13 @@ export default function AuthorPage() {
         ) : (
           <>
             <PostList
-              posts={posts}
+              posts={postsWithContent} //  mapped with content
               fallbackAuthorName={authorTitle}
               postBaseUrl={postBaseUrl}
               loading={loading}
               emptyMessage={
                 selectedYear
-                  ? `${authorTitle} has not published any posts in ${years.find(
-                      (y) => y === selectedYear
-                    )}`
+                  ? `${authorTitle} has not published any posts in ${selectedYear}`
                   : `${authorTitle} has not published any posts yet`
               }
             />

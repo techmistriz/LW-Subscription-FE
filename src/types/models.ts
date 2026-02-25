@@ -1,8 +1,8 @@
-// =========================
+import { ReactNode } from "react";
+
 // POST
-// =========================
-// Base Post type (shared fields)
 export interface Post {
+  content: ReactNode; // required for PostList rendering
   id: number;
   title: string;
   slug: string;
@@ -10,22 +10,31 @@ export interface Post {
   publish_date?: string;
   image?: string;
   author?: Author | string;
-
-  short_description?: string; // ✅ make optional
+  short_description?: string;
   date?: string;
   excerpt?: string;
 }
 
-// Article extends Post
-export interface Article extends Post {
+// ARTICLE
+// Article does NOT extend Post directly to avoid TypeScript errors
+export interface Article {
+  id: number;
+  title: string;
+  slug: string;
   content?: string;
   short_description?: string;
   excerpt?: string;
   description?: string | null;
 
+  published_at?: string;
+  publish_date?: string;
+  date?: string;
+
+  image?: string;
   category?: ArticleCategoryType;
   category_id?: number;
 
+  author?: Author | string;
   author_id?: number;
   author_slug?: string;
 
@@ -33,21 +42,17 @@ export interface Article extends Post {
   reader_feedbacks?: ReaderFeedback[] | null;
 }
 
-// =========================
 // CATEGORY
-// =========================
 export interface ArticleCategory {
   id: number;
   name: string;
   slug?: string;
 }
 
-// In some APIs, category may be a string
+// Category may also be just a string in some APIs
 export type ArticleCategoryType = ArticleCategory | string;
 
-// =========================
 // AUTHOR
-// =========================
 export interface Author {
   id: number;
   name: string;
@@ -68,46 +73,10 @@ export interface AuthorListItem {
   id: number;
   name: string;
   slug?: string;
-    linkedin: string;
-
+  linkedin: string;
 }
 
-// =========================
-// ARTICLE
-// =========================
-// export interface Article {
-//   id: number;
-//   title: string;
-//   slug: string;
-//   search?: string;
-
-//   content?: string;
-//   short_description?: string;
-//   excerpt?: string;
-//   description?: string | null;
-  
-//   published_at?: string;
-//   publish_date?: string;
-//   date?: string;
-
-//   image?: string;
-//   category?: ArticleCategoryType;
-//   category_id?: number;
-
-//   author?: Author | string;
-//   authorId?: number;
-//   author_id?: number;
-//   author_slug?: string;
-
-//   magazine_id?: number;
-
-//   // Reader Feedbacks (for verdict type posts)
-//   reader_feedbacks?: ReaderFeedback[] | null;
-// }
-
-// =========================
 // READER FEEDBACK
-// =========================
 export interface ReaderFeedback {
   id: number;
   reader_name: string;
@@ -118,38 +87,30 @@ export interface ReaderFeedback {
   updated_at?: string;
 }
 
-// =========================
 // MAGAZINE
-// =========================
 export interface Magazine {
+  magazine: Magazine;
   id: number;
   slug: string;
   title: string;
   image?: string;
   magazine_name?: string;
   description?: string;
-
   posts: Article[];
 }
 
-// =========================
 // CATEGORY (general purpose)
-// =========================
 export interface Category {
   id: number;
   name: string;
   slug?: string;
 }
 
-// =========================
 // YEAR
-// =========================
 export type Year = number;
 export type YearResponse = Year[];
 
-// =========================
 // AUTH / FORM DATA
-// =========================
 export interface RegisterForm {
   first_name: string;
   last_name: string;

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { getMagazines } from "@/lib/api/services/magazines";
 import { getYears } from "@/lib/api/services/years";
-// import { MagazineSkeleton } from "@/components/Skeletons/magazineSkeleton";
 import Pagination from "@/components/Pagination/Pagination";
 import { Magazine, Year } from "@/types";
 import Banner from "@/components/Common/Banner";
@@ -124,12 +123,6 @@ export default function MagazinesPage({
 
         {/* Magazines grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {/* {loading ? (
-            // Loading skeleton
-            Array.from({ length: 10 }).map((_, i) => (
-              <MagazineSkeleton key={i} />
-            )) */}
-
           {loading ? (
             <div className="col-span-full flex justify-center py-16">
               <PageLoader />

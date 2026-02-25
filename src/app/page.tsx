@@ -8,75 +8,40 @@ import BigFeature from "@/components/Home/BigFeature";
 import { MiddleCards } from "@/components/Home/MiddleCards";
 import AsidePosts from "@/components/Home/AsidePosts";
 
-import {
-  get1LatestPost,
-  get2LatestPost,
-  get4LatestPost,
-} from "@/components/Home/service";
-
-import {
-  getLatestMagazines,
-  getLatestSingleMagazines,
-} from "@/lib/api/services/magazines";
-
-import { getPosts } from "@/lib/api/services/posts";
+import { getHeroPost } from "@/components/Home/service";
+import { getLatestMagazines, latestEdition } from "@/lib/api/services/magazines";
 
 export const revalidate = 60;
 
 // Lazy load non-critical components
-const EditorPicks = dynamic(
-  () => import("@/components/EditorPick's/EditorPicks"),
-);
-
-const Advertisement = dynamic(
-  () => import("@/components/HomeAdvertisment/advertisement"),
-);
+const EditorPicks = dynamic(() => import("@/components/EditorPick's/EditorPicks"));
+const Advertisement = dynamic(() => import("@/components/HomeAdvertisment/advertisement"));
 
 export default async function HomePage() {
-  //  Parallel initial fetch
-  const [latestPosts, latest2Posts, latest4Post, latestSingle] =
-    await Promise.all([
-      get1LatestPost(),
-      get2LatestPost(),
-      get4LatestPost(),
-      getLatestSingleMagazines(),
-    ]);
+  // Hero posts
+  const heroData = await getHeroPost();
+  const get1LatestPost = heroData.slice(0, 1); // First post
+  const get2LatestPost = heroData.slice(1, 3); // Next 2 posts
+  const get4LatestPost = heroData.slice(3);    // Remaining posts
 
-  // Run remaining requests in parallel (if possible)
-  const [latestFive, postsResponse] = await Promise.all([
-    getLatestMagazines({
-      skipId: latestSingle?.id,
-      limit: 5,
-    }),
-    latestSingle?.id
-      ? getPosts({
-          magazine_id: Number(latestSingle.id),
-          limit: 3,
-        })
-      : Promise.resolve([]),
-  ]);
+  // Latest magazine edition
+  const latestEditionData = await latestEdition();
 
-  const articles = Array.isArray(postsResponse)
-    ? postsResponse
-    : (postsResponse?.data ?? []);
+  // Latest 5 magazines excluding current edition
+  const latestFive = await getLatestMagazines({
+    skipId: latestEditionData?.magazine.id,
+    limit: 5,
+  });
 
   return (
     <main className="bg-white">
-      {/* Top Section */}
-      {/* <section className="max-w-6xl mx-auto px-4 pt-5">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
-          <BigFeature post={latestPosts} />
-          <MiddleCards posts={latest2Posts} />
-          <AsidePosts posts={latest4Post} />
-        </div>
-      </section> */}
-
+      {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 pt-5">
-        {latestPosts && latest2Posts?.length && latest4Post?.length ? (
+        {get1LatestPost.length && get2LatestPost.length && get4LatestPost.length ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
-            <BigFeature post={latestPosts} />
-            <MiddleCards posts={latest2Posts} />
-            <AsidePosts posts={latest4Post} />
+            <BigFeature post={get1LatestPost[0]} />
+            <MiddleCards posts={get2LatestPost} />
+            <AsidePosts posts={get4LatestPost} />
           </div>
         ) : (
           <HomeHeroSkeleton />
@@ -93,16 +58,16 @@ export default async function HomePage() {
       <SubscribeBanner />
 
       {/* Latest Issue */}
-      {latestSingle && (
+      {latestEditionData && (
         <section className="max-w-6xl mx-auto px-4 py-10 lg:pb-0">
           <LatestIssueWithArticles
-            magazine={latestSingle}
-            articles={articles}
+            latestEdition={latestEditionData.magazine}
+            posts={latestEditionData.posts}
           />
         </section>
       )}
 
-      {/* Latest Editions */}
+      {/* Latest Magazines */}
       <LatestEdition magazines={latestFive} />
     </main>
   );

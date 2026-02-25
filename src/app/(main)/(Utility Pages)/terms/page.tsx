@@ -7,16 +7,7 @@ const TermsPage = () => {
     <section>
       <Banner title={'Terms and Conditions'} />
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
-            <h1 className="text-4xl sm:text-5xl font-semibold text-gray-900 mb-3 tracking-tight">
-              Terms and Conditions
-            </h1>
-            <p className="text-lg text-gray-600">LexWitness.com</p>
-          </div>
-        </div>
+       
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
@@ -109,45 +100,8 @@ const TermsPage = () => {
             </p>
           </section>
 
-          {/* Contact Section */}
-          <section className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
-            <h2 className="text-2xl text-gray-900 mb-4">Contact Us</h2>
-            <p className="text-gray-700 mb-6">Questions regarding these Terms? Reach out to us:</p>
-            <div className="grid md:grid-cols-2 gap-6 text-gray-700">
-              <div>
-                <p className="font-semibold text-gray-900">Email</p>
-                <p>support@lexwitness.com</p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-900">Address</p>
-                <p>Hashtsāl, Delhi, India</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Navigation */}
-          <div className="text-center pt-8 border-t border-gray-200">
-            <Link
-              href="/"
-              className="inline-block px-6 py-2 text-gray-800 hover:text-black rounded transition duration-200"
-            >
-              ← Back to Home
-            </Link>
-          </div>
+         
         </div>
-
-        {/* Footer */}
-        <footer className="bg-white border-t border-gray-200 mt-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-            <p className="text-sm text-gray-500">
-              © 2026 LexWitness. All rights reserved. |{' '}
-              <Link href="/privacy" className="text-blue-600 hover:text-blue-700 underline">
-                Privacy Policy
-              </Link>
-            </p>
-          </div>
-        </footer>
-      </div>
     </section>
   );
 };
