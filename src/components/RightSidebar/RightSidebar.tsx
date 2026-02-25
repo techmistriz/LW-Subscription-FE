@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SubscribeSidebar from "../../features/Auth/SubscribeSidebar";
+import SubscribeSidebar from "../../features/auth/SubscribeSidebar";
 import SidebarAdvertisement from "../SidebarAdvertisment/SidebarAdvertisement";
 import LatestEditionSingle from "../LatestEdition/LatestEditionSingle";
 import { getLatestSingleMagazines } from "@/lib/api/services/magazines";

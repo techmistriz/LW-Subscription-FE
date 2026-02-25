@@ -1,6 +1,6 @@
 import LatestIssue from "./LatestEditionSingle";
 import RelatedMagazineArticles from "../RelatedMagazineArticle/RelatedMagazineArticles";
-import NirmalaSitaraman from "../NirmalaSitaraman/NirmalaSitaraman";
+import NirmalaSitaraman from "../Editorial/Editorial";
 import Link from "next/link";
 import type { Magazine } from "@/types";
 

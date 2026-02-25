@@ -17,7 +17,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-4 my-10">
+    <section className="max-w-6xl mx-auto  my-10">
       <div className="text-center mb-10">
         <h2 className="text-2xl text-[#333333] font-semibold tracking-wide">
           ARTICLES
@@ -32,7 +32,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
             href={`/${article.slug}`}
             className="group border border-gray-300 bg-white hover:shadow-[0_2px_10px_rgba(0,0,0,0.18)] flex flex-col"
           >
-            <div className="relative w-full h-45 overflow-hidden">
+            <div className="relative w-full h-40 overflow-hidden">
               <Image
                 src={
                   article.image
@@ -45,7 +45,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
               />
             </div>
 
-            <div className="p-4 flex flex-col flex-1">
+            <div className="px-4 py-2 flex flex-col flex-1 border border-gray-200">
               <h3 className="text-[15px] font-semibold text-[#222] leading-snug mb-2 line-clamp-2">
                 {article.title}
               </h3>
