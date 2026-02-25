@@ -40,5 +40,4 @@ async function NirmalaSitaraman() {
   );
 }
 
-
 export default NirmalaSitaraman;
