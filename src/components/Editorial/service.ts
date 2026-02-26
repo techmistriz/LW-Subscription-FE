@@ -1,6 +1,9 @@
 import api from "@/lib/api/axios";
+import { ReactNode } from "react";
 
 export interface Editorial {
+  description: ReactNode;
+  slug: any;
   id: number;
   name: string;
   designation: string;

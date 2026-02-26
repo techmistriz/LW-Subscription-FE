@@ -16,7 +16,7 @@ export async function generateMetadata({
     };
   }
 
-  // ✅ PERFECT - Use your exact image base URL
+  // PERFECT - Use your exact image base URL
   let imageUrl = "https://lwsubscription.vercel.app/default-og-image.jpg";
   
   if (article.image) {
