@@ -11,7 +11,7 @@ export default function PricingCard() {
         {/* LEFT FEATURED CARD */}
         <div className="relative bg-white rounded-2xl border-4 border-red-500 shadow-xl overflow-hidden">
           {/* Top Red Banner */}
-          <div className="bg-red-600 italic text-white text-center py-2 text-xl font-bold">
+          <div className="bg-[#c9060a] italic text-white text-center py-2 text-xl font-bold">
             Recommended
           </div>
 
@@ -61,14 +61,14 @@ export default function PricingCard() {
 
             <div className="mb-2 text-gray-400 line-through text-xl">₹299</div>
 
-            <div className="text-2xl font-semibold text-red-600 mb-2">
+            <div className="text-2xl font-semibold text-[#c9060a] mb-2">
               Free{" "}
               <span className="text-gray-500 text-sm font-medium">
                 / 1 Month
               </span>
             </div>
 
-            <div className="text-sm text-red-600 mb-6">
+            <div className="text-sm text-[#c9060a] mb-6">
               (100% Off) <span className="text-gray-500 text-[14px]">| Cancel anytime</span>
             </div>
 
@@ -79,7 +79,7 @@ export default function PricingCard() {
               </div>
             </div>
 
-            <button className="bg-red-600 hover:bg-red-700 transition mb-6 text-white px-8 py-1 rounded-xl text-sm">
+            <button className="bg-[#c9060a] hover:bg-[#c9060a] transition mb-6 text-white px-8 py-1 rounded-xl text-sm">
               START MY FREE MONTH
             </button>
             </div>
@@ -104,7 +104,7 @@ export default function PricingCard() {
               <li>• Access our timeless archives</li>
             </ul>
             <div className="relative bg-gray-300 overflow-hidden">
-              <div className="absolute top-6 right-[-40px] rotate-45 bg-red-600 text-white text-sm px-10 py-1 font-semibold shadow-md">
+              <div className="absolute top-6 right-[-40px] rotate-45 bg-[#c9060a] text-white text-sm px-10 py-1 font-semibold shadow-md">
                 Save ₹4201
               </div>
               <div className="text-gray-400 line-through text-xl mb-2">
@@ -119,7 +119,7 @@ export default function PricingCard() {
                 </span>
               </div>
 
-              <div className="text-sm text-red-600 mb-10">
+              <div className="text-sm text-[#c9060a] mb-10">
                 (81% Off){" "}
                 <span className="text-gray-500 text-[12px]">| Cancel anytime</span>
               </div>
@@ -131,7 +131,7 @@ export default function PricingCard() {
                 </div>
               </div>
 
-              <button className="bg-red-600  hover:bg-red-700 mb-10 transition text-white px-6  rounded-xl ">
+              <button className="bg-[#c9060a]  hover:bg-[#c9060a] mb-10 transition text-white px-6  rounded-xl ">
                 GET INSTANT ACCESS
               </button>
             </div>

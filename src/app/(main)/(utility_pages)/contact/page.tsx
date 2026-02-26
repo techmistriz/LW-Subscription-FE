@@ -23,14 +23,14 @@ export default function ContactPage() {
           <div className="space-y-2 text-sm sm:text-md text-gray-800">
             <p>
               Deepak Jha | +91-XXXXXXXXXX |{" "}
-              <span className="text-red-600 break-all">
+              <span className="text-[#c9060a] break-all">
                 deepak@witnesslive.in
               </span>
             </p>
 
             <p>
               Aditya Raj | +91-XXXXXXXXXX |{" "}
-              <span className="text-red-600 break-all">
+              <span className="text-[#c9060a] break-all">
                 aditya@witnesslive.in
               </span>
             </p>
@@ -40,7 +40,7 @@ export default function ContactPage() {
 
           <div className="space-y-3 text-sm sm:text-md text-gray-800">
             <p className="font-semibold">
-              Lex <span className="text-red-600">Witness</span> – India’s 1st
+              Lex <span className="text-[#c9060a]">Witness</span> – India’s 1st
               Magazine on Legal & Corporate Affairs
             </p>
 
@@ -49,7 +49,7 @@ export default function ContactPage() {
 
             <p>
               E:{" "}
-              <span className="text-red-600 break-all">
+              <span className="text-[#c9060a] break-all">
                 info@witnesslive.in
               </span>
             </p>

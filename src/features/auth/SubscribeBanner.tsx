@@ -124,7 +124,7 @@ function SubscribeBanner() {
         disabled={loading}
       />
       {errors[name] && (
-        <span className="text-red-500 text-sm mt-1">{errors[name]}</span>
+        <span className="text-[#c9060a] text-sm mt-1">{errors[name]}</span>
       )}
     </div>
   );

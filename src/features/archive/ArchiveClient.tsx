@@ -172,7 +172,7 @@ const posts: Post[] = articles.map(a => ({
 
         <button
           onClick={handleApplyFilters}
-          className="bg-[#c9060a] text-white px-6 py-2 font-semibold hover:bg-red-700 transition-colors w-65 cursor-pointer"
+          className="bg-[#c9060a] text-white px-6 py-2 font-semibold hover:bg-[#c9060a] transition-colors w-65 cursor-pointer"
           disabled={loading}
         >
           {loading ? "Searching..." : "Search"}
