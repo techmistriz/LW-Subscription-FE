@@ -313,7 +313,7 @@ export default function ArticleDetailPage() {
                 </p>
 
                 {/* Social links */}
-                <div className="flex lg:mt-6 -pt-1 gap-4">
+                <div className="flex lg:mt-4 -pt-1 gap-4">
                   <a
                     href={article.author?.linkedin}
                     target="_blank"
