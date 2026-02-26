@@ -8,6 +8,7 @@ import BigFeature from "@/components/Home/BigFeature";
 import { MiddleCards } from "@/components/Home/MiddleCards";
 import AsidePosts from "@/components/Home/AsidePosts";
 
+
 import { getHeroPost } from "@/components/Home/service";
 import { getLatestMagazines, latestEdition } from "@/lib/api/services/magazines";
 
