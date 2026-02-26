@@ -11,7 +11,7 @@ export default function PricingCard() {
         {/* LEFT FEATURED CARD */}
         <div className="relative bg-white rounded-2xl border-4 border-red-500 shadow-xl overflow-hidden">
           {/* Top Red Banner */}
-          <div className="bg-red-600 text-white text-center py-2 text-xl font-bold">
+          <div className="bg-red-600 italic text-white text-center py-2 text-xl font-bold">
             Recommended
           </div>
 
