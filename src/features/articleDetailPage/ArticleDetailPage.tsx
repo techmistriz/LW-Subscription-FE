@@ -39,7 +39,7 @@ export default function ArticleDetailPage() {
       try {
         const articleData = await getArticleBySlug(slug as string);
         if (!active) return;
-
+        console.log(articleData);
         if (articleData) {
           setArticle(articleData);
           document.title = `${articleData.title} | Lex Witness`;
@@ -186,9 +186,7 @@ export default function ArticleDetailPage() {
         </h1>
         <div className="w-10 h-1 bg-[#c9060a] mb-1" />
 
-        {/* Meta and social sharing */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-          {/* Author and date */}
           <p className="text-sm text-[#333333] flex items-center gap-2">
             {article.author && typeof article.author !== "string" ? (
               <Link
@@ -204,11 +202,7 @@ export default function ArticleDetailPage() {
                   : "Lex Witness Bureau"}
               </span>
             )}
-
-            {/* Separator with space */}
             <span className="text-gray-500">|</span>
-
-            {/* Publish date */}
             <span>{article.publish_date}</span>
           </p>
 
@@ -248,7 +242,11 @@ export default function ArticleDetailPage() {
                       reader_feedback: item.reader_feedback,
                       reader_name: item.reader_name,
                       reader_designation: item.reader_designation,
-                      text_alignment: item.text_alignment || "left", // use alignment from API
+                      text_alignment:
+                        (item.text_aligment?.replace("text-", "") as
+                          | "left"
+                          | "right"
+                          | "center") || "left",
                     }}
                   />
                 ))}
@@ -313,13 +311,13 @@ export default function ArticleDetailPage() {
                 </p>
 
                 {/* Social links */}
-                <div className="flex lg:mt-4 -pt-1 gap-4">
+                <div className="flex lg:mt-5 -pt-1 gap-4">
                   <a
                     href={article.author?.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="
-    w-10 h-7
+    w-9 h-6
     flex items-center justify-center
     border border-[#0A66C2]
     text-[#0A66C2]
