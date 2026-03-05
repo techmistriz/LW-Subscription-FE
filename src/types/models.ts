@@ -18,6 +18,7 @@ export interface Post {
 // ARTICLE
 // Article does NOT extend Post directly to avoid TypeScript errors
 export interface Article {
+  magazine: any;
   id: number;
   title: string;
   slug: string;

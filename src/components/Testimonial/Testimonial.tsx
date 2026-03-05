@@ -54,7 +54,7 @@ export default function TestimonialCard({ data }: TestimonialProps) {
       {/* Author */}
       <div className={textAlignClass}>
         <h4 className="font-semibold mx-7 text-gray-900 text-sm sm:text-md md:text-[16px]">
-          {data.reader_name || "Anonymous"}
+          {data.reader_name || ""}
         </h4>
         {data.reader_designation && (
           <p className="text-gray-600 mx-7 text-xs sm:text-sm md:text-xs">

@@ -15,7 +15,7 @@ export default function LatestEdition({ magazines }: Props) {
     <section className="max-w-6xl mx-auto px-4 my-10 lg:mt-8">
       {/* Section header */}
       <div className="text-center mb-8">
-        <h2 className="text-[22px] text-[#333333] font-bold tracking-wide">
+        <h2 className="text-[20px] text-[#333333] font-bold tracking-wide">
           LATEST EDITIONS
         </h2>
         <div className="w-14 h-1.5 bg-[#c9060a] mx-auto mt-1"></div>
