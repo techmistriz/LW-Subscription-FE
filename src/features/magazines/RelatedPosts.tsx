@@ -3,8 +3,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Article } from "@/types";
+import { useState } from "react";
 
 const postsImgBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+
+function PostImage({ article }: { article: Article }) {
+  const [src, setSrc] = useState(
+    article.image
+      ? `${postsImgBaseUrl}/${article.image}`
+      : "/default_img.png"
+  );
+
+  return (
+    <Image
+      src={src}
+      alt={article.title}
+      fill
+      className="object-cover"
+      onError={() => setSrc("/placeholder.jpg")}
+    />
+  );
+}
 
 export default function RelatedPosts({ posts }: { posts: Article[] }) {
   if (!posts || posts.length === 0) {
@@ -17,7 +36,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
   }
 
   return (
-    <section className="max-w-6xl mx-auto  my-10">
+    <section className="max-w-6xl mx-auto my-10">
       <div className="text-center mb-10">
         <h2 className="text-2xl text-[#333333] font-semibold tracking-wide">
           ARTICLES
@@ -33,16 +52,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
             className="group border border-gray-300 bg-white hover:shadow-[0_2px_10px_rgba(0,0,0,0.18)] flex flex-col"
           >
             <div className="relative w-full h-40 overflow-hidden">
-              <Image
-                src={
-                  article.image
-                    ? `${postsImgBaseUrl}/${article.image}`
-                    : "/placeholder.jpg"
-                }
-                alt={article.title}
-                fill
-                className="object-cover"
-              />
+              <PostImage article={article} />
             </div>
 
             <div className="px-4 py-2 flex flex-col flex-1 border border-gray-200">

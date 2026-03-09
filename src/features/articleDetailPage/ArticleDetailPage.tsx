@@ -42,7 +42,8 @@ export default function ArticleDetailPage() {
 
       try {
         const articleData = await getArticleBySlug(slug);
-
+console.log("Slug:", slug);
+console.log("Article:", articleData);
         if (!active) return;
 
         if (articleData) {
@@ -260,23 +261,25 @@ export default function ArticleDetailPage() {
 
         {/* TESTIMONIALS */}
         {Array.isArray(article.reader_feedbacks) &&
-          article.reader_feedbacks.length > 0 && (
+          article.reader_feedbacks.some((item) => item.reader_feedback) && (
             <div className="my-12 space-y-8">
-              {article.reader_feedbacks.map((item: any) => (
-                <TestimonialCard
-                  key={item.id}
-                  data={{
-                    reader_feedback: item.reader_feedback,
-                    reader_name: item.reader_name,
-                    reader_designation: item.reader_designation,
-                    text_alignment:
-                      (item.text_aligment?.replace("text-", "") as
-                        | "left"
-                        | "right"
-                        | "center") || "left",
-                  }}
-                />
-              ))}
+              {article.reader_feedbacks
+                .filter((item) => item.reader_feedback) // remove empty feedback
+                .map((item: any) => (
+                  <TestimonialCard
+                    key={item.id}
+                    data={{
+                      reader_feedback: item.reader_feedback,
+                      reader_name: item.reader_name,
+                      reader_designation: item.reader_designation,
+                      text_alignment:
+                        (item.text_aligment?.replace("text-", "") as
+                          | "left"
+                          | "right"
+                          | "center") || "left",
+                    }}
+                  />
+                ))}
             </div>
           )}
 
@@ -309,23 +312,23 @@ export default function ArticleDetailPage() {
                 <div className="flex lg:mt-5 gap-4">
                   {/* Author LinkedIn */}
                   {/* {article.author?.linkedin && ( */}
-                    <a
-                      href={article.author.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
+                  <a
+                    href={article.author.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
+                  >
+                    <svg
+                      className="w-4 h-4 z-10"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        className="w-4 h-4 z-10"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-                      </svg>
+                      <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+                    </svg>
 
-                      {/* Hover overlay */}
-                      <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
-                    </a>
+                    {/* Hover overlay */}
+                    <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
+                  </a>
                   {/* )} */}
                 </div>
               </div>

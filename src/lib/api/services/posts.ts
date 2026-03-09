@@ -41,10 +41,27 @@ export async function getPosts({
 }
 
 // Single article by slug
+// export async function getArticleBySlug(slug: string) {
+//   try {
+//     const response = await api.get(`/posts/${slug}`);
+//     console.log(response)
+//     return response.data.data || response.data.post || response.data;
+//   } catch (error) {
+//     console.error("getArticleBySlug error:", error);
+//     return null;
+//   }
+// }
+
 export async function getArticleBySlug(slug: string) {
   try {
     const response = await api.get(`/posts/${slug}`);
-    return response.data.data || response.data.post || response.data;
+
+    const data = response.data;
+
+    if (data?.data) return data.data;
+    if (data?.post) return data.post;
+
+    return data;
   } catch (error) {
     console.error("getArticleBySlug error:", error);
     return null;
