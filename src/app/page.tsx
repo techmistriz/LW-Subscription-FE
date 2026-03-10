@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import HomeHeroSkeleton from "@/components/Home/HomeHeroSkeleton";
 import SubscribeBanner from "@/features/auth/SubscribeBanner";
 import LatestEdition from "@/components/LatestEdition/LatestEdition";
-import LatestIssueWithArticles from "@/components/LatestEdition/LatestEditionWithArticles";
+import LatestEditionWithArticles from "@/components/LatestEdition/LatestEditionWithArticles";
 import BigFeature from "@/components/Home/BigFeature";
 import { MiddleCards } from "@/components/Home/MiddleCards";
 import AsidePosts from "@/components/Home/AsidePosts";
@@ -61,7 +61,7 @@ export default async function HomePage() {
       {/* Latest Issue */}
       {latestEditionData && (
         <section className="max-w-6xl mx-auto px-4 py-10 lg:pb-0">
-          <LatestIssueWithArticles
+          <LatestEditionWithArticles
             latestEdition={latestEditionData.magazine}
             posts={latestEditionData.posts}
           />
