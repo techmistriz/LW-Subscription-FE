@@ -3,6 +3,7 @@ import { Author } from "@/types";
 import { Category } from "@/types";
 
 export interface Post {
+  magazine: any;
   id: number;
   title: string;
   slug?: string;

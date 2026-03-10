@@ -234,7 +234,7 @@ export default function ArticleDetailPage() {
         <div className="my-6">
           {isSubscribed ? (
             <div
-              className="article-content text-[15px] font-normal leading-7 text-gray-800"
+              className="article-content text-[15px] font-normal leading-7 text-gray-800 text-justify"
               dangerouslySetInnerHTML={{
                 __html: formatArticleHTML(article.description || ""),
               }}
@@ -282,6 +282,12 @@ export default function ArticleDetailPage() {
                 ))}
             </div>
           )}
+          <div className="flex justify-end  ">
+
+                    <SocialShare title={article.title} />
+          </div>
+
+
 
         {/* AUTHOR SECTION */}
         {article.author && typeof article.author !== "string" && (
@@ -289,7 +295,7 @@ export default function ArticleDetailPage() {
             <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
             <div className="w-10 h-1 bg-[#c9060a]" />
 
-            <div className="border border-gray-300 mt-2 p-4 flex gap-4">
+            <div className="border border-gray-300 mt-2 p-4 flex gap-4 hover:shadow-gray-300 hover:shadow-md">
               <div className="relative w-24 h-24 shrink-0">
                 <Image
                   src={authorImage}
@@ -314,7 +320,7 @@ export default function ArticleDetailPage() {
                   {/* {article.author?.linkedin && ( */}
                   <a
                     href={article.author.linkedin}
-                    target="_blank"
+                    // target="_blank"
                     rel="noopener noreferrer"
                     className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
                   >

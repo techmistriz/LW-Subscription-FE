@@ -35,7 +35,7 @@ export default function AsidePosts({ posts }: { posts: Post[] }) {
             {/* Date */}
             {post.publish_date && (
               <p className="text-gray-400 text-[12px] font-medium">
-                {post.publish_date}
+                {post.magazine.month.name} {post.magazine.year}
               </p>
             )}
 

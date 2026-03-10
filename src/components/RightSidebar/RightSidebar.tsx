@@ -21,7 +21,7 @@ function RightSidebar() {
   return (
     <aside className="lg:col-span-3 space-y-8">
       {magazine && (
-        <LatestEditionSingle magazine={magazine} showTitle={false} />
+        <LatestEditionSingle magazine={magazine} showTitle={false} showUnderline={false}/>
       )}
       <SubscribeSidebar />
       <SidebarAdvertisement />

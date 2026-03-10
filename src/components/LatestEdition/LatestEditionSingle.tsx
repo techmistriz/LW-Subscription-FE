@@ -6,9 +6,10 @@ const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 type Props = {
   magazine: Magazine;
   showTitle?: boolean;
+  showUnderline?: boolean;
 };
 
-export default function LatestIssue({ magazine, showTitle = true }: Props) {
+export default function LatestIssue({ magazine, showTitle = true, showUnderline = true }: Props) {
   if (!magazine) return null;
 
   const data = magazine?.magazine ?? magazine;
@@ -41,8 +42,10 @@ export default function LatestIssue({ magazine, showTitle = true }: Props) {
           {data.title}
         </p>
       )}
+{showUnderline && (
 
-      <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
+  <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
+)}
     </div>
   );
 }

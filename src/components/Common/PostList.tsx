@@ -106,7 +106,7 @@ export default function PostList({
   {article.publish_date || article.date || "N/A"}
 </p>
 
-            <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-relaxed">
+            <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-6">
               {article.short_description || "No description available"}
             </p>
 

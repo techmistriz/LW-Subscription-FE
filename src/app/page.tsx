@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import HomeHeroSkeleton from "@/components/Home/HomeHeroSkeleton";
 import SubscribeBanner from "@/features/auth/SubscribeBanner";
 import LatestEdition from "@/components/LatestEdition/LatestEdition";
-import LatestIssueWithArticles from "@/components/LatestEdition/LatestIssueWithArticles";
+import LatestIssueWithArticles from "@/components/LatestEdition/LatestEditionWithArticles";
 import BigFeature from "@/components/Home/BigFeature";
 import { MiddleCards } from "@/components/Home/MiddleCards";
 import AsidePosts from "@/components/Home/AsidePosts";

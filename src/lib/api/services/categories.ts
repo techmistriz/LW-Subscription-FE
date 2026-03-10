@@ -1,18 +1,6 @@
 import { request } from "@/lib/api/request";
 import { Category } from "@/types";
 
-
-  //  GET ALL CATEGORIES
-// export async function getCategories(): Promise<Category[]> {
-//   const response = await request<any>("GET", "/categories");
-
-//   if (!response?.status) return [];
-
-//   // Extract nested data correctly
-//   return response.data?.data ?? [];
-// }
-
-
 export async function getCategories(): Promise<Category[]> {
   const response = await request<any>(
     "GET",

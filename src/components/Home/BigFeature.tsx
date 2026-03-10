@@ -40,7 +40,7 @@ export default function BigFeature({ post }: { post?: Post }) {
         <Link href={`/${post.slug}`}>
           <h2 className="text-[20px] font-medium  leading-7.5 line-clamp-3">{post.title}</h2>
         </Link>
-        <p className="text-sm mt-2 opacity-90">{post.publish_date}</p>
+        <p className="text-sm mt-2 opacity-90">{post.magazine.title}</p>
         {/* <Link
         href={`/author/${post?.author?.slug}`}
         > */}

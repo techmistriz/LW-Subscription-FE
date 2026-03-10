@@ -1,4 +1,3 @@
-
 import { Year } from "@/types";
 import { request } from "../request";
 
