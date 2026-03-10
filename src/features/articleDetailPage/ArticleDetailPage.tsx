@@ -282,12 +282,12 @@ export default function ArticleDetailPage() {
                 ))}
             </div>
           )}
-          <div className="flex justify-end  ">
-
-                    <SocialShare title={article.title} />
-          </div>
-
-
+          
+          {article.description && (
+            <div className="flex justify-end  ">
+          <SocialShare title={article.title} />
+        </div>
+        )}
 
         {/* AUTHOR SECTION */}
         {article.author && typeof article.author !== "string" && (

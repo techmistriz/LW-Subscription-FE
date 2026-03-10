@@ -39,9 +39,7 @@ const Footer = () => {
              <div className="flex lg:mt-2 gap-3">
     {/* LinkedIn */}
       <a
-        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          shareUrl
-        )}`}
+        href="https://www.linkedin.com"
         target="_blank"
         rel="noopener noreferrer"
         className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
