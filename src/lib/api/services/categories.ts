@@ -12,11 +12,23 @@ export async function getCategories(): Promise<Category[]> {
   return response.data?.data ?? [];
 }
 
+
+export async function getAllCategories(): Promise<Category[]> {
+  const response = await request<any>(
+    "GET",
+    "/categories"
+  );
+
+  if (!response?.status) return [];
+
+  return response.data?.data ?? [];
+}
+
   //  GET CATEGORY BY SLUG
 export async function getCategoryBySlug(
   slug: string
 ): Promise<Category | null> {
-  const categories = await getCategories();
+  const categories = await getAllCategories();
 
   return categories.find((cat) => cat.slug === slug) ?? null;
 }
