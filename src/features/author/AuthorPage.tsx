@@ -12,6 +12,7 @@ import YearFilter from "@/components/Common/YearFilter";
 import PostList from "@/components/Common/PostList";
 import Pagination from "@/components/Pagination/Pagination";
 import { Post } from "@/types/models";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 // Post interface matching your API + Author normalization
 // interface Post {
@@ -39,8 +40,16 @@ export default function AuthorPage() {
   const authorName = authorSlug?.replace(/-/g, " ") || "";
   const authorTitle = toTitleCase(authorName);
 
+  const searchParams = useSearchParams();
+const router = useRouter();
+const pathname = usePathname();
+const yearParam = searchParams.get("year");
+
   const [loading, setLoading] = useState(false);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+
+const [selectedYear, setSelectedYear] = useState<number | null>(
+  yearParam ? Number(yearParam) : null
+);
   const [currentPage, setCurrentPage] = useState(1);
   const [years, setYears] = useState<number[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -113,16 +122,30 @@ export default function AuthorPage() {
     loadYears();
   }, [loadAuthor, loadYears]);
 
-  useEffect(() => {
-    if (authorId) {
-      fetchPosts(1);
-    }
-  }, [authorId, fetchPosts]);
+ const pageParam = Number(searchParams.get("page")) || 1;
+
+useEffect(() => {
+  if (authorId) {
+    const year = yearParam ? Number(yearParam) : null;
+    fetchPosts(pageParam, year);
+  }
+}, [authorId, pageParam, yearParam, fetchPosts]);
+
 
   // Apply Year Filter
-  const handleApplyFilter = () => {
-    fetchPosts(1, selectedYear);
-  };
+ const handleApplyFilter = () => {
+  const params = new URLSearchParams(searchParams.toString());
+
+ if (selectedYear) {
+  params.set("year", selectedYear.toString());
+} else {
+  params.delete("year");
+}
+
+  params.set("page", "1");
+
+  router.push(`${pathname}?${params.toString()}`);
+};
 
   const postsWithContent: Post[] = posts.map((p) => ({
     ...p,
@@ -162,8 +185,16 @@ export default function AuthorPage() {
                 currentPage={currentPage}
                 lastPage={lastPage}
                 loading={loading}
-                onPageChange={(page) => fetchPosts(page, selectedYear)}
-              />
+onPageChange={(page) => {
+  const params = new URLSearchParams(searchParams.toString());
+  params.set("page", page.toString());
+
+  if (selectedYear) {
+    params.set("year", selectedYear.toString());
+  }
+
+  router.push(`${pathname}?${params.toString()}`);
+}}              />
             )}
           </>
         )}

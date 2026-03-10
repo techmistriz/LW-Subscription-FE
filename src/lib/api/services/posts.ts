@@ -95,6 +95,7 @@ export async function getEditorPicksPosts(params?: {
       latest: 1,
     },
   });
+  console.log("Editor picks",response.data)
   return response.data?.data || [];
 }
 

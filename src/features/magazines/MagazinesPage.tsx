@@ -11,23 +11,33 @@ import { Magazine, Year } from "@/types";
 import Banner from "@/components/Common/Banner";
 import YearFilter from "@/components/Common/YearFilter";
 import PageLoader from "@/components/Loader/PageLoader";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+
 
 /**
  * MagazinesPage component displays all magazine editions with year filtering
  * and pagination support
- */
+*/
 export default function MagazinesPage({
   currentPage,
 }: {
   currentPage: number;
 }) {
   // State management
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const yearParam = searchParams.get("year");
+  const pageParam = Number(searchParams.get("page")) || 1;
+  
   const [magazines, setMagazines] = useState<Magazine[]>([]);
   const [loading, setLoading] = useState(false);
   const [years, setYears] = useState<Year[]>([]);
-  const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
+const [selectedYearId, setSelectedYearId] = useState<number | null>(
+  yearParam ? Number(yearParam) : null
+);
   const [yearOpen, setYearOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -58,9 +68,12 @@ export default function MagazinesPage({
   );
 
   // Load magazines on component mount
-  useEffect(() => {
-    fetchMagazines(undefined, currentPage);
-  }, [fetchMagazines, currentPage]);
+useEffect(() => {
+  const year = yearParam ? Number(yearParam) : undefined;
+  const page = pageParam;
+
+  fetchMagazines(year, page);
+}, [fetchMagazines, yearParam, pageParam]);
 
   // Load available years for filtering
   useEffect(() => {
@@ -90,13 +103,21 @@ export default function MagazinesPage({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleApplyFilter = () => {
-    fetchMagazines(selectedYearId ?? undefined, 1);
-  };
+const handleApplyFilter = () => {
+  const params = new URLSearchParams();
 
-  const selectedYearLabel = selectedYearId
-    ? years.find((y) => y === selectedYearId)
-    : null;
+  if (selectedYearId) {
+    params.set("year", String(selectedYearId));
+  }
+
+  params.set("page", "1");
+
+  router.push(`/magazines?${params.toString()}`);
+};
+
+const selectedYearLabel = selectedYearId
+  ? years.find((y) => y === selectedYearId)
+  : null;
 
   return (
     <section className="pb-8">
