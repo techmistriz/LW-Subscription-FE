@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -42,14 +42,20 @@ export default function ArticleDetailPage() {
 
       try {
         const articleData = await getArticleBySlug(slug);
+
         console.log("Slug:", slug);
         console.log("Article:", articleData);
+
         if (!active) return;
 
-        if (articleData) {
-          setArticle(articleData);
-          document.title = `${articleData.title} | Lex Witness`;
+        // ❗ API error or not found
+        if (!articleData || articleData.status === false) {
+          setArticle(null);
+          return;
         }
+
+        setArticle(articleData);
+        document.title = `${articleData.title} | Lex Witness`;
       } catch (error) {
         console.error("Failed to fetch article:", error);
         if (active) setArticle(null);
@@ -142,20 +148,8 @@ export default function ArticleDetailPage() {
   }
 
   /* ---------------- ARTICLE NOT FOUND ---------------- */
-
   if (!article) {
-    return (
-      <section className="bg-white min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            Article Not Found
-          </h1>
-          <p className="text-gray-600">
-            Article {slug} not found in {category} category.
-          </p>
-        </div>
-      </section>
-    );
+    notFound();
   }
 
   /* ---------------- CATEGORY TITLE ---------------- */
@@ -282,11 +276,11 @@ export default function ArticleDetailPage() {
                 ))}
             </div>
           )}
-          
-          {article.description && (
-            <div className="flex justify-end  ">
-          <SocialShare title={article.title} />
-        </div>
+
+        {article.description && (
+          <div className="flex justify-end  ">
+            <SocialShare title={article.title} />
+          </div>
         )}
 
         {/* AUTHOR SECTION */}
