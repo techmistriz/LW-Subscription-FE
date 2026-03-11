@@ -61,15 +61,17 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
 
   // Handle title search submission
   const handleTitleSearch = useCallback(() => {
-    if (!titleSearch.trim()) return;
-
     const params = new URLSearchParams();
-    params.append("search", titleSearch.trim());
 
-    setSearchLoading(true);
+    // Always indicate search mode
+    params.set("mode", "search");
+
+    if (titleSearch.trim()) {
+      params.set("search", titleSearch.trim());
+    }
+
     onClose();
     router.push(`/archive?${params.toString()}`);
-    setSearchLoading(false);
   }, [titleSearch, onClose, router]);
 
   // Handle filter search submission
@@ -86,7 +88,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
 
   // Handle Enter key press for title search
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && titleSearch.trim()) {
+    if (e.key === "Enter") {
       handleTitleSearch();
     }
   };
@@ -136,11 +138,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
               Select Year
             </option>
             {years.map((year) => (
-              <option
-                key={year}
-                value={year}
-                className="text-white bg-black"
-              >
+              <option key={year} value={year} className="text-white bg-black">
                 {year}
               </option>
             ))}
