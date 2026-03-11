@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 import HomeHeroSkeleton from "@/components/Home/HomeHeroSkeleton";
 import SubscribeBanner from "@/features/auth/SubscribeBanner";
@@ -14,43 +15,51 @@ import {
   latestEdition,
 } from "@/lib/api/services/magazines";
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 // Lazy load non-critical components
 const EditorPicks = dynamic(
-  () => import("@/components/EditorPick's/EditorPicks"),
+  () => import("@/components/EditorPick's/EditorPicks")
 );
+
 const Advertisement = dynamic(
-  () => import("@/components/HomeAdvertisment/advertisement"),
+  () => import("@/components/HomeAdvertisment/advertisement")
 );
 
 export default async function HomePage() {
-  // Hero posts
-  const heroData = await getHeroPost();
-  const get1LatestPost = heroData.slice(0, 1); // First post
-  const get2LatestPost = heroData.slice(1, 3); // Next 2 posts
-  const get4LatestPost = heroData.slice(3); // Remaining posts
+  // Fetch hero + latest edition in parallel
+  const [heroData, latestEditionData] = await Promise.all([
+    getHeroPost(),
+    latestEdition(),
+  ]);
 
-  // Latest magazine edition
-  const latestEditionData = await latestEdition();
+  // Latest magazines except current edition
+  const latestFive = latestEditionData
+    ? await getLatestMagazines({
+        skipId: latestEditionData.magazine.id,
+        limit: 5,
+      })
+    : [];
 
-  // Latest 5 magazines excluding current edition
-  const latestFive = await getLatestMagazines({
-    skipId: latestEditionData?.magazine.id,
-    limit: 5,
-  });
+  // Hero layout posts
+  const firstPost = heroData?.slice(0, 1) || [];
+  const middlePosts = heroData?.slice(1, 3) || [];
+  const asidePosts = heroData?.slice(3) || [];
+
+  const hasHeroContent =
+    firstPost.length > 0 &&
+    middlePosts.length > 0 &&
+    asidePosts.length > 0;
 
   return (
     <main className="bg-white">
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 pt-5">
-        {get1LatestPost.length &&
-        get2LatestPost.length &&
-        get4LatestPost.length ? (
+        {hasHeroContent ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
-            <BigFeature post={get1LatestPost[0]} />
-            <MiddleCards posts={get2LatestPost} />
-            <AsidePosts posts={get4LatestPost} />
+            <BigFeature post={firstPost[0]} />
+            <MiddleCards posts={middlePosts} />
+            <AsidePosts posts={asidePosts} />
           </div>
         ) : (
           <HomeHeroSkeleton />
@@ -58,10 +67,14 @@ export default async function HomePage() {
       </section>
 
       {/* Advertisement */}
-      <Advertisement />
+      <Suspense fallback={null}>
+        <Advertisement />
+      </Suspense>
 
       {/* Editor Picks */}
-      <EditorPicks />
+      <Suspense fallback={null}>
+        <EditorPicks />
+      </Suspense>
 
       {/* Subscribe Banner */}
       <SubscribeBanner />

@@ -15,7 +15,7 @@ type Props = {
   posts: Post[];
 };
 
-export default function LatestIssueWithArticles({
+export default function LatestEditionWithArticles({
   latestEdition,
   posts,
 }: Props) {
