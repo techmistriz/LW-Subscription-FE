@@ -161,7 +161,7 @@ export default function ArchivePage() {
 
       {isTitleSearch ? (
         /* SEARCH BAR UI */
-        <div className="flex items-center gap-3 my-6 border-b border-gray-300 pb-3 max-w-4xl">
+        <div className="flex items-center gap-3 mt-5 -mb-1 pb-2 border-gray-300  max-w-4xl">
           <input
             type="text"
             value={searchInput}
