@@ -5,7 +5,7 @@ export default function NotFound() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#f5f7fb] relative overflow-hidden px-4">
 
       {/* Grid Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(#e5e7eb_1px,transparent_1px),linear-gradient(90deg,#e5e7eb_1px,transparent_1px)] bg-[size:50px_50px] opacity-40"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(#e5e7eb_1px,transparent_1px),linear-gradient(90deg,#e5e7eb_1px,transparent_1px)] bg-size-[50px_50px] opacity-40"></div>
 
       {/* Content */}
       <div className="relative text-center max-w-xl w-full">
@@ -21,7 +21,7 @@ export default function NotFound() {
           <span>4</span>
 
           {/* Face */}
-          <div className="w-[90px] h-[70px] sm:w-[140px] sm:h-[110px] md:w-[180px] md:h-[140px] rounded-xl sm:rounded-2xl border-[6px] sm:border-[8px] md:border-[10px] border-[#c9060a] flex flex-col items-center justify-center">
+          <div className="w-22.5 h-17.5 sm:w-35 sm:h-27.5 md:w-45 md:h-35 rounded-xl sm:rounded-2xl border-[6px] sm:border-8 md:border-10 border-[#c9060a] flex flex-col items-center justify-center">
 
             {/* Eyes */}
             <div className="flex gap-3 sm:gap-6 mb-2 sm:mb-4">
@@ -30,7 +30,7 @@ export default function NotFound() {
             </div>
 
             {/* Sad mouth */}
-            <div className="w-6 sm:w-10 md:w-12 h-3 sm:h-5 border-b-[4px] sm:border-b-[5px] md:border-b-[6px] border-[#c9060a] rounded-b-full"></div>
+            <div className="w-6 sm:w-10 md:w-12 h-3 sm:h-5 border-b-4 sm:border-b-[5px] md:border-b-[6px] border-[#c9060a] rounded-b-full"></div>
           </div>
 
           <span>4</span>

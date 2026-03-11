@@ -8,22 +8,28 @@ import BigFeature from "@/components/Home/BigFeature";
 import { MiddleCards } from "@/components/Home/MiddleCards";
 import AsidePosts from "@/components/Home/AsidePosts";
 
-
 import { getHeroPost } from "@/components/Home/service";
-import { getLatestMagazines, latestEdition } from "@/lib/api/services/magazines";
+import {
+  getLatestMagazines,
+  latestEdition,
+} from "@/lib/api/services/magazines";
 
 export const revalidate = 60;
 
 // Lazy load non-critical components
-const EditorPicks = dynamic(() => import("@/components/EditorPick's/EditorPicks"));
-const Advertisement = dynamic(() => import("@/components/HomeAdvertisment/advertisement"));
+const EditorPicks = dynamic(
+  () => import("@/components/EditorPick's/EditorPicks"),
+);
+const Advertisement = dynamic(
+  () => import("@/components/HomeAdvertisment/advertisement"),
+);
 
 export default async function HomePage() {
   // Hero posts
   const heroData = await getHeroPost();
   const get1LatestPost = heroData.slice(0, 1); // First post
   const get2LatestPost = heroData.slice(1, 3); // Next 2 posts
-  const get4LatestPost = heroData.slice(3);    // Remaining posts
+  const get4LatestPost = heroData.slice(3); // Remaining posts
 
   // Latest magazine edition
   const latestEditionData = await latestEdition();
@@ -38,7 +44,9 @@ export default async function HomePage() {
     <main className="bg-white">
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 pt-5">
-        {get1LatestPost.length && get2LatestPost.length && get4LatestPost.length ? (
+        {get1LatestPost.length &&
+        get2LatestPost.length &&
+        get4LatestPost.length ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
             <BigFeature post={get1LatestPost[0]} />
             <MiddleCards posts={get2LatestPost} />

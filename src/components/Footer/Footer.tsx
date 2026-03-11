@@ -5,6 +5,9 @@ import { Linkedin } from "lucide-react";
 const Footer = () => {
    const shareUrl =
     typeof window !== "undefined" ? window.location.href : "";
+
+    const date = new Date()
+    const year = date.getFullYear()
   return (
     <footer className="bg-[#2f2f2f] text-gray-300">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
@@ -126,9 +129,10 @@ const Footer = () => {
         </div>
 
         {/* BOTTOM */}
-        <div className="border-t border-gray-600 mt-12 py-6 text-[14px] text-[#E2E2E2] text-center md:flex md:justify-center md:gap-6">
+        <div className="border-t border-gray-600 mt-12 py-5 text-[14px] text-[#E2E2E2] text-center md:flex md:justify-center md:gap-6">
           <p>
-            © 2020 Lex Witness – India’s 1st Magazine On Legal & Corporate
+            Copyright 
+            © {year} Lex Witness – India’s 1st Magazine On Legal & Corporate
             Affairs
           </p>
           <p>Rights Of Admission Reserved</p>
