@@ -21,7 +21,7 @@ export default function LatestEdition({ magazines }: Props) {
         <div className="w-14 h-1.5 bg-[#c9060a] mx-auto mt-1"></div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {magazines.map((magazine) => (
           <Link
             key={magazine.id}
