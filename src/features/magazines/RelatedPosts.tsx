@@ -9,9 +9,7 @@ const postsImgBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 function PostImage({ article }: { article: Article }) {
   const [src, setSrc] = useState(
-    article.image
-      ? `${postsImgBaseUrl}/${article.image}`
-      : "/default_img.png"
+    article.image ? `${postsImgBaseUrl}${article.image}` : "/default_img.png"
   );
 
   return (
@@ -19,6 +17,7 @@ function PostImage({ article }: { article: Article }) {
       src={src}
       alt={article.title}
       fill
+      sizes="(max-width:640px) 100vw, (max-width:768px) 50vw, (max-width:1024px) 33vw, 25vw"
       className="object-cover"
       onError={() => setSrc("/placeholder.jpg")}
     />

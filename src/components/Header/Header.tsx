@@ -99,19 +99,18 @@ export default function Header({ categories }: { categories: Category[] }) {
           </div>
 
           {/* CENTER — Logo */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Link href="/" className="block w-47.5">
-              <Image
-                src="/main-logo.png"
-                alt="Lex Witness Logo"
-                width={190}
-                height={80}
-                unoptimized
-                className="w-full h-auto object-contain"
-                priority
-              />
-            </Link>
-          </div>
+         <div className="absolute left-1/2 -translate-x-1/2">
+  <Link href="/" className="relative block w-[190px] h-[80px]">
+    <Image
+      src="/main-logo.png"
+      alt="Lex Witness Logo"
+      fill
+      sizes="190px"
+      className="object-contain"
+      priority
+    />
+  </Link>
+</div>
 
           {/* RIGHT — Search + User */}
           <div className="flex items-center  lg:ml-0">

@@ -9,7 +9,11 @@ type Props = {
   showUnderline?: boolean;
 };
 
-export default function LatestIssue({ magazine, showTitle = true, showUnderline = true }: Props) {
+export default function LatestIssue({
+  magazine,
+  showTitle = true,
+  showUnderline = true,
+}: Props) {
   if (!magazine) return null;
 
   const data = magazine?.magazine ?? magazine;
@@ -42,10 +46,9 @@ export default function LatestIssue({ magazine, showTitle = true, showUnderline 
           {data.title}
         </p>
       )}
-{showUnderline && (
-
-  <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
-)}
+      {showUnderline && (
+        <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
+      )}
     </div>
   );
 }

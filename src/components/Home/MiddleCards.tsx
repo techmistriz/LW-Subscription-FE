@@ -25,7 +25,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
               src={imageUrl}
               alt={post.title || "Post image"}
               fill
-              quality={70}
+              quality={75}
               className="object-cover"
               sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 300px"
             />
