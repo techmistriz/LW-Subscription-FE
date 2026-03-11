@@ -7,25 +7,24 @@ export default function AsidePosts({ posts }: { posts: Post[] }) {
   return (
     <aside className="lg:col-span-3 border border-gray-200 px-3 pt-3 text-sm">
       {posts.map((post, index) => {
-        const categorySlug = post.category?.slug;
-        const postSlug = post.slug;
+        const category = post.category;
+        const magazine = post.magazine;
 
         return (
           <div key={post.id} className="pb-2">
-            
             {/* Category */}
-            {categorySlug && (
+            {category?.slug && (
               <Link
-                href={`/category/${categorySlug}`}
+                href={`/category/${category.slug}`}
                 className="text-[#c9060a] text-[14px] font-medium"
               >
-                {post.category?.name}
+                {category.name}
               </Link>
             )}
 
             {/* Title */}
-            {postSlug && (
-              <Link href={`/${postSlug}`}>
+            {post.slug && (
+              <Link href={`/${post.slug}`}>
                 <p className="text-[#333333] text-[14px] font-normal cursor-pointer hover:text-black transition-colors line-clamp-2">
                   {post.title}
                 </p>
@@ -33,9 +32,9 @@ export default function AsidePosts({ posts }: { posts: Post[] }) {
             )}
 
             {/* Date */}
-            {post.publish_date && (
+            {post.publish_date && magazine && (
               <p className="text-gray-400 text-[12px] font-medium">
-                {post.magazine.month.name} {post.magazine.year}
+                {magazine.month?.name} {magazine.year}
               </p>
             )}
 

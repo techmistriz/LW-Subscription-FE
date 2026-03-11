@@ -37,9 +37,9 @@ const nextConfig = {
         hostname: "secure.gravatar.com",
         pathname: "/avatar/**",
       },
-      
     ],
-    unoptimized: true,
+
+    formats: ["image/avif", "image/webp"],
   },
 
   async rewrites() {

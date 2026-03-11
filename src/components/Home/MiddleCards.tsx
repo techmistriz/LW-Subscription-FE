@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Post } from "./service";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_POSTS_BASE_URL ;
+const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
 
 export function MiddleCards({ posts }: { posts: Post[] }) {
   if (!posts?.length) return null;
@@ -26,12 +25,12 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
               src={imageUrl}
               alt={post.title || "Post image"}
               fill
-              priority={false}
+              quality={70}
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 300px"
             />
 
-            {/* Gradient (same as BigFeature) */}
+            {/* Gradient */}
             <div
               className="absolute inset-0 z-10 pointer-events-none"
               style={{
@@ -42,15 +41,16 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
 
             {/* Category */}
             <Link
-            href={`/category/${post?.category?.slug}`}
-           className="absolute top-0 left-0 bg-[#c90609b9] text-white text-xs px-1 py-1 z-10">
+              href={`/category/${post?.category?.slug}`}
+              className="absolute top-0 left-0 bg-[#c90609b9] text-white text-xs px-1 py-1 z-10"
+            >
               {post.category?.name}
             </Link>
 
-            {/* Content (exact pattern as BigFeature) */}
+            {/* Content */}
             <div className="absolute bottom-3 left-6 right-6 text-white z-10">
               <Link href={`/${post.slug}`}>
-                <h2 className="text-[14px]  leading-snug text-white line-clamp-3">
+                <h2 className="text-[14px] leading-snug text-white line-clamp-3">
                   {post.title}
                 </h2>
               </Link>
