@@ -60,19 +60,29 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   }, [open]);
 
   // Handle title search submission
-  const handleTitleSearch = useCallback(() => {
-    const params = new URLSearchParams();
+ const handleTitleSearch = useCallback(() => {
+  const params = new URLSearchParams();
 
-    // Always indicate search mode
-    params.set("mode", "search");
+  params.set("mode", "search");
 
-    if (titleSearch.trim()) {
-      params.set("search", titleSearch.trim());
+  const value = titleSearch.trim();
+
+  if (value) {
+    params.set("search", value);
+
+    // Detect year like 2023
+    if (/^\d{4}$/.test(value)) {
+      params.set("year", value);
     }
+  }
 
-    onClose();
-    router.push(`/archive?${params.toString()}`);
-  }, [titleSearch, onClose, router]);
+  if (year) params.append("year", year.toString());
+  if (categoryId) params.append("category_id", categoryId.toString());
+  if (authorId) params.append("author_id", authorId.toString());
+
+  onClose();
+  router.push(`/archive?${params.toString()}`);
+}, [titleSearch, year, categoryId, authorId, onClose, router]);
 
   // Handle filter search submission
   const handleFilterSearch = useCallback(() => {

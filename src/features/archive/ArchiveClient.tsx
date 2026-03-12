@@ -117,17 +117,28 @@ export default function ArchivePage() {
 
   /* ---------------- SEARCH HANDLER ---------------- */
 
-  const handleArchiveSearch = () => {
-    const params = new URLSearchParams();
+const handleArchiveSearch = () => {
+  const params = new URLSearchParams();
 
-    params.set("mode", "search"); // always keep search mode
+  params.set("mode", "search");
 
-    if (searchInput.trim()) {
-      params.set("search", searchInput.trim());
+  const value = searchInput.trim();
+
+  if (value) {
+    params.set("search", value);
+
+    // detect year like 2023
+    if (/^\d{4}$/.test(value)) {
+      params.set("year", value);
     }
+  }
 
-    router.push(`/archive?${params.toString()}`);
-  };
+  if (year) params.append("year", year.toString());
+  if (categoryId) params.append("category_id", categoryId.toString());
+  if (authorId) params.append("author_id", authorId.toString());
+
+  router.push(`/archive?${params.toString()}`);
+};
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleArchiveSearch();
