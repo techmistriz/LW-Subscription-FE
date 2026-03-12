@@ -40,7 +40,7 @@ export default function PostList({
       </div>
     );
   }
-
+  console.log(posts);
   return (
     <div className="space-y-6">
       <hr className="border-gray-200" />
@@ -87,24 +87,22 @@ export default function PostList({
               </Link>
             </h3>
 
-           <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
-  {article.author && (
-    typeof article.author === "string" ? (
-      <span className="text-[#c9060a]">
-        {article.author}
-      </span>
-    ) : (
-      <Link
-        href={`/author/${article.author.slug}`}
-        className="text-[#c9060a]"
-      >
-        {article.author.name}
-      </Link>
-    )
-  )}
-  {" | "}
-  {article.publish_date || article.date || "N/A"}
-</p>
+            <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
+              {article.author &&
+                (typeof article.author === "string" ? (
+                  <span className="text-[#c9060a]">{article.author}</span>
+                ) : (
+                  <Link
+                    href={`/author/${article.author.slug}`}
+                    className="text-[#c9060a]"
+                  >
+                    {article.author.name}
+                  </Link>
+                ))}
+              {" | "}
+              {article.magazine?.month?.name} {article.magazine?.year}
+              {/* {article.publish_date || article.date || "N/A"} */}
+            </p>
 
             <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-6">
               {article.short_description || "No description available"}

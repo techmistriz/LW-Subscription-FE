@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 // POST
 export interface Post {
+  magazine: any;
   content: ReactNode; // required for PostList rendering
   id: number;
   title: string;
