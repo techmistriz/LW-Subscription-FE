@@ -3,11 +3,10 @@ import Image from "next/image";
 import { Linkedin } from "lucide-react";
 
 const Footer = () => {
-   const shareUrl =
-    typeof window !== "undefined" ? window.location.href : "";
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
 
-    const date = new Date()
-    const year = date.getFullYear()
+  const date = new Date();
+  const year = date.getFullYear();
   return (
     <footer className="bg-[#2f2f2f] text-gray-300">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
@@ -24,8 +23,6 @@ const Footer = () => {
               priority
             />
 
-           
-
             <h3 className="text-white text-[18px] font-semibold mb-2">
               ABOUT <span className="text-[#c9060a]">WITNESS</span>
             </h3>
@@ -39,25 +36,25 @@ const Footer = () => {
             <p className="mt-4 text-sm">Connect Us:</p>
 
             {/* Social */}
-             <div className="flex lg:mt-2 gap-3">
-    {/* LinkedIn */}
-      <a
-        href="https://www.linkedin.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
-      >
-        <svg
-          className="w-4 h-4 z-10"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-        </svg>
+            <div className="flex lg:mt-2 gap-3">
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
+              >
+                <svg
+                  className="w-4 h-4 z-10"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+                </svg>
 
-        <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10   pointer-events-none"></span>
-      </a>
-                  </div>
+                <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10   pointer-events-none"></span>
+              </a>
+            </div>
 
             {/* App Buttons */}
             {/* <div className="flex gap-3 mt-5 flex-wrap">
@@ -108,7 +105,8 @@ const Footer = () => {
                 <li key={i}>
                   <p className="text-gray-200">{title}</p>
                   <p className="text-[#c9060a] text-xs">
-                    {link} <span className="text-[#E2E2E2]">| 8 Years & Counting</span>
+                    {link}{" "}
+                    <span className="text-[#E2E2E2]">| 8 Years & Counting</span>
                   </p>
                 </li>
               ))}
@@ -117,7 +115,9 @@ const Footer = () => {
 
           {/* RIGHT */}
           <div className="lg:col-span-4">
-            <h3 className="text-white font-semibold text-[18px] mb-4">EXPLORE FURTHER!</h3>
+            <h3 className="text-white font-semibold text-[18px] mb-4">
+              EXPLORE FURTHER!
+            </h3>
 
             <p className="text-sm leading-relaxed text-[#E2E2E2]">
               We at Lex Witness strategically assist firms in reaching out to
@@ -131,9 +131,8 @@ const Footer = () => {
         {/* BOTTOM */}
         <div className="border-t border-gray-600 mt-12 py-5 text-[14px] text-[#E2E2E2] text-center md:flex md:justify-center md:gap-6">
           <p>
-            Copyright 
-            © {year} Lex Witness – India’s 1st Magazine On Legal & Corporate
-            Affairs
+            Copyright © {year} Lex Witness – India’s 1st Magazine On Legal &
+            Corporate Affairs
           </p>
           <p>Rights Of Admission Reserved</p>
         </div>
