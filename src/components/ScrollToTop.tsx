@@ -35,7 +35,7 @@ export default function ScrollToTop() {
         w-11 h-11 
         flex items-center justify-center
         shadow-lg transition
-        hover:bg-[#c9060a]
+        hover:bg-[#c9060a] cursor-pointer
         ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
       aria-label="Scroll to top"
