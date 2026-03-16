@@ -109,7 +109,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   return (
     <div className="fixed inset-0 z-100 bg-black/90 flex items-center justify-center">
       {/* Close button */}
-      <button onClick={onClose} className="absolute top-6 right-6 text-white">
+      <button onClick={onClose} className="absolute top-6 right-6 text-white cursor-pointer hover:text-gray-300">
         <X size={38} />
       </button>
 
@@ -121,8 +121,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             onChange={(e) => setTitleSearch(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder="Search here..."
-            className="w-full bg-transparent border border-gray-300 text-white placeholder:text-white placeholder:text-md px-5 py-2 pr-14 text-lg outline-none"
-          />
+className="w-full bg-transparent border border-gray-300 text-white placeholder:text-white px-5 py-2 pr-14 text-lg focus:outline-none   hover:bg-white/15"          />
 
           <Search
             onClick={handleTitleSearch}
