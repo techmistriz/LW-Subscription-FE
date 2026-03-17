@@ -202,7 +202,7 @@ className="w-full bg-transparent border border-gray-300 text-white placeholder:t
           {/* Search button */}
           <button
             onClick={handleFilterSearch}
-            disabled={searchLoading || loading}
+            // disabled={searchLoading || loading}
             className="bg-[#c9060a] text-white px-6 py-3 hover:bg-[#333] transition-colors cursor-pointer disabled:opacity-50"
           >
             Search

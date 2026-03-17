@@ -165,90 +165,104 @@ const handleArchiveSearch = () => {
   }));
 
   /* ---------------- UI ---------------- */
-
+const filtersLoading =
+  years.length === 0 ||
+  categories.length === 0 ||
+  authors.length === 0;
   return (
     <>
       {/* SEARCH OR FILTER UI */}
 
-      {isTitleSearch ? (
-        /* SEARCH BAR UI */
-        <div className="flex items-center gap-3 mt-5 -mb-1 pb-2 border-gray-300  max-w-4xl">
-          <input
-            type="text"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Search here..."
-            className="flex-1 bg-transparent outline-none text-md  text-gray-800"
-          />
-          <Search
-            onClick={handleArchiveSearch}
-            className="text-gray-700 size-5 cursor-pointer"
-          />
-        </div>
-      ) : (
-        /* FILTER UI */
-        <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4">
-          <select
-            value={selectedYearId?.toString() ?? ""}
-            onChange={(e) =>
-              setSelectedYearId(
-                e.target.value ? Number(e.target.value) : undefined,
-              )
-            }
-            className="bg-white border border-gray-300 px-2 py-2 outline-none"
-          >
-            <option value="">Select Year</option>
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+    {isTitleSearch ? (
+  /* SEARCH BAR UI */
+  <div className="flex items-center gap-3 mt-5 -mb-1 pb-2 border-gray-300 max-w-4xl">
+    <input
+      type="text"
+      value={searchInput}
+      onChange={(e) => setSearchInput(e.target.value)}
+      onKeyDown={handleKeyDown}
+      placeholder="Search here..."
+      className="flex-1 bg-transparent outline-none text-md text-gray-800"
+    />
+    <Search
+      onClick={handleArchiveSearch}
+      className="text-gray-700 size-5 cursor-pointer"
+    />
+  </div>
+)  : filtersLoading ? (
+  /* SIMPLE SKELETON */
+  <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4">
+    {[1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        className="h-10 w-[275px] bg-white animate-pulse "
+      />
+    ))}
+  </div>
+) : (
+  /* FILTER UI */
+  <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4 ">
+    <select
+      value={selectedYearId?.toString() ?? ""}
+      onChange={(e) =>
+        setSelectedYearId(
+          e.target.value ? Number(e.target.value) : undefined
+        )
+      }
+      className="bg-white border border-gray-300 px-2 py-2 outline-none"
+    >
+      <option value="">Select Year</option>
+      {years.map((y) => (
+        <option key={y} value={y}>
+          {y}
+        </option>
+      ))}
+    </select>
 
-          <select
-            value={selectedCategoryId?.toString() ?? ""}
-            onChange={(e) =>
-              setSelectedCategoryId(
-                e.target.value ? Number(e.target.value) : undefined,
-              )
-            }
-            className="bg-white border border-gray-300 px-2 py-2 outline-none"
-          >
-            <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+    <select
+      value={selectedCategoryId?.toString() ?? ""}
+      onChange={(e) =>
+        setSelectedCategoryId(
+          e.target.value ? Number(e.target.value) : undefined
+        )
+      }
+      className="bg-white border border-gray-300 px-2 py-2 outline-none"
+    >
+      <option value="">Select Category</option>
+      {categories.map((c) => (
+        <option key={c.id} value={c.id}>
+          {c.name}
+        </option>
+      ))}
+    </select>
 
-          <select
-            value={selectedAuthorId?.toString() ?? ""}
-            onChange={(e) =>
-              setSelectedAuthorId(
-                e.target.value ? Number(e.target.value) : undefined,
-              )
-            }
-            className="bg-white border border-gray-300 px-2 py-2 outline-none"
-          >
-            <option value="">Select Author</option>
-            {authors.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
-            ))}
-          </select>
+    <select
+      value={selectedAuthorId?.toString() ?? ""}
+      onChange={(e) =>
+        setSelectedAuthorId(
+          e.target.value ? Number(e.target.value) : undefined
+        )
+      }
+      className="bg-white border border-gray-300 px-2 py-2 outline-none"
+    >
+      <option value="">Select Author</option>
+      {authors.map((a) => (
+        <option key={a.id} value={a.id}>
+          {a.name}
+        </option>
+      ))}
+    </select>
 
-          <button
-            onClick={handleApplyFilters}
-            className="bg-[#c9060a] text-white px-6 py-2 font-semibold cursor-pointer"
-            disabled={loading}
-          >
-            {loading ? "Searching..." : "Search"}
-          </button>
-        </div>
-      )}
+    <button
+      onClick={handleApplyFilters}
+      className="w-[262px] bg-[#c9060a] text-white px-6  py-2 font-semibold cursor-pointer"
+      
+      disabled={loading}
+    >
+      {loading ? "Searching..." : "Search"}
+    </button>
+  </div>
+)}
 
       {/* POSTS */}
 
