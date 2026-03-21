@@ -20,8 +20,7 @@ export default function SocialShare({ title }: Props) {
         )}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
-      >
+className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"      >
         <svg
           className="w-4 h-4 z-10"
           fill="currentColor"
@@ -40,8 +39,7 @@ export default function SocialShare({ title }: Props) {
         )}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative group w-10 h-6 flex items-center justify-center border border-[#1877F2] text-[#1877F2] bg-white shadow-sm overflow-hidden"
-      >
+className="relative group w-10 h-6 flex items-center justify-center border border-[#1877F2] text-white bg-[#1877F2] shadow-sm overflow-hidden"      >
         <FaFacebookF className="w-4 h-4 z-10" />
 
         <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10  pointer-events-none"></span>
@@ -54,8 +52,7 @@ export default function SocialShare({ title }: Props) {
         )}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative group w-10 h-6 flex items-center justify-center border border-black text-black bg-white shadow-sm overflow-hidden"
-      >
+className="relative group w-10 h-6 flex items-center justify-center border border-black text-white bg-black shadow-sm overflow-hidden"      >
         <FaXTwitter className="w-4 h-4 z-10" />
 
         <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10   pointer-events-none"></span>
@@ -68,8 +65,7 @@ export default function SocialShare({ title }: Props) {
         )}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative group w-10 h-6 flex items-center justify-center border border-[#25D366] text-[#25D366] bg-white shadow-sm overflow-hidden"
-      >
+className="relative group w-10 h-6 flex items-center justify-center border border-[#25D366] text-white bg-[#25D366] shadow-sm overflow-hidden"      >
         <svg
           className="w-4 h-4 z-10"
           fill="currentColor"
