@@ -208,7 +208,7 @@ export default function ArticleDetailPage() {
 
         {/* FEATURE IMAGE */}
         {article.image && (
-          <div className="relative w-full mt-3 mb-6">
+          <div className="relative w-full mt-3 mb-6 aspect-video">
             <Image
               src={
                 article.image.startsWith("http")
@@ -216,9 +216,8 @@ export default function ArticleDetailPage() {
                   : `${postBaseUrl}/${article.image}`
               }
               alt={article.title}
-              width={1200}
-              height={800}
-              className="w-full h-auto object-cover"
+              fill
+              className="object-cover"
               priority
             />
           </div>
@@ -227,12 +226,12 @@ export default function ArticleDetailPage() {
         {/* ARTICLE CONTENT */}
         <div className="my-6">
           {isSubscribed ? (
-            <div
-              className="article-content text-[15px] font-normal leading-7 text-gray-800 text-justify"
-              dangerouslySetInnerHTML={{
-                __html: formatArticleHTML(article.description || ""),
-              }}
-            />
+           <div
+  className="article-content text-[17px] leading-7.25 font-normal text-gray-800 text-justify"
+  dangerouslySetInnerHTML={{
+    __html: formatArticleHTML(article.description || ""),
+  }}
+/>
           ) : (
             <div className="p-6 bg-white border-2 border-gray-100 text-center">
               <h2 className="text-2xl font-semibold text-gray-800 mb-3">
@@ -316,7 +315,7 @@ export default function ArticleDetailPage() {
                     href={article.author.linkedin}
                     // target="_blank"
                     rel="noopener noreferrer"
-                    className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
+                    className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"
                   >
                     <svg
                       className="w-4 h-4 z-10"
