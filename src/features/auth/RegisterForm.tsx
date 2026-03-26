@@ -247,41 +247,59 @@ export default function RegisterForm() {
 
               {/* PLANS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                {plans.map((plan) => (
-                  <label
-                    key={plan.id}
-                    htmlFor={plan.id}
-                    className={`
-                      group cursor-pointer rounded-lg border p-4 transition-all duration-200
-                      flex flex-col gap-3
-                      hover:shadow-md
-                      has-checked:border-green-600
-                      has-checked:bg-red-50
-                    `}
-                  >
-                    <input
-                      id={plan.id}
-                      type="radio"
-                      name="plan"
-                      value={plan.value}
-                      checked={form.plan === plan.value}
-                      onChange={handlePlanChange}
-                      className="hidden"
-                      disabled={loading}
-                    />
-                    <div className="flex flex-col items-center justify-between">
-                      <span className="text-sm font-semibold text-gray-800">
-                        {plan.value}
-                      </span>
-                      <span className="text-sm font-bold text-gray-900">
-                        {plan.price}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      Browse all charts · Cancel anytime · Least cost effective
-                    </p>
-                  </label>
-                ))}
+                {plans.map((plan) => {
+                  const isSelected = form.plan === plan.value;
+
+                  return (
+                    <label
+                      key={plan.id}
+                      htmlFor={plan.id}
+                      className={`
+          group cursor-pointer rounded-lg border border-gray-300 p-4 transition-all duration-200
+          flex flex-col gap-3 hover:shadow-md
+          ${isSelected ? "bg-[#c9060a] text-white border-[#c9060a]" : "bg-white"}
+        `}
+                    >
+                      <input
+                        id={plan.id}
+                        type="radio"
+                        name="plan"
+                        value={plan.value}
+                        checked={isSelected}
+                        onChange={handlePlanChange}
+                        className="hidden"
+                        disabled={loading}
+                      />
+
+                      <div className="flex flex-col items-center justify-between">
+                        <span
+                          className={`text-sm font-semibold ${
+                            isSelected ? "text-white" : "text-gray-800"
+                          }`}
+                        >
+                          {plan.value}
+                        </span>
+
+                        <span
+                          className={`text-sm font-bold ${
+                            isSelected ? "text-white" : "text-gray-900"
+                          }`}
+                        >
+                          {plan.price}
+                        </span>
+                      </div>
+
+                      <p
+                        className={`text-xs leading-relaxed ${
+                          isSelected ? "text-white/90" : "text-gray-600"
+                        }`}
+                      >
+                        Browse all charts · Cancel anytime · Least cost
+                        effective
+                      </p>
+                    </label>
+                  );
+                })}
               </div>
 
               <label className="flex items-center gap-2 text-sm mb-6 cursor-pointer">

@@ -1,12 +1,38 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+
+const plans = {
+  "1y": {
+    duration: "1 Year",
+    price: 599,
+    original: 299,
+    freeText: "Free",
+    label: "/ 1 Month",
+  },
+  "2y": {
+    duration: "2 Years",
+    price: 999,
+    original: 599,
+    freeText: "Free",
+    label: "/ 2 Months",
+  },
+  "3y": {
+    duration: "3 Years",
+    price: 1499,
+    original: 899,
+    freeText: "Free",
+    label: "/ 3 Months",
+  },
+};
 
 export default function PricingCard() {
   const [plan, setPlan] = useState("1y");
+  const currentPlan = plans[plan];
 
   return (
-    <div className=" flex items-center justify-center px-6 py-20">
+    <div id="pricing" className=" flex items-center justify-center px-6 py-20">
       <div className="grid md:grid-cols-2 gap-10 max-w-3xl h-auto w-full">
         {/* LEFT FEATURED CARD */}
         <div className="relative bg-white rounded-2xl border-4 border-red-500 shadow-xl overflow-hidden">
@@ -19,71 +45,68 @@ export default function PricingCard() {
             <h2 className="text-3xl font-bold mb-1 py-4">Digital + Print</h2>
 
             <p className="text-gray-500 mb-3 text-xs">
-              1 Year | Print Editions + Unlimited Digital Access
+              {currentPlan.duration} | Print Editions + Unlimited Digital Access
             </p>
 
             <ul className="text-left space-y-3 text-gray-700 mb-3 px-4 text-[13px]">
               <li>• Your First Month Is on Us</li>
-              <li>• ₹599 / year thereafter</li>
+              <li>• ₹{currentPlan.price} / year thereafter</li>
               <li>• ₹1 will be charged & refunded to activate subscription</li>
             </ul>
 
             {/* Toggle */}
             <div className="flex justify-center gap-4 mb-6">
-              <label className="flex items-center border border-gray-300 gap-2 bg-gray-100 px-4 py-2 rounded-xl cursor-pointer">
-                <input
-                  type="radio"
-                  checked={plan === "1y"}
-                  onChange={() => setPlan("1y")}
-                />
-                1 Yr
-              </label>
-
-              <label className="flex items-center border border-gray-300 gap-2 bg-gray-100 px-4 py-2 rounded-xl cursor-pointer">
-                <input
-                  type="radio"
-                  checked={plan === "2y"}
-                  onChange={() => setPlan("2y")}
-                />
-                2 Yr
-              </label> <label className="flex items-center border border-gray-300 gap-2 bg-gray-100 px-4 py-2 rounded-xl cursor-pointer">
-                <input
-                  type="radio"
-                  checked={plan === "3y"}
-                  onChange={() => setPlan("3y")}
-                />
-                3 Yr
-              </label>
+              <div className="flex justify-center gap-4 mb-6">
+                {["1y", "2y", "3y"].map((p) => (
+                  <label
+                    key={p}
+                    className={`flex items-center border gap-2 px-4 py-2 rounded-xl cursor-pointer 
+      ${plan === p ? "bg-red-100 border-red-500" : "bg-gray-100 border-gray-300"}`}
+                  >
+                    <input
+                      type="radio"
+                      name="plan"
+                      checked={plan === p}
+                      onChange={() => setPlan(p)}
+                    />
+                    {p.toUpperCase()}
+                  </label>
+                ))}
+              </div>
             </div>
 
             {/* Price */}
             <div className="bg-gray-300">
-
-            <div className="mb-2 text-gray-400 line-through text-xl">₹299</div>
-
-            <div className="text-2xl font-semibold text-[#c9060a] mb-2">
-              Free{" "}
-              <span className="text-gray-500 text-sm font-medium">
-                / 1 Month
-              </span>
-            </div>
-
-            <div className="text-sm text-[#c9060a] mb-6">
-              (100% Off) <span className="text-gray-500 text-[14px]">| Cancel anytime</span>
-            </div>
-
-            {/* Image Placeholder */}
-            <div className="flex justify-center mb-6">
-              <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center">
-                <span className="text-gray-400">Magazine Image</span>
+              <div className="mb-2 text-gray-400 line-through text-xl">
+                ₹{currentPlan.original}
               </div>
-            </div>
 
-            <button className="bg-[#c9060a] hover:bg-[#c9060a] transition mb-6 text-white px-8 py-1 rounded-xl text-sm">
-              START MY FREE MONTH
-            </button>
-            </div>
+              <div className="text-2xl font-semibold text-[#c9060a] mb-2">
+                {currentPlan.freeText}{" "}
+                <span className="text-gray-500 text-sm font-medium">
+                  {currentPlan.label}
+                </span>
+              </div>
 
+              <div className="text-sm text-[#c9060a] mb-6">
+                (100% Off){" "}
+                <span className="text-gray-500 text-[14px]">
+                  | Cancel anytime
+                </span>
+              </div>
+
+              {/* Image Placeholder */}
+              <div className="flex justify-center mb-6">
+                <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center">
+                  <span className="text-gray-400">Magazine Image</span>
+                </div>
+              </div>
+              <Link href="/register">
+                <button className="bg-[#c9060a] hover:bg-[#c9060a] transition mb-6 text-white px-8 py-1 rounded-xl text-sm cursor-pointer">
+                  START MY FREE MONTH
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -121,7 +144,9 @@ export default function PricingCard() {
 
               <div className="text-sm text-[#c9060a] mb-10">
                 (81% Off){" "}
-                <span className="text-gray-500 text-[12px]">| Cancel anytime</span>
+                <span className="text-gray-500 text-[12px]">
+                  | Cancel anytime
+                </span>
               </div>
 
               {/* Image Placeholder */}
@@ -130,10 +155,11 @@ export default function PricingCard() {
                   <span className="text-gray-400">Image</span>
                 </div>
               </div>
-
-              <button className="bg-[#c9060a]  hover:bg-[#c9060a] mb-10 transition text-white px-6  rounded-xl ">
-                GET INSTANT ACCESS
-              </button>
+              <Link href="/register">
+                <button className="bg-[#c9060a]  hover:bg-[#c9060a] mb-10 transition text-white px-6  rounded-xl cursor-pointer">
+                  GET INSTANT ACCESS
+                </button>
+              </Link>
             </div>
           </div>
         </div>

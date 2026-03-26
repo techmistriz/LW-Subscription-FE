@@ -19,6 +19,7 @@ import { Menu as HeadlessMenu, Transition } from "@headlessui/react"; // for dro
 
 import SearchOverlay from "../SearchOverlay";
 import { Category } from "@/types";
+import { useAuth } from "@/features/authContext";
 
 export default function Header({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
@@ -26,41 +27,14 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+ 
 
-  useEffect(() => {
-    const userData = localStorage.getItem("user_data");
-    if (userData) {
-      try {
-        const user = JSON.parse(userData);
-        setIsLoggedIn(true);
-        setUsername(`${user.first_name} ${user.last_name}`.trim());
-        return;
-      } catch {
-        localStorage.removeItem("user_data");
-      }
-    }
+  const { user, logout, loading } = useAuth();
 
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-      try {
-        let payloadStr = token.split(".")[1];
-        payloadStr += "=".repeat((4 - (payloadStr.length % 4)) % 4);
-        const payload = JSON.parse(atob(payloadStr));
-        setIsLoggedIn(true);
-        setUsername(
-          payload.username ||
-            payload.name ||
-            payload.email ||
-            payload.sub ||
-            "User",
-        );
-      } catch {
-        localStorage.removeItem("auth_token");
-      }
-    }
-  }, []);
+
+  const isLoggedIn = !!user;
+const username = user?.firstName || "User";
+
 
   useEffect(() => {
     if (searchOpen || open) {
@@ -84,14 +58,12 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
 
-  const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("user_data");
-    setIsLoggedIn(false);
-    setUsername("");
-    router.push("/");
-  };
+ const handleLogout = () => {
+  logout(); // 🔥 this updates everything globally
+  router.push("/");
+}
 
+if (loading) return null;
   return (
     <>
       <header className="border-b border-gray-300 bg-white text-black">
@@ -145,9 +117,9 @@ export default function Header({ categories }: { categories: Category[] }) {
                   className="relative inline-block text-left"
                 >
                   <HeadlessMenu.Button className="flex items-center gap-1 hover:text-[#c9060a] cursor-pointer">
-                    <User size={20} />
-                    <span className="hidden lg:inline truncate max-w-25 mr-1">
-                      {username || "Hi Suraj!"}
+                    {/* <User size={20} /> */}
+                    <span className="hidden lg:inline truncate max-w-25 mr-1 text-gray-500">
+                 Hi!   {" "}  {username}
                     </span>
                     <ChevronDown size={16} />
                   </HeadlessMenu.Button>
@@ -161,15 +133,25 @@ export default function Header({ categories }: { categories: Category[] }) {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <HeadlessMenu.Items className="absolute right-0 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                    <HeadlessMenu.Items className="absolute z-50 right-0 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                       <div className="py-1">
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
-                              href="/dashboard"
+                              href="/#"
                               className={`block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
                             >
-                              Dashboard
+                              Edit Profile
+                            </Link>
+                          )}
+                        </HeadlessMenu.Item>
+                        <HeadlessMenu.Item>
+                          {({ active }) => (
+                            <Link
+                              href="/#"
+                              className={`block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
+                            >
+                              My plans
                             </Link>
                           )}
                         </HeadlessMenu.Item>
@@ -189,7 +171,10 @@ export default function Header({ categories }: { categories: Category[] }) {
                 </HeadlessMenu>
               ) : (
                 <>
-                  <Link href="/register" className="flex items-center gap-1 ">
+                  <Link
+                    href="/subscription"
+                    className="flex items-center gap-1 "
+                  >
                     <NewspaperIcon className="hover:text-[#c9060a]" size={18} />
                     <span className="hidden lg:inline text-md hover:text-[#c9060a] text-[#333]">
                       Subscribe
@@ -283,7 +268,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                       onClick={() => setOpen(!open)}
                       className="hover:text-[#c9060a] transition duration-300 flex items-center gap-1"
                     >
-                      {username} <ChevronDown size={16} />
+                    Hi!  {username} <ChevronDown size={16} />
                     </button>
                     {/* Simple mobile dropdown */}
                     {open && (
@@ -335,11 +320,12 @@ export default function Header({ categories }: { categories: Category[] }) {
                   <Instagram size={20} />
                 </a> */}
 
+                {/* LinkedIn  */}
                 <a
                   href="#"
                   // target="_blank"
                   rel="noopener noreferrer"
-                  className="relative group w-9 h-6 flex items-center justify-center border border-[#0A66C2] text-[#0A66C2] bg-white shadow-sm overflow-hidden"
+                  className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"
                 >
                   <svg
                     className="w-4 h-4 z-10"
@@ -351,12 +337,12 @@ export default function Header({ categories }: { categories: Category[] }) {
 
                   <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10    pointer-events-none"></span>
                 </a>
-
+                {/* Whatsapp  */}
                 <a
                   href="#"
                   // target="_blank"
                   rel="noopener noreferrer"
-                  className="relative group w-9 h-6 flex items-center justify-center border border-[#25D366] text-[#25D366] bg-white shadow-sm overflow-hidden"
+                  className="relative group w-10 h-6 flex items-center justify-center border border-[#25D366] text-white bg-[#25D366] shadow-sm overflow-hidden"
                 >
                   <svg
                     className="w-4 h-4 z-10"

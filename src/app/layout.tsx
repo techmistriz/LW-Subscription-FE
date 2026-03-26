@@ -7,6 +7,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ScrollProvider from "./providers";
 import { getCategories } from "@/lib/api/services/categories";
 import LoaderOverlay from "@/components/LoaderOverlay/LoaderOverlay";
+import AuthGate from "@/components/AuthGate";
+import { AuthProvider } from "@/features/authContext";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -34,11 +36,16 @@ export default async function RootLayout({
     <html lang="en" className={poppins.variable}>
       <body className="antialiased">
         <ScrollProvider>
-          <Header categories={categories} />
-        {/* <LoaderOverlay/> */}
-          {children}
-          <Footer />
-          <ScrollToTop />
+          <AuthProvider>
+            <Header categories={categories} />
+            {/* <LoaderOverlay/> */}
+            <AuthGate />
+
+            {children}
+
+            <Footer />
+            <ScrollToTop />
+          </AuthProvider>
         </ScrollProvider>
       </body>
     </html>

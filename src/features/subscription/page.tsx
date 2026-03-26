@@ -21,10 +21,17 @@ export default function SubscriptionPage() {
     fetchData();
   }, []);
 
+
+  const scrollToPricing = () => {
+  const el = document.getElementById("pricing");
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+};
   return (
     <div className="bg-gray-100">
       {/* HERO SECTION */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
+      <section  className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
         
         {/* LEFT CONTENT */}
         <div className="text-center lg:text-left">
@@ -50,7 +57,7 @@ export default function SubscriptionPage() {
 
           {/* BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start grid lg:grid-cols-1">
-            <button className="bg-[#c9060a] text-sm text-white px-6 py-3 rounded-lg font-semibold transition hover:bg-[#333] cursor-pointer">
+            <button onClick={scrollToPricing} className="bg-[#c9060a] text-sm text-white px-6 py-3 rounded-lg font-semibold transition hover:bg-[#333] cursor-pointer">
               Your first year is on us!
             </button>
 
@@ -63,7 +70,7 @@ export default function SubscriptionPage() {
         {/* RIGHT IMAGE */}
         <div className="flex justify-center lg:justify-end">
           {singleMagazine?.image && (
-            <div className="relative w-64 sm:w-72 md:w-80 lg:w-86 aspect-[3/4] rounded-xl shadow-2xl overflow-hidden transition-transform duration-500 hover:scale-105">
+            <div className="relative w-64 sm:w-72 md:w-80 lg:w-86 aspect-[3/4] shadow-2xl overflow-hidden hover:shadow-2xl hover:scale-100 ">
               <Image
                 src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
                 alt={singleMagazine.title || "Latest Magazine"}
