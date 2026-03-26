@@ -138,7 +138,7 @@ if (loading) return null;
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
-                              href="/#"
+                              href="#"
                               className={`block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
                             >
                               Edit Profile
@@ -148,7 +148,7 @@ if (loading) return null;
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
-                              href="/#"
+                              href="#"
                               className={`block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
                             >
                               My plans
