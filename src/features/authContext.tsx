@@ -2,23 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-// const AuthContext = createContext<any>(null);
-
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-};
-
-type AuthContextType = {
-  user: User | null;
-  loading: boolean;
-  login: (user: User) => void;
-  logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
@@ -56,8 +40,4 @@ export const AuthProvider = ({ children }: any) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
