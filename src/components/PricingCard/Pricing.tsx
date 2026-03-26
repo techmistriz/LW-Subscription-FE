@@ -3,7 +3,17 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const plans = {
+type PlanType = "1y" | "2y" | "3y";
+
+type Plan = {
+  duration: string;
+  price: number;
+  original: number;
+  freeText: string;
+  label: string;
+};
+
+const plans: Record<PlanType, Plan> = {
   "1y": {
     duration: "1 Year",
     price: 599,
@@ -28,8 +38,8 @@ const plans = {
 };
 
 export default function PricingCard() {
-  const [plan, setPlan] = useState("1y");
-  const currentPlan = plans[plan];
+  const [plan, setPlan] = useState<PlanType>("1y");
+const currentPlan = plans[plan];
 
   return (
     <div id="pricing" className=" flex items-center justify-center px-6 py-20">
@@ -57,7 +67,7 @@ export default function PricingCard() {
             {/* Toggle */}
             <div className="flex justify-center gap-4 mb-6">
               <div className="flex justify-center gap-4 mb-6">
-                {["1y", "2y", "3y"].map((p) => (
+               {(["1y", "2y", "3y"] as PlanType[]).map((p) => (
                   <label
                     key={p}
                     className={`flex items-center border gap-2 px-4 py-2 rounded-xl cursor-pointer 

@@ -99,7 +99,7 @@ const AuthGate = () => {
   return (
     <>
       <div className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm" />
-     <RegisterModal onClose={() => {}} />
+<RegisterModal onClose={() => {}} />
     </>
   );
 };
