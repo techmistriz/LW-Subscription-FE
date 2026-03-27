@@ -9,11 +9,11 @@ const RegisterPopupWrapper = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const seen = localStorage.getItem("register_seen");
+    const seen = sessionStorage.getItem("register_seen");
 
     if (!seen && pathname !== "/sign-in") {
       setShowModal(true);
-      localStorage.setItem("register_seen", "true");
+      sessionStorage.setItem("register_seen", "true");
     }
   }, [pathname]);
 

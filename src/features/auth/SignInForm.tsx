@@ -21,8 +21,8 @@ export default function SignInForm() {
       const res = await loginUser(email.trim(), password);
 
       // Store auth data in localStorage
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      sessionStorage.setItem("token", res.data.token);
+      sessionStorage.setItem("user", JSON.stringify(res.data.user));
 
       // Redirect to home
       window.location.href = "/";

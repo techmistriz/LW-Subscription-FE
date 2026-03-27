@@ -9,13 +9,13 @@ export const AuthProvider = ({ children }: any) => {
   const [loading, setLoading] = useState(true); // ✅ add this
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
 
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
       } catch {
-        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
       }
     }
 
@@ -23,13 +23,13 @@ export const AuthProvider = ({ children }: any) => {
   }, []);
 
   const login = (userData: any) => {
-    localStorage.setItem("user", JSON.stringify(userData));
+    sessionStorage.setItem("user", JSON.stringify(userData));
     setUser(userData); // 🔥 triggers instant UI update
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
     setUser(null); // 🔥 triggers instant UI update
   };
 
