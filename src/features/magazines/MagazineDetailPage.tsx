@@ -49,7 +49,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       <section className="flex justify-center">
         <div className="flex flex-col md:flex-row gap-8 items-center max-w-5xl w-full">
           {/* Magazine cover image */}
-          <div className="w-full sm:w-80 md:w-72 shrink-0">
+          <div className="w-full sm:w-80 md:w-72 shrink-0 mb-4 lg:mb-0 md:mb-0">
             <div className="relative w-full aspect-3/4">
               <Image
                 src={
