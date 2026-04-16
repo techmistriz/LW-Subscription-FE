@@ -246,7 +246,7 @@ export default function RegisterForm() {
               </div>
 
               {/* PLANS */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {plans.map((plan) => {
                   const isSelected = form.plan === plan.value;
 
@@ -294,7 +294,7 @@ export default function RegisterForm() {
                           isSelected ? "text-white/90" : "text-gray-600"
                         }`}
                       >
-                        Browse all charts · Cancel anytime · Least cost
+                        · Browse all charts <br />· Cancel anytime <br />· Least cost
                         effective
                       </p>
                     </label>

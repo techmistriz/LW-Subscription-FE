@@ -3,6 +3,7 @@ import api from "../axios";
 import { Magazine, Post } from "@/types";
 // Types
 
+//for magazine grid
 export async function getMagazines(
   year?: number,
   page: number = 1,
@@ -72,6 +73,7 @@ export async function getSingleMagazine(slugOrId: string): Promise<Magazine> {
   }
 }
 
+//for latest 5 magazine grid
 export async function getLatestMagazines(options?: {
   skipId?: number | string;
   limit?: number;
@@ -96,6 +98,7 @@ export async function getLatestMagazines(options?: {
   }
 }
 
+//for single magazine right side bar
 export async function getLatestSingleMagazines(): Promise<Magazine | null> {
   try {
     const response = await api.get("/magazines", {

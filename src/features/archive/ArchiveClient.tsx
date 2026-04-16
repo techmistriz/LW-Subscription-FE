@@ -201,67 +201,67 @@ const filtersLoading =
   </div>
 ) : (
   /* FILTER UI */
-  <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4 ">
-    <select
-      value={selectedYearId?.toString() ?? ""}
-      onChange={(e) =>
-        setSelectedYearId(
-          e.target.value ? Number(e.target.value) : undefined
-        )
-      }
-      className="bg-white border border-gray-300 px-2 py-2 outline-none"
-    >
-      <option value="">Select Year</option>
-      {years.map((y) => (
-        <option key={y} value={y}>
-          {y}
-        </option>
-      ))}
-    </select>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 w-full">
+  <select
+    value={selectedYearId?.toString() ?? ""}
+    onChange={(e) =>
+      setSelectedYearId(
+        e.target.value ? Number(e.target.value) : undefined
+      )
+    }
+    className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
+  >
+    <option value="">Select Year</option>
+    {years.map((y) => (
+      <option key={y} value={y}>
+        {y}
+      </option>
+    ))}
+  </select>
 
-    <select
-      value={selectedCategoryId?.toString() ?? ""}
-      onChange={(e) =>
-        setSelectedCategoryId(
-          e.target.value ? Number(e.target.value) : undefined
-        )
-      }
-      className="bg-white border border-gray-300 px-2 py-2 outline-none"
-    >
-      <option value="">Select Category</option>
-      {categories.map((c) => (
-        <option key={c.id} value={c.id}>
-          {c.name}
-        </option>
-      ))}
-    </select>
+  <select
+    value={selectedCategoryId?.toString() ?? ""}
+    onChange={(e) =>
+      setSelectedCategoryId(
+        e.target.value ? Number(e.target.value) : undefined
+      )
+    }
+    className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
+  >
+    <option value="">Select Category</option>
+    {categories.map((c) => (
+      <option key={c.id} value={c.id}>
+        {c.name}
+      </option>
+    ))}
+  </select>
 
-    <select
-      value={selectedAuthorId?.toString() ?? ""}
-      onChange={(e) =>
-        setSelectedAuthorId(
-          e.target.value ? Number(e.target.value) : undefined
-        )
-      }
-      className="bg-white border border-gray-300 px-2 py-2 outline-none"
-    >
-      <option value="">Select Author</option>
-      {authors.map((a) => (
-        <option key={a.id} value={a.id}>
-          {a.name}
-        </option>
-      ))}
-    </select>
+  <select
+    value={selectedAuthorId?.toString() ?? ""}
+    onChange={(e) =>
+      setSelectedAuthorId(
+        e.target.value ? Number(e.target.value) : undefined
+      )
+    }
+    className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
+  >
+    <option value="">Select Author</option>
+    {authors.map((a) => (
+      <option key={a.id} value={a.id}>
+        {a.name}
+      </option>
+    ))}
+  </select>
 
-    <button
-      onClick={handleApplyFilters}
-      className="w-[262px] bg-[#c9060a] text-white px-6  py-2 font-semibold cursor-pointer"
-      
-      disabled={loading}
-    >
-      {loading ? "Searching..." : "Search"}
-    </button>
-  </div>
+  <button
+    onClick={handleApplyFilters}
+    /* Changed w-[262px] to w-full and added lg:w-[262px] to keep original size on desktop */
+    className="w-full lg:w-[262px] bg-[#c9060a] text-white px-6 py-2 font-semibold cursor-pointer disabled:opacity-50"
+    disabled={loading}
+  >
+    {loading ? "Searching..." : "Search"}
+  </button>
+</div>
 )}
 
       {/* POSTS */}
