@@ -42,7 +42,7 @@ export default function LatestIssue({
       </Link>
 
       {showTitle && (
-        <p className="text-[18px] font-semibold my-2 text-start">
+        <p className="text-center text-[18px] font-semibold my-2">
           {data.title}
         </p>
       )}
