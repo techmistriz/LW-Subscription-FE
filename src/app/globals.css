@@ -78,3 +78,15 @@ body {
 .perspective-1000 {
   perspective: 1000px;
 }
+
+/* This forces the removal of default arrows in all browsers */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Specifically for IE/Edge if needed */
+select::-ms-expand {
+  display: none;
+}
