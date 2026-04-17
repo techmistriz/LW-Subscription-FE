@@ -66,7 +66,7 @@ export default function Pagination({
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={loading}
-          className="w-8 h-8 border bg-gray-100 border-gray-300 hover:bg-gray-200"
+          className="w-8 h-8 border bg-gray-100 border-gray-300 hover:bg-gray-200 cursor-pointer"
         >
           «
         </button>
@@ -83,7 +83,7 @@ export default function Pagination({
             key={`page-${page}-${index}`}
             onClick={() => handlePageChange(page as number)}
             disabled={loading}
-            className={`w-8 h-8 border text-sm ${
+            className={`w-8 h-8 border text-sm cursor-pointer ${
               currentPage === page
                 ? "bg-[#c9060a] text-white border-[#c9060a]"
                 : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
@@ -99,7 +99,7 @@ export default function Pagination({
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={loading}
-          className="w-8 h-8 border bg-gray-100 border-gray-300 hover:bg-gray-200"
+          className="w-8 h-8 border bg-gray-100 border-gray-300 hover:bg-gray-200 cursor-pointer"
         >
           »
         </button>
