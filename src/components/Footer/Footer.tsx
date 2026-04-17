@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Linkedin } from "lucide-react";
+import Link from "next/link";
 
 const Footer = () => {
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -33,27 +34,35 @@ const Footer = () => {
               luminaries to opine, comment and share their views. more...
             </p>
 
-            <p className="mt-4 text-sm">Connect Us:</p>
+           <p className="mt-4 text-sm">Connect Us:</p>
 
-            {/* Social */}
-            <div className="flex lg:mt-2 gap-3">
-              {/* LinkedIn */}
-              <a
-                href="https://www.linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"              >
-                <svg
-                  className="w-4 h-4 z-10"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-                </svg>
+{/* Social */}
+<div className="flex lg:mt-2 gap-3 items-center">
+  {/* LinkedIn */}
+  <a
+    href="https://www.linkedin.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="relative group w-8 h-8 rounded-lg flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-md transition-transform hover:scale-105"
+  >
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+    </svg>
+  </a>
 
-                <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10   pointer-events-none"></span>
-              </a>
-            </div>
+  {/* Email Icon */}
+  <a
+    href="mailto:info@lexwitness.com"
+    className="relative bg-gray-700 border-gray-400 group w-8 h-8 rounded-lg flex items-center justify-center border  text-white  shadow-md transition-transform hover:scale-105"
+  >
+    ✉
+  </a>
+
+  {/* Email Text */}
+  {/* <span className="text-sm text-[#E2E2E2]">
+    info@lexwitness.com
+  </span> */}
+</div>
 
             {/* App Buttons */}
             {/* <div className="flex gap-3 mt-5 flex-wrap">
@@ -124,6 +133,45 @@ className="relative group w-10 h-6 flex items-center justify-center border borde
               initiatives. Here are some more info decks for you to know us
               better.
             </p>
+
+            <h3 className="text-white font-semibold text-[18px] mb-4 mt-10">
+              OTHER LINKS
+            </h3>
+            <div className="flex flex-col gap-2 text-sm">
+              <Link
+                href="/about"
+                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+              >
+                About Us
+              </Link>
+              <Link
+                href="/contact"
+                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+              >
+                Contact Us
+              </Link>
+
+              <Link
+                href="/terms"
+                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+              >
+                Terms & Conditions
+              </Link>
+
+              <Link
+                href="/privacy"
+                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+              >
+                Privacy Policy
+              </Link>
+
+              <Link
+                href="/get-involved"
+                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+              >
+                Get Involved
+              </Link>
+            </div>
           </div>
         </div>
 
