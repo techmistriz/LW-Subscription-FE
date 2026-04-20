@@ -114,7 +114,7 @@ export default function Dashboard() {
           </div>
 
           {/* Usage */}
-        <div className="bg-white rounded-xl shadow p-5 md:col-span-2">
+        {/* <div className="bg-white rounded-xl shadow p-5 md:col-span-2">
   <h2 className="font-semibold mb-3">Article Usage</h2>
 
   <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
@@ -123,7 +123,7 @@ export default function Dashboard() {
     style={{ width: `${usagePercent}%`, backgroundColor:'#c6090a' }}
   />
 </div>
-</div>
+</div> */}
         </div>
       </div>
 
