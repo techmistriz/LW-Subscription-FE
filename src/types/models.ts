@@ -123,6 +123,7 @@ export interface RegisterForm {
 }
 
 export interface FormData extends RegisterForm {
+  address: string | number | readonly string[] | undefined;
   plan: string;
   auto_renew: boolean;
 }

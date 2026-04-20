@@ -10,18 +10,19 @@ const initialFormState: FormData = {
   first_name: "",
   last_name: "",
   email: "",
+  contact: "",
   password: "",
   password_confirmation: "",
-  contact: "",
+  address: "",
   plan: "",
   auto_renew: false,
 };
 
 const plans = [
-  { id: "3year", value: "3 Year Plan", price: "₹1,200 / 3 Years" },
+  { id: "7days", value: " Free Plan", price: "Free / 7 days" },
   { id: "1year", value: "1 Year Plan", price: "₹600 / Year" },
   { id: "2year", value: "2 Year Plan", price: "₹1,000 / 2 Years" },
-  { id: "7days", value: " Free Plan", price: "Free / 7 days" },
+  { id: "3year", value: "3 Year Plan", price: "₹1,200 / 3 Years" },
 ];
 
 export default function RegisterForm() {
@@ -34,8 +35,13 @@ export default function RegisterForm() {
   );
 
   // Handle all input changes
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const target = e.target as HTMLInputElement;
+
+    const { name, value, type } = target;
+    const checked = (target as HTMLInputElement).checked;
 
     // Phone number: only digits, max 10
     if (name === "contact") {
@@ -49,7 +55,6 @@ export default function RegisterForm() {
       [name]: type === "checkbox" ? checked : value,
     });
 
-    // Clear field error on change
     if (fieldErrors[name]) {
       setFieldErrors({ ...fieldErrors, [name]: [] });
     }
@@ -61,6 +66,7 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(form)
 
     // Reset state
     setError("");
@@ -126,26 +132,9 @@ export default function RegisterForm() {
                 {success}
               </p>
             )}
-
+            <h1 className="font-semibold mb-5">PERSONAL DETAILS</h1>
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label className="text-sm block mb-1">E-mail *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                    className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
-                      fieldErrors.email
-                        ? "border-[#c9060a] bg-red-50"
-                        : "border-gray-200 bg-gray-50"
-                    }`}
-                  />
-                </div>
-
                 <div>
                   <label className="text-sm block mb-1">First Name *</label>
                   <input
@@ -162,7 +151,6 @@ export default function RegisterForm() {
                     }`}
                   />
                 </div>
-
                 <div>
                   <label className="text-sm block mb-1">Last Name *</label>
                   <input
@@ -179,49 +167,24 @@ export default function RegisterForm() {
                     }`}
                   />
                 </div>
-
                 <div>
-                  <label className="text-sm block mb-1">Password *</label>
+                  <label className="text-sm block mb-1">E-mail *</label>
                   <input
-                    required
-                    type="password"
-                    name="password"
-                    value={form.password}
+                    type="email"
+                    name="email"
+                    value={form.email}
                     onChange={handleChange}
-                    autoComplete="new-password"
+                    required
                     disabled={loading}
                     className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
-                      fieldErrors.password
+                      fieldErrors.email
                         ? "border-[#c9060a] bg-red-50"
                         : "border-gray-200 bg-gray-50"
                     }`}
                   />
                 </div>
-
                 <div>
-                  <label className="text-sm block mb-1">
-                    Repeat Password *
-                  </label>
-                  <input
-                    required
-                    type="password"
-                    name="password_confirmation"
-                    value={form.password_confirmation}
-                    onChange={handleChange}
-                    autoComplete="new-password"
-                    disabled={loading}
-                    className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
-                      fieldErrors.password_confirmation
-                        ? "border-[#c9060a] bg-red-50"
-                        : "border-gray-200 bg-gray-50"
-                    }`}
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="text-sm block mb-1">
-                    Contact * (10 digits only)
-                  </label>
+                  <label className="text-sm block mb-1">Contact *</label>
                   <input
                     type="tel"
                     name="contact"
@@ -243,8 +206,61 @@ export default function RegisterForm() {
                     </span>
                   )}
                 </div>
+                <div>
+                  <label className="text-sm block mb-1">Password *</label>
+                  <input
+                    required
+                    type="password"
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    autoComplete="new-password"
+                    disabled={loading}
+                    className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
+                      fieldErrors.password
+                        ? "border-[#c9060a] bg-red-50"
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm block mb-1">
+                    Confirm Password *
+                  </label>
+                  <input
+                    required
+                    type="password"
+                    name="password_confirmation"
+                    value={form.password_confirmation}
+                    onChange={handleChange}
+                    autoComplete="new-password"
+                    disabled={loading}
+                    className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
+                      fieldErrors.password_confirmation
+                        ? "border-[#c9060a] bg-red-50"
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                  />
+                </div>
+                <h1 className="font-semibold ">ADDRESS</h1> <br />
+                <div className="col-span-2">
+                  {/* <label className="text-sm block mb-1">
+                    Confirm Password *
+                  </label> */}
+                  <textarea
+                    name="address"
+                    value={form.address}
+                    onChange={handleChange}
+                    disabled={loading}
+                    rows={4}
+                    className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
+                      fieldErrors.address
+                        ? "border-[#c9060a] bg-red-50"
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                  />
+                </div>
               </div>
-
               {/* PLANS */}
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {plans.map((plan) => {
@@ -294,8 +310,8 @@ export default function RegisterForm() {
                           isSelected ? "text-white/90" : "text-gray-600"
                         }`}
                       >
-                        · Browse all charts <br />· Cancel anytime <br />· Least cost
-                        effective
+                        · Browse all charts <br />· Cancel anytime <br />· Least
+                        cost effective
                       </p>
                     </label>
                   );
@@ -307,7 +323,9 @@ export default function RegisterForm() {
                   type="checkbox"
                   name="auto_renew"
                   checked={form.auto_renew}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    setForm({ ...form, auto_renew: e.target.checked })
+                  }
                   className="accent-[#c9060a] w-4 h-4"
                   disabled={loading}
                 />
