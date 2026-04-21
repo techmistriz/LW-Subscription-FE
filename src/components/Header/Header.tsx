@@ -33,7 +33,9 @@ export default function Header({ categories }: { categories: Category[] }) {
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
   const isLoggedIn = !!user;
-  const username = user?.firstName || "User";
+  const username = user?.first_name || "User";
+
+  console.log("header",user)
 
   // Handle body scroll lock
   useEffect(() => {
@@ -62,10 +64,10 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
 
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-  };
+ const handleLogout = async () => {
+  await logout();
+  router.push("/");
+};
 
   if (loading) return null;
 
