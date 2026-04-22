@@ -71,13 +71,13 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname.startsWith(`/category/${slug}/`);
 
   // if (loading) return null;
-  if (loading) {
-    return (
-      <header className="border-b h-20 flex items-center px-4">
-        <div className="animate-pulse text-gray-400">Loading...</div>
-      </header>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <header className="border-b h-20 flex items-center px-4">
+  //       <div className="animate-pulse text-gray-400">Loading...</div>
+  //     </header>
+  //   );
+  // }
 
   return (
     <>
@@ -98,7 +98,7 @@ export default function Header({ categories }: { categories: Category[] }) {
 
           {/* CENTER — Logo */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Link href="/" className="relative block w-[190px] h-[80px]">
+            <Link href="/" className="relative block w-[190px] h-[80px] ">
               <Image
                 src="/main-logo.png"
                 alt="Lex Witness Logo"
