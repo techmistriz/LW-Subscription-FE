@@ -1,20 +1,16 @@
 "use client";
 
 import { getPlans } from "@/features/auth/services/plans";
-import { useAuth } from "@/features/authContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useAppSelector, useAppDispatch } from "@/redux/store/hooks";
+import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 
 export default function Dashboard() {
-  const { user, loading } = useAuth();
+  const dispatch = useAppDispatch();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [subscription, setSubscription] = useState<any>({
-    name: "Free Plan",
-    amount: 0,
-    status: "ACTIVE",
-  });
+  const { user, loading } = useAppSelector((state) => state.auth);
+  const subscription = useAppSelector((state) => state.subscription.data);
 
   const [plans, setPlans] = useState<any[]>([]);
   const [isHighest, setIsHighest] = useState(false);
@@ -25,58 +21,39 @@ export default function Dashboard() {
     email: "",
   });
 
-  // SAFE LOAD 
+  // ✅ USER + SUBSCRIPTION → Redux
   useEffect(() => {
-    const safeParse = (key: string) => {
-      try {
-        const data = sessionStorage.getItem(key);
-        if (!data || data === "undefined") return null;
-        return JSON.parse(data);
-      } catch {
-        sessionStorage.removeItem(key);
-        return null;
-      }
-    };
+    if (!user) return;
 
-    const storedUser = safeParse("user");
-    const storedSub = safeParse("subscription");
+    // USER
+    setFormData({
+      firstName: user.first_name || "",
+      lastName: user.last_name || "",
+      email: user.email || "",
+    });
 
-    // USER sync
-    const baseUser = user || storedUser;
-console.log("dashboard", baseUser)
-    if (baseUser) {
-      setFormData({
-        firstName: baseUser.first_name || "",
-        lastName: baseUser.last_name || "",
-        email: baseUser.email || "",
-      });
-    }
-
-    // SUBSCRIPTION sync 
-    const activeSub = baseUser?.active_subscription;
+    // SUBSCRIPTION → dispatch once
+    const activeSub = user?.active_subscription;
 
     if (activeSub) {
-      const normalized = {
-        id: activeSub.id,
-        plan_id: activeSub.plan?.id,
-        name: activeSub.plan?.name,
-        amount: Number(activeSub.plan?.price),
-        status: activeSub.status,
-        start_date: activeSub.start_date,
-        end_date: activeSub.end_date,
-        duration_value: activeSub.plan?.duration_value,
-        duration_unit: activeSub.plan?.duration_unit,
-        purchase_type: activeSub.purchase_type,
-      };
-
-      setSubscription(normalized);
-      sessionStorage.setItem("subscription", JSON.stringify(normalized));
-    } else if (storedSub) {
-      setSubscription(storedSub);
+      dispatch(
+        setSubscription({
+          id: activeSub.id,
+          plan_id: activeSub.plan?.id,
+          name: activeSub.plan?.name,
+          amount: Number(activeSub.plan?.price),
+          status: activeSub.status,
+          start_date: activeSub.start_date,
+          end_date: activeSub.end_date,
+          duration_value: activeSub.plan?.duration_value,
+          duration_unit: activeSub.plan?.duration_unit,
+          purchase_type: activeSub.purchase_type,
+        })
+      );
     }
-  }, [user]);
+  }, [user, dispatch]);
 
-  // PLANS 
+  // ✅ FETCH PLANS
   useEffect(() => {
     const fetchPlans = async () => {
       const data = await getPlans();
@@ -88,11 +65,11 @@ console.log("dashboard", baseUser)
 
       const currentPlanId = subscription?.plan_id;
 
-      if (currentPlanId && highest?.id) {
-        setIsHighest(Number(currentPlanId) === Number(highest.id));
-      } else {
-        setIsHighest(false);
-      }
+      setIsHighest(
+        currentPlanId && highest?.id
+          ? Number(currentPlanId) === Number(highest.id)
+          : false
+      );
     };
 
     fetchPlans();
@@ -100,12 +77,7 @@ console.log("dashboard", baseUser)
 
   if (loading) return null;
 
-  const handleSave = () => {
-    sessionStorage.setItem("user", JSON.stringify(formData));
-    setIsModalOpen(false);
-  };
-
-  // HELPERS 
+  // HELPERS
   const isActive = subscription?.status === "ACTIVE";
 
   const formatAmount = (amount: any) => {
@@ -172,12 +144,6 @@ console.log("dashboard", baseUser)
           <div className="bg-white rounded-xl shadow p-5">
             <div className="flex justify-between mb-3">
               <h2 className="font-semibold text-[#333]">User Details</h2>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="text-[#c9060a] text-sm cursor-pointer"
-              >
-                Edit
-              </button>
             </div>
 
             <p className="text-sm text-[#333]">
@@ -224,51 +190,6 @@ console.log("dashboard", baseUser)
           </div>
         </div>
       </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div
-            className="bg-white p-6 rounded-xl w-full max-w-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="font-semibold mb-4">Edit Profile</h2>
-
-            <input
-              className="w-full border p-2 mb-3 rounded"
-              value={formData.firstName}
-              readOnly
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
-              }
-              placeholder="First Name"
-            />
-
-            <input
-              className="w-full border p-2 mb-3 rounded"
-              value={formData.lastName}
-              readOnly
-              onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
-              }
-              placeholder="Last Name"
-            />
-
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setIsModalOpen(false)}>Cancel</button>
-              <button
-                onClick={handleSave}
-                className="bg-[#333] text-white px-4 py-2 rounded hover:bg-[#c6090a]"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

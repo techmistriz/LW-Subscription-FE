@@ -22,6 +22,8 @@ export interface RegisterPayload {
 }
 
 export interface RegisterResponse {
+  token: string | undefined;
+  user: any;
   status: boolean;
   message: string;
   data: {

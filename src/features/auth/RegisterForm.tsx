@@ -8,7 +8,10 @@ import { FormData } from "@/types";
 import { verifyPayment } from "./services/payment";
 import { getPlans } from "./services/plans";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../authContext";
+
+import { useAppDispatch } from "@/redux/store/hooks";
+import { setUser } from "@/redux/store/slices/authSlice";
+import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 
 const initialFormState: FormData = {
   first_name: "",
@@ -34,7 +37,7 @@ const loadRazorpay = () =>
 
 export default function RegisterForm() {
   const router = useRouter();
-  const { user, login } = useAuth();
+  const dispatch = useAppDispatch();
 
   const [form, setForm] = useState<FormData>(initialFormState);
   const [plans, setPlans] = useState<any[]>([]);
@@ -44,11 +47,9 @@ export default function RegisterForm() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>(
-    {},
-  );
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>({});
 
-  //  Fetch plans
+  // Fetch plans
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -61,10 +62,8 @@ export default function RegisterForm() {
     fetchPlans();
   }, []);
 
-  //  Input handler
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  // Input handler
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
 
     if (name === "contact") {
@@ -75,11 +74,9 @@ export default function RegisterForm() {
 
     setForm((prev) => ({
       ...prev,
-      [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }));
 
-    // clear field error
     if (fieldErrors[name]) {
       setFieldErrors((prev) => ({ ...prev, [name]: [] }));
     }
@@ -89,7 +86,7 @@ export default function RegisterForm() {
     setForm((prev) => ({ ...prev, plan: e.target.value }));
   };
 
-  //  Submit handler
+  // Submit handler
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -106,7 +103,6 @@ export default function RegisterForm() {
         return;
       }
 
-      //  Register user
       const res = await registerUser({
         first_name: form.first_name,
         last_name: form.last_name,
@@ -126,11 +122,6 @@ export default function RegisterForm() {
 
       const token = res?.data?.token;
       const userData = res?.data?.user;
-
-      // if (token && userData) {
-      //   login(userData, token);
-      // }
-
       const payment = res?.data?.payment;
 
       if (!payment) {
@@ -138,29 +129,36 @@ export default function RegisterForm() {
         return;
       }
 
-      //  FREE PLAN
+      // ================= FREE PLAN =================
       if (!payment.amount || payment.amount <= 0) {
         const sub = res?.data?.user?.active_subscription;
 
-        sessionStorage.setItem(
-          "subscription",
-          JSON.stringify({
+        if (token && userData) {
+          dispatch(setUser({ user: userData, token }));
+        }
+
+        dispatch(
+          setSubscription({
+            id: sub?.id,
+            plan_id: sub?.plan?.id,
             name: sub?.plan?.name,
             amount: 0,
             status: sub?.status,
             start_date: sub?.start_date,
             end_date: sub?.end_date,
-          }),
+          })
         );
 
         router.replace(
-          `/thankyou?name=${encodeURIComponent(selectedPlan.name)}&amount=0&status=success`,
+          `/thankyou?name=${encodeURIComponent(
+            selectedPlan.name
+          )}&amount=0&status=success`
         );
 
         return;
       }
 
-      //  Paid plan validation
+      // ================= PAID PLAN =================
       if (!payment.razorpay_key || !payment.order_id) {
         setError("Invalid payment configuration");
         return;
@@ -172,7 +170,6 @@ export default function RegisterForm() {
         return;
       }
 
-      //  Razorpay options
       const options = {
         key: payment.razorpay_key,
         amount: payment.amount,
@@ -201,31 +198,33 @@ export default function RegisterForm() {
             const verifiedUser = verifyRes?.data?.user;
             const token = verifyRes?.data?.token;
 
-            // ✅ LOGIN ONLY AFTER PAYMENT SUCCESS
             if (token && verifiedUser) {
-              login(verifiedUser, token);
+              dispatch(setUser({ user: verifiedUser, token }));
             }
 
             const sub = verifiedUser?.active_subscription;
 
-            sessionStorage.setItem(
-              "subscription",
-              JSON.stringify({
-                id: sub?.id,
-                name: sub?.plan?.name,
-                amount: Number(sub?.plan?.price),
-                status: sub?.status,
-                start_date: sub?.start_date,
-                end_date: sub?.end_date,
-                duration_value: sub?.plan?.duration_value,
-                duration_unit: sub?.plan?.duration_unit,
-                purchase_type: sub?.purchase_type,
-                plan_id: sub?.plan?.id,
-              }),
-            );
+            if (sub) {
+              dispatch(
+                setSubscription({
+                  id: sub.id,
+                  plan_id: sub.plan?.id,
+                  name: sub.plan?.name,
+                  amount: Number(sub.plan?.price),
+                  status: sub.status,
+                  start_date: sub.start_date,
+                  end_date: sub.end_date,
+                  duration_value: sub.plan?.duration_value,
+                  duration_unit: sub.plan?.duration_unit,
+                  purchase_type: sub.purchase_type,
+                })
+              );
+            }
 
             router.replace(
-              `/thankyou?name=${encodeURIComponent(selectedPlan.name)}&amount=${payment.amount}&status=success`,
+              `/thankyou?name=${encodeURIComponent(
+                selectedPlan.name
+              )}&amount=${payment.amount}&status=success`
             );
           } catch (err: any) {
             setError(err.message || "Verification failed");
@@ -244,7 +243,6 @@ export default function RegisterForm() {
 
       const rzp = new (window as any).Razorpay(options);
 
-      // Payment failure
       rzp.on("payment.failed", (response: any) => {
         setError(response?.error?.description || "Payment failed");
       });
@@ -259,7 +257,7 @@ export default function RegisterForm() {
 
   const getError = (name: keyof typeof fieldErrors) => fieldErrors[name]?.[0];
 
-  //  Payment loader screen
+  // Payment loader
   if (processingPayment) {
     return (
       <div className="min-h-screen flex items-center justify-center">

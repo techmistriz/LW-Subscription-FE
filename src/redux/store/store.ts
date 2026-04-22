@@ -1,16 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from './slices/authSlice'
+import authReducer from "./slices/authSlice";
+import subscriptionReducer from "./slices/subscriptionSlice"; 
 
 export const store = configureStore({
-    reducer:{
-        auth: authReducer,
-    }
-})
+  reducer: {
+    auth: authReducer,
+    subscription: subscriptionReducer,
+  },
+});
 
-//Types for TypeScript
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-
-
-
-
+// Types
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

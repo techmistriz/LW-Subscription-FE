@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser, registerUser } from "@/lib/auth/auth";
-import { useAuth } from "@/features/authContext";
+import { loginUser as loginApi, registerUser } from "@/lib/auth/auth";
 import { getMembershipPlan } from "@/features/auth/services/plans";
+
+import { useAppDispatch } from "@/redux/store/hooks";
+import { loginUser, setUser } from "@/redux/store/slices/authSlice";
+import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 
 const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
-  const { user, login } = useAuth();
+  const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
@@ -24,6 +27,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     password_confirmation: "",
   });
 
+  // FETCH PLAN
   useEffect(() => {
     let mounted = true;
 
@@ -42,10 +46,6 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (user) onClose?.();
-  }, [user, onClose]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
       ...prev,
@@ -53,76 +53,86 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const registerRes = await registerUser({
-        ...form,
-        membership_plan_id: planId,
-      });
+  try {
+    // REGISTER (ALREADY RETURNS TOKEN + USER)
+    const registerRes = await registerUser({
+      ...form,
+      membership_plan_id: planId,
+    });
 
-      if (!registerRes?.status) {
-        throw new Error(registerRes?.message || "Registration failed");
-      }
-
-      const loginRes = await loginUser(form.email, form.password);
-
-      const token = loginRes?.token || loginRes?.data?.token;
-      const userData = loginRes?.user || loginRes?.data?.user;
-
-      if (!token || !userData) {
-        throw new Error("Invalid login response");
-      }
-
-      //  START PROCESSING SCREEN HERE
-      setProcessingPayment(true);
-
-      login(userData, token);
-
-      const sub =
-        userData?.active_subscription ||
-        registerRes?.data?.user?.active_subscription;
-
-      if (sub) {
-        sessionStorage.setItem(
-          "subscription",
-          JSON.stringify({
-            id: sub?.id,
-            plan_id: sub?.plan?.id,
-            name: sub?.plan?.name,
-            amount: Number(sub?.plan?.price),
-            status: sub?.status,
-            start_date: sub?.start_date,
-            end_date: sub?.end_date,
-            duration_value: sub?.plan?.duration_value,
-            duration_unit: sub?.plan?.duration_unit,
-            purchase_type: sub?.purchase_type,
-          })
-        );
-      }
-
-   const planName = sub?.plan?.name || "Basic Plan";
-const amount = sub?.plan?.price || 0;
-
-setTimeout(() => {
-  setProcessingPayment(false);
-  onClose?.();
-
-  router.replace(
-    `/thankyou?name=${encodeURIComponent(planName)}&amount=${amount}&status=success`
-  );
-}, 800);
-    } catch (error: any) {
-      console.error("ERROR:", error.message);
-      setProcessingPayment(false);
-    } finally {
-      setLoading(false);
+    if (!registerRes?.status) {
+      throw new Error(registerRes?.message || "Registration failed");
     }
-  };
 
-  //  FULL SCREEN LOADING (IMPORTANT FIX)
+    const token =
+      registerRes?.data?.token ||
+      registerRes?.token;
+
+    const userData =
+      registerRes?.data?.user ||
+      registerRes?.user;
+
+    if (!token || !userData) {
+      throw new Error("Invalid register response");
+    }
+
+    // SHOW PROCESSING
+    setProcessingPayment(true);
+
+    // ✅ SET USER (NOT loginUser thunk)
+    dispatch(
+      setUser({
+        user: userData,
+        token,
+      })
+    );
+
+    // ✅ SUBSCRIPTION
+    const sub = userData?.active_subscription;
+
+    if (sub) {
+      dispatch(
+        setSubscription({
+          id: sub?.id,
+          plan_id: sub?.plan?.id,
+          name: sub?.plan?.name,
+          amount: Number(sub?.plan?.price),
+          status: sub?.status,
+          start_date: sub?.start_date,
+          end_date: sub?.end_date,
+          duration_value: sub?.plan?.duration_value,
+          duration_unit: sub?.plan?.duration_unit,
+          purchase_type: sub?.purchase_type,
+        })
+      );
+    }
+
+    const planName = sub?.plan?.name || "Basic Plan";
+    const amount = sub?.plan?.price || 0;
+
+    setTimeout(() => {
+      setProcessingPayment(false);
+      onClose?.();
+
+      router.replace(
+        `/thankyou?name=${encodeURIComponent(
+          planName
+        )}&amount=${amount}&status=success`
+      );
+    }, 800);
+  } catch (error: any) {
+    console.error("ERROR:", error.message);
+    setProcessingPayment(false);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // LOADING SCREEN
   if (processingPayment) {
     return (
       <div className="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
@@ -137,16 +147,6 @@ setTimeout(() => {
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center">
       <div className="bg-white w-full max-w-lg p-6 rounded shadow-lg relative">
-
-
- {/* <button
-    onClick={onClose}
-    className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-100 rounded-full text-xl"
-    aria-label="Close modal"
-  >
-    ×
-  </button> */}
-  
         <h2 className="text-xl font-semibold text-center mb-2">
           Register to Continue
         </h2>

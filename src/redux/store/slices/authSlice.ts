@@ -1,38 +1,62 @@
-// store/slices/authSlice.ts
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/api/axios";
-import { logoutApi } from "@/lib/auth/auth";
+import { loginUser as loginApi, logoutApi } from "@/lib/auth/auth";
 
 interface User {
   id: number;
-  name: string;
+  first_name: string;
+  last_name?: string;
   email: string;
+}
+
+interface Subscription {
+  id?: number;
+  plan_id?: number;
+  name?: string;
+  amount?: number;
+  status?: string;
+  start_date?: string;
+  end_date?: string;
+  duration_value?: number;
+  duration_unit?: string;
+  purchase_type?: string;
 }
 
 interface AuthState {
   user: User | null;
   token: string | null;
+  subscription: Subscription | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  isInitialized: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   token: null,
+  subscription: null,
   isAuthenticated: false,
   loading: false,
   error: null,
+    isInitialized: false,
 };
 
-//LOGIN
+// LOGIN
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (
-    { user, token }: { user: User; token: string },
+    { email, password }: { email: string; password: string },
     { rejectWithValue }
   ) => {
     try {
+      const res = await loginApi(email, password);
+
+      const token = res?.token || res?.data?.token;
+      const user = res?.user || res?.data?.user;
+
+      if (!token || !user) throw new Error("Invalid login response");
+
       sessionStorage.setItem("user", JSON.stringify(user));
       sessionStorage.setItem("token", token);
 
@@ -41,21 +65,19 @@ export const loginUser = createAsyncThunk(
       ] = `Bearer ${token}`;
 
       return { user, token };
-    } catch {
-      return rejectWithValue("Login failed");
+    } catch (err: any) {
+      return rejectWithValue(err.message || "Login failed");
     }
   }
 );
 
-//LOGOUT
+// LOGOUT
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   try {
     await logoutApi();
   } catch {}
 
-  sessionStorage.removeItem("user");
-  sessionStorage.removeItem("token");
-
+  sessionStorage.clear();
   delete axiosInstance.defaults.headers.common["Authorization"];
 
   return true;
@@ -65,9 +87,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    // LOAD USER + SUBSCRIPTION FROM STORAGE
     loadUserFromStorage: (state) => {
       const storedUser = sessionStorage.getItem("user");
       const token = sessionStorage.getItem("token");
+      const subscription = sessionStorage.getItem("subscription");
 
       if (storedUser && token) {
         state.user = JSON.parse(storedUser);
@@ -78,12 +102,42 @@ const authSlice = createSlice({
           "Authorization"
         ] = `Bearer ${token}`;
       }
+
+      if (subscription) {
+        state.subscription = JSON.parse(subscription);
+      }
+       state.isInitialized = true; 
+    },
+
+    // SET USER (for register / payment flow)
+    setUser: (
+      state,
+      action: PayloadAction<{ user: User; token: string }>
+    ) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+
+      sessionStorage.setItem("user", JSON.stringify(action.payload.user));
+      sessionStorage.setItem("token", action.payload.token);
+
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${action.payload.token}`;
+    },
+
+    // SET SUBSCRIPTION
+    setSubscription: (state, action: PayloadAction<Subscription>) => {
+      state.subscription = action.payload;
+      sessionStorage.setItem("subscription", JSON.stringify(action.payload));
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -91,17 +145,24 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isAuthenticated = true;
       })
-      .addCase(loginUser.rejected, (state) => {
+      .addCase(loginUser.rejected, (state, action: any) => {
         state.loading = false;
-        state.error = "Login failed";
+        state.error = action.payload;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.token = null;
+        state.subscription = null;
         state.isAuthenticated = false;
+        state.error = null;
       });
   },
 });
 
-export const { loadUserFromStorage } = authSlice.actions;
+export const {
+  loadUserFromStorage,
+  setSubscription,
+  setUser, // IMPORTANT (you need this for register/payment flow)
+} = authSlice.actions;
+
 export default authSlice.reducer;

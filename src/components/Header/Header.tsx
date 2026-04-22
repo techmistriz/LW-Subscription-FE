@@ -17,7 +17,9 @@ import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 
 import SearchOverlay from "../SearchOverlay";
 import { Category } from "@/types";
-import { useAuth } from "@/features/authContext";
+
+import { logoutUser } from "@/redux/store/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 
 export default function Header({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
@@ -25,17 +27,21 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [mobileUserDropdown, setMobileUserDropdown] = useState(false);
 
-  const { user, logout, loading } = useAuth();
-
-  // Ref to track the active item for scrolling
-  const activeItemRef = useRef<HTMLLIElement | null>(null);
+  const dispatch = useAppDispatch();
+  const { user, loading } = useAppSelector((state) => state.auth);
 
   const isLoggedIn = !!user;
   const username = user?.first_name || "User";
 
-  console.log("header",user)
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    router.push("/");
+  };
+  // Ref to track the active item for scrolling
+  const activeItemRef = useRef<HTMLLIElement | null>(null);
+
+  console.log("header", user);
 
   // Handle body scroll lock
   useEffect(() => {
@@ -64,12 +70,14 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
 
- const handleLogout = async () => {
-  await logout();
-  router.push("/");
-};
-
-  if (loading) return null;
+  // if (loading) return null;
+  if (loading) {
+    return (
+      <header className="border-b h-20 flex items-center px-4">
+        <div className="animate-pulse text-gray-400">Loading...</div>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -145,7 +153,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                           {({ active }) => (
                             <Link
                               href="/dashboard"
-                              className={`block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
+                              className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
                             >
                               Dashboard
                             </Link>
@@ -155,7 +163,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                           {({ active }) => (
                             <Link
                               href="/subscription"
-                              className={`block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
+                              className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
                             >
                               Plans
                             </Link>
@@ -165,7 +173,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                           {({ active }) => (
                             <button
                               onClick={handleLogout}
-                              className={`w-full text-left block px-4 py-2 text-sm text-gray-700 ${active ? "bg-gray-100" : ""}`}
+                              className={`w-full text-left block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
                             >
                               Logout
                             </button>
