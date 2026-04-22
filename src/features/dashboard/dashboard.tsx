@@ -21,7 +21,7 @@ export default function Dashboard() {
     email: "",
   });
 
-  // ✅ USER + SUBSCRIPTION → Redux
+  //  USER + SUBSCRIPTION → Redux
   useEffect(() => {
     if (!user) return;
 
@@ -53,7 +53,7 @@ export default function Dashboard() {
     }
   }, [user, dispatch]);
 
-  // ✅ FETCH PLANS
+  //  FETCH PLANS
   useEffect(() => {
     const fetchPlans = async () => {
       const data = await getPlans();
@@ -165,6 +165,7 @@ export default function Dashboard() {
 
           {/* Plan */}
           <div className="bg-[#c9060a] text-white rounded-xl p-5 shadow">
+             {/* <h2 className="font-semibold text-[#dcbcbc]">Your Plan</h2> */}
             <p className="font-semibold mb-2">
               {subscription?.name || "No Plan"}
             </p>

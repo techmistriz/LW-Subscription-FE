@@ -6,7 +6,7 @@ import { loginUser } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
 import { useRouter } from "next/navigation";
 
-// ✅ REDUX
+//  REDUX
 import { useAppDispatch } from "@/redux/store/hooks";
 import { loginUser as loginRedux } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
@@ -114,9 +114,9 @@ export default function SignInForm() {
               </button>
             </form>
 
-            <p className="text-sm text-[#c9060a] mt-4 cursor-pointer">
-              <Link href="/register">Register</Link> |{" "}
-              <Link href="/password-reset">
+            <p className="text-sm text-[#c9060a] mt-4 cursor-pointer ">
+              <Link href="/register" className="hover:underline">Register</Link> |{" "}
+              <Link href="/password-reset" className="hover:underline">
                 Lost your password?
               </Link>
             </p>

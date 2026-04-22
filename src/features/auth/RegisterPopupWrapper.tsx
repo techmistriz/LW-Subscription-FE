@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import RegisterModal from "../../features/auth/RegisterModal";
 
-// ✅ REDUX
+//  REDUX
 import { useAppSelector } from "@/redux/store/hooks";
 
 const RegisterPopupWrapper = () => {
@@ -18,7 +18,7 @@ const RegisterPopupWrapper = () => {
 
     const seen = sessionStorage.getItem("register_seen");
 
-    // ✅ ONLY SHOW IF NOT LOGGED IN
+    //  ONLY SHOW IF NOT LOGGED IN
     if (!user && !seen && pathname !== "/sign-in") {
       setShowModal(true);
       sessionStorage.setItem("register_seen", "true");

@@ -236,7 +236,7 @@ export default function Header({ categories }: { categories: Category[] }) {
       )}
 
       <aside
-        style={{ width: "300px" }} // ✅ FORCE WIDTH (bypasses Tailwind issues)
+        style={{ width: "300px" }} //  FORCE WIDTH (bypasses Tailwind issues)
         className={`fixed top-0 left-0 h-full bg-[#333333] text-white z-50 flex flex-col transform transition-transform duration-500 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}

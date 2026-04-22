@@ -6,7 +6,7 @@ const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true); // ✅ add this
+  const [loading, setLoading] = useState(true); //  add this
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: any) => {
       }
     }
 
-    setLoading(false); // ✅ done loading
+    setLoading(false); //  done loading
   }, []);
 
   const login = (userData: any) => {
