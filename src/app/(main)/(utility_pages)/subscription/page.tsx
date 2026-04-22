@@ -1,4 +1,5 @@
-import SubscriptionPage from "@/features/subscription/page";
+import SubscriptionPage from "@/features/SubscriptionPage";
+
 
 export default function Subscription() {
   
