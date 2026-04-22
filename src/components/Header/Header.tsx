@@ -29,19 +29,24 @@ export default function Header({ categories }: { categories: Category[] }) {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { user, loading } = useAppSelector((state) => state.auth);
+ const { user, loading, isInitialized, isAuthenticated } = useAppSelector(
+  (state) => state.auth
+);
 
-  const isLoggedIn = !!user;
-  const username = user?.first_name || "User";
+const isLoggedIn = isAuthenticated && !!user;
+const username = user?.first_name || "User";
 
   const handleLogout = async () => {
-    await dispatch(logoutUser());
-    router.push("/");
-  };
+  await dispatch(logoutUser()).unwrap(); 
+
+  router.replace("/"); 
+};
+
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
   console.log("header", user);
+  
 
   // Handle body scroll lock
   useEffect(() => {
@@ -70,15 +75,23 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
 
-  // if (loading) return null;
-  if (loading) {
-    return (
-      <header className="border-b h-20 flex items-center px-4">
-        <div className="animate-pulse text-gray-400">Loading...</div>
-      </header>
-    );
-  }
+  // wait until Redux is hydrated from sessionStorage
+if (!isInitialized) {
+  return (
+    <header className="border-b h-20 flex items-center px-4">
+      <div className="animate-pulse text-gray-400">Loading...</div>
+    </header>
+  );
+}
 
+// optional: avoid flicker while auth state is still resolving
+if (loading) {
+  return (
+    <header className="border-b h-20 flex items-center px-4">
+      <div className="animate-pulse text-gray-400">Loading...</div>
+    </header>
+  );
+}
   return (
     <>
       <header className="border-b border-gray-300 bg-white text-black">

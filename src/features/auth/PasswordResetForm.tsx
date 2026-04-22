@@ -71,7 +71,7 @@ export default function PasswordResetForm() {
               />
               <button
                 disabled={loading}
-                className="bg-[#c9060a] text-white px-6 py-2 text-sm w-full"
+                className="bg-[#c9060a] text-white px-6 py-2 text-sm w-full cursor-pointer"
               >
                 {loading ? "Sending..." : "Reset Password"}
               </button>

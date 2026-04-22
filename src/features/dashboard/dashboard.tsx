@@ -21,7 +21,7 @@ export default function Dashboard() {
     email: "",
   });
 
-  // ✅ USER + SUBSCRIPTION → Redux
+  // USER + SUBSCRIPTION → Redux
   useEffect(() => {
     if (!user) return;
 
@@ -53,7 +53,7 @@ export default function Dashboard() {
     }
   }, [user, dispatch]);
 
-  // ✅ FETCH PLANS
+  // FETCH PLANS
   useEffect(() => {
     const fetchPlans = async () => {
       const data = await getPlans();

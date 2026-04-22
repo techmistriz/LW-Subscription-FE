@@ -20,7 +20,7 @@ interface ActiveSubscription {
   end_date?: string;
   expires_at?: string;
   purchase_type?: string;
-  plan?: Plan; // ✅ IMPORTANT
+  plan?: Plan; // IMPORTANT
 }
 
 interface User {
@@ -29,7 +29,7 @@ interface User {
   last_name?: string;
   email: string;
 
-  // ✅ FIX (this was missing)
+  // FIX (this was missing)
   active_subscription?: ActiveSubscription;
 }
 
@@ -137,7 +137,7 @@ const authSlice = createSlice({
         state.subscription = JSON.parse(subscription);
       }
 
-      state.isInitialized = true; // ✅ important for AuthGate
+      state.isInitialized = true; // important for AuthGate
     },
 
     // SET USER (register / payment flow)
@@ -186,6 +186,7 @@ const authSlice = createSlice({
         state.subscription = null;
         state.isAuthenticated = false;
         state.error = null;
+        state.isInitialized = true; 
       });
   },
 });
