@@ -2,11 +2,35 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/api/axios";
 import { loginUser as loginApi, logoutApi } from "@/lib/auth/auth";
 
+/* ================= TYPES ================= */
+
+interface Plan {
+  id: number;
+  name: string;
+  price: number;
+  duration_value: number;
+  duration_unit: string;
+}
+
+interface ActiveSubscription {
+  id: number;
+  plan_id: number;
+  status: string;
+  start_date?: string;
+  end_date?: string;
+  expires_at?: string;
+  purchase_type?: string;
+  plan?: Plan; // ✅ IMPORTANT
+}
+
 interface User {
   id: number;
   first_name: string;
   last_name?: string;
   email: string;
+
+  // ✅ FIX (this was missing)
+  active_subscription?: ActiveSubscription;
 }
 
 interface Subscription {
@@ -32,6 +56,8 @@ interface AuthState {
   isInitialized: boolean;
 }
 
+/* ================= INITIAL ================= */
+
 const initialState: AuthState = {
   user: null,
   token: null,
@@ -39,8 +65,10 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
-    isInitialized: false,
+  isInitialized: false,
 };
+
+/* ================= THUNKS ================= */
 
 // LOGIN
 export const loginUser = createAsyncThunk(
@@ -83,6 +111,8 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
   return true;
 });
 
+/* ================= SLICE ================= */
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -106,10 +136,11 @@ const authSlice = createSlice({
       if (subscription) {
         state.subscription = JSON.parse(subscription);
       }
-       state.isInitialized = true; 
+
+      state.isInitialized = true; // ✅ important for AuthGate
     },
 
-    // SET USER (for register / payment flow)
+    // SET USER (register / payment flow)
     setUser: (
       state,
       action: PayloadAction<{ user: User; token: string }>
@@ -159,10 +190,12 @@ const authSlice = createSlice({
   },
 });
 
+/* ================= EXPORTS ================= */
+
 export const {
   loadUserFromStorage,
   setSubscription,
-  setUser, // IMPORTANT (you need this for register/payment flow)
+  setUser,
 } = authSlice.actions;
 
 export default authSlice.reducer;
