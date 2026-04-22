@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/api/axios";
 import { loginUser as loginApi, logoutApi } from "@/lib/auth/auth";
@@ -55,28 +54,11 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   isInitialized: boolean;
-=======
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-
-interface User {
-    id:number;
-    name:string;
-    email:string;
-}
-
-interface AuthState {
-    user: User| null;
-    token: string | null;
-    isAuthenticated: boolean;
-    loading: boolean;
-    error: string | null;
->>>>>>> parent of 3d83ac5 (major changes)
 }
 
 /* ================= INITIAL ================= */
 
 const initialState: AuthState = {
-<<<<<<< HEAD
   user: null,
   token: null,
   subscription: null,
@@ -128,19 +110,10 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
 
   return true;
 });
-=======
-    user: null,
-    token:null,
-    isAuthenticated:false,
-    loading: false,
-    error:null
-}
->>>>>>> parent of 3d83ac5 (major changes)
 
 /* ================= SLICE ================= */
 
 const authSlice = createSlice({
-<<<<<<< HEAD
   name: "auth",
   initialState,
   reducers: {
@@ -149,26 +122,12 @@ const authSlice = createSlice({
       const storedUser = sessionStorage.getItem("user");
       const token = sessionStorage.getItem("token");
       const subscription = sessionStorage.getItem("subscription");
-=======
-    name: 'auth',
-    initialState,
-    reducers: {
-        login: (state, action: PayloadAction<{user: User; token: string}>) => {
-            state.user = action.payload.user;
-            state.token = action.payload.token;
-            state.isAuthenticated = true;
-        },
->>>>>>> parent of 3d83ac5 (major changes)
 
-        logout: (state) => {
-            state.user = null;
-            state.token = null;
-            state.isAuthenticated = false;
-        }
-    }
-})
+      if (storedUser && token) {
+        state.user = JSON.parse(storedUser);
+        state.token = token;
+        state.isAuthenticated = true;
 
-<<<<<<< HEAD
         axiosInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${token}`;
@@ -239,7 +198,4 @@ export const {
   setUser,
 } = authSlice.actions;
 
-=======
-export const {login, logout} = authSlice.actions;
->>>>>>> parent of 3d83ac5 (major changes)
 export default authSlice.reducer;
