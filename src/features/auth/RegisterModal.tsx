@@ -83,7 +83,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     // SHOW PROCESSING
     setProcessingPayment(true);
 
-    // SET USER (NOT loginUser thunk)
+    // ✅ SET USER (NOT loginUser thunk)
     dispatch(
       setUser({
         user: userData,
@@ -91,7 +91,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       })
     );
 
-    // SUBSCRIPTION
+    // ✅ SUBSCRIPTION
     const sub = userData?.active_subscription;
 
     if (sub) {
@@ -147,13 +147,6 @@ const handleSubmit = async (e: React.FormEvent) => {
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center">
       <div className="bg-white w-full max-w-lg p-6 rounded shadow-lg relative">
-         <button
-    onClick={onClose}
-    className="absolute top-3 right-3 w-8 h-8 cursor-pointer flex items-center justify-center text-gray-500 hover:text-[#c6090a] hover:bg-gray-100 rounded-full text-xl"
-    aria-label="Close modal"
-  >
-    ×
-  </button>
         <h2 className="text-xl font-semibold text-center mb-2">
           Register to Continue
         </h2>
@@ -184,7 +177,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           <button
             disabled={loading}
-            className="bg-[#c9060a] text-white py-2 mt-2 md:col-span-2 disabled:opacity-60 cursor-pointer"
+            className="bg-[#c9060a] text-white py-2 mt-2 md:col-span-2 disabled:opacity-60"
           >
             {loading ? "Registering..." : "Register"}
           </button>

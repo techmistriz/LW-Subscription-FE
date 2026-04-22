@@ -111,7 +111,7 @@ export default function PricingCard() {
 
               <Link href="/register">
                 <button className="bg-[#c9060a] text-white px-8 py-1 rounded-xl text-sm mb-6 cursor-pointer">
-                  START PLAN
+                  START MY FREE MONTH
                 </button>
               </Link>
 
