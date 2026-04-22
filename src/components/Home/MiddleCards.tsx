@@ -56,7 +56,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
               </Link>
 
               <p className="text-xs mt-2 opacity-90">
-                {/* {post.magazine.title} */}
+                {post.magazine.title}
               </p>
             </div>
           </div>

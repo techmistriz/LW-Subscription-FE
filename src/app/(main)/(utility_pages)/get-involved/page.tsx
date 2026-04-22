@@ -1,4 +1,4 @@
-import GetInvolvedPage from "@/features/get-involved/GetInvolvedPage";
+import GetInvolvedPage from "@/features/get-involved/page";
 
 const GetInvolved = () => {
   return (
