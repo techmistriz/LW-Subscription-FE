@@ -10,6 +10,11 @@ export const request = async <T>(
   payload?: unknown
 ): Promise<ApiResponse<T>> => {
   try {
+    console.log("➡️ API REQUEST:", {
+  method,
+  url,
+  payload,
+});
     const response = await api.request<T>({
       method,
       url,
@@ -24,28 +29,37 @@ export const request = async <T>(
       data: response.data,
     };
   } catch (error) {
-    let message = "Something went wrong";
-    let errors: Record<string, string[]> | undefined;
+  console.error("🔥 API ERROR:", error);
 
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<{
-        message?: string;
-        errors?: Record<string, string[]>;
-      }>;
+  let message = "Something went wrong";
+  let errors: Record<string, string[]> | undefined;
 
-      message =
-        axiosError.response?.data?.message ||
-        axiosError.message ||
-        message;
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError<{
+      message?: string;
+      error?: string;
+      errors?: Record<string, string[]>;
+    }>;
 
-      errors = axiosError.response?.data?.errors;
-    }
+    console.error("🔥 STATUS:", axiosError.response?.status);
+    console.error("🔥 RESPONSE DATA:", axiosError.response?.data);
 
-    return {
-      status: false,
-      message,
-      data: null,
-      errors,
-    };
+    message =
+      axiosError.response?.data?.message ||
+      axiosError.response?.data?.error ||
+      axiosError.message ||
+      message;
+
+    errors = axiosError.response?.data?.errors;
   }
+
+  console.error("🔥 FINAL ERROR MESSAGE:", message);
+
+  return {
+    status: false,
+    message,
+    data: null,
+    errors,
+  };
+}
 };
