@@ -120,10 +120,15 @@ export interface RegisterForm {
   password: string;
   password_confirmation: string;
   contact: string;
+  address: string;
 }
 
 export interface FormData extends RegisterForm {
-  address: string | number | readonly string[] | undefined;
+
   plan: string;
   auto_renew: boolean;
+}
+
+export interface RegisterPayload extends RegisterForm {
+  membership_plan_id: number;
 }

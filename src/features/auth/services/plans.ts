@@ -35,18 +35,17 @@ export async function getMembershipPlan(is_trial = 1) {
 }
 
 
-export const getMembershipPlans = async () => {
+export const getMembershipPlans = async (is_trial: number = 0) => {
   try {
     const res = await api.get("/membership-plan", {
-      params: {
-        is_trial: 0,
-      },
+      params: { is_trial },
     });
-console.log("membership", res.data)
+
+    console.log("membership", res.data);
+
     return res.data;
   } catch (error) {
     console.error("Failed to fetch membership plans:", error);
     throw error;
   }
 };
-//is_trial=1
