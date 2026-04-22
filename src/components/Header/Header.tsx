@@ -36,7 +36,8 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   const handleLogout = async () => {
     await dispatch(logoutUser());
-    router.push("/");
+    // router.push("/");
+     window.location.href = "/";
   };
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);
@@ -70,6 +71,8 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
 
+    const authPlanLink = isLoggedIn ? "/subscription" : "/register";
+
   // if (loading) return null;
   // if (loading) {
   //   return (
@@ -98,16 +101,18 @@ export default function Header({ categories }: { categories: Category[] }) {
 
           {/* CENTER — Logo */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Link href="/" className="relative block w-[190px] h-[80px] ">
-              <Image
-                src="/main-logo.png"
-                alt="Lex Witness Logo"
-                fill
-                sizes="190px"
-                className="object-contain"
-                priority
-              />
-            </Link>
+           <Link href="/" scroll={false} prefetch={true}>
+  <div className="relative block w-[190px] h-[80px]">
+    <Image
+      src="/main-logo.png"
+      alt="Lex Witness Logo"
+      fill
+      sizes="190px"
+      className="object-contain"
+      priority
+    />
+  </div>
+</Link>
           </div>
 
           {/* RIGHT — Search + User */}
@@ -162,7 +167,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
-                              href="/subscription"
+                              href={authPlanLink} 
                               className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
                             >
                               Plans
@@ -185,8 +190,8 @@ export default function Header({ categories }: { categories: Category[] }) {
                 </HeadlessMenu>
               ) : (
                 <>
-                  <Link
-                    href="/subscription"
+                  <Link 
+                   href={authPlanLink}  
                     className="flex items-center gap-1"
                   >
                     <NewspaperIcon className="hover:text-[#c9060a]" size={18} />
