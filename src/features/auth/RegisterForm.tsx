@@ -9,7 +9,7 @@ import { verifyPayment } from "./services/payment";
 import { getPlans } from "./services/plans";
 import { useRouter } from "next/navigation";
 
-import { useAppDispatch } from "@/redux/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 import { setUser } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 
@@ -48,6 +48,20 @@ export default function RegisterForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>({});
+
+
+  const { user, token } = useAppSelector((state) => state.auth);
+const [checkingAuth, setCheckingAuth] = useState(true);
+
+useEffect(() => {
+  if (user || token) {
+    router.replace("/dashboard");
+  } else {
+    setCheckingAuth(false);
+  }
+}, [user, token, router]);
+
+
 
   // Fetch plans
   useEffect(() => {
@@ -257,6 +271,7 @@ export default function RegisterForm() {
 
   const getError = (name: keyof typeof fieldErrors) => fieldErrors[name]?.[0];
 
+
   // Payment loader
   if (processingPayment) {
     return (
@@ -268,6 +283,15 @@ export default function RegisterForm() {
       </div>
     );
   }
+
+  
+  if (checkingAuth) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-sm text-gray-500">Checking authentication...</p>
+    </div>
+  );
+}
 
   return (
     <main className="bg-white">

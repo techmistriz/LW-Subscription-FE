@@ -53,107 +53,103 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     }));
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    // REGISTER (ALREADY RETURNS TOKEN + USER)
-    const registerRes = await registerUser({
-      ...form,
-      membership_plan_id: planId,
-    });
+    try {
+      // REGISTER (ALREADY RETURNS TOKEN + USER)
+      const registerRes = await registerUser({
+        ...form,
+        membership_plan_id: planId,
+      });
 
-    if (!registerRes?.status) {
-      throw new Error(registerRes?.message || "Registration failed");
-    }
+      if (!registerRes?.status) {
+        throw new Error(registerRes?.message || "Registration failed");
+      }
 
-    const token =
-      registerRes?.data?.token ||
-      registerRes?.token;
+      const token = registerRes?.data?.token || registerRes?.token;
 
-    const userData =
-      registerRes?.data?.user ||
-      registerRes?.user;
+      const userData = registerRes?.data?.user || registerRes?.user;
 
-    if (!token || !userData) {
-      throw new Error("Invalid register response");
-    }
+      if (!token || !userData) {
+        throw new Error("Invalid register response");
+      }
 
-    // SHOW PROCESSING
-    setProcessingPayment(true);
+      // SHOW PROCESSING
+      setProcessingPayment(true);
 
-    //  SET USER (NOT loginUser thunk)
-    dispatch(
-      setUser({
-        user: userData,
-        token,
-      })
-    );
-
-    //  SUBSCRIPTION
-    const sub = userData?.active_subscription;
-
-    if (sub) {
+      //  SET USER (NOT loginUser thunk)
       dispatch(
-        setSubscription({
-          id: sub?.id,
-          plan_id: sub?.plan?.id,
-          name: sub?.plan?.name,
-          amount: Number(sub?.plan?.price),
-          status: sub?.status,
-          start_date: sub?.start_date,
-          end_date: sub?.end_date,
-          duration_value: sub?.plan?.duration_value,
-          duration_unit: sub?.plan?.duration_unit,
-          purchase_type: sub?.purchase_type,
-        })
+        setUser({
+          user: userData,
+          token,
+        }),
       );
-    }
 
-    const planName = sub?.plan?.name || "Basic Plan";
-    const amount = sub?.plan?.price || 0;
+      //  SUBSCRIPTION
+      const sub = userData?.active_subscription;
 
-    setTimeout(() => {
+      if (sub) {
+        dispatch(
+          setSubscription({
+            id: sub?.id,
+            plan_id: sub?.plan?.id,
+            name: sub?.plan?.name,
+            amount: Number(sub?.plan?.price),
+            status: sub?.status,
+            start_date: sub?.start_date,
+            end_date: sub?.end_date,
+            duration_value: sub?.plan?.duration_value,
+            duration_unit: sub?.plan?.duration_unit,
+            purchase_type: sub?.purchase_type,
+          }),
+        );
+      }
+
+      const planName = sub?.plan?.name || "Basic Plan";
+      const amount = sub?.plan?.price || 0;
+
+     setProcessingPayment(true);
+
+requestAnimationFrame(() => {
+  router.replace(
+    `/thankyou?name=${encodeURIComponent(
+      planName,
+    )}&amount=${amount}&status=success`,
+  );
+});
+    } catch (error: any) {
+      console.error("ERROR:", error.message);
       setProcessingPayment(false);
-      onClose?.();
-
-      router.replace(
-        `/thankyou?name=${encodeURIComponent(
-          planName
-        )}&amount=${amount}&status=success`
-      );
-    }, 800);
-  } catch (error: any) {
-    console.error("ERROR:", error.message);
-    setProcessingPayment(false);
-  } finally {
-    setLoading(false);
-  }
-};
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // LOADING SCREEN
-  if (processingPayment) {
-    return (
-      <div className="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-lg font-semibold">Processing...</h2>
-          <p className="text-sm text-gray-500">Please wait</p>
-        </div>
+if (processingPayment) {
+  return (
+    <div className="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-[#c9060a] rounded-full animate-spin mx-auto mb-3" />
+        <h2 className="text-lg font-semibold">Processing payment...</h2>
+        <p className="text-sm text-gray-500">Redirecting you securely</p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center">
       <div className="bg-white w-full max-w-lg p-6 rounded shadow-lg relative">
-         <button
-    onClick={onClose}
-    className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer hover:text-[#c6090a] hover:bg-gray-100 rounded-full text-xl"
-    aria-label="Close modal"
-  >
-    ×
-  </button>
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer hover:text-[#c6090a] hover:bg-gray-100 rounded-full text-xl"
+          aria-label="Close modal"
+        >
+          ×
+        </button>
         <h2 className="text-xl font-semibold text-center mb-2">
           Register to Continue
         </h2>
@@ -166,12 +162,52 @@ const handleSubmit = async (e: React.FormEvent) => {
           onSubmit={handleSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-3"
         >
-          <input name="first_name" placeholder="First Name" onChange={handleChange} className="border p-2 rounded" required />
-          <input name="last_name" placeholder="Last Name" onChange={handleChange} className="border p-2 rounded" required />
-          <input name="email" type="email" placeholder="Email" onChange={handleChange} className="border p-2 rounded" required />
-          <input name="contact" type="tel" placeholder="Phone Number" onChange={handleChange} className="border p-2 rounded" required />
-          <input name="password" type="password" placeholder="Password" onChange={handleChange} className="border p-2 rounded" required />
-          <input name="password_confirmation" type="password" placeholder="Confirm Password" onChange={handleChange} className="border p-2 rounded" required />
+          <input
+            name="first_name"
+            placeholder="First Name"
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="last_name"
+            placeholder="Last Name"
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="contact"
+            type="tel"
+            placeholder="Phone Number"
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            name="password_confirmation"
+            type="password"
+            placeholder="Confirm Password"
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
 
           <input
             name="address"
@@ -184,7 +220,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           <button
             disabled={loading}
-            className="bg-[#c9060a] text-white py-2 mt-2 md:col-span-2 disabled:opacity-60"
+            className="bg-[#c9060a] text-white py-2 mt-2 md:col-span-2 disabled:opacity-60 cursor-pointer"
           >
             {loading ? "Registering..." : "Register"}
           </button>
