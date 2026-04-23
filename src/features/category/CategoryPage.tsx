@@ -22,17 +22,17 @@ export default function CategoryPage() {
   const categoryTitle = toTitleCase(categoryName);
 
   const router = useRouter();
-const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
-const yearParam = searchParams.get("year");
-const pageParam = Number(searchParams.get("page")) || 1;
+  const yearParam = searchParams.get("year");
+  const pageParam = Number(searchParams.get("page")) || 1;
 
   const [loading, setLoading] = useState(true);
   const [selectYear, setselectYear] = useState<number | null>(
-  yearParam ? Number(yearParam) : null
-);
+    yearParam ? Number(yearParam) : null,
+  );
 
-const [currentPage, setCurrentPage] = useState(pageParam);
+  const [currentPage, setCurrentPage] = useState(pageParam);
   const [years, setYears] = useState<Year[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
   const [lastPage, setLastPage] = useState(1);
@@ -94,11 +94,11 @@ const [currentPage, setCurrentPage] = useState(pageParam);
   }, [categorySlug]);
 
   // Fetch posts when categoryId changes
-useEffect(() => {
-  if (categoryId) {
-    fetchPosts(yearParam ? Number(yearParam) : undefined, pageParam);
-  }
-}, [categoryId, yearParam, pageParam, fetchPosts]);
+  useEffect(() => {
+    if (categoryId) {
+      fetchPosts(yearParam ? Number(yearParam) : undefined, pageParam);
+    }
+  }, [categoryId, yearParam, pageParam, fetchPosts]);
 
   // Load years
   useEffect(() => {
@@ -115,33 +115,33 @@ useEffect(() => {
     loadYears();
   }, []);
 
- const handleApplyFilter = () => {
-  const params = new URLSearchParams(searchParams.toString());
+  const handleApplyFilter = () => {
+    const params = new URLSearchParams(searchParams.toString());
 
-  if (selectYear) {
-    params.set("year", selectYear.toString());
-  } else {
-    params.delete("year");
-  }
+    if (selectYear) {
+      params.set("year", selectYear.toString());
+    } else {
+      params.delete("year");
+    }
 
-  params.set("page", "1");
+    params.set("page", "1");
 
-  router.push(`?${params.toString()}`);
-};
+    router.push(`?${params.toString()}`);
+  };
 
   const handlePageChange = (page: number) => {
-  const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams.toString());
 
-  params.set("page", page.toString());
+    params.set("page", page.toString());
 
-  if (selectYear) {
-    params.set("year", selectYear.toString());
-  }
+    if (selectYear) {
+      params.set("year", selectYear.toString());
+    }
 
-  router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`);
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <section className="bg-white">

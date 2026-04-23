@@ -124,7 +124,6 @@ export interface RegisterForm {
 }
 
 export interface FormData extends RegisterForm {
-
   plan: string;
   auto_renew: boolean;
 }

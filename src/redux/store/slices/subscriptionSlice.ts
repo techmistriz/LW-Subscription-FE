@@ -29,10 +29,7 @@ const subscriptionSlice = createSlice({
       state.data = action.payload;
 
       // optional: persist
-      sessionStorage.setItem(
-        "subscription",
-        JSON.stringify(action.payload)
-      );
+      sessionStorage.setItem("subscription", JSON.stringify(action.payload));
     },
 
     loadSubscriptionFromStorage: (state) => {

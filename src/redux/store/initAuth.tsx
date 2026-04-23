@@ -10,7 +10,7 @@ export default function InitAuth({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     dispatch(loadUserFromStorage());
-    dispatch(loadSubscriptionFromStorage()); 
+    dispatch(loadSubscriptionFromStorage());
   }, [dispatch]);
 
   return <>{children}</>;

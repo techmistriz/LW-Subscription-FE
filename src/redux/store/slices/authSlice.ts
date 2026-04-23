@@ -28,6 +28,8 @@ interface User {
   first_name: string;
   last_name?: string;
   email: string;
+  contact: string;
+  address: string;
 
   //  FIX (this was missing)
   active_subscription?: ActiveSubscription;
