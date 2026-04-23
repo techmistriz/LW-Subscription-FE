@@ -30,6 +30,7 @@ export default function ArticleDetailPage() {
 
 
   //Only subscribes User Read full article content
+  
   const subscription = useAppSelector((state) => state.subscription.data);
 
   const isSubscribed = (() => {
@@ -47,6 +48,10 @@ export default function ArticleDetailPage() {
     return endDate >= new Date();
   })();
 
+
+  const { user } = useAppSelector((state) => state.auth)
+  const redirectPath = user? '/dashboard' : '/sign-in';
+  
   /* ---------------- FETCH ARTICLE ---------------- */
 
   useEffect(() => {
@@ -262,7 +267,7 @@ export default function ArticleDetailPage() {
               </p>
 
               <Link
-                href="/subscription"
+                href={redirectPath}
                 className="inline-block bg-[#c9060a] text-white px-6 py-3 font-normal hover:bg-[#333] transition"
               >
                 SUBSCRIBE NOW
