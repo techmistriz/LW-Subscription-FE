@@ -20,6 +20,7 @@ import { Category } from "@/types";
 
 import { logoutUser } from "@/redux/store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
+import { toast } from "sonner";
 
 export default function Header({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
@@ -36,8 +37,10 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   const handleLogout = async () => {
     await dispatch(logoutUser());
-    // router.push("/");
-    window.location.href = "/";
+    toast.success("Logout successful!");
+
+    // router.replace("/");
+    window.location.reload()
   };
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);

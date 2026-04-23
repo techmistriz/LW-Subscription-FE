@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 import { setUser } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
+import { toast } from "sonner";
 
 const initialFormState: FormData = {
   first_name: "",
@@ -166,6 +167,7 @@ export default function RegisterForm() {
             end_date: sub?.end_date,
           }),
         );
+toast.success("1 month free activated");
 
         // 3. REDIRECT
         router.replace(
@@ -179,13 +181,15 @@ export default function RegisterForm() {
 
       // ================= PAID PLAN =================
       if (!payment.razorpay_key || !payment.order_id) {
-        setError("Invalid payment configuration");
+        // setError("Invalid payment configuration");
+         toast.error("Invalid payment configuration");
         return;
       }
 
       const isLoaded = await loadRazorpay();
       if (!isLoaded) {
-        setError("Failed to load Razorpay SDK");
+        // setError("Failed to load Razorpay SDK");
+        toast.error("Failed to load Razorpay SDK");
         return;
       }
 
@@ -240,6 +244,7 @@ export default function RegisterForm() {
                 }),
               );
 
+             toast.success(`Subscribed successful!: ${selectedPlan.name}`);
               router.replace("/dashboard");
             }
 

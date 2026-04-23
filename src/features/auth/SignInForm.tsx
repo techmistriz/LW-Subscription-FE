@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store/hooks";
 import { loginUser as loginRedux } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
+import { toast } from "sonner";
 
 export default function SignInForm() {
   const [email, setEmail] = useState("");
@@ -48,9 +49,10 @@ export default function SignInForm() {
           }),
         );
       }
-
-      router.replace("/dashboard");
-    } catch (error: any) {
+toast.success("Login successful!");
+router.replace("/dashboard");
+} catch (error: any) {
+      toast.error("Something went wrong");
       setError(error || "Login failed");
     } finally {
       setLoading(false);

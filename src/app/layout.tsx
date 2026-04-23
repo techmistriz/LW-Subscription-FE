@@ -9,6 +9,7 @@ import { getCategories } from "@/lib/api/services/categories";
 import AuthGate from "@/components/AuthGate";
 import { ReduxProvider } from "@/redux/provides";
 import InitAuth from "@/redux/store/initAuth";
+import { Toaster } from "sonner";
 // import { AuthProvider } from "@/features/authContext";
 
 
@@ -47,6 +48,7 @@ export default async function RootLayout({
             <AuthGate />
 
             {children}
+              <Toaster position="bottom-right" />
 
             <Footer />
             <ScrollToTop />

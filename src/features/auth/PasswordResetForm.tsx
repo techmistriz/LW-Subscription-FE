@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { forgotPassword } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
+import { toast } from "sonner";
 
 export default function PasswordResetForm() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,8 @@ export default function PasswordResetForm() {
 
     try {
       const res = await forgotPassword(email.trim());
-      setSuccess(res.message || "Password reset link sent to your email");
+      // setSuccess(res.message || "Password reset link sent to your email");
+      toast.success(res.message || "Password reset link sent to your email");
     } catch (err: unknown) {
       setError(
         err instanceof Error

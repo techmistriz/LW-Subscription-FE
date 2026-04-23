@@ -8,6 +8,7 @@ import { getMembershipPlan } from "@/features/auth/services/plans";
 import { useAppDispatch } from "@/redux/store/hooks";
 import { loginUser, setUser } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
+import { toast } from "sonner";
 
 const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
@@ -112,6 +113,8 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
 
       setProcessingPayment(true);
 
+      toast.success("Register successful!  You have Access 1 month free plan");
+      
       requestAnimationFrame(() => {
         router.replace(
           `/thankyou?name=${encodeURIComponent(
