@@ -284,7 +284,7 @@ function StatCard({
           status
             ? value === "Active"
               ? "text-green-600"
-              : "text-red-600"
+              : "text-[#c6090a]"
             : "text-[#333]"
         }`}
       >
