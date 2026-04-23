@@ -15,6 +15,7 @@ import SocialShare from "@/components/SocialShare/SocialShare";
 import { Article } from "@/types";
 
 import "./style.css";
+import { useAppSelector } from "@/redux/store/hooks";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
@@ -25,8 +26,26 @@ export default function ArticleDetailPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isSubscribed] = useState(true); // Replace later with real subscription check
   const [authorImage, setAuthorImage] = useState("/avatar.jpg");
+
+
+  //Only subscribes User Read full article content
+  const subscription = useAppSelector((state) => state.subscription.data);
+
+  const isSubscribed = (() => {
+    if (!subscription) return false;
+
+    if (subscription.status !== "ACTIVE") return false;
+
+    if (!subscription.end_date) return false;
+
+    const endDate = new Date(subscription.end_date);
+
+    // check invalid date
+    if (isNaN(endDate.getTime())) return false;
+
+    return endDate >= new Date();
+  })();
 
   /* ---------------- FETCH ARTICLE ---------------- */
 
@@ -226,12 +245,12 @@ export default function ArticleDetailPage() {
         {/* ARTICLE CONTENT */}
         <div className="my-6">
           {isSubscribed ? (
-           <div
-  className="article-content text-[17px] leading-7.25 font-normal text-gray-800 text-justify"
-  dangerouslySetInnerHTML={{
-    __html: formatArticleHTML(article.description || ""),
-  }}
-/>
+            <div
+              className="article-content text-[17px] leading-7.25 font-normal text-gray-800 text-justify"
+              dangerouslySetInnerHTML={{
+                __html: formatArticleHTML(article.description || ""),
+              }}
+            />
           ) : (
             <div className="p-6 bg-white border-2 border-gray-100 text-center">
               <h2 className="text-2xl font-semibold text-gray-800 mb-3">
@@ -246,7 +265,7 @@ export default function ArticleDetailPage() {
                 href="/subscription"
                 className="inline-block bg-[#c9060a] text-white px-6 py-3 font-normal hover:bg-[#333] transition"
               >
-                Subscribe Now
+                SUBSCRIBE NOW
               </Link>
             </div>
           )}
