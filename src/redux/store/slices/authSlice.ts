@@ -75,7 +75,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (
     { email, password }: { email: string; password: string },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const res = await loginApi(email, password);
@@ -88,15 +88,14 @@ export const loginUser = createAsyncThunk(
       sessionStorage.setItem("user", JSON.stringify(user));
       sessionStorage.setItem("token", token);
 
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${token}`;
 
       return { user, token };
     } catch (err: any) {
       return rejectWithValue(err.message || "Login failed");
     }
-  }
+  },
 );
 
 // LOGOUT
@@ -128,9 +127,8 @@ const authSlice = createSlice({
         state.token = token;
         state.isAuthenticated = true;
 
-        axiosInstance.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${token}`;
+        axiosInstance.defaults.headers.common["Authorization"] =
+          `Bearer ${token}`;
       }
 
       if (subscription) {
@@ -141,10 +139,7 @@ const authSlice = createSlice({
     },
 
     // SET USER (register / payment flow)
-    setUser: (
-      state,
-      action: PayloadAction<{ user: User; token: string }>
-    ) => {
+    setUser: (state, action: PayloadAction<{ user: User; token: string }>) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
@@ -152,9 +147,8 @@ const authSlice = createSlice({
       sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       sessionStorage.setItem("token", action.payload.token);
 
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${action.payload.token}`;
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${action.payload.token}`;
     },
 
     // SET SUBSCRIPTION
@@ -192,10 +186,7 @@ const authSlice = createSlice({
 
 /* ================= EXPORTS ================= */
 
-export const {
-  loadUserFromStorage,
-  setSubscription,
-  setUser,
-} = authSlice.actions;
+export const { loadUserFromStorage, setSubscription, setUser } =
+  authSlice.actions;
 
 export default authSlice.reducer;

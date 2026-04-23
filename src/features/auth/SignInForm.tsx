@@ -20,44 +20,42 @@ export default function SignInForm() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
- const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  try {
-    const result = await dispatch(
-      loginRedux({ email, password })
-    ).unwrap();
+    try {
+      const result = await dispatch(loginRedux({ email, password })).unwrap();
 
-    const user = result.user;
+      const user = result.user;
 
-    const sub = user?.active_subscription;
+      const sub = user?.active_subscription;
 
-    if (sub) {
-      dispatch(
-        setSubscription({
-          id: sub?.id,
-          plan_id: sub?.plan?.id,
-          name: sub?.plan?.name,
-          amount: Number(sub?.plan?.price),
-          status: sub?.status,
-          start_date: sub?.start_date,
-          end_date: sub?.end_date,
-          duration_value: sub?.plan?.duration_value,
-          duration_unit: sub?.plan?.duration_unit,
-          purchase_type: sub?.purchase_type,
-        })
-      );
+      if (sub) {
+        dispatch(
+          setSubscription({
+            id: sub?.id,
+            plan_id: sub?.plan?.id,
+            name: sub?.plan?.name,
+            amount: Number(sub?.plan?.price),
+            status: sub?.status,
+            start_date: sub?.start_date,
+            end_date: sub?.end_date,
+            duration_value: sub?.plan?.duration_value,
+            duration_unit: sub?.plan?.duration_unit,
+            purchase_type: sub?.purchase_type,
+          }),
+        );
+      }
+
+      router.replace("/dashboard");
+    } catch (error: any) {
+      setError(error || "Login failed");
+    } finally {
+      setLoading(false);
     }
-
-    router.replace("/dashboard");
-  } catch (error: any) {
-    setError(error || "Login failed");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <main className="bg-white">
@@ -65,9 +63,7 @@ export default function SignInForm() {
 
       <section className="py-10">
         <div className="max-w-3xl mx-auto text-center px-4">
-          <h2 className="text-2xl font-bold tracking-wide">
-            SIGN IN YOURSELF
-          </h2>
+          <h2 className="text-2xl font-bold tracking-wide">SIGN IN YOURSELF</h2>
 
           <p className="text-[#333333] text-sm mt-2 max-w-xl mx-auto">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -76,9 +72,7 @@ export default function SignInForm() {
           <div className="w-12 h-1 bg-[#c9060a] mx-auto mt-4"></div>
 
           <div className="mt-6 bg-white shadow-[0_8px_20px_rgba(0,0,0,0.25)] border border-gray-200 p-8 max-w-md mx-auto text-left">
-            {error && (
-              <p className="text-[#c9060a] text-sm mb-3">{error}</p>
-            )}
+            {error && <p className="text-[#c9060a] text-sm mb-3">{error}</p>}
 
             <form onSubmit={handleSubmit}>
               <label className="block text-sm font-medium mb-2">
@@ -93,9 +87,7 @@ export default function SignInForm() {
                 className="w-full border px-4 py-2 mb-4"
               />
 
-              <label className="block text-sm font-medium mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-medium mb-2">Password</label>
               <input
                 required
                 type="password"
@@ -115,7 +107,10 @@ export default function SignInForm() {
             </form>
 
             <p className="text-sm text-[#c9060a] mt-4 cursor-pointer ">
-              <Link href="/register" className="hover:underline">Register</Link> |{" "}
+              <Link href="/register" className="hover:underline">
+                Register
+              </Link>{" "}
+              |{" "}
               <Link href="/password-reset" className="hover:underline">
                 Lost your password?
               </Link>

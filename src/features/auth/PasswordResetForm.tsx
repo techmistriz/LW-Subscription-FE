@@ -4,7 +4,6 @@ import { useState } from "react";
 import { forgotPassword } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
 
-
 export default function PasswordResetForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

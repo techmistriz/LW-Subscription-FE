@@ -47,21 +47,20 @@ export default function RegisterForm() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>({});
-
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>(
+    {},
+  );
 
   const { user, token } = useAppSelector((state) => state.auth);
-const [checkingAuth, setCheckingAuth] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
-useEffect(() => {
-  if (user || token) {
-    router.replace("/dashboard");
-  } else {
-    setCheckingAuth(false);
-  }
-}, [user, token, router]);
-
-
+  useEffect(() => {
+    if (user || token) {
+      router.replace("/dashboard");
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [user, token, router]);
 
   // Fetch plans
   useEffect(() => {
@@ -77,7 +76,9 @@ useEffect(() => {
   }, []);
 
   // Input handler
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value, type } = e.target as HTMLInputElement;
 
     if (name === "contact") {
@@ -88,7 +89,8 @@ useEffect(() => {
 
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }));
 
     if (fieldErrors[name]) {
@@ -147,10 +149,12 @@ useEffect(() => {
       if (!payment.amount || payment.amount <= 0) {
         const sub = res?.data?.user?.active_subscription;
 
+        // 1. SET USER (login effect)
         if (token && userData) {
           dispatch(setUser({ user: userData, token }));
         }
 
+        // 2. SET SUBSCRIPTION
         dispatch(
           setSubscription({
             id: sub?.id,
@@ -160,13 +164,14 @@ useEffect(() => {
             status: sub?.status,
             start_date: sub?.start_date,
             end_date: sub?.end_date,
-          })
+          }),
         );
 
+        // 3. REDIRECT
         router.replace(
           `/thankyou?name=${encodeURIComponent(
-            selectedPlan.name
-          )}&amount=0&status=success`
+            selectedPlan.name,
+          )}&amount=0&status=success`,
         );
 
         return;
@@ -219,6 +224,7 @@ useEffect(() => {
             const sub = verifiedUser?.active_subscription;
 
             if (sub) {
+              dispatch(setUser({ user: userData, token }));
               dispatch(
                 setSubscription({
                   id: sub.id,
@@ -231,14 +237,16 @@ useEffect(() => {
                   duration_value: sub.plan?.duration_value,
                   duration_unit: sub.plan?.duration_unit,
                   purchase_type: sub.purchase_type,
-                })
+                }),
               );
+
+              router.replace("/dashboard");
             }
 
             router.replace(
               `/thankyou?name=${encodeURIComponent(
-                selectedPlan.name
-              )}&amount=${payment.amount}&status=success`
+                selectedPlan.name,
+              )}&amount=${payment.amount}&status=success`,
             );
           } catch (err: any) {
             setError(err.message || "Verification failed");
@@ -271,7 +279,6 @@ useEffect(() => {
 
   const getError = (name: keyof typeof fieldErrors) => fieldErrors[name]?.[0];
 
-
   // Payment loader
   if (processingPayment) {
     return (
@@ -284,14 +291,13 @@ useEffect(() => {
     );
   }
 
-  
   if (checkingAuth) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-sm text-gray-500">Checking authentication...</p>
-    </div>
-  );
-}
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-sm text-gray-500">Checking authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <main className="bg-white">
@@ -300,7 +306,6 @@ useEffect(() => {
       {/*CONTENT*/}
       <section className="py-20">
         <div className="max-w-4xl mx-auto text-center px-4">
-          
           <h2 className="text-2xl font-semibold uppercase">
             Register Yourself
           </h2>

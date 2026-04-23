@@ -110,15 +110,15 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
       const planName = sub?.plan?.name || "Basic Plan";
       const amount = sub?.plan?.price || 0;
 
-     setProcessingPayment(true);
+      setProcessingPayment(true);
 
-requestAnimationFrame(() => {
-  router.replace(
-    `/thankyou?name=${encodeURIComponent(
-      planName,
-    )}&amount=${amount}&status=success`,
-  );
-});
+      requestAnimationFrame(() => {
+        router.replace(
+          `/thankyou?name=${encodeURIComponent(
+            planName,
+          )}&amount=${amount}&status=success`,
+        );
+      });
     } catch (error: any) {
       console.error("ERROR:", error.message);
       setProcessingPayment(false);
@@ -128,17 +128,17 @@ requestAnimationFrame(() => {
   };
 
   // LOADING SCREEN
-if (processingPayment) {
-  return (
-    <div className="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-10 h-10 border-4 border-gray-200 border-t-[#c9060a] rounded-full animate-spin mx-auto mb-3" />
-        <h2 className="text-lg font-semibold">Processing payment...</h2>
-        <p className="text-sm text-gray-500">Redirecting you securely</p>
+  if (processingPayment) {
+    return (
+      <div className="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-gray-200 border-t-[#c9060a] rounded-full animate-spin mx-auto mb-3" />
+          <h2 className="text-lg font-semibold">Processing payment...</h2>
+          <p className="text-sm text-gray-500">Redirecting you securely</p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center">
