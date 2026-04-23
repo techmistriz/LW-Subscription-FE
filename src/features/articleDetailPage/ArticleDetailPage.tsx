@@ -50,7 +50,7 @@ export default function ArticleDetailPage() {
 
 
   const { user } = useAppSelector((state) => state.auth)
-  const redirectPath = user? '/dashboard' : '/sign-in';
+  const redirectPath = user? '/dashboard' : '/register';
   
   /* ---------------- FETCH ARTICLE ---------------- */
 
