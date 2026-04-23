@@ -4,8 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getMembershipPlans } from "@/features/auth/services/plans";
 import { useAppSelector } from "@/redux/store/hooks";
+import { Magazine } from "@/types";
+import Image from "next/image";
+import { getLatestMagazines } from "@/lib/api/services/magazines";
 
-export default function PricingCard() {
+type PricingCardProps = {
+  magazine: Magazine | null;
+};
+
+export default function PricingCard({ magazine }: PricingCardProps) {
+  const [data, setData] = useState<Magazine | null>(null);
   const [plans, setPlans] = useState<any[]>([]);
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
 
@@ -33,6 +41,17 @@ export default function PricingCard() {
 
     fetchPlans();
   }, [subscription]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getLatestMagazines();
+
+      setData(data[1]);
+      console.log("Magazine Data", data[1]);
+    };
+
+    fetchData();
+  }, []);
 
   const currentPlan = plans.find((p) => p.id === selectedPlanId) || plans[0];
 
@@ -67,7 +86,7 @@ export default function PricingCard() {
     (p) => Number(p.id) === Number(selectedPlanId),
   );
 
-  // 👉 next higher OR fallback to highest
+  //next higher OR fallback to highest
   const rightPlan =
     currentIndex !== -1 && currentIndex < sortedPlans.length - 1
       ? sortedPlans[currentIndex + 1]
@@ -159,9 +178,41 @@ export default function PricingCard() {
                 </span>
               </div>
 
+              {/* <div className="flex justify-center mb-6">
+  <div className="relative w-40 h-40 rounded-full overflow-hidden bg-gray-100">
+    {magazine?.image ? (
+      <Image
+        src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${magazine.image}`}
+        alt={magazine?.title || "Magazine"}
+        fill
+        sizes="100px"   //match container
+        className="object-cover"
+      />
+    ) : (
+      <div className="flex items-center justify-center w-full h-full text-gray-400 text-sm">
+        No Image
+      </div>
+    )}
+  </div>
+</div> */}
+
               <div className="flex justify-center mb-6">
-                <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center">
-                  <span className="text-gray-400">Magazine Image</span>
+                <div className="relative w-40 h-40 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                  <div className="relative w-20 aspect-[3/4] overflow-hidden shadow-lg">
+                    {magazine?.image ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${magazine.image}`}
+                        alt={magazine?.title || "Magazine"}
+                        fill
+                        sizes="100px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-full h-full text-gray-400 text-sm">
+                        No Image
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -222,9 +273,23 @@ export default function PricingCard() {
 
                 <div className="text-sm text-[#c9060a] mb-10">(Best Value)</div>
 
-                <div className="flex justify-center mb-10">
-                  <div className="w-40 h-40 bg-gray-100 rounded-full flex items-center justify-center">
-                    <span className="text-gray-400">Image</span>
+                <div className="flex justify-center mb-6">
+                  <div className="relative w-40 h-40 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    <div className="relative w-20 aspect-3/4 overflow-hidden shadow-2xl">
+                      {data?.image ? (
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${data.image}`}
+                          alt={magazine?.title || "Magazine"}
+                          fill
+                          sizes="100px"
+                          className="object-cover shadow-2xl"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center w-full h-full text-gray-400 text-sm">
+                          No Image
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 

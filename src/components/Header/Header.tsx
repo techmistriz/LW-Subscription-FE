@@ -258,16 +258,16 @@ export default function Header({ categories }: { categories: Category[] }) {
             {/* RIGHT SIDE (USER + CLOSE) */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
-                <User2 size={18} className="text-white" />
+                <User2 size={18} className="text-white " />
                 {isLoggedIn ? (
-                  <span className="text-md truncate max-w-[100px]">
+                  <span className="text-md truncate max-w-25">
                     Hi {username}
                   </span>
                 ) : (
                   <Link
                     href="/sign-in"
                     onClick={() => setOpen(false)}
-                    className="text-sm"
+                    className="text-sm hover:text-[#c6090a] cursor-pointer"
                   >
                     Sign-in
                   </Link>

@@ -114,7 +114,7 @@ export default function SubscriptionPage() {
 
       {/* PRICING */}
       <div className="py-12 px-4">
-        <PricingCard />
+        <PricingCard magazine={singleMagazine} />
       </div>
     </div>
   );
