@@ -46,9 +46,7 @@ const InputField = ({
       maxLength={maxLength}
       disabled={disabled}
     />
-    {error && (
-      <span className="text-[#c9060a] text-sm mt-1">{error}</span>
-    )}
+    {error && <span className="text-[#c9060a] text-sm mt-1">{error}</span>}
   </div>
 );
 
@@ -146,7 +144,6 @@ export default function SubscribeBanner() {
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="mt-6 flex flex-col gap-4 lg:flex-row justify-center">
-            
             <InputField
               name="name"
               type="text"
@@ -177,7 +174,6 @@ export default function SubscribeBanner() {
               maxLength={10}
               disabled={loading}
             />
-
           </div>
 
           <div className="flex justify-center mt-6">
