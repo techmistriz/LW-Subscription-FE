@@ -40,7 +40,6 @@ export default function PostList({
       </div>
     );
   }
-  console.log(posts);
   return (
     <div className="space-y-6">
       <hr className="border-gray-200" />

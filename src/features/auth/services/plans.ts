@@ -4,11 +4,11 @@ import api from "@/lib/api/axios";
 
 export async function getPlans() {
   try {
-    console.log("Fetching membership plans...");
+    // console.log("Fetching membership plans...");
 
     const res = await api.get("/membership-plan");
 
-    console.log("Plans API FULL RESPONSE:", res.data);
+    // console.log("Plans API FULL RESPONSE:", res.data);
 
     if (!res.data?.status) {
       throw new Error(res.data?.message || "Failed to fetch plans");
@@ -41,7 +41,7 @@ export const getMembershipPlans = async (is_trial: number = 0) => {
       params: { is_trial },
     });
 
-    console.log("membership", res.data);
+    // console.log("membership", res.data);
 
     return res.data;
   } catch (error) {

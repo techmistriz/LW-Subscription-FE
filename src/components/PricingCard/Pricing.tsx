@@ -47,7 +47,6 @@ export default function PricingCard({ magazine }: PricingCardProps) {
       const data = await getLatestMagazines();
 
       setData(data[1]);
-      console.log("Magazine Data", data[1]);
     };
 
     fetchData();

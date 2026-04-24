@@ -54,7 +54,6 @@ const handleLogout = async () => {
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
-  console.log("header", user);
 
   // Handle body scroll lock
   useEffect(() => {

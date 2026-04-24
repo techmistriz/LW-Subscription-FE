@@ -58,8 +58,8 @@ export default function ArticleDetailPage() {
       try {
         const articleData = await getArticleBySlug(slug);
 
-        console.log("Slug:", slug);
-        console.log("Article:", articleData);
+        // console.log("Slug:", slug);
+        // console.log("Article:", articleData);
 
         if (!active) return;
 
