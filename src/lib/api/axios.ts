@@ -7,40 +7,52 @@ const api = axios.create({
   },
 });
 
+// REQUEST INTERCEPTOR
 api.interceptors.request.use((config) => {
-  const token =
-    typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+  // run only in browser
+  if (typeof window !== "undefined") {
+    const token = sessionStorage.getItem("token");
 
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
+    }
   }
 
   return config;
 });
 
+//  RESPONSE INTERCEPTOR
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
     const url = error.config?.url || "";
 
-    // Skip redirect for login request
+    // normalize url for safety
+    const normalizedUrl = url.toLowerCase();
+
+    // skip redirect for auth endpoints
     const isAuthRequest =
-      url.includes("/sign-in") || url.includes("/auth/login");
+      normalizedUrl.includes("/sign-in") ||
+      normalizedUrl.includes("/auth/login");
 
     if (status === 401 && !isAuthRequest) {
       if (typeof window !== "undefined") {
+        // clear only auth-related data
         sessionStorage.removeItem("token");
-
-        // optional: also clear subscription
         sessionStorage.removeItem("subscription");
+        sessionStorage.removeItem("user");
 
+        // hard redirect (same as your logic)
         window.location.href = "/sign-in";
       }
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

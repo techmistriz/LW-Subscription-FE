@@ -35,13 +35,22 @@ export default function Header({ categories }: { categories: Category[] }) {
   const isLoggedIn = !!user;
   const username = user?.first_name || "User";
 
-  const handleLogout = async () => {
-    await dispatch(logoutUser());
-    toast.success("Logout successful!");
 
-    router.push("/sign-in");
-    router.refresh();
-  };
+const handleLogout = async () => {
+  dispatch(logoutUser()); // no await
+  toast.success("Logout successful!");
+
+  router.replace("/sign-in");
+};
+
+// const handleLogout = async () => {
+//   await dispatch(logoutUser());
+//   toast.success("Logout successful!");
+
+//     router.replace("/sign-in");
+//     router.refresh();
+//   };
+
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
