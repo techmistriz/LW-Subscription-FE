@@ -28,30 +28,21 @@ export default function ArticleDetailPage() {
   const [loading, setLoading] = useState(true);
   const [authorImage, setAuthorImage] = useState("/avatar.jpg");
 
-
   //Only subscribes User Read full article content
-  
+
+  const { user } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.data);
 
-  const isSubscribed = (() => {
-    if (!subscription) return false;
+  const isSubscribed = Boolean(
+    user && // 🔥 MUST HAVE
+    subscription &&
+    subscription.status === "ACTIVE" &&
+    subscription.end_date &&
+    new Date(subscription.end_date) >= new Date(),
+  );
 
-    if (subscription.status !== "ACTIVE") return false;
+  const redirectPath = user ? "/dashboard" : "/register";
 
-    if (!subscription.end_date) return false;
-
-    const endDate = new Date(subscription.end_date);
-
-    // check invalid date
-    if (isNaN(endDate.getTime())) return false;
-
-    return endDate >= new Date();
-  })();
-
-
-  const { user } = useAppSelector((state) => state.auth)
-  const redirectPath = user? '/dashboard' : '/register';
-  
   /* ---------------- FETCH ARTICLE ---------------- */
 
   useEffect(() => {

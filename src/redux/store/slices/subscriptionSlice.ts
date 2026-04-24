@@ -27,19 +27,17 @@ const subscriptionSlice = createSlice({
   reducers: {
     setSubscription: (state, action: PayloadAction<Subscription>) => {
       state.data = action.payload;
-
-      // optional: persist
       sessionStorage.setItem("subscription", JSON.stringify(action.payload));
     },
 
     loadSubscriptionFromStorage: (state) => {
       const stored = sessionStorage.getItem("subscription");
-      if (stored) {
-        try {
-          state.data = JSON.parse(stored);
-        } catch {
-          state.data = null;
-        }
+      if (!stored) return;
+
+      try {
+        state.data = JSON.parse(stored);
+      } catch {
+        state.data = null;
       }
     },
 
@@ -47,6 +45,13 @@ const subscriptionSlice = createSlice({
       state.data = null;
       sessionStorage.removeItem("subscription");
     },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase("auth/logout/fulfilled", (state) => {
+      state.data = null;
+      sessionStorage.removeItem("subscription");
+    });
   },
 });
 

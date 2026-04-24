@@ -5,15 +5,18 @@ import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/store/hooks";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
+import { useRouter } from "next/navigation";
+
+/* ---------------- COMPONENT ---------------- */
 
 export default function Dashboard() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const { user, loading } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.data);
 
   const [plans, setPlans] = useState<any[]>([]);
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,7 +25,15 @@ export default function Dashboard() {
     address: "",
   });
 
-  /* ---------------- USER + SUBSCRIPTION ---------------- */
+  /* ---------------- AUTH GUARD ---------------- */
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) router.replace("/sign-in");
+  }, [user, loading, router]);
+
+  /* ---------------- SYNC USER ---------------- */
+
   useEffect(() => {
     if (!user) return;
 
@@ -34,7 +45,7 @@ export default function Dashboard() {
       address: user.address || "",
     });
 
-    const sub = user?.active_subscription;
+    const sub = user.active_subscription;
 
     if (sub) {
       dispatch(
@@ -55,6 +66,7 @@ export default function Dashboard() {
   }, [user, dispatch]);
 
   /* ---------------- FETCH PLANS ---------------- */
+
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -68,7 +80,7 @@ export default function Dashboard() {
     fetchPlans();
   }, []);
 
-  /* ---------------- DERIVED VALUES ---------------- */
+  /* ---------------- DERIVED DATA ---------------- */
 
   const highestPlan = useMemo(() => {
     if (!plans.length) return null;
@@ -81,55 +93,67 @@ export default function Dashboard() {
   const isActive = subscription?.status === "ACTIVE";
   const isExpired = subscription?.status === "EXPIRED";
 
-  const isHighestPlan =
-    highestPlan && subscription?.plan_id
-      ? Number(subscription.plan_id) === Number(highestPlan.id)
-      : false;
+  const isHighestPlan = useMemo(() => {
+    if (!highestPlan || !subscription?.plan_id) return false;
+    return Number(subscription.plan_id) === Number(highestPlan.id);
+  }, [highestPlan, subscription?.plan_id]);
 
   /* ---------------- BUTTON LOGIC ---------------- */
 
   const buttonLabel = useMemo(() => {
     if (!subscription) return "Choose Plan";
-
     if (isExpired) return "Renew Plan";
-
     if (isHighestPlan && isActive) return "Current Plan";
-
     return "Upgrade Plan";
   }, [subscription, isExpired, isHighestPlan, isActive]);
 
-  const buttonLink = useMemo(() => {
-    if (isHighestPlan && isActive) return "#";
-    return "/subscription";
-  }, [isHighestPlan, isActive]);
-
+  const buttonLink = isHighestPlan && isActive ? "#" : "/subscription";
   const buttonDisabled = isHighestPlan && isActive;
 
-  /* ---------------- HELPERS ---------------- */
+  /* ---------------- FORMATTERS ---------------- */
 
-  const formatAmount = (amount?: number) => {
-    if (!amount || amount === 0) return "0.00";
-    return `₹${amount.toLocaleString("en-IN")}`;
-  };
+  const formatAmount = (amount?: number) =>
+    !amount ? "0.00" : `₹${amount.toLocaleString("en-IN")}`;
 
-  const formatDate = (date?: string) => {
-    return date ? new Date(date).toDateString() : "—";
-  };
+  const formatDate = (date?: string) =>
+    date ? new Date(date).toDateString() : "—";
 
-  if (loading) return null;
+  /* ---------------- EARLY RETURN ---------------- */
+
+  if (loading || !user) return null;
 
   const isFreePlan = !subscription?.amount || Number(subscription.amount) === 0;
 
-  const planLabel = isFreePlan ? "Free Plan" : `Premium Plan `;
+  const planLabel = isFreePlan ? "Free Plan" : "Premium Plan";
+
+  /* ---------------- REMAINING DAYS ---------------- */
+
+  const endDate = subscription?.end_date;
+
+  const remainingDays = useMemo(() => {
+    if (!endDate) return null;
+
+    const diff = new Date(endDate).getTime() - new Date().getTime();
+
+    if (diff <= 0) return 0;
+
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }, [endDate]);
+
+  const remainingDaysLabel = useMemo(() => {
+    if (remainingDays === null) return "—";
+    if (remainingDays === 0) return "Expired";
+    return `${remainingDays} day${remainingDays > 1 ? "s" : ""} left`;
+  }, [remainingDays]);
 
   /* ---------------- UI ---------------- */
 
   return (
     <div className="min-h-screen mt-10">
       <div className="max-w-6xl mx-auto p-4 md:p-8 border border-gray-200">
-        {/* Header */}
+        {/* HEADER */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
+          <h1 className="text-2xl font-semibold">Dashboard</h1>
 
           <Link
             href={buttonLink}
@@ -143,119 +167,79 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {/* Stats */}
+        {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <StatCard title="Plan Type" value={planLabel} />
-
           <StatCard title="Price" value={formatAmount(subscription?.amount)} />
-
           <StatCard
             title="Duration"
             value={`${subscription?.duration_value || "-"} ${subscription?.duration_unit || ""}`}
           />
-
           <StatCard
             title="Status"
             value={isActive ? "Active" : "Inactive"}
             status
           />
+          <StatCard
+            title="Remaining"
+            value={remainingDaysLabel}
+            status={remainingDays === 0}
+          />
         </div>
 
-        {/* Grid */}
+        {/* GRID */}
         <div className="grid md:grid-cols-2 gap-6">
-          {/* User */}
+          {/* USER */}
           <div className="bg-white rounded-xl shadow-sm p-5">
-            <h2 className="font-semibold text-[#333] mb-3">User Details</h2>
+            <h2 className="font-semibold mb-3">User Details</h2>
 
-            <div className="space-y-2 text-sm text-[#333]">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Name</span>
-                <span className="font-medium">
-                  {formData.firstName} {formData.lastName}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Email</span>
-                <span className="font-medium">{formData.email}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Contact</span>
-                <span className="font-medium">{formData.contact || "—"}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Address</span>
-                <span className="font-medium text-right max-w-[60%]">
-                  {formData.address || "—"}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Member Since</span>
-                <span className="font-medium">
-                  {formatDate(subscription?.start_date)}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Subscription ID</span>
-                <span className="font-medium">{subscription?.id || "—"}</span>
-              </div>
+            <div className="space-y-2 text-sm">
+              <Row
+                label="Name"
+                value={`${formData.firstName} ${formData.lastName}`}
+              />
+              <Row label="Email" value={formData.email} />
+              <Row label="Contact" value={formData.contact || "—"} />
+              <Row label="Address" value={formData.address || "—"} />
+              <Row
+                label="Member Since"
+                value={formatDate(subscription?.start_date)}
+              />
+              <Row label="Subscription ID" value={subscription?.id || "—"} />
             </div>
           </div>
 
-          {/* Plan */}
-          <div className="rounded-xl p-px bg-linear-to-br from-[#ff3b3b] via-[#c9060a] to-[#7a0406] shadow-lg">
-            <div className="bg-[#c9060a] rounded-xl p-5 text-white flex flex-col justify-between h-full">
-              {/* Header */}
-              <div>
-                <p className="text-xs uppercase tracking-wider opacity-70">
-                  Current Plan
-                </p>
-                <h2 className="text-2xl font-bold mt-1">
-                  {subscription?.name || "No Plan"}
-                </h2>
-              </div>
+          {/* PLAN */}
+          <div className="rounded-xl p-px bg-linear-to-br from-[#ff3b3b] via-[#c9060a] to-[#7a0406]">
+            <div className="bg-[#c9060a] rounded-xl p-5 text-white h-full">
+              <p className="text-xs opacity-70 uppercase">Current Plan</p>
+              <h2 className="text-2xl font-bold">
+                {subscription?.name || "No Plan"}
+              </h2>
 
-              {/* Price */}
-              <div className="mt-4">
-                <h3 className="text-3xl font-bold">
-                  {formatAmount(subscription?.amount)}
-                </h3>
-                <p className="text-xs opacity-70 mt-1">
-                  inclusive of all taxes
-                </p>
-              </div>
+              <h3 className="text-3xl font-bold mt-4">
+                {formatAmount(subscription?.amount)}
+              </h3>
 
-              {/* Divider */}
-              <div className="border-t border-white/20 my-4"></div>
+              <div className="border-t border-white/20 my-4" />
 
-              {/* Details */}
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="opacity-70">Valid till</span>
-                  <span className="font-medium">
-                    {formatDate(subscription?.end_date)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span className="opacity-70">Duration</span>
-                  <span className="font-medium">
-                    {subscription?.duration_value
+                <RowWhite
+                  label="Valid till"
+                  value={formatDate(subscription?.end_date)}
+                />
+                <RowWhite
+                  label="Duration"
+                  value={
+                    subscription?.duration_value
                       ? `${subscription.duration_value} ${subscription.duration_unit}`
-                      : "—"}
-                  </span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span className="opacity-70">Type</span>
-                  <span className="font-medium">
-                    {subscription?.purchase_type || "—"}
-                  </span>
-                </div>
+                      : "—"
+                  }
+                />
+                <RowWhite
+                  label="Type"
+                  value={subscription?.purchase_type || "—"}
+                />
               </div>
             </div>
           </div>
@@ -265,7 +249,7 @@ export default function Dashboard() {
   );
 }
 
-/* ---------------- SMALL COMPONENT ---------------- */
+/* ---------------- REUSABLE COMPONENTS ---------------- */
 
 function StatCard({
   title,
@@ -281,15 +265,33 @@ function StatCard({
       <p className="text-sm text-gray-500">{title}</p>
       <h3
         className={`text-xl font-semibold ${
-          status
-            ? value === "Active"
+          status && value !== "Active"
+            ? "text-[#c6090a]"
+            : status
               ? "text-green-600"
-              : "text-[#c6090a]"
-            : "text-[#333]"
+              : "text-[#333]"
         }`}
       >
         {value}
       </h3>
+    </div>
+  );
+}
+
+function Row({ label, value }: any) {
+  return (
+    <div className="flex justify-between">
+      <span className="text-gray-500">{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
+}
+
+function RowWhite({ label, value }: any) {
+  return (
+    <div className="flex justify-between">
+      <span className="opacity-70">{label}</span>
+      <span className="font-medium">{value}</span>
     </div>
   );
 }

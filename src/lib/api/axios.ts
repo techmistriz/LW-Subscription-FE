@@ -21,12 +21,24 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const url = error.config?.url || "";
+
+    // Skip redirect for login request
+    const isAuthRequest =
+      url.includes("/sign-in") || url.includes("/auth/login");
+
+    if (status === 401 && !isAuthRequest) {
       if (typeof window !== "undefined") {
         sessionStorage.removeItem("token");
-        window.location.href = "/signin";
+
+        // optional: also clear subscription
+        sessionStorage.removeItem("subscription");
+
+        window.location.href = "/sign-in";
       }
     }
+
     return Promise.reject(error);
   },
 );

@@ -49,11 +49,10 @@ export default function SignInForm() {
           }),
         );
       }
-toast.success("Login successful!");
-router.replace("/dashboard");
-} catch (error: any) {
-      toast.error("Something went wrong");
-      setError(error || "Login failed");
+      toast.success("Login successful!");
+      router.replace("/dashboard");
+    } catch (error: any) {
+      toast.error(error || "Login failed");
     } finally {
       setLoading(false);
     }

@@ -20,7 +20,7 @@ interface ActiveSubscription {
   end_date?: string;
   expires_at?: string;
   purchase_type?: string;
-  plan?: Plan; //  IMPORTANT
+  plan?: Plan;
 }
 
 interface User {
@@ -30,28 +30,12 @@ interface User {
   email: string;
   contact: string;
   address: string;
-
-  //  FIX (this was missing)
   active_subscription?: ActiveSubscription;
-}
-
-interface Subscription {
-  id?: number;
-  plan_id?: number;
-  name?: string;
-  amount?: number;
-  status?: string;
-  start_date?: string;
-  end_date?: string;
-  duration_value?: number;
-  duration_unit?: string;
-  purchase_type?: string;
 }
 
 interface AuthState {
   user: User | null;
   token: string | null;
-  subscription: Subscription | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -63,7 +47,6 @@ interface AuthState {
 const initialState: AuthState = {
   user: null,
   token: null,
-  subscription: null,
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -106,7 +89,10 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
     await logoutApi();
   } catch {}
 
-  sessionStorage.clear();
+  //  safer clear
+  sessionStorage.removeItem("user");
+  sessionStorage.removeItem("token");
+
   delete axiosInstance.defaults.headers.common["Authorization"];
 
   return true;
@@ -118,29 +104,28 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // LOAD USER + SUBSCRIPTION FROM STORAGE
     loadUserFromStorage: (state) => {
       const storedUser = sessionStorage.getItem("user");
       const token = sessionStorage.getItem("token");
-      const subscription = sessionStorage.getItem("subscription");
 
-      if (storedUser && token) {
+      if (!token) {
+        state.isInitialized = true;
+        return;
+      }
+
+      if (storedUser) {
         state.user = JSON.parse(storedUser);
-        state.token = token;
         state.isAuthenticated = true;
-
-        axiosInstance.defaults.headers.common["Authorization"] =
-          `Bearer ${token}`;
       }
 
-      if (subscription) {
-        state.subscription = JSON.parse(subscription);
-      }
+      state.token = token;
 
-      state.isInitialized = true; //  important for AuthGate
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${token}`;
+
+      state.isInitialized = true;
     },
 
-    // SET USER (register / payment flow)
     setUser: (state, action: PayloadAction<{ user: User; token: string }>) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
@@ -151,12 +136,6 @@ const authSlice = createSlice({
 
       axiosInstance.defaults.headers.common["Authorization"] =
         `Bearer ${action.payload.token}`;
-    },
-
-    // SET SUBSCRIPTION
-    setSubscription: (state, action: PayloadAction<Subscription>) => {
-      state.subscription = action.payload;
-      sessionStorage.setItem("subscription", JSON.stringify(action.payload));
     },
   },
 
@@ -179,16 +158,12 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.token = null;
-        state.subscription = null;
         state.isAuthenticated = false;
         state.error = null;
       });
   },
 });
 
-/* ================= EXPORTS ================= */
-
-export const { loadUserFromStorage, setSubscription, setUser } =
-  authSlice.actions;
+export const { loadUserFromStorage, setUser } = authSlice.actions;
 
 export default authSlice.reducer;

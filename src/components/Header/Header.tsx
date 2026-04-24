@@ -39,8 +39,8 @@ export default function Header({ categories }: { categories: Category[] }) {
     await dispatch(logoutUser());
     toast.success("Logout successful!");
 
-    // router.replace("/");
-    window.location.reload()
+    router.push("/sign-in");
+    router.refresh();
   };
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);

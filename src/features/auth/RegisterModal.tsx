@@ -114,7 +114,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
       setProcessingPayment(true);
 
       toast.success("Register successful!  You have Access 1 month free plan");
-      
+
       requestAnimationFrame(() => {
         router.replace(
           `/thankyou?name=${encodeURIComponent(
@@ -123,6 +123,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
         );
       });
     } catch (error: any) {
+      toast.error(error.message);
       console.error("ERROR:", error.message);
       setProcessingPayment(false);
     } finally {
