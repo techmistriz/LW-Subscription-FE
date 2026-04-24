@@ -26,7 +26,7 @@ const initialFormState: FormData = {
   auto_renew: false,
 };
 
-// Load Razorpay SDK
+/*----------------- Load Razorpay SDK -----------------*/
 const loadRazorpay = () =>
   new Promise<boolean>((resolve) => {
     const script = document.createElement("script");
@@ -63,7 +63,7 @@ export default function RegisterForm() {
     }
   }, [user, token, router]);
 
-  // Fetch plans
+  /*----------------- Fetch plans -----------------*/
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -76,7 +76,7 @@ export default function RegisterForm() {
     fetchPlans();
   }, []);
 
-  // Input handler
+  /*----------------- Input handler -----------------*/
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -103,7 +103,7 @@ export default function RegisterForm() {
     setForm((prev) => ({ ...prev, plan: e.target.value }));
   };
 
-  // Submit handler
+  /*----------------- Submit handler -----------------*/
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -146,7 +146,7 @@ export default function RegisterForm() {
         return;
       }
 
-      // ================= FREE PLAN =================
+      /* 1. ----------------- FREE PLAN  -----------------*/
       if (!payment.amount || payment.amount <= 0) {
         const sub = res?.data?.user?.active_subscription;
 
@@ -155,7 +155,7 @@ export default function RegisterForm() {
           dispatch(setUser({ user: userData, token }));
         }
 
-        // 2. SET SUBSCRIPTION
+        /* 2. ----------------- SET SUBSCRIPTION -----------------*/
         dispatch(
           setSubscription({
             id: sub?.id,
@@ -167,9 +167,9 @@ export default function RegisterForm() {
             end_date: sub?.end_date,
           }),
         );
-toast.success("1 month free activated");
+        toast.success("1 month free activated");
 
-        // 3. REDIRECT
+        /* 3. ----------------- REDIRECT -----------------*/
         router.replace(
           `/thankyou?name=${encodeURIComponent(
             selectedPlan.name,
@@ -179,10 +179,10 @@ toast.success("1 month free activated");
         return;
       }
 
-      // ================= PAID PLAN =================
+      /*----------------- PAID PLAN -----------------*/
       if (!payment.razorpay_key || !payment.order_id) {
         // setError("Invalid payment configuration");
-         toast.error("Invalid payment configuration");
+        toast.error("Invalid payment configuration");
         return;
       }
 
@@ -244,7 +244,7 @@ toast.success("1 month free activated");
                 }),
               );
 
-             toast.success(`Subscribed successful!: ${selectedPlan.name}`);
+              toast.success(`Subscribed successful!: ${selectedPlan.name}`);
               router.replace("/dashboard");
             }
 
@@ -276,7 +276,8 @@ toast.success("1 month free activated");
 
       rzp.open();
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      // setError(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -284,7 +285,7 @@ toast.success("1 month free activated");
 
   const getError = (name: keyof typeof fieldErrors) => fieldErrors[name]?.[0];
 
-  // Payment loader
+  /*----------------- Payment loader -----------------*/
   if (processingPayment) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -308,7 +309,7 @@ toast.success("1 month free activated");
     <main className="bg-white">
       <Banner title={"subscribe"} />
 
-      {/*CONTENT*/}
+      {/*----------------- CONTENT -----------------*/}
       <section className="py-20">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-2xl font-semibold uppercase">
@@ -320,7 +321,7 @@ toast.success("1 month free activated");
           </p>
           <div className="w-12 h-0.75 bg-[#c9060a] mx-auto mt-4"></div>
 
-          {/*FORM CARD */}
+          {/*----------------- FORM CARD -----------------*/}
           <div className="mt-12 bg-white border border-gray-200 shadow-[0_0_15px_rgba(0,0,0,0.15)] p-8 max-w-2xl mx-auto text-left">
             {error && (
               <p className="text-[#c9060a] text-sm mb-4 bg-red-50 p-3 rounded">
@@ -473,7 +474,7 @@ toast.success("1 month free activated");
                     value={form.address}
                     onChange={handleChange}
                     disabled={loading}
-                    rows={4}
+                    rows={2}
                     className={`w-full border px-3 py-2 mt-1 rounded focus:outline-none focus:ring-2 focus:ring-[#c9060a] ${
                       getError("address")
                         ? "border-[#c9060a] bg-red-50"
@@ -487,7 +488,7 @@ toast.success("1 month free activated");
                   )}
                 </div>
               </div>
-              {/* PLANS */}
+              {/*----------------- PLANS -----------------*/}
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {plans.map((plan) => {
                   const isSelected = form.plan === String(plan.id);
@@ -516,7 +517,7 @@ toast.success("1 month free activated");
                       />
 
                       <div className="flex flex-col items-center justify-between">
-                        {/* PLAN NAME */}
+                        {/*----------------- PLAN NAME -----------------*/}
                         <span
                           className={`text-sm font-semibold ${
                             isSelected ? "text-white" : "text-gray-800"
@@ -537,7 +538,7 @@ toast.success("1 month free activated");
                         </span>
                       </div>
 
-                      {/* DESCRIPTION (same UI text) */}
+                      {/*----------------- DESCRIPTION (same UI text) -----------------*/}
                       <p
                         className={`text-xs leading-relaxed ${
                           isSelected ? "text-white/90" : "text-gray-600"

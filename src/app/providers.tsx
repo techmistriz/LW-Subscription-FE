@@ -15,10 +15,9 @@ export default function ScrollProvider({
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [pathname]);
 
-  return(
-<Provider store={store}>
-
-    <>{children}</>
-</Provider>
-  )
+  return (
+    <Provider store={store}>
+      <>{children}</>
+    </Provider>
+  );
 }

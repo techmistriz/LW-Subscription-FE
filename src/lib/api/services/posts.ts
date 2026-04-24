@@ -1,6 +1,6 @@
 import api from "@/lib/api/axios";
 
-// Unified Posts API - Single source of truth
+/*----------------- Unified Posts API - Single source of truth -----------------*/
 interface GetPostsParams {
   search?: string;
   category_id?: number;
@@ -13,7 +13,7 @@ interface GetPostsParams {
   latest?:number;
 }
 
-// Main posts fetch - handles ALL search/filter cases
+/*----------------- Main posts fetch - handles ALL search/filter cases -----------------*/
 export async function getPosts({
   search,
   category_id,
@@ -40,8 +40,8 @@ export async function getPosts({
   return response.data;
 }
 
-// Single article by slug
 
+/*----------------- Single article by slug -----------------*/
 export async function getArticleBySlug(slug: string) {
   try {
     const response = await api.get(`/posts/${slug}`);
@@ -73,7 +73,7 @@ export async function getRelatedPosts(params: {
   return response.data?.data || [];
 }
 
-// Editor picks posts (limited 5)
+/*----------------- Editor picks posts (limited 5) -----------------*/
 export async function getEditorPicksPosts(params?: {
   category_id?: number;
   limit?: number;

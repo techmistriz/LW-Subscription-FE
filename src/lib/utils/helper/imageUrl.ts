@@ -1,10 +1,10 @@
 export const getImageUrl = (
   image?: string | null,
-  baseUrl?: string
+  baseUrl?: string,
 ): string => {
   if (!image) return "/placeholder.jpg";
 
-  // If already full URL
+ /*----------------- If already full URL -----------------*/
   if (image.startsWith("http")) {
     return image.replace("http://", "https://");
   }

@@ -28,13 +28,13 @@ export default function ArticleDetailPage() {
   const [loading, setLoading] = useState(true);
   const [authorImage, setAuthorImage] = useState("/avatar.jpg");
 
-  //Only subscribes User Read full article content
+  /*----------------- Only subscribes User Read full article content -----------------*/
 
   const { user } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.data);
 
   const isSubscribed = Boolean(
-    user && // 🔥 MUST HAVE
+    user && // MUST HAVE
     subscription &&
     subscription.status === "ACTIVE" &&
     subscription.end_date &&
@@ -63,7 +63,7 @@ export default function ArticleDetailPage() {
 
         if (!active) return;
 
-        // ❗ API error or not found
+        /*----------------- API error or not found -----------------*/
         if (!articleData || articleData.status === false) {
           setArticle(null);
           return;
@@ -179,21 +179,21 @@ export default function ArticleDetailPage() {
   return (
     <section className="bg-white">
       <article className="lg:col-span-9">
-        {/* CATEGORY */}
+        {/*----------------- CATEGORY -----------------*/}
         <Link href={`/category/${rawCategory}`}>
           <p className="text-[#c9060a] font-semibold text-lg uppercase cursor-pointer mb-2">
             {categoryTitle}
           </p>
         </Link>
 
-        {/* TITLE */}
+        {/*----------------- TITLE -----------------*/}
         <h1 className="text-2xl lg:text-[22px] font-semibold leading-snug">
           {article.title}
         </h1>
 
         <div className="w-10 h-1 bg-[#c9060a] mb-1" />
 
-        {/* AUTHOR + SOCIAL */}
+        {/*----------------- AUTHOR + SOCIAL -----------------*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p className="text-sm text-[#333333] flex items-center gap-2">
             {article.author && typeof article.author !== "string" ? (
@@ -221,7 +221,7 @@ export default function ArticleDetailPage() {
           <SocialShare title={article.title} />
         </div>
 
-        {/* FEATURE IMAGE */}
+        {/*----------------- FEATURE IMAGE -----------------*/}
         {article.image && (
           <div className="relative w-full mt-3 mb-6 aspect-video">
             <Image
@@ -238,7 +238,7 @@ export default function ArticleDetailPage() {
           </div>
         )}
 
-        {/* ARTICLE CONTENT */}
+        {/*----------------- ARTICLE CONTENT -----------------*/}
         <div className="my-6">
           {isSubscribed ? (
             <div
@@ -267,7 +267,7 @@ export default function ArticleDetailPage() {
           )}
         </div>
 
-        {/* TESTIMONIALS */}
+        {/*----------------- TESTIMONIALS -----------------*/}
         {Array.isArray(article.reader_feedbacks) &&
           article.reader_feedbacks.some((item) => item.reader_feedback) && (
             <div className="my-12 space-y-8">
@@ -297,7 +297,7 @@ export default function ArticleDetailPage() {
           </div>
         )}
 
-        {/* AUTHOR SECTION */}
+        {/*----------------- AUTHOR SECTION -----------------*/}
         {article.author && typeof article.author !== "string" && (
           <>
             <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
@@ -324,7 +324,7 @@ export default function ArticleDetailPage() {
                     `${article.author.name} is a contributor at Lex Witness.`}
                 </p>
                 <div className="flex lg:mt-5 gap-4">
-                  {/* Author LinkedIn */}
+                  {/*----------------- Author LinkedIn -----------------*/}
                   {/* {article.author?.linkedin && ( */}
                   <a
                     href={article.author.linkedin}
@@ -340,7 +340,7 @@ export default function ArticleDetailPage() {
                       <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
                     </svg>
 
-                    {/* Hover overlay */}
+                    {/*----------------- Hover overlay -----------------*/}
                     <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
                   </a>
                   {/* )} */}
@@ -350,7 +350,7 @@ export default function ArticleDetailPage() {
           </>
         )}
 
-        {/* RELATED POSTS */}
+        {/*----------------- RELATED POSTS -----------------*/}
         {relatedPosts.length > 0 && (
           <div className="my-8">
             <h3 className="font-bold text-xl">RELATED ARTICLES</h3>

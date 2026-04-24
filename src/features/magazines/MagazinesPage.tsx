@@ -15,11 +15,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 
-
-/**
- * MagazinesPage component displays all magazine editions with year filtering
- * and pagination support
-*/
+/*----------------- MagazinesPage component displays all magazine editions with year filtering and pagination support -----------------*/
 export default function MagazinesPage({
   currentPage,
 }: {
@@ -28,16 +24,16 @@ export default function MagazinesPage({
   // State management
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const yearParam = searchParams.get("year");
   const pageParam = Number(searchParams.get("page")) || 1;
-  
+
   const [magazines, setMagazines] = useState<Magazine[]>([]);
   const [loading, setLoading] = useState(false);
   const [years, setYears] = useState<Year[]>([]);
-const [selectedYearId, setSelectedYearId] = useState<number | null>(
-  yearParam ? Number(yearParam) : null
-);
+  const [selectedYearId, setSelectedYearId] = useState<number | null>(
+    yearParam ? Number(yearParam) : null,
+  );
   const [yearOpen, setYearOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -46,7 +42,7 @@ const [selectedYearId, setSelectedYearId] = useState<number | null>(
   // const searchParams = useSearchParams();
   // const currentPage = Number(searchParams.get("page")) || 1;
 
-  // Fetch magazines with optional year filter and pagination
+  /*----------------- Fetch magazines with optional year filter and pagination -----------------*/
   const fetchMagazines = useCallback(
     async (year?: number, pageNumber: number = 1) => {
       setLoading(true);
@@ -67,15 +63,15 @@ const [selectedYearId, setSelectedYearId] = useState<number | null>(
     [],
   );
 
-  // Load magazines on component mount
-useEffect(() => {
-  const year = yearParam ? Number(yearParam) : undefined;
-  const page = pageParam;
+  /*----------------- Load magazines on component mount -----------------*/
+  useEffect(() => {
+    const year = yearParam ? Number(yearParam) : undefined;
+    const page = pageParam;
 
-  fetchMagazines(year, page);
-}, [fetchMagazines, yearParam, pageParam]);
+    fetchMagazines(year, page);
+  }, [fetchMagazines, yearParam, pageParam]);
 
-  // Load available years for filtering
+  /*----------------- Load available years for filtering -----------------*/
   useEffect(() => {
     async function loadYears() {
       try {
@@ -89,7 +85,7 @@ useEffect(() => {
     loadYears();
   }, []);
 
-  // Close dropdown when clicking outside
+  /*----------------- Close dropdown when clicking outside -----------------*/
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -103,36 +99,36 @@ useEffect(() => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-const handleApplyFilter = () => {
-  const params = new URLSearchParams();
+  const handleApplyFilter = () => {
+    const params = new URLSearchParams();
 
-  if (selectedYearId) {
-    params.set("year", String(selectedYearId));
-  }
+    if (selectedYearId) {
+      params.set("year", String(selectedYearId));
+    }
 
-  params.set("page", "1");
+    params.set("page", "1");
 
-  router.push(`/magazines?${params.toString()}`);
-};
+    router.push(`/magazines?${params.toString()}`);
+  };
 
-const selectedYearLabel = selectedYearId
-  ? years.find((y) => y === selectedYearId)
-  : null;
+  const selectedYearLabel = selectedYearId
+    ? years.find((y) => y === selectedYearId)
+    : null;
 
   return (
     <section className="pb-8">
-      {/* Hero banner */}
+      {/*----------------- Hero banner -----------------*/}
       <Banner title="Magazines" />
 
-      {/* Main content */}
+      {/*----------------- Main content -----------------*/}
       <div className="max-w-6xl mx-auto px-4">
-        {/* Page header */}
+        {/*----------------- Page header -----------------*/}
         <h2 className="mt-6 text-2xl font-semibold text-[#333]">
           ALL EDITIONS MAGAZINE
         </h2>
         <div className="w-14 h-1.5 bg-[#c9060a] mt-1"></div>
 
-        {/* Filter controls */}
+        {/*----------------- Filter controls -----------------*/}
         <YearFilter
           years={years}
           selectedYear={selectedYearId}
@@ -142,28 +138,28 @@ const selectedYearLabel = selectedYearId
         />
         <hr className="border-gray-200 mb-6" />
 
-        {/* Magazines grid */}
+        {/*----------------- Magazines grid -----------------*/}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {loading ? (
             <div className="col-span-full flex justify-center py-16">
               <PageLoader />
             </div>
           ) : magazines.length === 0 ? (
-            // Empty state
+            /*----------------- Empty state -----------------*/
             <p className="col-span-full text-center text-[#333333] py-12">
               {selectedYearLabel
                 ? `No magazines found for ${selectedYearLabel}`
                 : "No magazines found"}
             </p>
           ) : (
-            // Magazines list
+            /*----------------- Magazines list -----------------*/
             magazines.map((magazine) => (
               <Link
                 key={magazine.id}
                 href={`/magazines/${magazine.slug}`}
                 className="hover:shadow-lg transition"
               >
-                {/* Magazine cover */}
+                {/*----------------- Magazine cover -----------------*/}
                 <div className="relative w-full aspect-3/4">
                   <Image
                     src={
@@ -177,7 +173,7 @@ const selectedYearLabel = selectedYearId
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
                 </div>
-                {/* Magazine details */}
+                {/*----------------- Magazine details -----------------*/}
                 <div className="p-3 text-center">
                   <p className="text-sm text-[#333333]">{magazine.title}</p>
                   <p className="text-[#c9060a] font-medium">Read more</p>
@@ -187,7 +183,7 @@ const selectedYearLabel = selectedYearId
           )}
         </div>
 
-        {/* Pagination controls */}
+        {/*----------------- Pagination controls -----------------*/}
         <Suspense fallback={null}>
           <Pagination
             currentPage={page}

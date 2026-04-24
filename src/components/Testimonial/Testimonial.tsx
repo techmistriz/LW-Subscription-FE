@@ -13,7 +13,7 @@ interface TestimonialProps {
 export default function TestimonialCard({ data }: TestimonialProps) {
   if (!data) return null;
 
-  // Text alignment classes
+  /*----------------- Text alignment classes -----------------*/
   const alignment = data.text_alignment ?? "left";
 
   const textAlignClass = {

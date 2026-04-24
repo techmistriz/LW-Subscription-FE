@@ -6,9 +6,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/store/hooks";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 import { useRouter } from "next/navigation";
+import PageLoader from "@/components/Loader/PageLoader";
 
 /* ---------------- COMPONENT ---------------- */
-
 export default function Dashboard() {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -26,14 +26,12 @@ export default function Dashboard() {
   });
 
   /* ---------------- AUTH GUARD ---------------- */
-
   useEffect(() => {
     if (loading) return;
     if (!user) router.replace("/sign-in");
   }, [user, loading, router]);
 
   /* ---------------- SYNC USER ---------------- */
-
   useEffect(() => {
     if (!user) return;
 
@@ -66,7 +64,6 @@ export default function Dashboard() {
   }, [user, dispatch]);
 
   /* ---------------- FETCH PLANS ---------------- */
-
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -81,7 +78,6 @@ export default function Dashboard() {
   }, []);
 
   /* ---------------- DERIVED DATA ---------------- */
-
   const highestPlan = useMemo(() => {
     if (!plans.length) return null;
 
@@ -99,7 +95,6 @@ export default function Dashboard() {
   }, [highestPlan, subscription?.plan_id]);
 
   /* ---------------- BUTTON LOGIC ---------------- */
-
   const buttonLabel = useMemo(() => {
     if (!subscription) return "Choose Plan";
     if (isExpired) return "Renew Plan";
@@ -111,7 +106,6 @@ export default function Dashboard() {
   const buttonDisabled = isHighestPlan && isActive;
 
   /* ---------------- FORMATTERS ---------------- */
-
   const formatAmount = (amount?: number) =>
     !amount ? "0.00" : `₹${amount.toLocaleString("en-IN")}`;
 
@@ -119,15 +113,13 @@ export default function Dashboard() {
     date ? new Date(date).toDateString() : "—";
 
   /* ---------------- EARLY RETURN ---------------- */
-
-  if (loading || !user) return null;
+  // if (loading || !user) return null;
 
   const isFreePlan = !subscription?.amount || Number(subscription.amount) === 0;
 
   const planLabel = isFreePlan ? "Free Plan" : "Premium Plan";
 
   /* ---------------- REMAINING DAYS ---------------- */
-
   const endDate = subscription?.end_date;
 
   const remainingDays = useMemo(() => {
@@ -147,11 +139,18 @@ export default function Dashboard() {
   }, [remainingDays]);
 
   /* ---------------- UI ---------------- */
-
+  if (loading || !user) {
+ return (
+       <div className="min-h-screen  flex justify-center">
+         <PageLoader />
+       </div>
+     );
+}
   return (
     <div className="min-h-screen mt-10">
       <div className="max-w-6xl mx-auto p-4 md:p-8 border border-gray-200">
-        {/* HEADER */}
+        
+        {/*----------------- HEADER -----------------*/}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
@@ -167,7 +166,7 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {/* STATS */}
+        {/*----------------- STATS -----------------*/}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <StatCard title="Plan Type" value={planLabel} />
           <StatCard title="Price" value={formatAmount(subscription?.amount)} />
@@ -187,7 +186,7 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* GRID */}
+        {/*----------------- GRID -----------------*/}
         <div className="grid md:grid-cols-2 gap-6">
           {/* USER */}
           <div className="bg-white rounded-xl shadow-sm p-5">
@@ -209,7 +208,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* PLAN */}
+          {/*----------------- PLAN -----------------*/}
           <div className="rounded-xl p-px bg-linear-to-br from-[#ff3b3b] via-[#c9060a] to-[#7a0406]">
             <div className="bg-[#c9060a] rounded-xl p-5 text-white h-full">
               <p className="text-xs opacity-70 uppercase">Current Plan</p>
@@ -250,7 +249,6 @@ export default function Dashboard() {
 }
 
 /* ---------------- REUSABLE COMPONENTS ---------------- */
-
 function StatCard({
   title,
   value,

@@ -1,5 +1,3 @@
-// import axiosInstance from "../api/axios";
-
 import api from "@/lib/api/axios";
 
 export async function getPlans() {
@@ -23,17 +21,12 @@ export async function getPlans() {
 
 export async function getMembershipPlan(is_trial = 1) {
   try {
-    const response = await api.get(
-      `/membership-plan?is_trial=${is_trial}`
-    );
+    const response = await api.get(`/membership-plan?is_trial=${is_trial}`);
     return response.data;
   } catch (error: any) {
-    throw new Error(
-      error.response?.data?.message || "Failed to fetch plan"
-    );
+    throw new Error(error.response?.data?.message || "Failed to fetch plan");
   }
 }
-
 
 export const getMembershipPlans = async (is_trial: number = 0) => {
   try {

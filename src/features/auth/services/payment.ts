@@ -9,10 +9,7 @@ export async function verifyPayment(data: {
     // console.log(" VERIFY API CALL START");
     // console.log("Verify Payload:", data);
 
-    const response = await api.post(
-      "/auth/razorpay/notify",
-      data
-    );
+    const response = await api.post("/auth/razorpay/notify", data);
 
     // console.log(" VERIFY API RESPONSE:", response.data);
 
@@ -22,7 +19,7 @@ export async function verifyPayment(data: {
     // console.log("VERIFY ERROR DATA:", error.response?.data);
 
     throw new Error(
-      error.response?.data?.message || "Payment verification failed"
+      error.response?.data?.message || "Payment verification failed",
     );
   }
 }

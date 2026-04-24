@@ -28,7 +28,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     password_confirmation: "",
   });
 
-  // FETCH PLAN
+  /*----------------------- FETCH PLAN  -----------------------*/
   useEffect(() => {
     let mounted = true;
 
@@ -59,7 +59,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     setLoading(true);
 
     try {
-      // REGISTER (ALREADY RETURNS TOKEN + USER)
+      /*----------------------- REGISTER (ALREADY RETURNS TOKEN + USER)  -----------------------*/
       const registerRes = await registerUser({
         ...form,
         membership_plan_id: planId,
@@ -77,10 +77,10 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
         throw new Error("Invalid register response");
       }
 
-      // SHOW PROCESSING
+      /*----------------- SHOW PROCESSING -----------------*/
       setProcessingPayment(true);
 
-      //  SET USER (NOT loginUser thunk)
+      /*-----------------  SET USER (NOT loginUser thunk) -----------------*/
       dispatch(
         setUser({
           user: userData,
@@ -88,7 +88,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
         }),
       );
 
-      //  SUBSCRIPTION
+      /*----------------------- SUBSCRIPTION -----------------------*/
       const sub = userData?.active_subscription;
 
       if (sub) {
@@ -131,7 +131,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
-  // LOADING SCREEN
+  /*----------------- LOADING SCREEN -----------------*/
   if (processingPayment) {
     return (
       <div className="fixed inset-0 z-[99999] bg-white flex items-center justify-center">

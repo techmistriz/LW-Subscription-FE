@@ -6,7 +6,7 @@ const AuthContext = createContext<any>(null);
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true); //  add this
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
@@ -24,13 +24,13 @@ export const AuthProvider = ({ children }: any) => {
 
   const login = (userData: any) => {
     sessionStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData); // 🔥 triggers instant UI update
+    setUser(userData); // triggers instant UI update
   };
 
   const logout = () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
-    setUser(null); // 🔥 triggers instant UI update
+    setUser(null); // triggers instant UI update
   };
 
   return (

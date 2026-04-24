@@ -11,8 +11,6 @@ export default async function EditorialPage() {
       <Banner title={"Editorial"} />
 
       <div className="max-w-6xl mx-auto px-6 py-8 ">
-      
-
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Side - Editor Image */}
           <div className="relative w-[80%] aspect-4/5 mx-auto overflow-hidden shadow-lg ">

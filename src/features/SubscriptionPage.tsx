@@ -29,12 +29,11 @@ export default function SubscriptionPage() {
     }
   };
 
-  
   return (
     <div className="bg-gray-100">
-      {/* HERO SECTION */}
+      {/*----------------- HERO SECTION -----------------*/}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
-        {/* LEFT CONTENT */}
+        {/*----------------- LEFT CONTENT -----------------*/}
         <div className="text-center lg:text-left">
           <h1 className="text-3xl sm:text-4xl lg:text-4xl text-[#c9060a] font-semibold mb-6">
             Making Sense of India
@@ -56,7 +55,7 @@ export default function SubscriptionPage() {
             and a Q&A with Viswanathan Anand.
           </p>
 
-          {/* BUTTONS */}
+          {/*----------------- BUTTONS -----------------*/}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start grid lg:grid-cols-1">
             <button
               onClick={scrollToPricing}
@@ -71,10 +70,13 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
-        {/* RIGHT IMAGE */}
+        {/*----------------- RIGHT IMAGE -----------------*/}
         <div className="flex justify-center lg:justify-end">
           {singleMagazine?.image && (
-            <Link  href={`/magazines/${singleMagazine.slug}`} className="relative w-64 sm:w-72 md:w-80 lg:w-86 aspect-[3/4] shadow-2xl overflow-hidden hover:shadow-2xl hover:scale-100 ">
+            <Link
+              href={`/magazines/${singleMagazine.slug}`}
+              className="relative w-64 sm:w-72 md:w-80 lg:w-86 aspect-[3/4] shadow-2xl overflow-hidden hover:shadow-2xl hover:scale-100 "
+            >
               <Image
                 src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
                 alt={singleMagazine.title || "Latest Magazine"}
@@ -86,7 +88,7 @@ export default function SubscriptionPage() {
         </div>
       </section>
 
-      {/* BENEFITS SECTION */}
+      {/*----------------- BENEFITS SECTION -----------------*/}
       <section className="bg-red-100 py-12">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
           <div>
@@ -112,7 +114,7 @@ export default function SubscriptionPage() {
         </div>
       </section>
 
-      {/* PRICING */}
+      {/*----------------- PRICING -----------------*/}
       <div className="py-12 px-4">
         <PricingCard magazine={singleMagazine} />
       </div>

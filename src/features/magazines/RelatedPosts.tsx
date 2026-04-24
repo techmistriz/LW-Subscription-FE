@@ -9,7 +9,7 @@ const postsImgBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 function PostImage({ article }: { article: Article }) {
   const [src, setSrc] = useState(
-    article.image ? `${postsImgBaseUrl}${article.image}` : "/default_img.png"
+    article.image ? `${postsImgBaseUrl}${article.image}` : "/default_img.png",
   );
 
   return (

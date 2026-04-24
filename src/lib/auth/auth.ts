@@ -1,7 +1,7 @@
 import axiosInstance from "../api/axios";
 import { RegisterPayload, RegisterResponse } from "@/types/auth";
 
-// LOGIN
+/*----------------- LOGIN -----------------*/
 export async function loginUser(email: string, password: string) {
   try {
     const res = await axiosInstance.post("/auth/login", {
@@ -20,7 +20,7 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-// REGISTER (FIXED)
+/*----------------- REGISTER (FIXED) -----------------*/
 export async function registerUser(
   payload: RegisterPayload
 ): Promise<RegisterResponse> {
@@ -37,7 +37,7 @@ export async function registerUser(
   }
 }
 
-// FORGOT PASSWORD
+/*----------------- FORGOT PASSWORD -----------------*/
 export async function forgotPassword(email: string) {
   try {
     const res = await axiosInstance.post("/auth/forgot-password", {
@@ -55,7 +55,7 @@ export async function forgotPassword(email: string) {
   }
 }
 
-// LOGOUT
+/*----------------- LOGOUT -----------------*/
 export async function logoutApi() {
   try {
     await axiosInstance.post("/auth/logout");

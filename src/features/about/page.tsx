@@ -1,8 +1,6 @@
-// app/about/page.tsx
 "use client";
 
 import Banner from "@/components/Common/Banner";
-// import Link from "next/link";
 
 export default function AboutUsPage() {
   return (
@@ -12,18 +10,18 @@ export default function AboutUsPage() {
       <div className="bg-gray-100 py-12 sm:py-16 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
 
-          {/* Title */}
+          {/*----------------- Title -----------------*/}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-800 mb-6">
             About Us
           </h1>
 
-          {/* Intro Text */}
+          {/*----------------- Intro Text -----------------*/}
           <p className="text-base sm:text-lg font-medium text-gray-700 mb-10 sm:mb-12 leading-relaxed">
             LexWitness is a premier legal news and analysis platform dedicated to delivering accurate, timely, and insightful content.
             We aim to simplify complex legal developments for professionals, students, and anyone interested in the law.
           </p>
 
-          {/* Our Story */}
+          {/*----------------- Our Story -----------------*/}
           <div className="mb-10 sm:mb-12 text-left">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
               Our Story
@@ -35,7 +33,7 @@ export default function AboutUsPage() {
             </p>
           </div>
 
-          {/* Mission */}
+          {/*----------------- Mission -----------------*/}
           <div className="mb-10 sm:mb-12 text-left">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
               Our Mission
@@ -46,7 +44,7 @@ export default function AboutUsPage() {
             </p>
           </div>
 
-          {/* Vision */}
+          {/*----------------- Vision -----------------*/}
           <div className="mb-10 sm:mb-12 text-left">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
               Our Vision
@@ -57,7 +55,7 @@ export default function AboutUsPage() {
             </p>
           </div>
 
-          {/* Values */}
+          {/*----------------- Values -----------------*/}
           <div className="mb-10 sm:mb-12 text-left">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
               Our Values
@@ -70,7 +68,7 @@ export default function AboutUsPage() {
             </ul>
           </div>
 
-          {/* Team */}
+          {/*----------------- Team -----------------*/}
           <div className="mb-10 sm:mb-12 text-left">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
               Our Team

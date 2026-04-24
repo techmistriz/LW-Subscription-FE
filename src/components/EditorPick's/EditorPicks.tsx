@@ -39,7 +39,6 @@ export default function EditorPicks() {
     fetchPosts();
   }, []);
 
-
   return (
     <section className="max-w-6xl mx-auto px-4 mb-12">
       <div className="text-center mb-10">

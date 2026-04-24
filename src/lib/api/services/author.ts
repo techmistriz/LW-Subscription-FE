@@ -1,6 +1,7 @@
 import { request } from "@/lib/api/request";
 import { Author } from "@/types";
-//  GET ALL AUTHORS
+
+/*----------------- GET ALL AUTHORS -----------------*/
 export async function getAuthors(): Promise<Author[]> {
   const response = await request<any>("GET", "/authors");
 
@@ -14,5 +15,3 @@ export async function getAuthors(): Promise<Author[]> {
     slug: a.slug,
   }));
 }
-
-

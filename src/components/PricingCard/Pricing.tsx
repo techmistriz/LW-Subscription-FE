@@ -75,8 +75,7 @@ export default function PricingCard({ magazine }: PricingCardProps) {
 
   const isDisabled = isCurrentPlan && isActive;
 
-  // Right card helper
-
+ /*----------------- Right card helper -----------------*/
   const sortedPlans = [...plans].sort(
     (a, b) => Number(a.price) - Number(b.price),
   );
@@ -85,7 +84,7 @@ export default function PricingCard({ magazine }: PricingCardProps) {
     (p) => Number(p.id) === Number(selectedPlanId),
   );
 
-  //next higher OR fallback to highest
+  /*----------------- next higher OR fallback to highest -----------------*/
   const rightPlan =
     currentIndex !== -1 && currentIndex < sortedPlans.length - 1
       ? sortedPlans[currentIndex + 1]

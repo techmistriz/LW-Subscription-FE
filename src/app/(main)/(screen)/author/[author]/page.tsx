@@ -1,10 +1,8 @@
-import AuthorPage from '@/features/author/AuthorPage'
-import React from 'react'
+import AuthorPage from "@/features/author/AuthorPage";
+import React from "react";
 
 function page() {
-  return (
-    <AuthorPage/>
-  )
+  return <AuthorPage />;
 }
 
-export default page
+export default page;

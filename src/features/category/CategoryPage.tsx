@@ -38,7 +38,7 @@ export default function CategoryPage() {
   const [lastPage, setLastPage] = useState(1);
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
-  // Fetch posts
+  /*----------------- Fetch posts -----------------*/
   const fetchPosts = useCallback(
     async (year?: number, page: number = 1) => {
       if (!categoryId) return;
@@ -65,7 +65,7 @@ export default function CategoryPage() {
     [categoryId],
   );
 
-  // Load category
+  /*----------------- Load category -----------------*/
   useEffect(() => {
     async function loadCategory() {
       if (!categorySlug) return;
@@ -93,14 +93,14 @@ export default function CategoryPage() {
     loadCategory();
   }, [categorySlug]);
 
-  // Fetch posts when categoryId changes
+  /*----------------- Fetch posts when categoryId changes -----------------*/
   useEffect(() => {
     if (categoryId) {
       fetchPosts(yearParam ? Number(yearParam) : undefined, pageParam);
     }
   }, [categoryId, yearParam, pageParam, fetchPosts]);
 
-  // Load years
+  /*----------------- Load years -----------------*/
   useEffect(() => {
     async function loadYears() {
       try {

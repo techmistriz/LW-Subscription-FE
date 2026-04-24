@@ -35,7 +35,7 @@ export default function Pagination({
 
   if (lastPage <= 1) return null;
 
-  // Dynamic page logic
+  /*----------------- Dynamic page logic -----------------*/
   const getPages = () => {
     const pages: (number | string)[] = [];
 

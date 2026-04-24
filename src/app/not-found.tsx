@@ -3,13 +3,11 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#f5f7fb] relative overflow-hidden px-4">
-
       {/* Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(#e5e7eb_1px,transparent_1px),linear-gradient(90deg,#e5e7eb_1px,transparent_1px)] bg-size-[50px_50px] opacity-40"></div>
 
       {/* Content */}
       <div className="relative text-center max-w-xl w-full">
-
         {/* Title */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#333] mb-6">
           ERROR
@@ -17,12 +15,10 @@ export default function NotFound() {
 
         {/* 404 */}
         <div className="flex items-center justify-center gap-3 sm:gap-6 text-[80px] sm:text-[120px] md:text-[160px] font-bold text-[#c9060a] leading-none">
-
           <span>4</span>
 
           {/* Face */}
           <div className="w-22.5 h-17.5 sm:w-35 sm:h-27.5 md:w-45 md:h-35 rounded-xl sm:rounded-2xl border-[6px] sm:border-8 md:border-10 border-[#c9060a] flex flex-col items-center justify-center">
-
             {/* Eyes */}
             <div className="flex gap-3 sm:gap-6 mb-2 sm:mb-4">
               <span className="w-2.5 h-2.5 sm:w-4 sm:h-4 bg-[#c9060a] rounded"></span>

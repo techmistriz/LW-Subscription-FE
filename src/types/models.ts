@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
-// POST
+/*----------------- POST -----------------*/
 export interface Post {
   magazine: any;
-  content: ReactNode; // required for PostList rendering
+  content: ReactNode; //required for PostList rendering
   id: number;
   title: string;
   slug: string;
@@ -16,8 +16,8 @@ export interface Post {
   excerpt?: string;
 }
 
-// ARTICLE
-// Article does NOT extend Post directly to avoid TypeScript errors
+/*----------------- ARTICLE -----------------*/
+/*----------------- Article does NOT extend Post directly to avoid TypeScript errors -----------------*/
 export interface Article {
   magazine: any;
   id: number;
@@ -44,17 +44,17 @@ export interface Article {
   reader_feedbacks?: ReaderFeedback[] | null;
 }
 
-// CATEGORY
+/*----------------- CATEGORY -----------------*/
 export interface ArticleCategory {
   id: number;
   name: string;
   slug?: string;
 }
 
-// Category may also be just a string in some APIs
+/*----------------- Category may also be just a string in some APIs -----------------*/
 export type ArticleCategoryType = ArticleCategory | string;
 
-// AUTHOR
+/*----------------- AUTHOR -----------------*/
 export interface Author {
   id: number;
   name: string;
@@ -78,7 +78,7 @@ export interface AuthorListItem {
   linkedin: string;
 }
 
-// READER FEEDBACK
+/*----------------- READER FEEDBACK -----------------*/
 export interface ReaderFeedback {
   id: number;
   reader_name: string;
@@ -89,7 +89,7 @@ export interface ReaderFeedback {
   updated_at?: string;
 }
 
-// MAGAZINE
+/*----------------- MAGAZINE -----------------*/
 export interface Magazine {
   magazine: Magazine;
   id: number;
@@ -101,18 +101,18 @@ export interface Magazine {
   posts: Article[];
 }
 
-// CATEGORY (general purpose)
+/*----------------- CATEGORY (general purpose) -----------------*/
 export interface Category {
   id: number;
   name: string;
   slug?: string;
 }
 
-// YEAR
+/*----------------- YEAR -----------------*/
 export type Year = number;
 export type YearResponse = Year[];
 
-// AUTH / FORM DATA
+/*----------------- AUTH / FORM DATA -----------------*/
 export interface RegisterForm {
   first_name: string;
   last_name: string;

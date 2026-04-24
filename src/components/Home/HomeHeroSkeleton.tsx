@@ -2,7 +2,6 @@ export default function HomeHeroSkeleton() {
   return (
     <section className="max-w-6xl mx-auto px-4 pt-5 animate-pulse">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-2">
-        
         {/* Big Feature Skeleton */}
         <div className="lg:col-span-7 h-[420px] bg-gray-300 rounded-md" />
 
@@ -23,7 +22,6 @@ export default function HomeHeroSkeleton() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

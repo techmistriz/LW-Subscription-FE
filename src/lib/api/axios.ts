@@ -7,16 +7,14 @@ const api = axios.create({
   },
 });
 
-/* =========================================================
-   REQUEST INTERCEPTOR
-========================================================= */
+/*  ----------------------- REQUEST INTERCEPTOR ----------------------- */
 api.interceptors.request.use((config) => {
   // run only in browser
   if (typeof window !== "undefined") {
     const token = sessionStorage.getItem("token");
 
     if (token) {
-      // ✅ Ensure headers exists and is AxiosHeaders
+      //  Ensure headers exists and is AxiosHeaders
       if (!config.headers) {
         config.headers = new AxiosHeaders();
       }
@@ -28,9 +26,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/* =========================================================
-   RESPONSE INTERCEPTOR
-========================================================= */
+/* ----------------------- RESPONSE INTERCEPTOR -----------------------*/
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -58,7 +54,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

@@ -16,7 +16,7 @@ export default function ArchivePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  /* ---------------- URL PARAMS ---------------- */
+  /*----------------- URL PARAMS -----------------*/
 
   const searchTerm = searchParams.get("search") || "";
   const mode = searchParams.get("mode");
@@ -37,7 +37,7 @@ export default function ArchivePage() {
 
   const isTitleSearch = mode === "search" || !!searchTerm;
 
-  /* ---------------- STATE ---------------- */
+  /*----------------- STATE -----------------*/
 
   const [articles, setArticles] = useState<Article[]>([]);
   const [years, setYears] = useState<Year[]>([]);
@@ -60,13 +60,13 @@ export default function ArchivePage() {
 
   const totalPages = meta?.paging?.last_page ?? 1;
 
-  /* ---------------- SYNC SEARCH INPUT ---------------- */
+  /*----------------- SYNC SEARCH INPUT -----------------*/
 
   useEffect(() => {
     setSearchInput(searchTerm);
   }, [searchTerm]);
 
-  /* ---------------- LOAD FILTER DATA ---------------- */
+  /*----------------- LOAD FILTER DATA -----------------*/
 
   const loadFilterData = useCallback(async () => {
     try {
@@ -88,7 +88,7 @@ export default function ArchivePage() {
     loadFilterData();
   }, [loadFilterData]);
 
-  /* ---------------- FETCH ARTICLES ---------------- */
+  /*----------------- FETCH ARTICLES -----------------*/
 
   const fetchArticles = useCallback(async () => {
     setLoading(true);
@@ -115,36 +115,36 @@ export default function ArchivePage() {
     fetchArticles();
   }, [fetchArticles]);
 
-  /* ---------------- SEARCH HANDLER ---------------- */
+  /*----------------- SEARCH HANDLER -----------------*/
 
-const handleArchiveSearch = () => {
-  const params = new URLSearchParams();
+  const handleArchiveSearch = () => {
+    const params = new URLSearchParams();
 
-  params.set("mode", "search");
+    params.set("mode", "search");
 
-  const value = searchInput.trim();
+    const value = searchInput.trim();
 
-  if (value) {
-    params.set("search", value);
+    if (value) {
+      params.set("search", value);
 
-    // detect year like 2023
-    if (/^\d{4}$/.test(value)) {
-      params.set("year", value);
+      // detect year like 2023
+      if (/^\d{4}$/.test(value)) {
+        params.set("year", value);
+      }
     }
-  }
 
-  if (year) params.append("year", year.toString());
-  if (categoryId) params.append("category_id", categoryId.toString());
-  if (authorId) params.append("author_id", authorId.toString());
+    if (year) params.append("year", year.toString());
+    if (categoryId) params.append("category_id", categoryId.toString());
+    if (authorId) params.append("author_id", authorId.toString());
 
-  router.push(`/archive?${params.toString()}`);
-};
+    router.push(`/archive?${params.toString()}`);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleArchiveSearch();
   };
 
-  /* ---------------- FILTER HANDLER ---------------- */
+  /*----------------- FILTER HANDLER -----------------*/
 
   const handleApplyFilters = () => {
     const params = new URLSearchParams();
@@ -157,114 +157,109 @@ const handleArchiveSearch = () => {
     router.push(`/archive?${params.toString()}`);
   };
 
-  /* ---------------- MAP POSTS ---------------- */
+  /*----------------- MAP POSTS -----------------*/
 
   const posts: Post[] = articles.map((a) => ({
     ...a,
     content: a.content ? <>{a.content}</> : <></>,
   }));
 
-  /* ---------------- UI ---------------- */
-const filtersLoading =
-  years.length === 0 ||
-  categories.length === 0 ||
-  authors.length === 0;
+  /*----------------- UI -----------------*/
+  const filtersLoading =
+    years.length === 0 || categories.length === 0 || authors.length === 0;
   return (
     <>
-      {/* SEARCH OR FILTER UI */}
+      {/*----------------- SEARCH OR FILTER UI -----------------*/}
 
-    {isTitleSearch ? (
-  /* SEARCH BAR UI */
-  <div className="flex items-center gap-3 mt-5 -mb-1 pb-2 border-gray-300 max-w-4xl">
-    <input
-      type="text"
-      value={searchInput}
-      onChange={(e) => setSearchInput(e.target.value)}
-      onKeyDown={handleKeyDown}
-      placeholder="Search here..."
-      className="flex-1 bg-transparent outline-none text-md text-gray-800"
-    />
-    <Search
-      onClick={handleArchiveSearch}
-      className="text-gray-700 size-5 cursor-pointer"
-    />
-  </div>
-)  : filtersLoading ? (
-  /* SIMPLE SKELETON */
-  <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4">
-    {[1, 2, 3, 4].map((i) => (
-      <div
-        key={i}
-        className="h-10 w-[275px] bg-white animate-pulse "
-      />
-    ))}
-  </div>
-) : (
-  /* FILTER UI */
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 w-full">
-  <select
-    value={selectedYearId?.toString() ?? ""}
-    onChange={(e) =>
-      setSelectedYearId(
-        e.target.value ? Number(e.target.value) : undefined
-      )
-    }
-    className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
-  >
-    <option value="">Select Year</option>
-    {years.map((y) => (
-      <option key={y} value={y}>
-        {y}
-      </option>
-    ))}
-  </select>
+      {isTitleSearch ? (
+        /*----------------- SEARCH BAR UI -----------------*/
+        <div className="flex items-center gap-3 mt-5 -mb-1 pb-2 border-gray-300 max-w-4xl">
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Search here..."
+            className="flex-1 bg-transparent outline-none text-md text-gray-800"
+          />
+          <Search
+            onClick={handleArchiveSearch}
+            className="text-gray-700 size-5 cursor-pointer"
+          />
+        </div>
+      ) : filtersLoading ? (
+        /*----------------- SIMPLE SKELETON -----------------*/
+        <div className="grid grid-cols-1 sm:grid-cols-2 w-max lg:grid-cols-4 gap-2 mb-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-10 w-[275px] bg-white animate-pulse " />
+          ))}
+        </div>
+      ) : (
+        /*----------------- FILTER UI -----------------*/
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-4 w-full">
+          <select
+            value={selectedYearId?.toString() ?? ""}
+            onChange={(e) =>
+              setSelectedYearId(
+                e.target.value ? Number(e.target.value) : undefined,
+              )
+            }
+            className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
+          >
+            <option value="">Select Year</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
 
-  <select
-    value={selectedCategoryId?.toString() ?? ""}
-    onChange={(e) =>
-      setSelectedCategoryId(
-        e.target.value ? Number(e.target.value) : undefined
-      )
-    }
-    className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
-  >
-    <option value="">Select Category</option>
-    {categories.map((c) => (
-      <option key={c.id} value={c.id}>
-        {c.name}
-      </option>
-    ))}
-  </select>
+          <select
+            value={selectedCategoryId?.toString() ?? ""}
+            onChange={(e) =>
+              setSelectedCategoryId(
+                e.target.value ? Number(e.target.value) : undefined,
+              )
+            }
+            className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
+          >
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
 
-  <select
-    value={selectedAuthorId?.toString() ?? ""}
-    onChange={(e) =>
-      setSelectedAuthorId(
-        e.target.value ? Number(e.target.value) : undefined
-      )
-    }
-    className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
-  >
-    <option value="">Select Author</option>
-    {authors.map((a) => (
-      <option key={a.id} value={a.id}>
-        {a.name}
-      </option>
-    ))}
-  </select>
+          <select
+            value={selectedAuthorId?.toString() ?? ""}
+            onChange={(e) =>
+              setSelectedAuthorId(
+                e.target.value ? Number(e.target.value) : undefined,
+              )
+            }
+            className="w-full bg-white border border-gray-300 px-2 py-2 outline-none"
+          >
+            <option value="">Select Author</option>
+            {authors.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name}
+              </option>
+            ))}
+          </select>
 
-  <button
-    onClick={handleApplyFilters}
-    /* Changed w-[262px] to w-full and added lg:w-[262px] to keep original size on desktop */
-    className="w-full lg:w-[262px] bg-[#c9060a] text-white px-6 py-2 font-semibold cursor-pointer disabled:opacity-50"
-    disabled={loading}
-  >
-    {loading ? "Searching..." : "Search"}
-  </button>
-</div>
-)}
+          <button
+            onClick={handleApplyFilters}
+            /*----------------- Changed w-[262px] to w-full and added lg:w-[262px] to keep original size on desktop -----------------*/
+            className="w-full lg:w-[262px] bg-[#c9060a] text-white px-6 py-2 font-semibold cursor-pointer disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? "Searching..." : "Search"}
+          </button>
+        </div>
+      )}
 
-      {/* POSTS */}
+      {/*----------------- POSTS -----------------*/}
 
       <PostList
         posts={posts}
@@ -275,7 +270,7 @@ const filtersLoading =
         }
       />
 
-      {/* PAGINATION */}
+      {/*----------------- PAGINATION -----------------*/}
 
       {!loading && articles.length > 0 && (
         <Pagination

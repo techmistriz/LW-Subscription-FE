@@ -17,23 +17,23 @@ import {
 
 export const revalidate = 300;
 
-// Lazy load non-critical components
+/*----------------- Lazy load non-critical components -----------------*/
 const EditorPicks = dynamic(
-  () => import("@/components/EditorPick's/EditorPicks")
+  () => import("@/components/EditorPick's/EditorPicks"),
 );
 
 const Advertisement = dynamic(
-  () => import("@/components/HomeAdvertisment/advertisement")
+  () => import("@/components/HomeAdvertisment/advertisement"),
 );
 
 export default async function HomePage() {
-  // Fetch hero + latest edition in parallel
+  /*----------------- Fetch hero + latest edition in parallel -----------------*/
   const [heroData, latestEditionData] = await Promise.all([
     getHeroPost(),
     latestEdition(),
   ]);
 
-  // Latest magazines except current edition
+  /*----------------- Latest magazines except current edition -----------------*/
   const latestFive = latestEditionData
     ? await getLatestMagazines({
         skipId: latestEditionData.magazine.id,
@@ -41,18 +41,17 @@ export default async function HomePage() {
       })
     : [];
 
-  // Hero layout posts
+  /*----------------- Hero layout posts -----------------*/
   const firstPost = heroData?.slice(0, 1) || [];
   const middlePosts = heroData?.slice(1, 3) || [];
   const asidePosts = heroData?.slice(3) || [];
 
   const hasHeroContent =
-    firstPost.length > 0 &&
-    middlePosts.length > 0 &&
-    asidePosts.length > 0;
+    firstPost.length > 0 && middlePosts.length > 0 && asidePosts.length > 0;
 
   return (
     <main className="bg-white">
+      
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 pt-5">
         {hasHeroContent ? (

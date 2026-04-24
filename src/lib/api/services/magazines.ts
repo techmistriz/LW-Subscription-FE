@@ -1,9 +1,8 @@
 import { PaginatedResponse } from "@/types/api";
 import api from "../axios";
 import { Magazine, Post } from "@/types";
-// Types
 
-//for magazine grid
+/*-----------------for magazine grid -----------------*/
 export async function getMagazines(
   year?: number,
   page: number = 1,
@@ -28,7 +27,7 @@ export async function getMagazines(
           current_page: 1,
           last_page: 1,
           total: 0,
-          per_page: per_page, // FIX
+          per_page: per_page, 
         },
       },
     };
@@ -37,17 +36,18 @@ export async function getMagazines(
 
 export async function getSingleMagazine(slugOrId: string): Promise<Magazine> {
   try {
-    // Try direct endpoint first
+   /*----------------- Try direct endpoint first -----------------*/
     const response = await api.get(`/magazines/${slugOrId}`);
 
     const result = response.data;
 
-    // handle all possible response shapes
+   /*----------------- handle all possible response shapes -----------------*/
     const magazine = result?.data?.data ?? result?.data ?? result;
 
     return magazine;
   } catch (error: any) {
-    // If 404 → fallback to slug search
+
+   /*----------------- If 404 → fallback to slug search-----------------*/
     if (error.response?.status === 404) {
       try {
         const listRes = await api.get("/magazines");
@@ -73,7 +73,7 @@ export async function getSingleMagazine(slugOrId: string): Promise<Magazine> {
   }
 }
 
-//for latest 5 magazine grid
+/*----------------- for latest 5 magazine grid -----------------*/
 export async function getLatestMagazines(options?: {
   skipId?: number | string;
   limit?: number;
@@ -84,7 +84,7 @@ export async function getLatestMagazines(options?: {
         page: 1,
         limit: options?.limit ?? 5,
         latest: 1,
-        skip_id: options?.skipId, // skip by id
+        skip_id: options?.skipId,
       },
     });
 
@@ -98,7 +98,7 @@ export async function getLatestMagazines(options?: {
   }
 }
 
-//for single magazine right side bar
+/*----------------- for single magazine right side bar -----------------*/
 export async function getLatestSingleMagazines(): Promise<Magazine | null> {
   try {
     const response = await api.get("/magazines", {

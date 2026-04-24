@@ -1,9 +1,7 @@
 import TermsPage from "@/features/terms/page";
 
 const Terms = () => {
-  return (
- <TermsPage/>
-  );
+  return <TermsPage />;
 };
 
 export default Terms;

@@ -1,10 +1,8 @@
-import CategoryPage from '@/features/category/CategoryPage'
-import React from 'react'
+import CategoryPage from "@/features/category/CategoryPage";
+import React from "react";
 
 function page() {
-  return (
-   <CategoryPage/>
-  )
+  return <CategoryPage />;
 }
 
-export default page
+export default page;

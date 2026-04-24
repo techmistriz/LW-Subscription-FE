@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/api/axios";
 import { loginUser as loginApi, logoutApi } from "@/lib/auth/auth";
 
-/* ================= TYPES ================= */
+/*----------------- TYPES -----------------*/
 
 interface Plan {
   id: number;
@@ -42,7 +42,7 @@ interface AuthState {
   isInitialized: boolean;
 }
 
-/* ================= INITIAL ================= */
+/*----------------- INITIAL -----------------*/
 
 const initialState: AuthState = {
   user: null,
@@ -55,7 +55,7 @@ const initialState: AuthState = {
 
 /* ================= THUNKS ================= */
 
-// LOGIN
+/*----------------- LOGIN -----------------*/
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (
@@ -83,7 +83,7 @@ export const loginUser = createAsyncThunk(
   },
 );
 
-// LOGOUT
+/*----------------- LOGOUT -----------------*/
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   try {
     await logoutApi();
@@ -98,8 +98,7 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
   return true;
 });
 
-/* ================= SLICE ================= */
-
+/*----------------- SLICE -----------------*/
 const authSlice = createSlice({
   name: "auth",
   initialState,

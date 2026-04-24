@@ -10,8 +10,6 @@ import AuthGate from "@/components/AuthGate";
 import { ReduxProvider } from "@/redux/provides";
 import InitAuth from "@/redux/store/initAuth";
 import { Toaster } from "sonner";
-// import { AuthProvider } from "@/features/authContext";
-
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -39,19 +37,17 @@ export default async function RootLayout({
     <html lang="en" className={poppins.variable}>
       <body className="antialiased">
         <ScrollProvider>
-        
-            <ReduxProvider>
+          <ReduxProvider>
             <InitAuth>
+              <Header categories={categories} />
+              {/* <LoaderOverlay/> */}
+              <AuthGate />
 
-            <Header categories={categories} />
-            {/* <LoaderOverlay/> */}
-            <AuthGate />
-
-            {children}
+              {children}
               <Toaster position="bottom-right" />
 
-            <Footer />
-            <ScrollToTop />
+              <Footer />
+              <ScrollToTop />
             </InitAuth>
           </ReduxProvider>
         </ScrollProvider>

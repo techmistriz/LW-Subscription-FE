@@ -7,15 +7,13 @@ import { ApiResponse } from "@/types";
 export const request = async <T>(
   method: "GET" | "POST" | "PUT" | "DELETE",
   url: string,
-  payload?: unknown
+  payload?: unknown,
 ): Promise<ApiResponse<T>> => {
   try {
     const response = await api.request<T>({
       method,
       url,
-      ...(method === "GET"
-        ? { params: payload }
-        : { data: payload }),
+      ...(method === "GET" ? { params: payload } : { data: payload }),
     });
 
     return {
@@ -34,9 +32,7 @@ export const request = async <T>(
       }>;
 
       message =
-        axiosError.response?.data?.message ||
-        axiosError.message ||
-        message;
+        axiosError.response?.data?.message || axiosError.message || message;
 
       errors = axiosError.response?.data?.errors;
     }

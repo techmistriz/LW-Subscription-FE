@@ -6,7 +6,7 @@ import { loginUser } from "@/lib/auth/auth";
 import Banner from "../../components/Common/Banner";
 import { useRouter } from "next/navigation";
 
-//  REDUX
+/*----------------- REDUX -----------------*/
 import { useAppDispatch } from "@/redux/store/hooks";
 import { loginUser as loginRedux } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";

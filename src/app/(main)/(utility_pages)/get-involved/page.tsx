@@ -1,9 +1,7 @@
 import GetInvolvedPage from "@/features/GetInvolvedPage";
 
 const GetInvolved = () => {
-  return (
-  <GetInvolvedPage/>
-  );
+  return <GetInvolvedPage />;
 };
 
 export default GetInvolved;

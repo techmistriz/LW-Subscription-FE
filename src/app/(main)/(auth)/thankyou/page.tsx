@@ -11,10 +11,10 @@ export default function ThankYou() {
   const amount = searchParams.get("amount");
   const status = searchParams.get("status") || "success";
 
-  //  define this (missing in your code)
+  /*----------------- define this (missing in your code) -----------------*/
   const isSuccess = status === "success";
 
-  //  Proper amount formatting
+  /*----------------- Proper amount formatting -----------------*/
   const formattedAmount =
     amount && Number(amount) > 0
       ? `₹${(Number(amount) / 100).toLocaleString("en-IN")}`
@@ -22,21 +22,21 @@ export default function ThankYou() {
 
   const statusLabel = isSuccess ? "Active" : "Failed";
 
-   useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => {
       router.push("/dashboard");
-    }, 2500); 
+    }, 2500);
 
     return () => clearTimeout(timer);
   }, [router]);
 
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
-
         {/* Icon */}
-        <div className={`text-5xl mb-4 ${isSuccess ? "text-green-500" : "text-red-500"}`}>
+        <div
+          className={`text-5xl mb-4 ${isSuccess ? "text-green-500" : "text-red-500"}`}
+        >
           {isSuccess ? "✔" : "✖"}
         </div>
 
@@ -54,8 +54,12 @@ export default function ThankYou() {
 
         {/* Plan Info */}
         <div className="bg-gray-100 rounded-lg p-4 mb-6 text-sm">
-          <p><strong>Plan:</strong> {decodeURIComponent(plan)}</p>
-          <p><strong>Amount:</strong> {formattedAmount}</p>
+          <p>
+            <strong>Plan:</strong> {decodeURIComponent(plan)}
+          </p>
+          <p>
+            <strong>Amount:</strong> {formattedAmount}
+          </p>
           <p>
             <strong>Status:</strong>{" "}
             <span className={isSuccess ? "text-green-600" : "text-red-600"}>

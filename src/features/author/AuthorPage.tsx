@@ -14,24 +14,6 @@ import Pagination from "@/components/Pagination/Pagination";
 import { Post } from "@/types/models";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-// Post interface matching your API + Author normalization
-// interface Post {
-//   id: number;
-//   slug: string;
-//   title: string;
-//   image?: string;
-//   publish_date?: string;
-//   short_description?: string;
-//   author?:
-//     | {
-//         id: number;
-//         name: string;
-//         slug: string;
-//         linkedin: string; // ensure linkedin exists
-//       }
-//     | string;
-// }
-
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function AuthorPage() {
@@ -41,22 +23,22 @@ export default function AuthorPage() {
   const authorTitle = toTitleCase(authorName);
 
   const searchParams = useSearchParams();
-const router = useRouter();
-const pathname = usePathname();
-const yearParam = searchParams.get("year");
+  const router = useRouter();
+  const pathname = usePathname();
+  const yearParam = searchParams.get("year");
 
   const [loading, setLoading] = useState(false);
 
-const [selectedYear, setSelectedYear] = useState<number | null>(
-  yearParam ? Number(yearParam) : null
-);
+  const [selectedYear, setSelectedYear] = useState<number | null>(
+    yearParam ? Number(yearParam) : null,
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [years, setYears] = useState<number[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
 
-  // Load Author
+  /*----------------- Load Author -----------------*/
   const loadAuthor = useCallback(async () => {
     if (!authorSlug) return;
 
@@ -70,7 +52,7 @@ const [selectedYear, setSelectedYear] = useState<number | null>(
     }
   }, [authorSlug]);
 
-  // Fetch Posts
+  /*----------------- Fetch Posts -----------------*/
   const fetchPosts = useCallback(
     async (page: number = 1, year: number | null = null) => {
       if (!authorId) return;
@@ -84,7 +66,7 @@ const [selectedYear, setSelectedYear] = useState<number | null>(
           ...(year ? { year } : {}),
         });
 
-        // Normalize posts so each author has a linkedin
+        /*----------------- Normalize posts so each author has a linkedin -----------------*/
         const normalizedPosts = (response.data ?? []).map((post: Post) => ({
           ...post,
           author:
@@ -107,7 +89,7 @@ const [selectedYear, setSelectedYear] = useState<number | null>(
     [authorId],
   );
 
-  // Load Years
+  /*----------------- Load Years -----------------*/
   const loadYears = useCallback(async () => {
     try {
       const data = await getYears();
@@ -122,30 +104,29 @@ const [selectedYear, setSelectedYear] = useState<number | null>(
     loadYears();
   }, [loadAuthor, loadYears]);
 
- const pageParam = Number(searchParams.get("page")) || 1;
+  const pageParam = Number(searchParams.get("page")) || 1;
 
-useEffect(() => {
-  if (authorId) {
-    const year = yearParam ? Number(yearParam) : null;
-    fetchPosts(pageParam, year);
-  }
-}, [authorId, pageParam, yearParam, fetchPosts]);
+  useEffect(() => {
+    if (authorId) {
+      const year = yearParam ? Number(yearParam) : null;
+      fetchPosts(pageParam, year);
+    }
+  }, [authorId, pageParam, yearParam, fetchPosts]);
 
+  /*----------------- Apply Year Filter -----------------*/
+  const handleApplyFilter = () => {
+    const params = new URLSearchParams(searchParams.toString());
 
-  // Apply Year Filter
- const handleApplyFilter = () => {
-  const params = new URLSearchParams(searchParams.toString());
+    if (selectedYear) {
+      params.set("year", selectedYear.toString());
+    } else {
+      params.delete("year");
+    }
 
- if (selectedYear) {
-  params.set("year", selectedYear.toString());
-} else {
-  params.delete("year");
-}
+    params.set("page", "1");
 
-  params.set("page", "1");
-
-  router.push(`${pathname}?${params.toString()}`);
-};
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   const postsWithContent: Post[] = posts.map((p) => ({
     ...p,
@@ -185,16 +166,17 @@ useEffect(() => {
                 currentPage={currentPage}
                 lastPage={lastPage}
                 loading={loading}
-onPageChange={(page) => {
-  const params = new URLSearchParams(searchParams.toString());
-  params.set("page", page.toString());
+                onPageChange={(page) => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set("page", page.toString());
 
-  if (selectedYear) {
-    params.set("year", selectedYear.toString());
-  }
+                  if (selectedYear) {
+                    params.set("year", selectedYear.toString());
+                  }
 
-  router.push(`${pathname}?${params.toString()}`);
-}}              />
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+              />
             )}
           </>
         )}

@@ -29,15 +29,15 @@ async function NirmalaSitaraman() {
         {/* Top Section (Text Left + Image Right) */}
         <div className="flex gap-4">
           {/* Right Image */}
-         <div className="w-24 h-24 relative shrink-0 overflow-hidden">
-  <Image
-    src={`${imgUrl}${data.image}`}
-    alt={data.name}
-    fill
-    sizes="96px"
-    className="object-cover"
-  />
-</div>
+          <div className="w-24 h-24 relative shrink-0 overflow-hidden">
+            <Image
+              src={`${imgUrl}${data.image}`}
+              alt={data.name}
+              fill
+              sizes="96px"
+              className="object-cover"
+            />
+          </div>
 
           {/* Left Content */}
           <div className="flex-1">

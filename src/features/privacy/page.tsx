@@ -1,4 +1,3 @@
-// app/privacy/page.tsx
 import Banner from "@/components/Common/Banner";
 import Link from "next/link";
 
@@ -10,40 +9,40 @@ const PrivacyPage = () => {
       <Banner title="Privacy Policy" />
 
       <div className="min-h-screen bg-gray-50">
-        {/* Main Content */}
+        {/*----------------- Main Content -----------------*/}
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6 sm:space-y-8">
-
-          {/* Section 1 */}
+          {/*----------------- Section 1 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               1. Introduction
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed space-y-2">
               <p>
-                LexWitness.com ("we," "us," "our") respects your privacy.
-                This Privacy Policy explains how we collect, use, disclose,
-                and safeguard your information when you visit our website,
-                use our services, or interact with us.
+                LexWitness.com ("we," "us," "our") respects your privacy. This
+                Privacy Policy explains how we collect, use, disclose, and
+                safeguard your information when you visit our website, use our
+                services, or interact with us.
               </p>
               <p>
-                By using LexWitness.com, you consent to the practices described in this policy.
+                By using LexWitness.com, you consent to the practices described
+                in this policy.
               </p>
             </div>
           </section>
 
-          {/* Section 2 */}
+          {/*----------------- Section 2 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               2. Information We Collect
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed space-y-2">
               <p>
-                Personal Information: Name, email address, phone number,
-                billing information when you register, subscribe, or contact us.
+                Personal Information: Name, email address, phone number, billing
+                information when you register, subscribe, or contact us.
               </p>
               <p>
-                Usage Data: IP address, browser type, pages visited,
-                time spent, referring site.
+                Usage Data: IP address, browser type, pages visited, time spent,
+                referring site.
               </p>
               <p>
                 Cookies: Track preferences, analyze usage, deliver targeted ads.
@@ -51,7 +50,7 @@ const PrivacyPage = () => {
             </div>
           </section>
 
-          {/* Section 3 */}
+          {/*----------------- Section 3 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               3. How We Use Your Information
@@ -70,15 +69,15 @@ const PrivacyPage = () => {
             </div>
           </section>
 
-          {/* Section 4 */}
+          {/*----------------- Section 4 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               4. Cookies and Tracking
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed space-y-2">
               <p>
-                We use cookies to enhance your experience. You can manage
-                cookie preferences through your browser settings.
+                We use cookies to enhance your experience. You can manage cookie
+                preferences through your browser settings.
               </p>
               <p>Cookie Types:</p>
               <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm">
@@ -89,7 +88,7 @@ const PrivacyPage = () => {
             </div>
           </section>
 
-          {/* Section 5 */}
+          {/*----------------- Section 5 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               5. Third Party Sharing
@@ -105,7 +104,7 @@ const PrivacyPage = () => {
             </div>
           </section>
 
-          {/* Section 6 */}
+          {/*----------------- Section 6 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               6. Data Security
@@ -119,7 +118,7 @@ const PrivacyPage = () => {
             </div>
           </section>
 
-          {/* Section 7 */}
+          {/*----------------- Section 7 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               7. Your Rights
@@ -138,33 +137,34 @@ const PrivacyPage = () => {
             </div>
           </section>
 
-          {/* Section 8 */}
+          {/*----------------- Section 8 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               8. Children's Privacy
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed">
               <p>
-                Our services are not directed to children under 13.
-                We do not knowingly collect personal information from children under 13.
+                Our services are not directed to children under 13. We do not
+                knowingly collect personal information from children under 13.
               </p>
             </div>
           </section>
 
-          {/* Section 9 */}
+          {/*----------------- Section 9 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               9. International Data Transfers
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed">
               <p>
-                Your information may be transferred to and processed in countries
-                outside India, including the United States, where privacy laws may differ.
+                Your information may be transferred to and processed in
+                countries outside India, including the United States, where
+                privacy laws may differ.
               </p>
             </div>
           </section>
 
-          {/* Section 10 */}
+          {/*----------------- Section 10 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
               10. Changes to Policy
@@ -172,11 +172,11 @@ const PrivacyPage = () => {
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed">
               <p>
                 We may update this Privacy Policy. Changes will be posted here
-                with the new effective date. Continued use constitutes acceptance.
+                with the new effective date. Continued use constitutes
+                acceptance.
               </p>
             </div>
           </section>
-
         </div>
       </div>
     </section>

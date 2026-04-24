@@ -11,7 +11,6 @@
   --font-sans: var(--font-poppins);
 }
 
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ffffff;
@@ -40,7 +39,7 @@ body {
   animation: scroll 20s linear infinite;
 }
 
-/* Arrow buttons */
+/*----------------- Arrow buttons -----------------*/
 .swiper-button-next,
 .swiper-button-prev {
   color: black;
@@ -48,45 +47,45 @@ body {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 }
 
-/* Hover effect */
-/* .swiper-button-next:hover,
+/*----------------- Hover effect -----------------*/
+/*----------------- .swiper-button-next:hover,
 .swiper-button-prev:hover {
   background: #c9060a;
   color: white;
-} */
+} -----------------*/
 
-/* Reduce default arrow size */
+/*----------------- Reduce default arrow size -----------------*/
 .swiper-button-next::after,
 .swiper-button-prev::after {
   font-size: 18px;
   font-weight: bold;
 }
 
-/* 3D shadow for hero magazine */
+/*----------------- 3D shadow for hero magazine -----------------*/
 .shadow-3d {
   box-shadow:
-    0 15px 25px rgba(0.5,0.5,0.5,0.5),
-    0 10px 10px rgba(0,0,0.4,0.2),
-    0 0 20px rgba(0,0,0,0.1);
+    0 15px 25px rgba(0.5, 0.5, 0.5, 0.5),
+    0 10px 10px rgba(0, 0, 0.4, 0.2),
+    0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Perspective for 3D hover effect */
+/*----------------- Perspective for 3D hover effect -----------------*/
 .perspective-1000 {
   perspective: 1000px;
 }
 
-/* This forces the removal of default arrows in all browsers */
+/*----------------- This forces the removal of default arrows in all browsers -----------------*/
 select {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
 }
 
-/* Specifically for IE/Edge if needed */
+/*----------------- Specifically for IE/Edge if needed -----------------*/
 select::-ms-expand {
   display: none;
 }

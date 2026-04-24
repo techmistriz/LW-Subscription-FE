@@ -15,7 +15,7 @@ interface FormErrors {
   contact?: string;
 }
 
-/* ✅ Moved OUTSIDE to prevent re-render focus issue */
+/*----------------- Moved OUTSIDE to prevent re-render focus issue -----------------*/
 const InputField = ({
   name,
   type,
@@ -64,14 +64,14 @@ export default function SubscribeBanner() {
     message: string;
   } | null>(null);
 
-  /* ✅ auto-hide alert */
+  /*-----------------  auto-hide alert -----------------*/
   useEffect(() => {
     if (!alert) return;
     const timer = setTimeout(() => setAlert(null), 3000);
     return () => clearTimeout(timer);
   }, [alert]);
 
-  /* ✅ validation */
+  /*----------------- validation -----------------*/
   const validate = () => {
     const newErrors: FormErrors = {};
 
@@ -93,7 +93,7 @@ export default function SubscribeBanner() {
     return Object.keys(newErrors).length === 0;
   };
 
-  /* ✅ input handler */
+  /*----------------- input handler -----------------*/
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -110,7 +110,7 @@ export default function SubscribeBanner() {
     }
   };
 
-  /* ✅ submit handler */
+  /*----------------- submit handler -----------------*/
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;

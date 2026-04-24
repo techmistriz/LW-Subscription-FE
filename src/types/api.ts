@@ -1,5 +1,3 @@
-// lib/types/api.ts
-
 export type ApiResponse<T = unknown> =
   | {
       status: true;

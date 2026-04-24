@@ -21,8 +21,6 @@ export interface EditorialResponse {
 }
 
 export async function getEditorial(): Promise<Editorial> {
-  const response = await api.get<EditorialResponse>(
-    "/editorial-settings"
-  );
+  const response = await api.get<EditorialResponse>("/editorial-settings");
   return response.data.data;
 }

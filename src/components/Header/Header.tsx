@@ -35,27 +35,25 @@ export default function Header({ categories }: { categories: Category[] }) {
   const isLoggedIn = !!user;
   const username = user?.first_name || "User";
 
+  const handleLogout = async () => {
+    dispatch(logoutUser()); // no await
+    toast.success("Logout successful!");
 
-const handleLogout = async () => {
-  dispatch(logoutUser()); // no await
-  toast.success("Logout successful!");
+    router.replace("/sign-in");
+  };
 
-  router.replace("/sign-in");
-};
+  // const handleLogout = async () => {
+  //   await dispatch(logoutUser());
+  //   toast.success("Logout successful!");
 
-// const handleLogout = async () => {
-//   await dispatch(logoutUser());
-//   toast.success("Logout successful!");
-
-//     router.replace("/sign-in");
-//     router.refresh();
-//   };
+  //     router.replace("/sign-in");
+  //     router.refresh();
+  //   };
 
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
-
-  // Handle body scroll lock
+  /*----------------- Handle body scroll lock -----------------*/
   useEffect(() => {
     if (searchOpen || open) {
       const scrollBarWidth =
@@ -68,7 +66,7 @@ const handleLogout = async () => {
     }
   }, [searchOpen, open]);
 
-  // Handle scrolling active item into center when sidebar opens or path changes
+ /*----------------- Handle scrolling active item into center when sidebar opens or path changes -----------------*/
   useEffect(() => {
     if (open && activeItemRef.current) {
       activeItemRef.current.scrollIntoView({
@@ -126,7 +124,7 @@ const handleLogout = async () => {
             </Link>
           </div>
 
-          {/* RIGHT — Search + User */}
+          {/*----------------- RIGHT — Search + User -----------------*/}
           <div className="flex items-center z-10">
             <button
               onClick={() => setSearchOpen(true)}
@@ -219,7 +217,7 @@ const handleLogout = async () => {
           </div>
         </div>
 
-        {/* NAV BAR */}
+        {/*----------------- NAV BAR -----------------*/}
         <nav className="border-t border-gray-300 bg-gray-100">
           <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-hide">
             {categories.map((item, index) => (
@@ -240,7 +238,7 @@ const handleLogout = async () => {
         </nav>
       </header>
 
-      {/* MOBILE SIDEBAR */}
+      {/*----------------- MOBILE SIDEBAR -----------------*/}
       {open && (
         <div
           onClick={() => setOpen(false)}
@@ -256,7 +254,7 @@ const handleLogout = async () => {
       >
         <div className="h-20 border-b border-[#808080] flex items-center">
           <div className="w-full px-4 flex items-center justify-between">
-            {/* LEFT LOGO */}
+            {/*----------------- LEFT LOGO -----------------*/}
             <div className="flex items-center gap-2 py-4">
               <Image
                 src="https://lexwitness.com/wp-content/themes/lexwitness/images/favicon.png"
@@ -266,7 +264,7 @@ const handleLogout = async () => {
               />
             </div>
 
-            {/* RIGHT SIDE (USER + CLOSE) */}
+            {/*----------------- RIGHT SIDE (USER + CLOSE) -----------------*/}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <User2 size={18} className="text-white " />
@@ -322,7 +320,7 @@ const handleLogout = async () => {
           </ul>
         </nav>
 
-        {/* MOBILE BOTTOM */}
+        {/*----------------- MOBILE BOTTOM  -----------------*/}
         <div className="mt-auto bg-[#545454] border-t border-gray-600">
           <div className="flex flex-col px-4 py-3">
             <div className="flex items-center justify-end">

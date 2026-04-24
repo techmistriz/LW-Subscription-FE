@@ -7,19 +7,18 @@ export default function ContactPage() {
 
       <div className="flex justify-center items-center bg-gray-100 py-12 sm:py-16 px-4 sm:px-6">
         <div className="max-w-3xl w-full text-center">
-
-          {/* Title */}
+          {/*----------------- Title -----------------*/}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-800 mb-6">
             Connect with LEXWITNESS
           </h1>
 
-          {/* Intro Text */}
+          {/*----------------- Intro Text -----------------*/}
           <p className="text-base sm:text-lg font-medium text-gray-700 mb-6 leading-relaxed">
             In order to participate at The Grand Masters 2026 Summit Series,
             please get in touch with:
           </p>
 
-          {/* Contact Persons */}
+          {/*----------------- Contact Persons -----------------*/}
           <div className="space-y-2 text-sm sm:text-md text-gray-800">
             <p>
               Deepak Jha | +91-XXXXXXXXXX |{" "}
@@ -54,7 +53,6 @@ export default function ContactPage() {
               </span>
             </p>
           </div>
-
         </div>
       </div>
     </section>
