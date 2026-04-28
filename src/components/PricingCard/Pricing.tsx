@@ -164,8 +164,7 @@
 //       </div>
 //     </div>
 //   );
-// } 
-
+// }
 
 "use client";
 
@@ -231,36 +230,35 @@ export default function PricingCard() {
   const [selectedPlanId, setSelectedPlanId] = useState<number>(2);
   const [loading, setLoading] = useState(false);
 
-const handleSubscribe = useCallback(() => {
-  setLoading(true);
+  const handleSubscribe = useCallback(() => {
+    setLoading(true);
 
-  const selectedPlan = planDetails.find(
-    (p) => p.id === selectedPlanId
-  );
+    const selectedPlan = planDetails.find((p) => p.id === selectedPlanId);
 
-  if (selectedPlan) {
-    dispatch(
-      setSubscription({
-        plan_id: selectedPlan.id,
-        name: selectedPlan.name,
-        amount: Number(selectedPlan.price),
-        duration_value:
-          selectedPlan.id === 1 ? 1 :
-          selectedPlan.id === 2 ? 1 :
-          selectedPlan.id === 3 ? 2 : 3,
-        duration_unit: "year",
-      })
-    );
-  }
+    if (selectedPlan) {
+      dispatch(
+        setSubscription({
+          plan_id: selectedPlan.id,
+          name: selectedPlan.name,
+          amount: Number(selectedPlan.price),
+          duration_value:
+            selectedPlan.id === 1
+              ? 1
+              : selectedPlan.id === 2
+                ? 1
+                : selectedPlan.id === 3
+                  ? 2
+                  : 3,
+          duration_unit: "year",
+        }),
+      );
+    }
 
-  router.push("/register");
-}, [router, selectedPlanId, dispatch]);
+    router.push("/register");
+  }, [router, selectedPlanId, dispatch]);
 
   return (
-    <section
-      id="pricing"
-      className=" max-w-6xl m-auto to-gray-50 py-24 px-6"
-    >
+    <section id="pricing" className=" max-w-6xl m-auto to-gray-50 py-24 px-6">
       {/* HEADER */}
       <div className="text-center mb-14">
         <h2 className="text-4xl font-black uppercase tracking-tight text-gray-900">
@@ -278,10 +276,7 @@ const handleSubscribe = useCallback(() => {
           const isSelected = selectedPlanId === plan.id;
 
           return (
-            <label
-              key={plan.id}
-              className="relative cursor-pointer group"
-            >
+            <label key={plan.id} className="relative cursor-pointer group">
               <input
                 type="radio"
                 name="plan"
@@ -293,16 +288,19 @@ const handleSubscribe = useCallback(() => {
               {/* CARD */}
               <div
                 className={`
-                  relative h-full p-8 rounded-2xl border-2 border-gray-300 transition-all duration-300
-                  bg-white shadow-sm
-                  hover:shadow-xl hover:-translate-y-1
-                  ${plan.border}
-                  ${isSelected ? "shadow-2xl scale-[1.02]" : ""}
-                `}
+                relative h-full 
+                p-5 md:p-8   
+                rounded-2xl border-2 border-gray-300 
+                transition-all duration-300
+                bg-white shadow-sm
+                hover:shadow-xl hover:-translate-y-1
+                ${plan.border}
+                ${isSelected ? "shadow-2xl scale-[1.02]" : ""}
+              `}
               >
                 {/* BADGE */}
                 {plan.badge && (
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-3 right-3 md:top-4 md:right-4">
                     <span
                       className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full
                       ${
@@ -320,11 +318,7 @@ const handleSubscribe = useCallback(() => {
                 <div className="flex justify-center mb-6">
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
-                    ${
-                      isSelected
-                        ? "border-[#c9060a]"
-                        : "border-gray-300"
-                    }`}
+                    ${isSelected ? "border-[#c9060a]" : "border-gray-300"}`}
                   >
                     {isSelected && (
                       <div className="w-2.5 h-2.5 bg-[#c9060a] rounded-full" />
@@ -334,28 +328,32 @@ const handleSubscribe = useCallback(() => {
 
                 {/* TITLE */}
                 <h3
-                  className={`text-xl font-black uppercase tracking-widest text-center mb-3 ${plan.color}`}
+                  className={`
+                    text-lg md:text-xl 
+                    font-black uppercase tracking-widest 
+                    text-center mb-3 ${plan.color}
+                  `}
                 >
                   {plan.name}
                 </h3>
 
                 {/* DETAILS */}
-                <div className="text-center space-y-1 min-h-[70px]">
-                  <p className="text-gray-800 font-semibold text-sm">
+                <div className="text-center space-y-1 min-h-15 md:min-h-17.5">
+                  <p className="text-sm md:text-sm text-gray-800 font-semibold">
                     {plan.detail}
                   </p>
-                  <p className="text-gray-500 text-[11px] uppercase tracking-wide">
+                  <p className="text-[10px] md:text-[11px] text-gray-500 uppercase tracking-wide">
                     {plan.sub}
                   </p>
                 </div>
 
                 {/* PRICE */}
-                <div className="mt-8 text-center">
-                  <p className="text-3xl font-black text-gray-900">
+                <div className="mt-6 md:mt-8 text-center">
+                  <p className="text-2xl md:text-3xl font-black text-gray-900">
                     {plan.price === "0" ? "FREE" : `₹${plan.price}`}
                   </p>
                   {plan.price !== "0" && (
-                    <p className="text-[11px] text-gray-400 font-medium">
+                    <p className="text-[10px] md:text-[11px] text-gray-400 font-medium">
                       + 18% GST applicable
                     </p>
                   )}
@@ -372,13 +370,17 @@ const handleSubscribe = useCallback(() => {
       </div>
 
       {/* CTA */}
-      <div className="flex justify-center mt-14">
+      <div className="flex justify-center mt-10 md:mt-14 px-2">
         <button
           onClick={handleSubscribe}
           disabled={loading}
           className="
-            bg-[#c9060a] text-white px-18 py-3 rounded-xl
-            font-bold text-lg uppercase tracking-widest
+            w-full sm:w-auto   
+            bg-[#c9060a] text-white 
+            px-6 md:px-18 py-3 
+            rounded-xl
+            font-bold text-sm md:text-lg 
+            uppercase tracking-widest
             hover:bg-[#333] transition-all duration-300
             active:scale-95 shadow-xl shadow-red-500/20
             disabled:opacity-50

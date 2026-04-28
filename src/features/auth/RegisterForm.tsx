@@ -514,12 +514,11 @@ export default function RegisterForm() {
                     //     : "border-gray-100 hover:border-gray-200"
                     // }`}
 
-                     className={` p-4 rounded-xl border-2 transition-all ${
+                    className={` p-4 rounded-xl border-2 transition-all ${
                       form.plan === String(plan.id)
                         ? "border-[#c9060a] bg-red-50 shadow-md"
                         : "border-gray-100 "
                     }`}
-                    
                   >
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-sm uppercase">
