@@ -75,59 +75,58 @@ export default function RegisterForm() {
   //   }
   // }, [subscriptionData]);
 
-/* ------------------ Preselect Plan ------------------ */
-useEffect(() => {
-  if (!plans.length) return;
+  /* ------------------ Preselect Plan ------------------ */
+  useEffect(() => {
+    if (!plans.length) return;
 
-  // Priority 1: Redux
-  if (subscriptionData?.plan_id) {
-    setForm((prev) => ({
-      ...prev,
-      plan: String(subscriptionData.plan_id),
-    }));
-    return;
-  }
-
-  // Priority 2: SessionStorage
-  const stored = sessionStorage.getItem("subscription");
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored);
-      if (parsed?.plan_id) {
-        setForm((prev) => ({
-          ...prev,
-          plan: String(parsed.plan_id),
-        }));
-      }
-    } catch {
-      console.warn("Invalid subscription in sessionStorage");
+    // Priority 1: Redux
+    if (subscriptionData?.plan_id) {
+      setForm((prev) => ({
+        ...prev,
+        plan: String(subscriptionData.plan_id),
+      }));
+      return;
     }
-  }
-}, [subscriptionData, plans]);
 
+    // Priority 2: SessionStorage
+    const stored = sessionStorage.getItem("subscription");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (parsed?.plan_id) {
+          setForm((prev) => ({
+            ...prev,
+            plan: String(parsed.plan_id),
+          }));
+        }
+      } catch {
+        console.warn("Invalid subscription in sessionStorage");
+      }
+    }
+  }, [subscriptionData, plans]);
 
   // Auth Redirect
-useEffect(() => {
-  if (user && token) {
-    // router.replace("/dashboard"); // or wherever
-  } else {
-    setCheckingAuth(false);
-  }
-}, [user, token, router]);
-
-/* ------------------ Fetch Plans ------------------ */
-useEffect(() => {
-  const fetchPlans = async () => {
-    try {
-      const data = await getPlans();
-      setPlans(data);
-    } catch {
-      toast.error("Failed to load plans");
+  useEffect(() => {
+    if (user && token) {
+      // router.replace("/dashboard"); // or wherever
+    } else {
+      setCheckingAuth(false);
     }
-  };
+  }, [user, token, router]);
 
-  fetchPlans();
-}, []);
+  /* ------------------ Fetch Plans ------------------ */
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const data = await getPlans();
+        setPlans(data);
+      } catch {
+        toast.error("Failed to load plans");
+      }
+    };
+
+    fetchPlans();
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -150,167 +149,166 @@ useEffect(() => {
     }
   };
 
-/* ------------------ OTP ------------------ */
-const handleSendOtp = () => {
-  if (form.contact.length !== 10) {
-    return toast.error("Enter a valid 10-digit number");
-  }
-
-  setIsOtpSent(true);
-  toast.success(`OTP sent to ${form.contact}`);
-};
-
-const handleVerifyOtp = () => {
-  if (form.otp === "1234") {
-    setIsOtpVerified(true);
-    toast.success("Number verified!");
-  } else {
-    toast.error("Invalid OTP");
-  }
-};
-
-
-/* ------------------ Razorpay Payment ------------------ */
-const handleRazorpayPayment = async (payment: any, selectedPlan: any) => {
-  const isLoaded = await loadRazorpay();
-  if (!isLoaded) throw new Error("Razorpay SDK failed to load");
-
-  const rzp = new (window as any).Razorpay({
-    key: payment.razorpay_key,
-    amount: payment.amount,
-    currency: payment.currency,
-    order_id: payment.order_id,
-    name: "Lexwitness",
-    description: selectedPlan.name,
-
-    handler: async (response: any) => {
-      setProcessingPayment(true);
-
-      try {
-        const verifyRes = await verifyPayment({
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_order_id: response.razorpay_order_id,
-          razorpay_signature: response.razorpay_signature,
-        });
-
-        if (!verifyRes?.status) throw new Error("Payment verification failed");
-
-        const verifiedUser = verifyRes.data.user;
-        const sub = verifiedUser?.active_subscription;
-
-        dispatch(setUser({
-          user: verifiedUser,
-          token: verifyRes.data.token,
-        }));
-
-        if (sub) {
-          dispatch(setSubscription({
-            id: sub.id,
-            plan_id: sub.plan?.id,
-            name: sub.plan?.name,
-            amount: Number(sub.plan?.price),
-            status: sub.status,
-            start_date: sub.start_date,
-            end_date: sub.end_date,
-          }));
-        }
-
-        router.replace("/thankyou");
-
-      } catch (err) {
-        toast.error("Payment verification failed");
-      } finally {
-        setProcessingPayment(false);
-      }
-    },
-
-    prefill: {
-      name: `${form.first_name} ${form.last_name}`,
-      email: form.email,
-      contact: form.contact,
-    },
-
-    theme: { color: "#c9060a" },
-  });
-
-  rzp.open();
-};
-
-
-
- /* ------------------ Form Submit ------------------ */
-const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
-
-  if (!isOtpVerified) {
-    return toast.error("Please verify your contact number first");
-  }
-
-  setLoading(true);
-  setFieldErrors({});
-
-  try {
-    const selectedPlan = plans.find(
-      (p) => String(p.id) === form.plan
-    );
-
-    if (!selectedPlan) {
-      throw new Error("Please select a plan");
+  /* ------------------ OTP ------------------ */
+  const handleSendOtp = () => {
+    if (form.contact.length !== 10) {
+      return toast.error("Enter a valid 10-digit number");
     }
 
-    const res = await registerUser({
-      ...form,
-      membership_plan_id: selectedPlan.id,
+    setIsOtpSent(true);
+    toast.success(`OTP sent to ${form.contact}`);
+  };
+
+  const handleVerifyOtp = () => {
+    if (form.otp === "1234") {
+      setIsOtpVerified(true);
+      toast.success("Number verified!");
+    } else {
+      toast.error("Invalid OTP");
+    }
+  };
+
+  /* ------------------ Razorpay Payment ------------------ */
+  const handleRazorpayPayment = async (payment: any, selectedPlan: any) => {
+    const isLoaded = await loadRazorpay();
+    if (!isLoaded) throw new Error("Razorpay SDK failed to load");
+
+    const rzp = new (window as any).Razorpay({
+      key: payment.razorpay_key,
+      amount: payment.amount,
+      currency: payment.currency,
+      order_id: payment.order_id,
+      name: "Lexwitness",
+      description: selectedPlan.name,
+
+      handler: async (response: any) => {
+        setProcessingPayment(true);
+
+        try {
+          const verifyRes = await verifyPayment({
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          });
+
+          if (!verifyRes?.status)
+            throw new Error("Payment verification failed");
+
+          const verifiedUser = verifyRes.data.user;
+          const sub = verifiedUser?.active_subscription;
+
+          dispatch(
+            setUser({
+              user: verifiedUser,
+              token: verifyRes.data.token,
+            }),
+          );
+
+          if (sub) {
+            dispatch(
+              setSubscription({
+                id: sub.id,
+                plan_id: sub.plan?.id,
+                name: sub.plan?.name,
+                amount: Number(sub.plan?.price),
+                status: sub.status,
+                start_date: sub.start_date,
+                end_date: sub.end_date,
+              }),
+            );
+          }
+
+          router.replace("/thankyou");
+        } catch (err) {
+          toast.error("Payment verification failed");
+        } finally {
+          setProcessingPayment(false);
+        }
+      },
+
+      prefill: {
+        name: `${form.first_name} ${form.last_name}`,
+        email: form.email,
+        contact: form.contact,
+      },
+
+      theme: { color: "#c9060a" },
     });
 
-    if (!res?.status) {
-      if (res?.errors) setFieldErrors(res.errors);
-      throw new Error(res?.message || "Registration failed");
+    rzp.open();
+  };
+
+  /* ------------------ Form Submit ------------------ */
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!isOtpVerified) {
+      return toast.error("Please verify your contact number first");
     }
 
-    const { token, user: userData, payment } = res.data;
+    setLoading(true);
+    setFieldErrors({});
 
-    if (!payment) {
-      throw new Error("Payment data not received");
-    }
+    try {
+      const selectedPlan = plans.find((p) => String(p.id) === form.plan);
 
-    /* ---------- FREE PLAN ---------- */
-    if (!payment.amount || payment.amount <= 0) {
-      const sub = userData?.active_subscription;
-
-      if (token && userData) {
-        dispatch(setUser({ user: userData, token }));
+      if (!selectedPlan) {
+        throw new Error("Please select a plan");
       }
 
-      dispatch(setSubscription({
-        id: sub?.id,
-        plan_id: sub?.plan?.id,
-        name: sub?.plan?.name,
-        amount: 0,
-        status: sub?.status,
-        start_date: sub?.start_date,
-        end_date: sub?.end_date,
-      }));
+      const res = await registerUser({
+        ...form,
+        membership_plan_id: selectedPlan.id,
+      });
 
-      toast.success("Registration Successful");
+      if (!res?.status) {
+        if (res?.errors) setFieldErrors(res.errors);
+        throw new Error(res?.message || "Registration failed");
+      }
 
-      router.replace(
-  `/thankyou?name=${encodeURIComponent(selectedPlan.name)}&amount=0&status=success&email=${encodeURIComponent(form.email)}`
-);
+      const { token, user: userData, payment } = res.data;
 
-      return;
+      if (!payment) {
+        throw new Error("Payment data not received");
+      }
+
+      /* ---------- FREE PLAN ---------- */
+      if (!payment.amount || payment.amount <= 0) {
+        const sub = userData?.active_subscription;
+
+        if (token && userData) {
+          dispatch(setUser({ user: userData, token }));
+        }
+
+        dispatch(
+          setSubscription({
+            id: sub?.id,
+            plan_id: sub?.plan?.id,
+            name: sub?.plan?.name,
+            amount: 0,
+            status: sub?.status,
+            start_date: sub?.start_date,
+            end_date: sub?.end_date,
+          }),
+        );
+
+        toast.success("Registration Successful");
+
+        router.replace(
+          `/thankyou?name=${encodeURIComponent(selectedPlan.name)}&amount=0&status=success&email=${encodeURIComponent(form.email)}`,
+        );
+
+        return;
+      }
+
+      /* ---------- PAID PLAN ---------- */
+      await handleRazorpayPayment(payment, selectedPlan);
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    /* ---------- PAID PLAN ---------- */
-    await handleRazorpayPayment(payment, selectedPlan);
-
-  } catch (err: any) {
-    toast.error(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const getError = (name: string) => fieldErrors[name]?.[0];
 
@@ -326,6 +324,12 @@ const handleSubmit = async (e: FormEvent) => {
       </div>
     );
   }
+
+  const selectedPlan = plans.find((p) => String(p.id) === form.plan);
+
+  const price = Number(selectedPlan?.price || 0);
+  const gst = price * 0.18;
+  const total = price + gst;
 
   return (
     <main className="bg-gray-50">
@@ -379,7 +383,7 @@ const handleSubmit = async (e: FormEvent) => {
                     <button
                       type="button"
                       onClick={handleSendOtp}
-                      className="bg-black text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap"
+                      className="bg-[#333] text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap"
                     >
                       {isOtpSent ? "Resend" : "Send OTP"}
                     </button>
@@ -498,23 +502,30 @@ const handleSubmit = async (e: FormEvent) => {
                 {plans.map((plan) => (
                   <div
                     key={plan.id}
-                    onClick={() =>
-                      setForm((prev) => ({
-                        ...prev,
-                        plan: String(plan.id),
-                      }))
-                    }
-                    className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
+                    // onClick={() =>
+                    //   setForm((prev) => ({
+                    //     ...prev,
+                    //     plan: String(plan.id),
+                    //   }))
+                    // }
+                    // className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
+                    //   form.plan === String(plan.id)
+                    //     ? "border-[#c9060a] bg-red-50 shadow-md"
+                    //     : "border-gray-100 hover:border-gray-200"
+                    // }`}
+
+                     className={` p-4 rounded-xl border-2 transition-all ${
                       form.plan === String(plan.id)
                         ? "border-[#c9060a] bg-red-50 shadow-md"
-                        : "border-gray-100 hover:border-gray-200"
+                        : "border-gray-100 "
                     }`}
+                    
                   >
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-sm uppercase">
                         {plan.name}
                       </span>
-                      <span className="text-sm font-black text-[#c9060a]">
+                      <span className="text-sm font-[#333] text-[#c9060a]">
                         {Number(plan.price) === 0 ? "FREE" : `₹${plan.price}`}
                       </span>
                     </div>
@@ -528,55 +539,33 @@ const handleSubmit = async (e: FormEvent) => {
               {/* Order Summary Logic */}
               {form.plan && (
                 <div className="bg-gray-50 p-5 rounded-xl space-y-3 border border-gray-100">
+                  {/* Base Price */}
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500 font-medium">
                       Base Price
                     </span>
-                    <span className="font-bold">
-                      ₹
-                      {plans.find((p) => String(p.id) === form.plan)?.price ||
-                        0}
-                    </span>
+                    <span className="font-bold">₹{price}</span>
                   </div>
 
-                  {/* Only show GST if price > 0 */}
-                  {Number(
-                    plans.find((p) => String(p.id) === form.plan)?.price,
-                  ) > 0 && (
+                  {/* GST (only if price > 0) */}
+                  {price > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500 font-medium">
                         GST (18%)
                       </span>
                       <span className="font-bold text-red-600">
-                        + ₹
-                        {(
-                          Number(
-                            plans.find((p) => String(p.id) === form.plan)
-                              ?.price,
-                          ) * 0.18
-                        ).toFixed(2)}
+                        + ₹{gst.toFixed(2)}
                       </span>
                     </div>
                   )}
 
+                  {/* Total */}
                   <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
-                    <span className="text-xs font-black uppercase text-gray-800">
+                    <span className="text-xs font-bold uppercase text-gray-800">
                       Total Payable
                     </span>
-                    <span className="text-xl font-black text-[#c9060a]">
-                      ₹
-                      {(
-                        Number(
-                          plans.find((p) => String(p.id) === form.plan)
-                            ?.price || 0,
-                        ) * 1.18
-                      ).toFixed(
-                        Number(
-                          plans.find((p) => String(p.id) === form.plan)?.price,
-                        ) === 0
-                          ? 0
-                          : 2,
-                      )}
+                    <span className="text-xl font-bold text-[#c9060a]">
+                      ₹{price === 0 ? total : total.toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -587,7 +576,7 @@ const handleSubmit = async (e: FormEvent) => {
                 <button
                   type="submit"
                   disabled={loading || !form.plan}
-                  className="w-full bg-[#c9060a] text-white py-3 cursor-pointer rounded-xl font-bold uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50 shadow-lg shadow-red-100"
+                  className="w-full bg-[#c9060a] text-white py-3 cursor-pointer rounded-xl font-bold uppercase tracking-widest hover:bg-[#333] transition-all disabled:opacity-50 shadow-lg shadow-red-100"
                 >
                   {loading
                     ? "Processing..."
