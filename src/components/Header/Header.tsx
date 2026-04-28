@@ -80,7 +80,7 @@ export default function Header({ categories }: { categories: Category[] }) {
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
 
-  const authPlanLink = isLoggedIn ? "/subscription" : "/register";
+  const authPlanLink = isLoggedIn ? "/subscription" : "/subscription";
 
   // if (loading) return null;
   // if (loading) {

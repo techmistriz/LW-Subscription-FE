@@ -121,11 +121,19 @@ export interface RegisterForm {
   password_confirmation: string;
   contact: string;
   address: string;
+
 }
 
 export interface FormData extends RegisterForm {
   plan: string;
   auto_renew: boolean;
+  otp:string;
+  dob:string;
+  organisation:string;
+  city:string;
+  pincode:string;
+  state:string;
+  country:string;
 }
 
 export interface RegisterPayload extends RegisterForm {

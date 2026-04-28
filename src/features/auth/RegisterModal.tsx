@@ -2,242 +2,135 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser as loginApi, registerUser } from "@/lib/auth/auth";
-import { getMembershipPlan } from "@/features/auth/services/plans";
-
-import { useAppDispatch } from "@/redux/store/hooks";
-import { loginUser, setUser } from "@/redux/store/slices/authSlice";
-import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
-import { toast } from "sonner";
+import { Magazine } from "@/types";
+import Link from "next/link";
+import Image from "next/image";
+import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
 
 const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-
+  const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
   const [loading, setLoading] = useState(false);
-  const [processingPayment, setProcessingPayment] = useState(false);
-  const [planId, setPlanId] = useState<number>(1);
+  const [imageLoading, setImageLoading] = useState(true);
 
-  const [form, setForm] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    contact: "",
-    address: "",
-    password: "",
-    password_confirmation: "",
-  });
-
-  /*----------------------- FETCH PLAN  -----------------------*/
+  /* ---------------- FETCH (Logic preserved) ---------------- */
   useEffect(() => {
     let mounted = true;
-
-    const fetchPlan = async () => {
+    const fetchData = async () => {
       try {
-        const res = await getMembershipPlan(1);
-        if (mounted) setPlanId(res?.data?.id || 1);
-      } catch {
-        if (mounted) setPlanId(1);
+        const res = await getLatestSingleMagazines();
+        if (mounted) {
+          setSingleMagazine(res?.data || res);
+        }
+      } catch (error) {
+        console.error("Error fetching magazines:", error);
       }
     };
-
-    fetchPlan();
+    fetchData();
+    router.prefetch("/subscription");
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  /* ---------------- DATA MAPPING ---------------- */
+  const magazineName = singleMagazine?.magazine_name || "Lex Witness Magazine";
+  const magazineSlug = singleMagazine?.slug || "latest";
+  const imageSrc =
+    singleMagazine?.image && singleMagazine.image.startsWith("http")
+      ? singleMagazine.image
+      : `${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine?.image || "fallback.jpg"}`;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRedirect = () => {
     setLoading(true);
-
-    try {
-      /*----------------------- REGISTER (ALREADY RETURNS TOKEN + USER)  -----------------------*/
-      const registerRes = await registerUser({
-        ...form,
-        membership_plan_id: planId,
-      });
-
-      if (!registerRes?.status) {
-        throw new Error(registerRes?.message || "Registration failed");
-      }
-
-      const token = registerRes?.data?.token || registerRes?.token;
-
-      const userData = registerRes?.data?.user || registerRes?.user;
-
-      if (!token || !userData) {
-        throw new Error("Invalid register response");
-      }
-
-      /*----------------- SHOW PROCESSING -----------------*/
-      setProcessingPayment(true);
-
-      /*-----------------  SET USER (NOT loginUser thunk) -----------------*/
-      dispatch(
-        setUser({
-          user: userData,
-          token,
-        }),
-      );
-
-      /*----------------------- SUBSCRIPTION -----------------------*/
-      const sub = userData?.active_subscription;
-
-      if (sub) {
-        dispatch(
-          setSubscription({
-            id: sub?.id,
-            plan_id: sub?.plan?.id,
-            name: sub?.plan?.name,
-            amount: Number(sub?.plan?.price),
-            status: sub?.status,
-            start_date: sub?.start_date,
-            end_date: sub?.end_date,
-            duration_value: sub?.plan?.duration_value,
-            duration_unit: sub?.plan?.duration_unit,
-            purchase_type: sub?.purchase_type,
-          }),
-        );
-      }
-
-      const planName = sub?.plan?.name || "Basic Plan";
-      const amount = sub?.plan?.price || 0;
-
-      setProcessingPayment(true);
-
-      toast.success("Register successful!  You have Access 1 month free plan");
-
-      requestAnimationFrame(() => {
-        router.replace(
-          `/thankyou?name=${encodeURIComponent(
-            planName,
-          )}&amount=${amount}&status=success`,
-        );
-      });
-    } catch (error: any) {
-      toast.error(error.message);
-      console.error("ERROR:", error.message);
-      setProcessingPayment(false);
-    } finally {
-      setLoading(false);
-    }
+    onClose();
+    router.push("/subscription");
   };
-
-  /*----------------- LOADING SCREEN -----------------*/
-  if (processingPayment) {
-    return (
-      <div className="fixed inset-0 z-[99999] bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-gray-200 border-t-[#c9060a] rounded-full animate-spin mx-auto mb-3" />
-          <h2 className="text-lg font-semibold">Processing payment...</h2>
-          <p className="text-sm text-gray-500">Redirecting you securely</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center">
-      <div className="bg-white w-full max-w-lg p-6 rounded shadow-lg relative">
+      <div className="bg-white w-full max-w-5xl min-h-[520px] rounded-xl shadow-2xl relative overflow-hidden flex flex-col md:flex-row border border-gray-100">
+        {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer hover:text-[#c6090a] hover:bg-gray-100 rounded-full text-xl"
-          aria-label="Close modal"
+          className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center text-[#333]  cursor-pointer hover:bg-[#c2b9b9] bg-gray-100 rounded-full transition"
+          aria-label="Close"
         >
-          ×
+          <span className="text-2xl leading-none">&times;</span>
         </button>
-        <h2 className="text-xl font-semibold text-center mb-2">
-          Register to Continue
-        </h2>
 
-        <p className="text-center text-gray-500 mb-4 text-sm">
-          Fill your details to register
-        </p>
-
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-3"
-        >
-          <input
-            name="first_name"
-            placeholder="First Name"
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            name="last_name"
-            placeholder="Last Name"
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            name="contact"
-            type="tel"
-            placeholder="Phone Number"
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-          <input
-            name="password_confirmation"
-            type="password"
-            placeholder="Confirm Password"
-            onChange={handleChange}
-            className="border p-2 rounded"
-            required
-          />
-
-          <input
-            name="address"
-            type="text"
-            placeholder="Enter your address.."
-            onChange={handleChange}
-            className="border p-2 rounded md:col-span-2"
-            required
-          />
-
-          <button
-            disabled={loading}
-            className="bg-[#c9060a] text-white py-2 mt-2 md:col-span-2 disabled:opacity-60 cursor-pointer"
+        {/* LEFT IMAGE */}
+        <div className="w-full md:w-5/12 bg-gradient-to-b p-15 from-gray-50 to-white p-6 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
+          <Link
+            href={`/magazines/${magazineSlug}`}
+            onClick={onClose}
+            className="group relative w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
           >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
+            {/* SKELETON */}
+            {imageLoading && (
+              <div className="absolute inset-0 animate-pulse bg-gray-200" />
+            )}
 
-        <div className="text-center mt-4 text-sm">
-          Already have an account?{" "}
-          <button
-            onClick={() => router.push("/sign-in")}
-            className="underline font-medium hover:text-[#c6090a] cursor-pointer"
+            <Image
+              src={imageSrc}
+              alt={magazineName}
+              fill
+              className={`object-cover transition-all duration-500  ${
+                imageLoading ? "opacity-0" : "opacity-100"
+              }`}
+              priority
+              onLoadingComplete={() => setImageLoading(false)}
+            />
+          </Link>
+        </div>
+
+        {/* RIGHT CONTENT */}
+        <div className="w-full md:w-7/12 p-10 md:p-14 flex flex-col justify-center">
+          <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
+            Latest Issue
+          </span>
+
+          <Link
+            href={`/magazines/${magazineSlug}`}
+            onClick={onClose}
+            className="mt-2 text-2xl font-bold text-[#333] hover:text-[#c9060a] transition leading-snug "
           >
-            Sign In
-          </button>
+            {magazineName}
+          </Link>
+
+          {/* HEADLINE */}
+          <div className="mt-8">
+            <h2 className="text-3xl font-black text-[#333] leading-tight">
+              Start Your <br />
+              <span className="text-[#c9060a]">Free Month</span> Now
+            </h2>
+
+            <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
+              <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                ✓
+              </span>
+              Full access to all premium insights
+            </p>
+
+            <p className="text-[#333]/50 mt-1 text-xs italic">
+              No credit card required
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-10">
+            <button
+              onClick={handleRedirect}
+              disabled={loading}
+              className="w-full bg-[#c9060a] text-white py-3.5 rounded-lg font-semibold text-base hover:brightness-110 cursor-pointer active:scale-[0.99] transition shadow-md hover:shadow-lg hover:shadow-[#c9060a]/30 disabled:opacity-70"
+            >
+              {loading ? "Redirecting..." : "Subscribe now"}
+            </button>
+
+            <p className="text-center text-xs text-[#333]/40 mt-4">
+              Join 10,000+ legal professionals today.
+            </p>
+          </div>
         </div>
       </div>
     </div>

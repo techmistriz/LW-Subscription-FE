@@ -89,3 +89,7 @@ select {
 select::-ms-expand {
   display: none;
 }
+
+.input {
+  @apply w-full border px-3 py-2 mt-1 rounded bg-gray-50 focus:ring-2 focus:ring-[#c9060a] outline-none;
+}

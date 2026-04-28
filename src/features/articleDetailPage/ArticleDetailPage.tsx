@@ -41,7 +41,7 @@ export default function ArticleDetailPage() {
     new Date(subscription.end_date) >= new Date(),
   );
 
-  const redirectPath = user ? "/dashboard" : "/register";
+  const redirectPath = user ? "/dashboard" : "/subscription";
 
   /* ---------------- FETCH ARTICLE ---------------- */
 
@@ -176,6 +176,14 @@ export default function ArticleDetailPage() {
 
   const categoryTitle = toTitleCase(rawCategory);
 
+  const fullHTML = formatArticleHTML(article.description || "");
+
+  const previewHTML = fullHTML
+    ?.replace(/<[^>]+>/g, "") // remove HTML tags
+    .split(" ")
+    .slice(0, 60)
+    .join(" ");
+
   return (
     <section className="bg-white">
       <article className="lg:col-span-9">
@@ -239,30 +247,37 @@ export default function ArticleDetailPage() {
         )}
 
         {/*----------------- ARTICLE CONTENT -----------------*/}
+
         <div className="my-6">
           {isSubscribed ? (
             <div
               className="article-content text-[17px] leading-7.25 font-normal text-gray-800 text-justify"
-              dangerouslySetInnerHTML={{
-                __html: formatArticleHTML(article.description || ""),
-              }}
+              dangerouslySetInnerHTML={{ __html: fullHTML }}
             />
           ) : (
-            <div className="p-6 bg-white border-2 border-gray-100 text-center">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-3">
-                Subscribe to Read Full Article
-              </h2>
-
-              <p className="text-gray-700 mb-4 text-[14px]">
-                This article is available only for our subscribed readers.
+            <div className="text-center">
+              {/* Preview Text */}
+              <p className="text-[17px] leading-7 text-gray-800 text-justify">
+                {previewHTML}...
               </p>
 
-              <Link
-                href={redirectPath}
-                className="inline-block bg-[#c9060a] text-white px-6 py-3 font-normal hover:bg-[#333] transition"
-              >
-                SUBSCRIBE NOW
-              </Link>
+              {/* CTA */}
+              <div className="mt-6 p-6 border-2 border-gray-100">
+                <h2 className="text-xl font-semibold text-gray-800 mb-3">
+                  Continue Reading
+                </h2>
+
+                <p className="text-gray-600 mb-4 text-sm">
+                  Subscribe to unlock full access to this article.
+                </p>
+
+                <Link
+                  href={redirectPath}
+                  className="inline-block bg-[#c9060a] text-white px-6 py-3 hover:bg-black transition"
+                >
+                  SUBSCRIBE NOW
+                </Link>
+              </div>
             </div>
           )}
         </div>

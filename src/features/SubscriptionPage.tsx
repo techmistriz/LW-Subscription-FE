@@ -61,11 +61,11 @@ export default function SubscriptionPage() {
               onClick={scrollToPricing}
               className="bg-[#c9060a] text-sm text-white px-6 py-3 rounded-lg font-semibold transition hover:bg-[#333] cursor-pointer"
             >
-              Your first year is on us!
+              Your First Year is on Us.
             </button>
 
             <button className="border text-sm border-gray-300 text-[#333] px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition cursor-pointer">
-              Exclusive rates only for our existing readers - Renew Now!
+              Choose your Subscription Plan
             </button>
           </div>
         </div>
@@ -112,11 +112,33 @@ export default function SubscriptionPage() {
             </p>
           </div>
         </div>
+        <div className="max-w-6xl mt-10 mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+          <div>
+            <h3 className="font-semibold text-lg">Unlimited Access</h3>
+            <p className="text-gray-600 text-sm mt-2">
+              Access full website and app content
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-lg">Weekly Magazine</h3>
+            <p className="text-gray-600 text-sm mt-2">
+              Get physical print delivered
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-lg">Premium Analysis</h3>
+            <p className="text-gray-600 text-sm mt-2">
+              Deep insights & archives access
+            </p>
+          </div>
+        </div>
       </section>
 
       {/*----------------- PRICING -----------------*/}
-      <div className="py-12 px-4">
-        <PricingCard magazine={singleMagazine} />
+      <div className="pb-16 px-4">
+        <PricingCard  />
       </div>
     </div>
   );
