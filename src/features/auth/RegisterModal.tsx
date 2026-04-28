@@ -20,7 +20,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
       try {
         const res = await getLatestSingleMagazines();
         if (mounted) {
-          setSingleMagazine(res?.data || res);
+          setSingleMagazine(res || res);
         }
       } catch (error) {
         console.error("Error fetching magazines:", error);
