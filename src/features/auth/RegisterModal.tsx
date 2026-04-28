@@ -124,12 +124,12 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
               disabled={loading}
               className="w-full bg-[#c9060a] text-white py-3.5 rounded-lg font-semibold text-base hover:brightness-110 cursor-pointer active:scale-[0.99] transition shadow-md hover:shadow-lg hover:shadow-[#c9060a]/30 disabled:opacity-70"
             >
-              {loading ? "Redirecting..." : "Subscribe now"}
+              {loading ? "Redirecting..." : "Subscribe Now"}
             </button>
 
-            <p className="text-center text-xs text-[#333]/40 mt-4">
+            {/* <p className="text-center text-xs text-[#333]/40 mt-4">
               Join 10,000+ legal professionals today.
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
