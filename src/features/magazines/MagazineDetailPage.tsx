@@ -97,7 +97,7 @@ export default async function MagazineDetailPage({ params }: Props) {
 
             {/*----------------- Subscribe button -----------------*/}
             <button className="bg-[#c9060a] hover:bg-[#333333] text-white px-6 py-2 cursor-pointer transition-colors">
-              <Link href="/register">Subscribe now</Link>
+              <Link href="/subscription">Subscribe now</Link>
             </button>
           </div>
         </div>
