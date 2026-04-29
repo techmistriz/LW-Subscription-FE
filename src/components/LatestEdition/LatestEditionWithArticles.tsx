@@ -30,14 +30,11 @@ export default function LatestEditionWithArticles({
           {latestEdition.magazine_name ||
             "A Photo Feature on Judgements, Laws & Bills"}
         </p>
-        <Link href="/register">
-          <button
-            className="bg-[#c9060a] text-white w-full py-2.5 border-2 border-white hover:bg-[#222] disabled:opacity-50 cursor-pointer block mx-auto"
-            type="submit"
-            // disabled={loading}
-          >
-            SUBSCRIBE NOW
-          </button>
+        <Link
+          href="/subscription#pricing"
+          className="bg-[#c9060a] text-white w-full py-2.5 border-2 border-white hover:bg-[#222] block text-center"
+        >
+          SUBSCRIBE NOW
         </Link>
       </div>
 

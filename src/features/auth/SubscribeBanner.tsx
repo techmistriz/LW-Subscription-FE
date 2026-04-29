@@ -2,6 +2,7 @@
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { subscribeUser } from "@/lib/auth/subscribe";
+import { toast } from "sonner";
 
 interface FormData {
   name: string;
@@ -127,10 +128,11 @@ export default function SubscribeBanner() {
 
       setForm({ name: "", email: "", contact: "" });
     } catch (err: any) {
-      setAlert({
-        type: "error",
-        message: err?.message || "Something went wrong.",
-      });
+      // setAlert({
+      //   type: "error",
+      //   message: err?.message || "Something went wrong.",
+      // });
+      toast.error(err.message)
     } finally {
       setLoading(false);
     }

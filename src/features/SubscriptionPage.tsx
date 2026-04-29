@@ -12,7 +12,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-
 import { Globe, BookOpen, Star, Newspaper, Clock, Layers } from "lucide-react";
 
 const benefits = [
@@ -120,7 +119,6 @@ export default function SubscriptionPage() {
     <div className="bg-white">
       {/*----------------- HERO SECTION -----------------*/}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
-        
         {/* LEFT CONTENT */}
         <div className="text-center lg:text-left">
           <h1 className="text-3xl sm:text-4xl lg:text-4xl text-[#c9060a] font-semibold mb-6">
@@ -142,7 +140,6 @@ export default function SubscriptionPage() {
 
           {/* BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            
             {/* FIXED CTA (NO HASH, NO FLASH) */}
             <button
               onClick={() => {
@@ -186,24 +183,23 @@ export default function SubscriptionPage() {
       )}
 
       {/*----------------- BENEFITS SECTION -----------------*/}
-   <section className="bg-white py-12">
-  <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-    {benefits.map((item, i) => {
-      const Icon = item.icon;
-      return (
-        <div key={i} className="flex flex-col items-center">
-          
-          <div className="w-12 h-12 flex items-center justify-center bg-[#c9060a]/10 rounded-full mb-4">
-            <Icon className="w-6 h-6 text-[#c9060a]" />
-          </div>
+      <section className="bg-white py-12">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+          {benefits.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <div key={i} className="flex flex-col items-center">
+                <div className="w-12 h-12 flex items-center justify-center bg-[#c9060a]/10 rounded-full mb-4">
+                  <Icon className="w-6 h-6 text-[#c9060a]" />
+                </div>
 
-          <h3 className="font-semibold text-lg">{item.title}</h3>
-          <p className="text-gray-600 text-sm mt-2">{item.desc}</p>
+                <h3 className="font-semibold text-lg">{item.title}</h3>
+                <p className="text-gray-600 text-sm mt-2">{item.desc}</p>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-</section>
+      </section>
 
       {/*----------------- PRICING -----------------*/}
       <div id="pricing">
