@@ -12,6 +12,42 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+
+import { Globe, BookOpen, Star, Newspaper, Clock, Layers } from "lucide-react";
+
+const benefits = [
+  {
+    title: "Unlimited Access",
+    desc: "Read all articles across web and app without limits",
+    icon: Globe,
+  },
+  {
+    title: "Weekly Magazine",
+    desc: "Get the latest print edition delivered to your doorstep",
+    icon: BookOpen,
+  },
+  {
+    title: "Premium Analysis",
+    desc: "Expert opinions and deep-dive editorial insights",
+    icon: Star,
+  },
+  {
+    title: "Daily News Brief",
+    desc: "Stay updated with concise daily summaries",
+    icon: Newspaper,
+  },
+  {
+    title: "Early Access",
+    desc: "Read selected stories before they are publicly available",
+    icon: Clock,
+  },
+  {
+    title: "Archive Access",
+    desc: "Explore past editions and historical articles anytime",
+    icon: Layers,
+  },
+];
+
 export default function SubscriptionPage() {
   const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
   const [latestFive, setLatestFive] = useState<Magazine[]>([]);
@@ -150,50 +186,24 @@ export default function SubscriptionPage() {
       )}
 
       {/*----------------- BENEFITS SECTION -----------------*/}
-      <section className="bg-white py-12">
-        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-          <div>
-            <h3 className="font-semibold text-lg">Unlimited Access</h3>
-            <p className="text-gray-600 text-sm mt-2">
-              Access full website and app content
-            </p>
+   <section className="bg-white py-12">
+  <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+    {benefits.map((item, i) => {
+      const Icon = item.icon;
+      return (
+        <div key={i} className="flex flex-col items-center">
+          
+          <div className="w-12 h-12 flex items-center justify-center bg-[#c9060a]/10 rounded-full mb-4">
+            <Icon className="w-6 h-6 text-[#c9060a]" />
           </div>
 
-          <div>
-            <h3 className="font-semibold text-lg">Weekly Magazine</h3>
-            <p className="text-gray-600 text-sm mt-2">
-              Get physical print delivered
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg">Premium Analysis</h3>
-            <p className="text-gray-600 text-sm mt-2">
-              Deep insights & archives access
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-lg">Unlimited Access</h3>
-            <p className="text-gray-600 text-sm mt-2">
-              Access full website and app content
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg">Weekly Magazine</h3>
-            <p className="text-gray-600 text-sm mt-2">
-              Get physical print delivered
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg">Premium Analysis</h3>
-            <p className="text-gray-600 text-sm mt-2">
-              Deep insights & archives access
-            </p>
-          </div>
+          <h3 className="font-semibold text-lg">{item.title}</h3>
+          <p className="text-gray-600 text-sm mt-2">{item.desc}</p>
         </div>
-      </section>
+      );
+    })}
+  </div>
+</section>
 
       {/*----------------- PRICING -----------------*/}
       <div id="pricing">
