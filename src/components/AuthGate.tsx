@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import RegisterModal from "../features/auth/RegisterModal";
+import RegisterModal from "../features/auth/PopupModal/Popup";
 import { useAppSelector } from "@/redux/store/hooks";
 
 const AuthGate = () => {

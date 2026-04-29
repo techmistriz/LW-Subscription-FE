@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { subscribeUser } from "@/lib/auth/subscribe";
+import { toast } from "sonner";
 
 interface FormData {
   name: string;
@@ -33,15 +34,16 @@ function SubscribeSidebar() {
 
     try {
       await subscribeUser(form);
-      setMessage("Subscribed successfully!");
+      // setMessage("Subscribed successfully!");
 
       setTimeout(() => {
         setMessage(null);
       }, 3000);
-
+toast.success("Subscribed successfully!");
       setForm({ name: "", email: "", contact: "" });
     } catch (err: any) {
-      setError(err.message);
+      // setError(err.message);
+      toast.error(err.message);
 
       setTimeout(() => {
         setError(null);

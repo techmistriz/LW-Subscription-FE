@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
 
-const RegisterModal = ({ onClose }: { onClose: () => void }) => {
+const Popup = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
   const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
   const [loading, setLoading] = useState(false);
@@ -43,14 +43,17 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
 
   const handleRedirect = () => {
     setLoading(true);
+
+    sessionStorage.setItem("scrollToPricing", "true");
+
     onClose();
     router.push("/subscription");
   };
 
   return (
- <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center p-4 md:p-0">
-  <div className="bg-white w-full max-w-5xl md:min-h-[520px] max-h-[95vh] overflow-y-auto md:overflow-visible rounded-xl shadow-2xl relative flex flex-col md:flex-row border border-gray-100">
-          {/* CLOSE BUTTON */}
+    <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center p-4 md:p-0">
+      <div className="bg-white w-full max-w-4xl md:min-h-[520px] max-h-[95vh] overflow-y-auto md:overflow-visible  shadow-2xl relative flex flex-col md:flex-row border border-gray-100">
+        {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center text-[#333]  cursor-pointer hover:bg-[#c2b9b9] bg-gray-100 rounded-full transition"
@@ -60,11 +63,11 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
         </button>
 
         {/* LEFT IMAGE */}
-<div className="w-full rounded-xl md:w-5/12 bg-gradient-to-b from-gray-50 to-white p-4 md:p-15 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
+        <div className="w-full md:w-5/12 bg-gradient-to-b from-gray-50 to-white p-4 md:p-12 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
           <Link
             href={`/magazines/${magazineSlug}`}
             onClick={onClose}
-           className="group relative w-[65%] md:w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
+            className="group relative w-[65%] md:w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
           >
             {/* SKELETON */}
             {imageLoading && (
@@ -85,7 +88,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
         </div>
 
         {/* RIGHT CONTENT */}
-      <div className="w-full md:w-7/12 p-6 md:p-10 md:p-14 flex flex-col justify-center">
+        <div className="w-full md:w-7/12 p-6 md:p-10 md:p-14 flex flex-col justify-center">
           <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
             Latest Issue
           </span>
@@ -93,16 +96,15 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
           <Link
             href={`/magazines/${magazineSlug}`}
             onClick={onClose}
- className="mt-2 text-xl md:text-2xl font-bold text-[#333] hover:text-[#c9060a]"
-           >
+            className="mt-2 text-xl md:text-2xl font-bold text-[#333] hover:text-[#c9060a]"
+          >
             {magazineName}
           </Link>
 
           {/* HEADLINE */}
           <div className="mt-8">
-          <h2 className="text-2xl md:text-3xl font-black text-[#333] leading-tight">
-              Start Your <br />
-              <span className="text-[#c9060a]">Free Month</span> Now
+            <h2 className="text-2xl md:text-xl font-black text-[#333] leading-tight">
+              Start Your <span className="text-[#c9060a]">Free Month</span> Now
             </h2>
 
             <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
@@ -122,7 +124,7 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
             <button
               onClick={handleRedirect}
               disabled={loading}
-             className="w-full bg-[#c9060a] hover:bg-[#333] cursor-pointer text-white py-3 md:py-3.5 rounded-lg font-semibold text-sm md:text-base ..."
+              className="w-fit px-4 bg-[#c9060a] hover:bg-[#333] cursor-pointer text-white py-3 md:py-3.5  font-semibold text-sm md:text-base ..."
             >
               {loading ? "Redirecting..." : "Subscribe Now"}
             </button>
@@ -137,4 +139,4 @@ const RegisterModal = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default RegisterModal;
+export default Popup;

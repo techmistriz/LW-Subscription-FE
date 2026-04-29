@@ -66,7 +66,7 @@ export default function Header({ categories }: { categories: Category[] }) {
     }
   }, [searchOpen, open]);
 
- /*----------------- Handle scrolling active item into center when sidebar opens or path changes -----------------*/
+  /*----------------- Handle scrolling active item into center when sidebar opens or path changes -----------------*/
   useEffect(() => {
     if (open && activeItemRef.current) {
       activeItemRef.current.scrollIntoView({
@@ -173,7 +173,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                             </Link>
                           )}
                         </HeadlessMenu.Item>
-                        <HeadlessMenu.Item>
+                        {/* <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
                               href={authPlanLink}
@@ -182,7 +182,7 @@ export default function Header({ categories }: { categories: Category[] }) {
                               Plans
                             </Link>
                           )}
-                        </HeadlessMenu.Item>
+                        </HeadlessMenu.Item> */}
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <button

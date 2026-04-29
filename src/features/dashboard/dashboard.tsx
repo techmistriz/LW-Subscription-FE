@@ -140,21 +140,20 @@ export default function Dashboard() {
 
   /* ---------------- UI ---------------- */
   if (loading || !user) {
- return (
-       <div className="min-h-screen  flex justify-center">
-         <PageLoader />
-       </div>
-     );
-}
+    return (
+      <div className="min-h-screen  flex justify-center">
+        <PageLoader />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen mt-10">
       <div className="max-w-6xl mx-auto p-4 md:p-8 border border-gray-200">
-        
         {/*----------------- HEADER -----------------*/}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-          <Link
+          {/* <Link
             href={buttonLink}
             className={`px-4 py-2 rounded-lg text-sm ${
               buttonDisabled
@@ -163,12 +162,12 @@ export default function Dashboard() {
             }`}
           >
             {buttonLabel}
-          </Link>
+          </Link> */}
         </div>
 
         {/*----------------- STATS -----------------*/}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <StatCard title="Plan Type" value={planLabel} />
+          <StatCard title="Plan" value={subscription?.name || "No Plan"} />
           <StatCard title="Price" value={formatAmount(subscription?.amount)} />
           <StatCard
             title="Duration"
@@ -209,37 +208,51 @@ export default function Dashboard() {
           </div>
 
           {/*----------------- PLAN -----------------*/}
-          <div className="rounded-xl p-px bg-linear-to-br from-[#ff3b3b] via-[#c9060a] to-[#7a0406]">
-            <div className="bg-[#c9060a] rounded-xl p-5 text-white h-full">
-              <p className="text-xs opacity-70 uppercase">Current Plan</p>
-              <h2 className="text-2xl font-bold">
-                {subscription?.name || "No Plan"}
-              </h2>
+          <div className="bg-[#c9060a] rounded-xl p-5 text-white shadow-sm">
+            <p className="text-xs text-[#ffe4e6] uppercase tracking-wider">
+              Your Current Plan
+            </p>
 
-              <h3 className="text-3xl font-bold mt-4">
-                {formatAmount(subscription?.amount)}
-              </h3>
+            <div className="border-t border-white/20 my-4" />
 
-              <div className="border-t border-white/20 my-4" />
+            {/* FEATURES */}
+            {user.active_subscription?.plan?.feature &&
+              (() => {
+                const cleanFeatures = user.active_subscription.plan.feature
+                  ?.replace(/style="[^"]*"/g, "") // remove inline styles
+                  ?.replace(/class="[^"]*"/g, ""); // remove all classes
 
-              <div className="space-y-2 text-sm">
-                <RowWhite
-                  label="Valid till"
-                  value={formatDate(subscription?.end_date)}
-                />
-                <RowWhite
-                  label="Duration"
-                  value={
-                    subscription?.duration_value
-                      ? `${subscription.duration_value} ${subscription.duration_unit}`
-                      : "—"
-                  }
-                />
-                <RowWhite
-                  label="Type"
-                  value={subscription?.purchase_type || "—"}
-                />
-              </div>
+                return (
+                  <div className="mb-6">
+                    <p className="text-[10px] text-[#fecaca] mb-2 uppercase font-semibold tracking-wider">
+                      Included Features
+                    </p>
+
+                    <div
+                      className="plan-features text-[#fff1f2] text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: cleanFeatures }}
+                    />
+                  </div>
+                );
+              })()}
+
+            <div className="space-y-2 text-sm">
+              <RowWhite
+                label="Valid till"
+                value={formatDate(subscription?.end_date)}
+              />
+              <RowWhite
+                label="Duration"
+                value={
+                  subscription?.duration_value
+                    ? `${subscription.duration_value} ${subscription.duration_unit}`
+                    : "—"
+                }
+              />
+              <RowWhite
+                label="Type"
+                value={subscription?.purchase_type || "—"}
+              />
             </div>
           </div>
         </div>

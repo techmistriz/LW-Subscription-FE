@@ -11,6 +11,10 @@ interface Subscription {
   duration_value?: number;
   duration_unit?: string;
   purchase_type?: string;
+  features?: string;
+   is_trial?: string;
+  tag?: string;
+  
 }
 
 interface SubscriptionState {

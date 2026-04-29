@@ -44,7 +44,7 @@ export default async function RootLayout({
               <AuthGate />
 
               {children}
-              <Toaster position="bottom-right" />
+              <Toaster richColors position="bottom-right" />
 
               <Footer />
               <ScrollToTop />

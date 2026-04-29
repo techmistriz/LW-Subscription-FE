@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { notFound, useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { notFound, useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,7 +15,9 @@ import SocialShare from "@/components/SocialShare/SocialShare";
 import { Article } from "@/types";
 
 import "./style.css";
-import { useAppSelector } from "@/redux/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
+import { setUser } from "@/redux/store/slices/authSlice";
+import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
@@ -41,7 +43,12 @@ export default function ArticleDetailPage() {
     new Date(subscription.end_date) >= new Date(),
   );
 
-  const redirectPath = user ? "/dashboard" : "/subscription";
+  const router = useRouter();
+
+  const handleSubscribe = () => {
+    sessionStorage.setItem("scrollToPricing", "true");
+    router.push("/subscription");
+  };
 
   /* ---------------- FETCH ARTICLE ---------------- */
 
@@ -144,6 +151,63 @@ export default function ArticleDetailPage() {
       setAuthorImage("/avatar.jpg");
     }
   }, [article]);
+
+  /* ---------------- USER REFRESH ---------------- */
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!user || user.active_subscription) return; //  prevents unnecessary re-fetch
+
+    let isMounted = true;
+
+    const refreshUser = async () => {
+      try {
+        const res = await fetch("/api/user", {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        });
+
+        const updatedUser = await res.json();
+
+        if (!isMounted) return;
+
+        dispatch(
+          setUser({
+            user: updatedUser,
+            token: sessionStorage.getItem("token") || "",
+          }),
+        );
+
+        if (updatedUser?.active_subscription) {
+          const sub = updatedUser.active_subscription;
+
+          dispatch(
+            setSubscription({
+              id: sub.id,
+              plan_id: sub.plan?.id,
+              name: sub.plan?.name,
+              amount: Number(sub.plan?.price),
+              status: sub.status,
+              start_date: sub.start_date,
+              end_date: sub.end_date,
+              duration_value: sub.plan?.duration_value,
+              duration_unit: sub.plan?.duration_unit,
+              purchase_type: sub.purchase_type,
+            }),
+          );
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    refreshUser();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, dispatch]);
 
   /* ---------------- LOADING UI ---------------- */
 
@@ -271,12 +335,12 @@ export default function ArticleDetailPage() {
                   Subscribe to unlock full access to this article.
                 </p>
 
-                <Link
-                  href={redirectPath}
-                  className="inline-block bg-[#c9060a] text-white px-6 py-3 hover:bg-black transition"
+                <button
+                  onClick={handleSubscribe}
+                  className="bg-[#c9060a] text-white px-6 py-3 hover:bg-[#333] transition cursor-pointer"
                 >
                   SUBSCRIBE NOW
-                </Link>
+                </button>
               </div>
             </div>
           )}

@@ -12,6 +12,7 @@ import { getPlans } from "./services/plans";
 import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 import { setUser } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
+import SubscriptionSummarySkeleton from "@/components/Skeletons/SubscriptionSummary";
 
 /* ------------------ Load Razorpay SDK ------------------ */
 const loadRazorpay = () =>
@@ -55,6 +56,7 @@ export default function RegisterForm() {
 
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [plansLoading, setPlansLoading] = useState(true);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
@@ -117,11 +119,14 @@ export default function RegisterForm() {
   /* ------------------ Fetch Plans ------------------ */
   useEffect(() => {
     const fetchPlans = async () => {
+      setPlansLoading(true);
       try {
         const data = await getPlans();
         setPlans(data);
       } catch {
         toast.error("Failed to load plans");
+      } finally {
+        setPlansLoading(false);
       }
     };
 
@@ -214,11 +219,17 @@ export default function RegisterForm() {
                 status: sub.status,
                 start_date: sub.start_date,
                 end_date: sub.end_date,
+                duration_value: sub.plan?.duration_value,
+                duration_unit: sub.plan?.duration_unit,
+                purchase_type: sub.purchase_type,
               }),
             );
           }
 
           router.replace("/thankyou");
+          setTimeout(() => {
+            router.refresh();
+          }, 300);
         } catch (err) {
           toast.error("Payment verification failed");
         } finally {
@@ -289,6 +300,9 @@ export default function RegisterForm() {
             status: sub?.status,
             start_date: sub?.start_date,
             end_date: sub?.end_date,
+            duration_value: sub?.plan?.duration_value,
+            duration_unit: sub?.plan?.duration_unit,
+            purchase_type: sub?.purchase_type,
           }),
         );
 
@@ -297,7 +311,9 @@ export default function RegisterForm() {
         router.replace(
           `/thankyou?name=${encodeURIComponent(selectedPlan.name)}&amount=0&status=success&email=${encodeURIComponent(form.email)}`,
         );
-
+        setTimeout(() => {
+          router.refresh();
+        }, 300);
         return;
       }
 
@@ -330,6 +346,10 @@ export default function RegisterForm() {
   const price = Number(selectedPlan?.price || 0);
   const gst = price * 0.18;
   const total = price + gst;
+
+  const selectedPlanObj = plans.find((p) => String(p.id) === form.plan);
+
+  const otherPlans = plans.filter((p) => String(p.id) !== form.plan);
 
   return (
     <main className="bg-gray-50">
@@ -383,9 +403,9 @@ export default function RegisterForm() {
                     <button
                       type="button"
                       onClick={handleSendOtp}
-                      className="bg-[#333] text-white px-3 py-2 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap"
+                      className="bg-[#c9060a] cursor-pointer text-white px-3 py-1 rounded-md text-[10px] font-bold uppercase whitespace-nowrap"
                     >
-                      {isOtpSent ? "Resend" : "Send OTP"}
+                      {isOtpSent ? "Resend" : "Get OTP"}
                     </button>
                   )}
                 </div>
@@ -400,7 +420,7 @@ export default function RegisterForm() {
                     <button
                       type="button"
                       onClick={handleVerifyOtp}
-                      className="text-[#c9060a] text-xs font-bold uppercase underline"
+                      className="text-[#c9060a] text-xs font-bold uppercase underline cursor-pointer"
                     >
                       Verify
                     </button>
@@ -492,107 +512,132 @@ export default function RegisterForm() {
           {/* RIGHT: PLAN SELECTION */}
 
           <div className="lg:col-span-5">
-            <div className="bg-white p-8 border border-gray-200 shadow-sm rounded-xl sticky top-10 space-y-6">
-              <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
-                Selected Plan
-              </h2>
+            {plansLoading ? (
+              <SubscriptionSummarySkeleton />
+            ) : (
+              <div className="bg-white p-8 border border-gray-200 shadow-sm rounded-xl sticky top-10 space-y-6">
+                <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
+                  Subscription Summary
+                </h2>
 
-              {/* Plan List */}
-              <div className="space-y-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
-                {plans.map((plan) => (
-                  <div
-                    key={plan.id}
-                    // onClick={() =>
-                    //   setForm((prev) => ({
-                    //     ...prev,
-                    //     plan: String(plan.id),
-                    //   }))
-                    // }
-                    // className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
-                    //   form.plan === String(plan.id)
-                    //     ? "border-[#c9060a] bg-red-50 shadow-md"
-                    //     : "border-gray-100 hover:border-gray-200"
-                    // }`}
+                {/* Plan List */}
+                <div className="space-y-4 max-h-105 overflow-y-auto pr-2 custom-scrollbar">
+                  {/* SELECTED PLAN */}
+                  {selectedPlanObj && (
+                    <div>
+                      <h3 className="text-[11px] font-bold uppercase text-[#c9060a] mb-2 tracking-wider">
+                        Your Plan
+                      </h3>
 
-                    className={` p-4 rounded-xl border-2 transition-all ${
-                      form.plan === String(plan.id)
-                        ? "border-[#c9060a] bg-red-50 shadow-md"
-                        : "border-gray-100 "
-                    }`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="font-bold text-sm uppercase">
-                        {plan.name}
-                      </span>
-                      <span className="text-sm font-[#333] text-[#c9060a]">
-                        {Number(plan.price) === 0 ? "FREE" : `₹${plan.price}`}
-                      </span>
-                    </div>
-                    {/* <p className="text-[11px] text-gray-500 mt-1 uppercase font-bold tracking-tighter">
-                      {plan.duration_value} {plan.duration_unit} Access
-                    </p> */}
-                  </div>
-                ))}
-              </div>
-
-              {/* Order Summary Logic */}
-              {form.plan && (
-                <div className="bg-gray-50 p-5 rounded-xl space-y-3 border border-gray-100">
-                  {/* Base Price */}
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 font-medium">
-                      Base Price
-                    </span>
-                    <span className="font-bold">₹{price}</span>
-                  </div>
-
-                  {/* GST (only if price > 0) */}
-                  {price > 0 && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500 font-medium">
-                        GST (18%)
-                      </span>
-                      <span className="font-bold text-red-600">
-                        + ₹{gst.toFixed(2)}
-                      </span>
+                      <div className="p-4 rounded-xl border-2 border-[#c9060a] bg-red-50 shadow-md">
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-sm uppercase">
+                            {selectedPlanObj.name}
+                          </span>
+                          <span className="text-sm font-bold text-[#c9060a]">
+                            {Number(selectedPlanObj.price) === 0
+                              ? "0.00"
+                              : `₹${selectedPlanObj.price}`}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   )}
 
-                  {/* Total */}
-                  <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
-                    <span className="text-xs font-bold uppercase text-gray-800">
-                      Total Payable
-                    </span>
-                    <span className="text-xl font-bold text-[#c9060a]">
-                      ₹{price === 0 ? total : total.toFixed(2)}
-                    </span>
-                  </div>
+                  {/* OTHER PLANS */}
+                  {otherPlans.length > 0 && (
+                    <div>
+                      <h3 className="text-[11px] font-bold uppercase text-gray-400 mb-2 tracking-wider">
+                        Other Plans
+                      </h3>
+
+                      <div className="space-y-3">
+                        {otherPlans.map((plan) => (
+                          <div
+                            key={plan.id}
+                            onClick={() =>
+                              setForm((prev) => ({
+                                ...prev,
+                                plan: String(plan.id),
+                              }))
+                            }
+                            className="cursor-pointer p-4 rounded-xl border-2 border-gray-100 hover:border-gray-200 transition-all"
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-sm uppercase">
+                                {plan.name}
+                              </span>
+                              <span className="text-sm font-bold text-[#333]">
+                                ₹{plan.price}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
 
-              {/* Submit Button */}
-              <form onSubmit={handleSubmit} className="pt-2">
-                <button
-                  type="submit"
-                  disabled={loading || !form.plan}
-                  className="w-full bg-[#c9060a] text-white py-3 cursor-pointer rounded-xl font-bold uppercase tracking-widest hover:bg-[#333] transition-all disabled:opacity-50 shadow-lg shadow-red-100"
-                >
-                  {loading
-                    ? "Processing..."
-                    : Number(
-                          plans.find((p) => String(p.id) === form.plan)?.price,
-                        ) === 0
-                      ? "Register Now"
-                      : "Pay Now"}
-                </button>
+                {/* Order Summary Logic */}
+                {form.plan && (
+                  <div className="bg-gray-50 p-5 rounded-xl space-y-3 border border-gray-100">
+                    {/* Base Price */}
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500 font-medium">
+                        Base Price
+                      </span>
+                      <span className="font-bold">₹{price}</span>
+                    </div>
 
-                {!isOtpVerified && (
-                  <p className="text-center text-[10px] text-gray-400 mt-3 italic font-bold uppercase tracking-tighter">
-                    Please verify your contact number to proceed
-                  </p>
+                    {/* GST (only if price > 0) */}
+                    {price > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500 font-medium">
+                          GST (18%)
+                        </span>
+                        <span className="font-bold text-red-600">
+                          + ₹{gst.toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Total */}
+                    <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
+                      <span className="text-xs font-bold uppercase text-gray-800">
+                        Total Payable
+                      </span>
+                      <span className="text-xl font-bold text-[#c9060a]">
+                        ₹{price === 0 ? total : total.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
                 )}
-              </form>
-            </div>
+
+                {/* Submit Button */}
+                <form onSubmit={handleSubmit} className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading || !form.plan}
+                    className="w-full bg-[#c9060a] text-white py-3 cursor-pointer font-bold uppercase tracking-widest hover:bg-[#333] transition-all disabled:opacity-50 shadow-lg shadow-red-100"
+                  >
+                    {loading
+                      ? "Processing..."
+                      : Number(
+                            plans.find((p) => String(p.id) === form.plan)
+                              ?.price,
+                          ) === 0
+                        ? "Subscribe Now"
+                        : "Pay Now"}
+                  </button>
+
+                  {!isOtpVerified && (
+                    <p className="text-center text-[10px] text-gray-400 mt-3 italic font-bold uppercase tracking-tighter">
+                      Please verify your contact number to proceed
+                    </p>
+                  )}
+                </form>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -604,7 +649,8 @@ function Input({ label, error, type = "text", ...props }: any) {
   return (
     <div className="space-y-1">
       <label className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-        {label}
+        {label.replace(" *", "")}
+        {label.includes("*") && <span className="text-[#c9060a] ml-1">*</span>}
       </label>
       <input
         type={type}

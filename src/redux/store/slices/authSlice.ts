@@ -10,6 +10,9 @@ interface Plan {
   price: number;
   duration_value: number;
   duration_unit: string;
+  feature: string;
+   is_trial: string;
+  tag: string;
 }
 
 interface ActiveSubscription {

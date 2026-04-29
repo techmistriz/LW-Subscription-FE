@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import RegisterModal from "../../features/auth/RegisterModal";
+import RegisterModal from "./Popup";
 
 /*----------------- REDUX -----------------*/
 import { useAppSelector } from "@/redux/store/hooks";
 
-const RegisterPopupWrapper = () => {
+const PopupWrapper = () => {
   const pathname = usePathname();
   const { user, loading } = useAppSelector((state) => state.auth);
 
@@ -30,4 +30,4 @@ const RegisterPopupWrapper = () => {
   return <RegisterModal onClose={() => setShowModal(false)} />;
 };
 
-export default RegisterPopupWrapper;
+export default PopupWrapper;
