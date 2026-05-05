@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import Banner from "../../components/Common/Banner";
-import { registerUser } from "@/lib/auth/auth";
+import { registerUser, sendOtp } from "@/lib/api/auth/auth";
 import { verifyPayment } from "./services/payment";
 import { getPlans } from "./services/plans";
 
@@ -42,7 +42,7 @@ export default function RegisterForm() {
     contact: "",
     otp: "",
     dob: "",
-    organisation_name: "",
+    organisation: "",
     address: "",
     city: "",
     pincode: "",
@@ -155,23 +155,88 @@ export default function RegisterForm() {
   };
 
   /* ------------------ OTP ------------------ */
-  const handleSendOtp = () => {
-    if (form.contact.length !== 10) {
-      return toast.error("Enter a valid 10-digit number");
+
+const handleSendOtp = async () => {
+  if (form.contact.length !== 10) {
+    return toast.error("Enter valid number");
+  }
+
+  try {
+    const res = await sendOtp(form.contact);
+
+    if (!res?.status) {
+      throw new Error(res?.message);
     }
 
+    toast.success("OTP sent");
     setIsOtpSent(true);
-    toast.success(`OTP sent to ${form.contact}`);
-  };
+  } catch (err: any) {
+    toast.error(err.message);
+  }
+};
 
-  const handleVerifyOtp = () => {
-    if (form.otp === "1234") {
-      setIsOtpVerified(true);
-      toast.success("Number verified!");
-    } else {
-      toast.error("Invalid OTP");
-    }
-  };
+
+  // const handleSendOtp = () => {
+  //   if (form.contact.length !== 10) {
+  //     return toast.error("Enter a valid 10-digit number");
+  //   }
+
+  //   setIsOtpSent(true);
+  //   toast.success(`OTP sent to ${form.contact}`);
+  // };
+
+  // const handleVerifyOtp = () => {
+  //   if (form.otp === "123456") {
+  //     setIsOtpVerified(true);
+  //     toast.success("Number verified!");
+  //   } else {
+  //     toast.error("Invalid OTP");
+  //   }
+  // };
+
+
+//   const handleSendOtp = async () => {
+//   if (form.contact.length !== 10) {
+//     return toast.error("Enter valid number");
+//   }
+
+//   try {
+//     await fetch("/api/send-otp", {
+//       method: "POST",
+//       body: JSON.stringify({ phone: form.contact }),
+//       headers: { "Content-Type": "application/json" },
+//     });
+
+//     setIsOtpSent(true);
+//     toast.success("OTP sent");
+//   } catch {
+//     toast.error("Failed to send OTP");
+//   }
+// };
+
+// const handleVerifyOtp = async () => {
+//   try {
+//     const res = await fetch("/api/verify-otp", {
+//       method: "POST",
+//       body: JSON.stringify({
+//         phone: form.contact,
+//         otp: form.otp,
+//       }),
+//       headers: { "Content-Type": "application/json" },
+//     });
+
+//     const data = await res.json();
+
+//     if (data.status) {
+//       setIsOtpVerified(true);
+//       toast.success("Verified!");
+//     } else {
+//       toast.error(data.message);
+//     }
+//   } catch {
+//     toast.error("Verification failed");
+//   }
+// };
 
   /* ------------------ Razorpay Payment ------------------ */
   const handleRazorpayPayment = async (payment: any, selectedPlan: any) => {
@@ -448,8 +513,8 @@ export default function RegisterForm() {
               />
               <Input
                 label="Organisation Name"
-                name="organisation_name"
-                value={form.organisation_name}
+                name="organisation"
+                value={form.organisation}
                 onChange={handleChange}
               />
 

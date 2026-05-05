@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { subscribeUser } from "@/lib/auth/subscribe";
+import { subscribeUser } from "@/lib/api/auth/subscribe";
 import { toast } from "sonner";
 
 interface FormData {

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/api/axios";
-import { loginUser as loginApi, logoutApi } from "@/lib/auth/auth";
+import { loginUser as loginApi, logoutApi } from "@/lib/api/auth/auth";
 
 /*----------------- TYPES -----------------*/
 

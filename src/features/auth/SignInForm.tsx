@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, FormEvent } from "react";
-import { loginUser } from "@/lib/auth/auth";
+import { loginUser } from "@/lib/api/auth/auth";
 import Banner from "../../components/Common/Banner";
 import { useRouter } from "next/navigation";
 
@@ -112,8 +112,8 @@ export default function SignInForm() {
                 Register
               </Link>{" "}
               |{" "}
-              <Link href="/password-reset" className="hover:underline">
-                Lost your password?
+              <Link href="/forget-password" className="hover:underline">
+                Forget your password?
               </Link>
             </p>
           </div>

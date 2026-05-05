@@ -1,4 +1,4 @@
-import axiosInstance from "../api/axios";
+import axiosInstance from "../axios";
 import { RegisterPayload, RegisterResponse } from "@/types/auth";
 
 /*----------------- LOGIN -----------------*/
@@ -8,7 +8,6 @@ export async function loginUser(email: string, password: string) {
       email,
       password,
     });
-
     return res.data;
   } catch (error: any) {
     const message =
@@ -20,7 +19,7 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-/*----------------- REGISTER (FIXED) -----------------*/
+/*----------------- REGISTER -----------------*/
 export async function registerUser(
   payload: RegisterPayload
 ): Promise<RegisterResponse> {
@@ -37,11 +36,11 @@ export async function registerUser(
   }
 }
 
-/*----------------- FORGOT PASSWORD -----------------*/
-export async function forgotPassword(email: string) {
+/*----------------- SEND OTP -----------------*/
+export async function sendOtp(contact: string) {
   try {
-    const res = await axiosInstance.post("/auth/forgot-password", {
-      email,
+    const res = await axiosInstance.post("/auth/send-otp", {
+      contact,
     });
 
     return res.data;
@@ -49,7 +48,44 @@ export async function forgotPassword(email: string) {
     const message =
       error.response?.data?.message ||
       error.response?.data?.error ||
+      "Failed to send OTP";
+
+    throw new Error(message);
+  }
+}
+
+/*----------------- FORGOT PASSWORD -----------------*/
+export async function forgotPassword(email: string) {
+  try {
+    const res = await axiosInstance.post("/auth/forgot-password", {
+      email,
+    });
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
       "Failed to send reset link";
+
+    throw new Error(message);
+  }
+}
+
+/*----------------- RESET PASSWORD -----------------*/
+export async function resetPassword(data: {
+  email: string;
+  token: string;
+  password: string;
+  password_confirmation: string;
+}) {
+  try {
+    const res = await axiosInstance.post("/auth/reset-password", data);
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Reset password failed";
 
     throw new Error(message);
   }
