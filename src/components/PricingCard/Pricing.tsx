@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 import { getPlans } from "@/features/auth/services/plans";
 import PricingSkeleton from "../Skeletons/PricingSkeleton";
+import { useAppSelector } from "@/redux/store/hooks";
 
 export default function PricingCard() {
   const router = useRouter();
@@ -86,7 +87,24 @@ export default function PricingCard() {
     router.push("/register");
   }, [router, selectedPlanId, dispatch, plans]);
 
-if (!plans.length) {
+  const isAuthenticated = useAppSelector(
+  (state: any) => state.auth.isAuthenticated
+);
+
+const filteredPlans = useMemo(() => {
+  if (!plans.length) return [];
+
+  if (isAuthenticated) {
+    return plans.filter((plan) => Number(plan.price) !== 0);
+  }
+
+  return plans;
+}, [plans, isAuthenticated]);
+
+
+const visibleCount = filteredPlans.length;
+
+if (!plans) {
   return (
     <section className="min-h-screen bg-gray-100 w-full py-24 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -119,8 +137,14 @@ if (!plans.length) {
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-          {plans.map((plan) => {
+        <div
+  className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
+    visibleCount === 3
+      ? "lg:grid-cols-3 justify-items-center"
+      : "lg:grid-cols-4"
+  }`}
+>
+          {filteredPlans.map((plan) => {
             const isSelected = selectedPlanId === plan.id;
             const features = parseFeatures(plan.feature);
 

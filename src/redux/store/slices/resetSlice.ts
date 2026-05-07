@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ResetState = {
   loading: boolean;
@@ -21,14 +21,19 @@ const resetSlice = createSlice({
       state.error = null;
       state.success = null;
     },
-    resetSuccess: (state, action) => {
+
+    resetSuccess: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.success = action.payload;
+      state.error = null;
     },
-    resetFail: (state, action) => {
+
+    resetFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
+      state.success = null;
     },
+
     clearResetState: (state) => {
       state.loading = false;
       state.error = null;

@@ -27,6 +27,7 @@ export interface RegisterResponse {
   status: boolean;
   message: string;
   data: {
+    membership_plan_id: any;
     user: any;
     token?: string;
     payment?: {

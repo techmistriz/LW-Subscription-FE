@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { logoutUser } from "./authSlice";
 
 interface Subscription {
   id?: number;
@@ -12,17 +13,18 @@ interface Subscription {
   duration_unit?: string;
   purchase_type?: string;
   features?: string;
-   is_trial?: string;
+  is_trial?: string;
   tag?: string;
-  
 }
 
 interface SubscriptionState {
   data: Subscription | null;
+  isLoaded: boolean;
 }
 
 const initialState: SubscriptionState = {
   data: null,
+  isLoaded: false,
 };
 
 const subscriptionSlice = createSlice({
@@ -31,18 +33,21 @@ const subscriptionSlice = createSlice({
   reducers: {
     setSubscription: (state, action: PayloadAction<Subscription>) => {
       state.data = action.payload;
-      sessionStorage.setItem("subscription", JSON.stringify(action.payload));
+
+      sessionStorage.setItem(
+        "subscription",
+        JSON.stringify(action.payload)
+      );
     },
 
     loadSubscriptionFromStorage: (state) => {
       const stored = sessionStorage.getItem("subscription");
-      if (!stored) return;
 
-      try {
+      if (stored) {
         state.data = JSON.parse(stored);
-      } catch {
-        state.data = null;
       }
+
+      state.isLoaded = true;
     },
 
     clearSubscription: (state) => {
@@ -52,7 +57,7 @@ const subscriptionSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder.addCase("auth/logout/fulfilled", (state) => {
+    builder.addCase(logoutUser.fulfilled, (state) => {
       state.data = null;
       sessionStorage.removeItem("subscription");
     });
