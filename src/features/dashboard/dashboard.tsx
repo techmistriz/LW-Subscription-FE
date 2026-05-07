@@ -12,6 +12,16 @@ import {
 } from "@/redux/store/slices/subscriptionSlice";
 import { loadUserFromStorage } from "@/redux/store/slices/authSlice";
 import PageLoader from "@/components/Loader/PageLoader";
+import {
+  renewPlan,
+  verifyRenewPayment,
+} from "@/lib/api/subscription/subscription";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function Dashboard() {
   const router = useRouter();
@@ -54,43 +64,14 @@ export default function Dashboard() {
     }
   }, [user, subscriptionFromSlice, isInitialized]);
 
-  // Combine subscription data from both sources
   // In your Dashboard.tsx, update the subscription mapping
-  const subscription = useMemo(() => {
-    // First check subscription slice
-    if (subscriptionFromSlice) {
-      console.log("Using subscription from slice:", subscriptionFromSlice);
-      return subscriptionFromSlice;
-    }
+  //  FIXED: direct Redux subscription reference
+  const subscription = subscriptionFromSlice;
 
-    // Then check user's active_subscription
-    if (user?.active_subscription) {
-      console.log(
-        "Using subscription from user.active_subscription:",
-        user.active_subscription,
-      );
-      const sub = user.active_subscription;
-      return {
-        id: sub.id,
-        plan_id: sub.plan_id || sub.membership_plan_id, // ✅ Handle both field names
-        name: sub.plan?.name,
-        amount: Number(sub.plan?.price || 0),
-        status: sub.status,
-        start_date: sub.start_date,
-        end_date: sub.end_date,
-        duration_value: sub.plan?.duration_value,
-        duration_unit: sub.plan?.duration_unit,
-        purchase_type: sub.purchase_type,
-        features: sub.plan?.feature,
-        is_trial: String(sub.plan?.is_trial ?? ""),
-        tag: sub.plan?.tag,
-      };
-    }
-
-    console.log("No subscription found");
-    return null;
-  }, [subscriptionFromSlice, user]);
-
+  // debug only
+  useEffect(() => {
+    console.log(" LIVE SUBSCRIPTION UPDATE:", subscriptionFromSlice);
+  }, [subscriptionFromSlice]);
   /* ---------------- AUTH GUARD ---------------- */
   useEffect(() => {
     if (loading) return;
@@ -147,8 +128,15 @@ export default function Dashboard() {
 
   console.log("statusss", status);
 
-  const isActive = status === "ACTIVE";
-  const isExpired = status === "EXPIRED";
+  const now = new Date();
+
+  const hasExpiredByDate = subscription?.end_date
+    ? new Date(subscription.end_date) < now
+    : false;
+
+  const isActive = status === "ACTIVE" && !hasExpiredByDate;
+
+  const isExpired = status === "EXPIRED" || hasExpiredByDate;
 
   const isHighestPlan = useMemo(() => {
     if (!highestPlan || !subscription?.plan_id) return false;
@@ -192,7 +180,7 @@ export default function Dashboard() {
       if (expiredDays <= 10) {
         return {
           label: "Renew Plan",
-          link: "/renew",
+          link: "#",
           disabled: false,
         };
       }
@@ -209,7 +197,7 @@ export default function Dashboard() {
     if (isActive && !isHighestPlan) {
       return {
         label: "Upgrade Plan",
-        link: "/upgrade",
+        link: "/subscription",
         disabled: false,
       };
     }
@@ -260,6 +248,119 @@ export default function Dashboard() {
     return `${remainingDays} day${remainingDays > 1 ? "s" : ""} left`;
   }, [remainingDays]);
 
+  const handleRenewPlan = async () => {
+    try {
+      if (!subscription?.id) return;
+
+      const res = await renewPlan(subscription.id);
+
+      console.log("Renew response", res);
+
+      const payment = res?.data?.payment;
+
+      if (!payment) {
+        alert("Payment data not received");
+        return;
+      }
+
+      const options = {
+        key: payment.razorpay_key,
+        amount: payment.amount,
+        currency: payment.currency || "INR",
+        order_id: payment.order_id,
+
+        name: "Lex Witness",
+
+        handler: async function (response: any) {
+          try {
+            console.log(" Razorpay Success Response:", response);
+
+            const verifyRes = await verifyRenewPayment({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              membership_plan_id: subscription.plan_id,
+              purchase_type: "RENEW",
+            });
+
+            //  FULL RESPONSE LOG (MOST IMPORTANT)
+            console.log(" VERIFY API FULL RESPONSE:", verifyRes);
+            console.log(" VERIFY DATA:", verifyRes?.data);
+            console.log(
+              " UPDATED SUBSCRIPTION:",
+              verifyRes?.data?.subscription,
+            );
+
+            if (verifyRes?.status) {
+              const sub = verifyRes.data.subscription;
+
+              console.log(" RAW SUB FROM API:", sub);
+
+              //  NORMALIZE like your dashboard expects
+              const formattedSub = {
+                id: sub.id,
+                plan_id: sub.membership_plan_id,
+                name: sub.plan?.name,
+                amount: Number(sub.plan?.price || sub.total_amount || 0),
+                status: sub.status,
+                start_date: sub.start_date,
+                end_date: sub.end_date,
+                duration_value: sub.plan?.duration_value,
+                duration_unit: sub.plan?.duration_unit,
+                purchase_type: sub.purchase_type,
+                features: sub.plan?.feature,
+                tag: sub.plan?.tag,
+              };
+
+              console.log(" FORMATTED SUB FOR REDUX:", formattedSub);
+
+              //  update Redux instantly
+              dispatch(setSubscription(formattedSub));
+
+              //  force React refresh (important)
+              setDataLoaded(false);
+              requestAnimationFrame(() => setDataLoaded(true));
+            }
+          } catch (error) {
+            console.error(" Verify failed:", error);
+          }
+        },
+
+        prefill: {
+          name: `${user?.first_name || ""} ${user?.last_name || ""}`,
+          email: user?.email,
+          contact: user?.contact,
+        },
+
+        theme: {
+          color: "#c9060a",
+        },
+
+        retry: {
+          enabled: true,
+        },
+
+        modal: {
+          ondismiss: function () {
+            console.log("Payment popup closed");
+          },
+        },
+      };
+
+      if (!window.Razorpay) {
+        alert("Razorpay SDK failed to load");
+        return;
+      }
+
+      const razor = new window.Razorpay(options);
+      razor.open();
+    } catch (error: any) {
+      console.log("RENEW ERROR =>", error?.response?.data);
+
+      alert(error?.response?.data?.message || "Renew failed");
+    }
+  };
+
   /* ---------------- LOADER ---------------- */
   if (loading || !dataLoaded || !isInitialized || !isSubscriptionLoaded) {
     return (
@@ -280,17 +381,42 @@ export default function Dashboard() {
         {/* HEADER */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
-          <Link
-            href={buttonState.disabled ? "#" : buttonState.link}
-            onClick={(e) => buttonState.disabled && e.preventDefault()}
-            className={`px-4 py-2 rounded-lg text-sm transition-all ${
-              buttonState.disabled
-                ? "bg-gray-400 text-white cursor-not-allowed pointer-events-none"
-                : "bg-[#333] text-white hover:bg-[#c6090a]"
-            }`}
-          >
-            {buttonState.label}
-          </Link>
+
+          <div className="flex gap-3">
+            {/* EXPIRED → SHOW BOTH BUTTONS */}
+            {isExpired ? (
+              <>
+                {/* Renew Button */}
+                <button
+                  onClick={handleRenewPlan}
+                  className="px-4 py-2 rounded-lg text-sm transition-all bg-[#333] text-white hover:bg-[#c6090a]"
+                >
+                  Renew Plan
+                </button>
+
+                {/* Buy New Plan */}
+                <Link
+                  href="/subscription"
+                  className="px-4 py-2 rounded-lg text-sm transition-all bg-[#c9060a] text-white hover:bg-[#333]"
+                >
+                  Buy New Plan
+                </Link>
+              </>
+            ) : (
+              /* NORMAL SINGLE BUTTON */
+              <Link
+                href={buttonState.disabled ? "#" : buttonState.link}
+                onClick={(e) => buttonState.disabled && e.preventDefault()}
+                className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                  buttonState.disabled
+                    ? "bg-gray-400 text-white cursor-not-allowed pointer-events-none"
+                    : "bg-[#333] text-white hover:bg-[#c6090a]"
+                }`}
+              >
+                {buttonState.label}
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* STATS */}

@@ -14,7 +14,7 @@ export default function RegisterForm() {
     plans,
     loading,
     plansLoading,
-    processingPayment, // ✅ ADD THIS - it was missing!
+    processingPayment, //  ADD THIS - it was missing!
     selectedPlan,
     otherPlans,
     isOtpSent,
@@ -26,7 +26,7 @@ export default function RegisterForm() {
     setForm
   } = useRegisterForm();
 
-  // ✅ Show loading state during payment processing
+  //  Show loading state during payment processing
   if (processingPayment) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">

@@ -46,7 +46,7 @@ export function useRegisterForm() {
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>({});
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
-  const [processingPayment, setProcessingPayment] = useState(false); // ✅ ADD THIS
+  const [processingPayment, setProcessingPayment] = useState(false); //  ADD THIS
 
   // Fetch plans
   useEffect(() => {
@@ -216,7 +216,7 @@ export function useRegisterForm() {
       }
     }
     
-    // ✅ FIX: Handle free plan response (has user, subscription, token)
+    //  FIX: Handle free plan response (has user, subscription, token)
     const { token, user: userData, subscription: subscriptionData } = responseData;
     
     console.log("Free plan response - User:", userData);
@@ -226,7 +226,7 @@ export function useRegisterForm() {
     if (token && userData) {
       axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       
-      // ✅ CRITICAL: Add subscription to user object
+      //  CRITICAL: Add subscription to user object
       const userWithSubscription = {
         ...userData,
         active_subscription: subscriptionData ? {
@@ -289,7 +289,7 @@ export function useRegisterForm() {
     fieldErrors,
     isOtpSent,
     otpTimer,
-    processingPayment, // ✅ Export this
+    processingPayment, //  Export this
     selectedPlan: plans.find(p => String(p.id) === form.plan),
     otherPlans: plans.filter(p => String(p.id) !== form.plan),
     handleChange,

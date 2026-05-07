@@ -1,20 +1,61 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
+
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
+
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
-import { getPlans } from "@/features/auth/services/plans";
-import PricingSkeleton from "../Skeletons/PricingSkeleton";
 import { useAppSelector } from "@/redux/store/hooks";
+
+import { getPlans } from "@/features/auth/services/plans";
+
+import {
+  upgradePlan,
+  buyNewPlan,
+  verifySubscriptionPayment,
+} from "@/lib/api/subscription/subscription";
+
+import PricingSkeleton from "../Skeletons/PricingSkeleton";
+import { toast } from "sonner";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function PricingCard() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [selectedPlanId, setSelectedPlanId] = useState<number>(2);
-  const [loading, setLoading] = useState(false);
-  const [plans, setPlans] = useState<any[]>([]);
+  const [selectedPlanId, setSelectedPlanId] =
+    useState<number>(2);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [plans, setPlans] = useState<any[]>(
+    []
+  );
+
+  const isAuthenticated =
+    useAppSelector(
+      (state: any) =>
+        state.auth.isAuthenticated
+    );
+
+  const user = useAppSelector(
+    (state: any) => state.auth.user
+  );
+
+  const activeSubscription =
+    user?.active_subscription;
 
   /* ---------------- FETCH PLANS ---------------- */
   useEffect(() => {
@@ -30,7 +71,11 @@ export default function PricingCard() {
 
         setPlans(data);
       } catch (err) {
-        console.error("Failed to load plans", err);
+        console.error(
+          "Failed to load plans",
+          err
+        );
+
         setPlans([]);
       }
     };
@@ -43,81 +88,234 @@ export default function PricingCard() {
     if (!html) return [];
 
     const div = document.createElement("div");
+
     div.innerHTML = html;
 
-    return Array.from(div.querySelectorAll("li, p")).map(
-      (el) => el.textContent || ""
-    );
+    return Array.from(
+      div.querySelectorAll("li, p")
+    ).map((el) => el.textContent || "");
   };
 
-  /* ---------------- COLOR MAPPING (FIX) ---------------- */
+  /* ---------------- PLAN COLOR ---------------- */
   const getPlanColor = (name: string) => {
     switch (name?.toLowerCase()) {
       case "free":
         return "text-gray-500";
+
       case "silver":
         return "text-slate-600";
+
       case "gold":
         return "text-amber-500";
+
       case "platinum":
         return "text-indigo-500";
+
       default:
         return "text-gray-900";
     }
   };
 
-  /* ---------------- SUBSCRIBE ---------------- */
-  const handleSubscribe = useCallback(() => {
+  /* ---------------- SUBSCRIBE / UPGRADE ---------------- */
+const handleSubscribe = useCallback(async () => {
+  try {
     setLoading(true);
 
-    const selectedPlan = plans.find((p) => p.id === selectedPlanId);
+    const selectedPlan = plans.find(
+      (p) => p.id === selectedPlanId
+    );
 
-    if (selectedPlan) {
-      dispatch(
-        setSubscription({
-          plan_id: selectedPlan.id,
-          name: selectedPlan.name,
-          amount: Number(selectedPlan.price),
-          duration_value: selectedPlan.duration_value,
-          duration_unit: selectedPlan.duration_unit,
-        })
+    if (!selectedPlan) {
+      toast.error("Plan not found");
+      return;
+    }
+
+    // Store selected plan in redux (UI selection only)
+    // dispatch(
+    //   setSubscription({
+    //     plan_id: selectedPlan.id,
+    //     name: selectedPlan.name,
+    //     amount: Number(selectedPlan.price),
+    //     duration_value: selectedPlan.duration_value,
+    //     duration_unit: selectedPlan.duration_unit,
+    //   })
+    // );
+
+    
+    // Not logged in
+    if (!isAuthenticated) {
+      router.push("/register");
+      return;
+    }
+
+    // Free plan
+    if (Number(selectedPlan.price) === 0) {
+      router.push("/dashboard");
+      return;
+    }
+
+    const isExpired =
+      activeSubscription?.status === "EXPIRED" ||
+      (activeSubscription?.end_date &&
+        new Date(activeSubscription.end_date) < new Date());
+
+    let paymentData: any = null;
+
+    /* ---------------- BUY NEW ---------------- */
+    if (isExpired) {
+      const res = await buyNewPlan(selectedPlan.id);
+      paymentData = res?.data?.payment || res?.data;
+    }
+
+    /* ---------------- UPGRADE ---------------- */
+    else {
+      const response = await upgradePlan({
+        membership_plan_id: selectedPlan.id,
+      });
+
+      console.log("UPGRADE API RESPONSE:", response);
+
+      paymentData = response?.data?.payment;
+
+      if (!paymentData) {
+        toast.error("Payment data missing from upgrade API");
+        return;
+      }
+    }
+
+    if (!paymentData) {
+      toast.error("Payment initiation failed");
+      return;
+    }
+
+    const options = {
+      key:
+        paymentData?.razorpay_key ||
+        process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+
+      amount: paymentData?.amount,
+      currency: paymentData?.currency || "INR",
+      order_id: paymentData?.order_id,
+
+      name: "Lex Witness",
+
+      handler: async function (response: any) {
+        try {
+          const verifyRes = await verifySubscriptionPayment({
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            purchase_type: isExpired ? "RENEW" : "UPGRADE",
+            membership_plan_id: selectedPlan.id,
+          });
+
+          console.log("VERIFY RESPONSE:", verifyRes);
+
+          // 🔥 IMPORTANT: UPDATE REDUX HERE (THIS FIXES DASHBOARD ISSUE)
+          const sub =
+            verifyRes?.data?.subscription ||
+            verifyRes?.data?.data?.subscription;
+
+          if (sub) {
+            const formattedSub = {
+              id: sub.id,
+              plan_id: sub.membership_plan_id,
+              name: sub.plan?.name,
+              amount: Number(sub.plan?.price || sub.total_amount || 0),
+              status: sub.status,
+              start_date: sub.start_date,
+              end_date: sub.end_date,
+              duration_value: sub.plan?.duration_value,
+              duration_unit: sub.plan?.duration_unit,
+              purchase_type: sub.purchase_type,
+              features: sub.plan?.feature,
+              tag: sub.plan?.tag,
+            };
+
+            dispatch(setSubscription(formattedSub));
+
+            // force sync
+            window.dispatchEvent(new Event("storage"));
+          }
+
+          toast.success(
+            isExpired
+              ? "Plan purchased successfully"
+              : "Plan upgraded successfully"
+          );
+
+          router.push("/dashboard");
+        } catch (err) {
+          console.error("Verification error:", err);
+          toast.error("Payment verification failed");
+        }
+      },
+
+      prefill: {
+        name: `${user?.first_name || ""} ${user?.last_name || ""}`,
+        email: user?.email,
+        contact: user?.contact,
+      },
+
+      theme: {
+        color: "#c9060a",
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  } catch (error: any) {
+    toast.error(error?.response?.data?.message || "API ERROR");
+    console.log("API ERROR:", error?.response?.data);
+    console.log("STATUS:", error?.response?.status);
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+}, [
+  selectedPlanId,
+  plans,
+  dispatch,
+  router,
+  isAuthenticated,
+  user,
+  activeSubscription,
+]);
+
+  /* ---------------- FILTER PLANS ---------------- */
+  const filteredPlans = useMemo(() => {
+    if (!plans.length) return [];
+
+    if (isAuthenticated) {
+      return plans.filter(
+        (plan) =>
+          Number(plan.price) !== 0
       );
     }
 
-    router.push("/register");
-  }, [router, selectedPlanId, dispatch, plans]);
+    return plans;
+  }, [plans, isAuthenticated]);
 
-  const isAuthenticated = useAppSelector(
-  (state: any) => state.auth.isAuthenticated
-);
+  const visibleCount =
+    filteredPlans.length;
 
-const filteredPlans = useMemo(() => {
-  if (!plans.length) return [];
+  /* ---------------- LOADER ---------------- */
+  if (!plans.length) {
+    return (
+      <section className="min-h-screen bg-gray-100 w-full py-24 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="h-8 w-64 bg-gray-200 rounded mx-auto mb-3 animate-pulse" />
 
-  if (isAuthenticated) {
-    return plans.filter((plan) => Number(plan.price) !== 0);
+            <div className="h-4 w-40 bg-gray-200 rounded mx-auto animate-pulse" />
+          </div>
+
+          <PricingSkeleton />
+        </div>
+      </section>
+    );
   }
 
-  return plans;
-}, [plans, isAuthenticated]);
-
-
-const visibleCount = filteredPlans.length;
-
-if (!plans) {
-  return (
-    <section className="min-h-screen bg-gray-100 w-full py-24 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <div className="h-8 w-64 bg-gray-200 rounded mx-auto mb-3 animate-pulse" />
-          <div className="h-4 w-40 bg-gray-200 rounded mx-auto animate-pulse" />
-        </div>
-
-        <PricingSkeleton/>
-      </div>
-    </section>
-  );
-}
   return (
     <section
       id="pricing"
@@ -130,23 +328,29 @@ if (!plans) {
           <h2 className="text-4xl font-black uppercase tracking-tight text-gray-900">
             Choose Your Plan
           </h2>
+
           <p className="text-gray-500 mt-2 text-sm">
-            Flexible pricing built for professionals
+            Flexible pricing built for
+            professionals
           </p>
+
           <div className="w-20 h-1 bg-[#c9060a] mx-auto mt-5 rounded-full" />
         </div>
 
         {/* GRID */}
         <div
-  className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
-    visibleCount === 3
-      ? "lg:grid-cols-3 justify-items-center"
-      : "lg:grid-cols-4"
-  }`}
->
+          className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
+            visibleCount === 3
+              ? "lg:grid-cols-3 justify-items-center"
+              : "lg:grid-cols-4"
+          }`}
+        >
           {filteredPlans.map((plan) => {
-            const isSelected = selectedPlanId === plan.id;
-            const features = parseFeatures(plan.feature);
+            const isSelected =
+              selectedPlanId === plan.id;
+
+            const features =
+              parseFeatures(plan.feature);
 
             return (
               <label
@@ -160,10 +364,12 @@ if (!plans) {
                     <span
                       className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md
                       ${
-                        plan.tag === "Most Popular" ||
-                        plan.tag === "Best Value"
+                        plan.tag ===
+                          "Most Popular" ||
+                        plan.tag ===
+                          "Best Value"
                           ? "bg-[#c9060a] text-white"
-                          : "bg-gray-300 text-[#333 ]"
+                          : "bg-gray-300 text-[#333]"
                       }`}
                     >
                       {plan.tag}
@@ -177,7 +383,11 @@ if (!plans) {
                   name="plan"
                   className="sr-only"
                   checked={isSelected}
-                  onChange={() => setSelectedPlanId(plan.id)}
+                  onChange={() =>
+                    setSelectedPlanId(
+                      plan.id
+                    )
+                  }
                 />
 
                 {/* CARD */}
@@ -190,7 +400,7 @@ if (!plans) {
                   }`}
                 >
 
-                  {/* RADIO INDICATOR */}
+                  {/* RADIO ICON */}
                   <div className="flex justify-center mb-5">
                     <div
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
@@ -206,7 +416,7 @@ if (!plans) {
                     </div>
                   </div>
 
-                  {/* NAME (FIXED COLOR HERE) */}
+                  {/* NAME */}
                   <h3
                     className={`text-lg md:text-xl font-black uppercase tracking-widest text-center mb-3 ${getPlanColor(
                       plan.name
@@ -217,27 +427,37 @@ if (!plans) {
 
                   {/* FEATURES */}
                   <ul className="text-start space-y-1 min-h-[60px] list-disc marker:text-[#c9060a] list-inside">
-                    {features.slice(0, 3).map((f: string, i: number) => (
-                      <li
-                        key={i}
-                        className="text-sm text-gray-800 font-semibold"
-                      >
-                        {f}
-                      </li>
-                    ))}
+                    {features
+                      .slice(0, 3)
+                      .map(
+                        (
+                          f: string,
+                          i: number
+                        ) => (
+                          <li
+                            key={i}
+                            className="text-sm text-gray-800 font-semibold"
+                          >
+                            {f}
+                          </li>
+                        )
+                      )}
                   </ul>
 
                   {/* PRICE */}
                   <div className="mt-6 text-center">
                     <p className="text-2xl md:text-3xl font-black text-gray-900">
-                      {Number(plan.price) === 0
+                      {Number(plan.price) ===
+                      0
                         ? "FREE"
                         : `₹${plan.price}`}
                     </p>
 
-                    {Number(plan.price) !== 0 && (
+                    {Number(plan.price) !==
+                      0 && (
                       <p className="text-[11px] text-gray-400">
-                        + 18% GST applicable
+                        + 18% GST
+                        applicable
                       </p>
                     )}
                   </div>
@@ -254,7 +474,9 @@ if (!plans) {
             disabled={loading}
             className="w-full sm:w-auto bg-[#c9060a] text-white px-6 md:px-18 py-3 font-bold text-sm md:text-lg uppercase tracking-widest hover:bg-[#333] transition-all duration-300 active:scale-95 shadow-xl shadow-red-500/20 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? "Processing..." : "Subscribe Now"}
+            {loading
+              ? "Processing..."
+              : "Subscribe Now"}
           </button>
         </div>
 

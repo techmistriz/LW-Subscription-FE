@@ -25,30 +25,39 @@ export default function SubscriptionSummary({
   const total = price + gst;
 
   return (
-    <div className="bg-white p-8 border border-gray-200 shadow-sm rounded-xl sticky top-10 space-y-6">
-      <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
+<div className="bg-white p-6 border border-gray-200 shadow-sm rounded-xl sticky top-10 h-[670px] flex flex-col">
+        <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
         Subscription Summary
       </h2>
 
-      <div className="space-y-4 max-h-105 overflow-y-auto pr-2 custom-scrollbar">
-        {/* Selected Plan */}
-        {selectedPlan && (
-          <div>
-            <h3 className="text-[11px] font-bold uppercase text-[#c9060a] mb-2 tracking-wider">
-              Your Plan
-            </h3>
-            <div className="p-4 rounded-xl border-2 border-[#c9060a] bg-red-50 shadow-md">
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-sm uppercase">
-                  {selectedPlan.name}
-                </span>
-                <span className="text-sm font-bold text-[#c9060a]">
-                  {Number(selectedPlan.price) === 0 ? "0.00" : `₹${selectedPlan.price}`}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+<div className="space-y-4 max-h-105 overflow-y-auto pr-2 custom-scrollbar">
+          {/* Selected Plan */}
+     <div className="min-h-[90px]">
+  {selectedPlan ? (
+    <div>
+      <h3 className="text-[11px] mt-2 font-bold uppercase text-[#c9060a] mb-2 tracking-wider">
+        Selected Plan
+      </h3>
+
+      <div className="p-4 rounded-xl border-2 border-[#c9060a] bg-red-50 shadow-md">
+        <div className="flex justify-between items-center">
+          <span className="font-bold text-sm uppercase">
+            {selectedPlan.name}
+          </span>
+          <span className="text-sm font-bold text-[#c9060a]">
+            {Number(selectedPlan.price) === 0
+              ? "0.00"
+              : `₹${selectedPlan.price}`}
+          </span>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="text-xs text-gray-400 italic">
+      No plan selected
+    </div>
+  )}
+</div>
 
         {/* Other Plans */}
         {otherPlans.length > 0 && (
@@ -80,7 +89,7 @@ export default function SubscriptionSummary({
 
       {/* Order Summary */}
       {formPlan && (
-        <div className="bg-gray-50 p-5 rounded-xl space-y-3 border border-gray-100">
+        <div className="bg-gray-50 p-5 mt-4 rounded-xl space-y-3 border border-gray-100">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500 font-medium">Base Price</span>
             <span className="font-bold">₹{price}</span>
@@ -105,6 +114,7 @@ export default function SubscriptionSummary({
       )}
 
       <form onSubmit={onSubmit} className="pt-2">
+        
         <button
           type="submit"
           disabled={loading || !formPlan}

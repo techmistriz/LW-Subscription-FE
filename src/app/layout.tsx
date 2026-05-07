@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import Script from "next/script";
+
 import "./globals.css";
+
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -36,15 +39,28 @@ export default async function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <body className="antialiased">
+
+        {/* Razorpay Script */}
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
+
         <ScrollProvider>
           <ReduxProvider>
             <InitAuth>
               <Header categories={categories} />
+
               {/* <LoaderOverlay/> */}
+
               <AuthGate />
 
               {children}
-              <Toaster richColors position="bottom-right" />
+
+              <Toaster
+                richColors
+                position="bottom-right"
+              />
 
               <Footer />
               <ScrollToTop />
