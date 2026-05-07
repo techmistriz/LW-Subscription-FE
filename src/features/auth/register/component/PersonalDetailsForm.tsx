@@ -5,7 +5,6 @@ import FormInput from "./FormInput";
 import OTPInput from "./OTPInput";
 import { RegisterFormData } from "@/types/register.types";
 
-
 interface PersonalDetailsFormProps {
   form: RegisterFormData;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -21,7 +20,7 @@ export default function PersonalDetailsForm({
   getError,
   isOtpSent,
   otpTimer,
-  onSendOtp
+  onSendOtp,
 }: PersonalDetailsFormProps) {
   return (
     <div className="bg-white p-8 border border-gray-200 shadow-sm rounded-xl">
@@ -38,7 +37,7 @@ export default function PersonalDetailsForm({
           error={getError("first_name")}
           required
         />
-        
+
         <FormInput
           label="Last Name *"
           name="last_name"
@@ -47,7 +46,7 @@ export default function PersonalDetailsForm({
           error={getError("last_name")}
           required
         />
-        
+
         <FormInput
           label="Email *"
           type="email"
@@ -77,7 +76,7 @@ export default function PersonalDetailsForm({
           error={getError("dob")}
           required
         />
-        
+
         <FormInput
           label="Organisation Name"
           name="organisation"
@@ -104,7 +103,7 @@ export default function PersonalDetailsForm({
           error={getError("city")}
           required
         />
-        
+
         <FormInput
           label="Pincode *"
           name="pincode"
@@ -113,7 +112,7 @@ export default function PersonalDetailsForm({
           error={getError("pincode")}
           required
         />
-        
+
         <FormInput
           label="State *"
           name="state"
@@ -122,7 +121,7 @@ export default function PersonalDetailsForm({
           error={getError("state")}
           required
         />
-        
+
         <FormInput
           label="Country *"
           name="country"
@@ -133,22 +132,24 @@ export default function PersonalDetailsForm({
         />
 
         <FormInput
-                  label="Password *"
-                  type="password"
-                  name="password"
-                  onChange={onChange}
-                  error={getError("password")}
-                  required
-                         />
-        
+          label="Password *"
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={onChange}
+          error={getError("password")}
+          required
+        />
+
         <FormInput
-                  label="Confirm Password *"
-                  type="password"
-                  name="password_confirmation"
-                  onChange={onChange}
-                  error={getError("password_confirmation")}
-                  required
-                         />
+          label="Confirm Password *"
+          type="password"
+          name="password_confirmation"
+          value={form.password_confirmation}
+          onChange={onChange}
+          error={getError("password_confirmation")}
+          required
+        />
       </div>
     </div>
   );

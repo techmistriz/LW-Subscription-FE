@@ -65,19 +65,20 @@ export const renewPlan = async (
 };
 
 /* ---------------- VERIFY PAYMENT ---------------- */
-export const verifySubscriptionPayment =
-  async (payload: {
-    razorpay_payment_id: string;
-    razorpay_order_id: string;
-    razorpay_signature: string;
-  }) => {
-    const res = await axiosInstance.post(
-      "/subscription/payment-verify",
-      payload
-    );
+export const verifySubscriptionPayment = async (payload: {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+  purchase_type?: "RENEW" | "UPGRADE";
+  membership_plan_id?: number;
+}) => {
+  const res = await axiosInstance.post(
+    "/subscription/payment-verify",
+    payload
+  );
 
-    return res.data;
-  };
+  return res.data;
+};
 
 /* ---------------- VERIFY RENEW PAYMENT ---------------- */
 /* same API */

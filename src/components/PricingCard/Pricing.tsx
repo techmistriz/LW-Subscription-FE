@@ -169,9 +169,11 @@ const handleSubscribe = useCallback(async () => {
 
     /* ---------------- UPGRADE ---------------- */
     else {
-      const response = await upgradePlan({
-        membership_plan_id: selectedPlan.id,
-      });
+      // const response = await upgradePlan({
+      //   membership_plan_id: selectedPlan.id,
+      // });
+
+        const response = await upgradePlan(selectedPlan.id);
 
       console.log("UPGRADE API RESPONSE:", response);
 

@@ -229,15 +229,15 @@ export function useRegisterForm() {
       //  CRITICAL: Add subscription to user object
       const userWithSubscription = {
         ...userData,
-        active_subscription: subscriptionData ? {
-          id: subscriptionData.id,
-          plan_id: subscriptionData.membership_plan_id,
-          status: subscriptionData.status,
-          start_date: subscriptionData.start_date,
-          end_date: subscriptionData.end_date,
-          purchase_type: subscriptionData.purchase_type,
-          plan: subscriptionData.plan
-        } : null
+       active_subscription: subscriptionData ? {
+  id: subscriptionData.id,
+  plan_id: subscriptionData.plan?.id,  
+  status: subscriptionData.status,
+  start_date: subscriptionData.start_date,
+  end_date: subscriptionData.end_date,
+  purchase_type: subscriptionData.purchase_type,
+  plan: subscriptionData.plan
+} : null
       };
       
       console.log("User with subscription:", userWithSubscription);
@@ -247,21 +247,19 @@ export function useRegisterForm() {
       
       // Also dispatch subscription separately
       if (subscriptionData) {
-        dispatch(setSubscription({
-          id: subscriptionData.id,
-          plan_id: subscriptionData.membership_plan_id,
-          name: subscriptionData.plan?.name,
-          amount: Number(subscriptionData.plan?.price || 0),
-          status: subscriptionData.status,
-          start_date: subscriptionData.start_date,
-          end_date: subscriptionData.end_date,
-          duration_value: subscriptionData.plan?.duration_value,
-          duration_unit: subscriptionData.plan?.duration_unit,
-          purchase_type: subscriptionData.purchase_type,
-          features: subscriptionData.plan?.feature,
-          is_trial: String(subscriptionData.plan?.is_trial ?? ""),
-          tag: subscriptionData.plan?.tag,
-        }));
+     dispatch(setSubscription({
+  id: subscriptionData.id,
+  plan_id: subscriptionData.plan?.id, 
+  name: subscriptionData.plan?.name,
+  amount: Number(subscriptionData.plan?.price || 0),
+  status: subscriptionData.status,
+  start_date: subscriptionData.start_date,
+  end_date: subscriptionData.end_date,
+  purchase_type: subscriptionData.purchase_type,
+  features: subscriptionData.plan?.feature,
+  is_trial: String(subscriptionData.plan?.is_trial ?? ""),
+  tag: subscriptionData.plan?.tag,
+}));
       }
       
       toast.success("Registration Successful");

@@ -5,6 +5,7 @@ import { setSubscription } from "./subscriptionSlice";
 
 /* ---------------- USER TYPE ---------------- */
 interface User {
+  active_subscription: boolean;
   id: number;
   first_name: string;
   last_name?: string;

@@ -1,6 +1,6 @@
 
 import { forgotPassword, resetPassword } from "@/lib/api/auth/auth";
-import { AppDispatch } from "../store";
+import { AppDispatch } from "../store/store";
 import { resetFail, resetStart, resetSuccess } from "../store/slices/resetSlice";
 
 
