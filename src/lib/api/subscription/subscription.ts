@@ -1,18 +1,5 @@
 import axiosInstance from "../axios";
 
-/* ---------------- UPGRADE PLAN ---------------- */
-export const upgradePlan = async (
-  membership_plan_id: number
-) => {
-  const res = await axiosInstance.post(
-    "/subscription/upgrade-plan",
-    {
-      membership_plan_id,
-    }
-  );
-
-  return res.data;
-};
 
 /* ---------------- BUY NEW PLAN ---------------- */
 export const buyNewPlan = async (
@@ -64,7 +51,23 @@ export const renewPlan = async (
   return res.data;
 };
 
-/* ---------------- VERIFY PAYMENT ---------------- */
+
+/* ---------------- UPGRADE PLAN ---------------- */
+export const upgradePlan = async (
+  membership_plan_id: number
+) => {
+  const res = await axiosInstance.post(
+    "/subscription/upgrade-plan",
+    {
+      membership_plan_id,
+    }
+  );
+
+  return res.data;
+};
+
+
+/* ----------------  PAYMENT VERIFY ---------------- */
 export const verifySubscriptionPayment = async (payload: {
   razorpay_payment_id: string;
   razorpay_order_id: string;

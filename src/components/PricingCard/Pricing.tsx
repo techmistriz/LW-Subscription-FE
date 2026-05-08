@@ -126,31 +126,12 @@ const handleSubscribe = useCallback(async () => {
     );
 
     if (!selectedPlan) {
-      toast.error("Plan not found");
+      toast.error("Please select a plan");
       return;
     }
 
-    // Store selected plan in redux (UI selection only)
-    // dispatch(
-    //   setSubscription({
-    //     plan_id: selectedPlan.id,
-    //     name: selectedPlan.name,
-    //     amount: Number(selectedPlan.price),
-    //     duration_value: selectedPlan.duration_value,
-    //     duration_unit: selectedPlan.duration_unit,
-    //   })
-    // );
-
-    
-    // Not logged in
     if (!isAuthenticated) {
       router.push("/register");
-      return;
-    }
-
-    // Free plan
-    if (Number(selectedPlan.price) === 0) {
-      router.push("/dashboard");
       return;
     }
 
@@ -160,30 +141,24 @@ const handleSubscribe = useCallback(async () => {
         new Date(activeSubscription.end_date) < new Date());
 
     let paymentData: any = null;
+    let apiResponse: any = null;
 
     /* ---------------- BUY NEW ---------------- */
-    if (isExpired) {
-      const res = await buyNewPlan(selectedPlan.id);
-      paymentData = res?.data?.payment || res?.data;
+    if (!activeSubscription) {
+      apiResponse = await buyNewPlan(selectedPlan.id);
+    }
+
+    /* ---------------- RENEW ---------------- */
+    else if (isExpired) {
+      apiResponse = await renewPlan(activeSubscription.id);
     }
 
     /* ---------------- UPGRADE ---------------- */
     else {
-      // const response = await upgradePlan({
-      //   membership_plan_id: selectedPlan.id,
-      // });
-
-        const response = await upgradePlan(selectedPlan.id);
-
-      console.log("UPGRADE API RESPONSE:", response);
-
-      paymentData = response?.data?.payment;
-
-      if (!paymentData) {
-        toast.error("Payment data missing from upgrade API");
-        return;
-      }
+      apiResponse = await upgradePlan(selectedPlan.id);
     }
+
+    paymentData = apiResponse?.data?.payment || apiResponse?.data;
 
     if (!paymentData) {
       toast.error("Payment initiation failed");
@@ -207,49 +182,42 @@ const handleSubscribe = useCallback(async () => {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
-            purchase_type: isExpired ? "RENEW" : "UPGRADE",
             membership_plan_id: selectedPlan.id,
+            purchase_type: !activeSubscription
+              ? "NEW"
+              : isExpired
+              ? "RENEW"
+              : "UPGRADE",
           });
 
-          console.log("VERIFY RESPONSE:", verifyRes);
-
-          // 🔥 IMPORTANT: UPDATE REDUX HERE (THIS FIXES DASHBOARD ISSUE)
           const sub =
             verifyRes?.data?.subscription ||
             verifyRes?.data?.data?.subscription;
 
           if (sub) {
-            const formattedSub = {
-              id: sub.id,
-              plan_id: sub.membership_plan_id,
-              name: sub.plan?.name,
-              amount: Number(sub.plan?.price || sub.total_amount || 0),
-              status: sub.status,
-              start_date: sub.start_date,
-              end_date: sub.end_date,
-              duration_value: sub.plan?.duration_value,
-              duration_unit: sub.plan?.duration_unit,
-              purchase_type: sub.purchase_type,
-              features: sub.plan?.feature,
-              tag: sub.plan?.tag,
-            };
-
-            dispatch(setSubscription(formattedSub));
-
-            // force sync
-            window.dispatchEvent(new Event("storage"));
+            dispatch(
+              setSubscription({
+                id: sub.id,
+                plan_id: sub.membership_plan_id,
+                name: sub.plan?.name,
+                amount: Number(sub.plan?.price || 0),
+                status: sub.status,
+                start_date: sub.start_date,
+                end_date: sub.end_date,
+                duration_value: sub.plan?.duration_value,
+                duration_unit: sub.plan?.duration_unit,
+                purchase_type: sub.purchase_type,
+                features: sub.plan?.feature,
+                tag: sub.plan?.tag,
+              })
+            );
           }
 
-          toast.success(
-            isExpired
-              ? "Plan purchased successfully"
-              : "Plan upgraded successfully"
-          );
-
+          toast.success("Payment successful");
           router.push("/dashboard");
         } catch (err) {
-          console.error("Verification error:", err);
-          toast.error("Payment verification failed");
+          console.error(err);
+          toast.error("Verification failed");
         }
       },
 
@@ -267,21 +235,19 @@ const handleSubscribe = useCallback(async () => {
     const razorpay = new window.Razorpay(options);
     razorpay.open();
   } catch (error: any) {
-    toast.error(error?.response?.data?.message || "API ERROR");
-    console.log("API ERROR:", error?.response?.data);
-    console.log("STATUS:", error?.response?.status);
     console.error(error);
+    toast.error(error?.response?.data?.message || "API ERROR");
   } finally {
     setLoading(false);
   }
 }, [
   selectedPlanId,
   plans,
+  isAuthenticated,
+  activeSubscription,
+  user,
   dispatch,
   router,
-  isAuthenticated,
-  user,
-  activeSubscription,
 ]);
 
   /* ---------------- FILTER PLANS ---------------- */

@@ -386,18 +386,20 @@ export default function Dashboard() {
             {/* EXPIRED → SHOW BOTH BUTTONS */}
             {isExpired ? (
               <>
-                {/* Renew Button */}
-                <button
-                  onClick={handleRenewPlan}
-                  className="px-4 py-2 rounded-lg text-sm transition-all bg-[#333] text-white hover:bg-[#c6090a]"
-                >
-                  Renew Plan
-                </button>
+                {/* Renew Button (HIDE if FREE PLAN) */}
+                {Number(subscription?.amount) > 0 && (
+                  <button
+                    onClick={handleRenewPlan}
+                    className="px-4 py-2 rounded-lg text-sm transition-all bg-[#333] text-white hover:bg-[#c6090a] cursor-pointer"
+                  >
+                    Renew Plan
+                  </button>
+                )}
 
-                {/* Buy New Plan */}
+                {/* Buy New Plan (always show) */}
                 <Link
-                  href="/subscription"
-                  className="px-4 py-2 rounded-lg text-sm transition-all bg-[#c9060a] text-white hover:bg-[#333]"
+                  href="/subscription?flow=buy-new"
+                  className="px-4 py-2 rounded-lg text-sm transition-all bg-[#c9060a] text-white hover:bg-[#333] cursor-pointer"
                 >
                   Buy New Plan
                 </Link>
