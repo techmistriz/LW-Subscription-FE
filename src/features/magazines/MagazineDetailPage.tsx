@@ -104,7 +104,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       </section>
 
       {/*----------------- Related content sections -----------------*/}
-      <RelatedPosts posts={magazine.posts} />
+      <RelatedPosts posts={magazine.posts ?? []} />
       <LatestEdition magazines={latestMagazines} />
     </section>
   );

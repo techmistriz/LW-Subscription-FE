@@ -1,44 +1,44 @@
 import { ReactNode } from "react";
 
-/*----------------- POST -----------------*/
+/*==================== POST ====================*/
 export interface Post {
-  tag: boolean;
-  authors?: Author[];
-  magazine?: Magazine;
-
-  content: ReactNode;
   id: number;
   title: string;
   slug: string;
 
+  content?: ReactNode;
+
   published_at?: string;
   publish_date?: string;
+  date?: string;
 
   image?: string;
 
+  short_description?: string;
+  excerpt?: string;
+
   author?: Author | string;
 
-  short_description?: string;
-  date?: string;
-  excerpt?: string;
-}
-
-/*----------------- ARTICLE -----------------*/
-/*----------------- Article does NOT extend Post directly to avoid TypeScript errors -----------------*/
-export interface Article {
-  tags: any;
-  tags: any;
   authors?: Author[];
+
+  tags?: Tag[];
+
   magazine?: Magazine;
 
+  tag?: boolean;
+}
+
+/*==================== ARTICLE ====================*/
+export interface Article {
   id: number;
   title: string;
   slug: string;
 
   content?: string;
+  description?: string | null;
+
   short_description?: string;
   excerpt?: string;
-  description?: string | null;
 
   published_at?: string;
   publish_date?: string;
@@ -53,103 +53,164 @@ export interface Article {
   author_id?: number;
   author_slug?: string;
 
+  authors?: Author[];
+
+  tags?: Tag[];
+
+  magazine?: Magazine;
   magazine_id?: number;
 
   reader_feedbacks?: ReaderFeedback[] | null;
 }
 
-/*----------------- CATEGORY -----------------*/
+/*==================== TAG ====================*/
+export interface Tag {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+/*==================== CATEGORY ====================*/
 export interface ArticleCategory {
   id: number;
   name: string;
   slug?: string;
 }
 
-/*----------------- Category may also be just a string in some APIs -----------------*/
-export type ArticleCategoryType = ArticleCategory | string;
+export type ArticleCategoryType =
+  | ArticleCategory
+  | string;
 
-/*----------------- AUTHOR -----------------*/
+/*==================== AUTHOR ====================*/
 export interface Author {
   id: number;
   name: string;
+
   slug?: string;
+
   email?: string;
+
   description?: string;
+
   image?: string;
   avatar?: string;
+
   bio?: string;
+
   role_id?: string;
+
   title?: string;
+
   excerpt?: string;
+
   publishedAt?: string;
-  linkedin: string;
+
+  linkedin?: string;
 }
 
 export interface AuthorListItem {
   id: number;
   name: string;
+
   slug?: string;
-  linkedin: string;
+
+  linkedin?: string;
 }
 
-/*----------------- READER FEEDBACK -----------------*/
+/*==================== READER FEEDBACK ====================*/
 export interface ReaderFeedback {
   id: number;
+
   reader_name: string;
+
   reader_designation: string;
+
   reader_feedback: string;
+
   status?: number;
+
   created_at?: string;
+
   updated_at?: string;
 }
 
-/*----------------- MAGAZINE -----------------*/
+/*==================== MAGAZINE ====================*/
 export interface Magazine {
-  magazine: Magazine;
   id: number;
+
   slug: string;
+
   title: string;
+
+  year?: string;
+
   image?: string;
+
   magazine_name?: string;
+
   description?: string;
-  posts: Article[];
+
+  posts?: Article[];
+
+  month?: {
+    id: number;
+    name: string;
+  };
 }
 
-/*----------------- CATEGORY (general purpose) -----------------*/
+/*==================== CATEGORY ====================*/
 export interface Category {
   id: number;
+
   name: string;
+
   slug?: string;
 }
 
-/*----------------- YEAR -----------------*/
+/*==================== YEAR ====================*/
 export type Year = number;
+
 export type YearResponse = Year[];
 
-/*----------------- AUTH / FORM DATA -----------------*/
+/*==================== AUTH ====================*/
 export interface RegisterForm {
   first_name: string;
+
   last_name: string;
+
   email: string;
+
   password: string;
+
   password_confirmation: string;
+
   contact: string;
+
   address: string;
-
 }
 
-export interface FormData extends RegisterForm {
+export interface FormData
+  extends RegisterForm {
   plan: string;
+
   auto_renew: boolean;
-  otp:string;
-  dob:string;
-  organisation:string;
-  city:string;
-  pincode:string;
-  state:string;
-  country:string;
+
+  otp: string;
+
+  dob: string;
+
+  organisation: string;
+
+  city: string;
+
+  pincode: string;
+
+  state: string;
+
+  country: string;
 }
 
-export interface RegisterPayload extends RegisterForm {
+export interface RegisterPayload
+  extends RegisterForm {
   membership_plan_id: number;
 }

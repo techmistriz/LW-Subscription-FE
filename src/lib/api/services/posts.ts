@@ -1,45 +1,44 @@
 import api from "@/lib/api/axios";
 
-/*----------------- Unified Posts API - Single source of truth -----------------*/
+/*----------------- Unified Posts API -----------------*/
 interface GetPostsParams {
   search?: string;
   category_id?: number;
   year?: number;
   author_id?: number;
   magazine_id?: number;
+  tag_id?: number;
   page?: number;
   limit?: number;
-  per_page?:number;
-  latest?:number;
+  per_page?: number;
+  latest?: number;
 }
 
-/*----------------- Main posts fetch - handles ALL search/filter cases -----------------*/
+/*----------------- Main posts fetch -----------------*/
 export async function getPosts({
   search,
   category_id,
   year,
   author_id,
   magazine_id,
+  tag_id,
   page = 1,
-  per_page = 10 ,
-  // latest,
+  per_page = 10,
 }: GetPostsParams = {}) {
   const params: any = {
     page,
     per_page,
-    ...(magazine_id && { magazine_id }), // Only include if exists
+    ...(magazine_id && { magazine_id }),
     ...(search && { search }),
     ...(category_id && { category_id }),
-    ...(year && { year}),
+    ...(year && { year }),
     ...(author_id && { author_id }),
-    // latest
+    ...(tag_id && { tag_id }),
   };
-
 
   const response = await api.get("/posts", { params });
   return response.data;
 }
-
 
 /*----------------- Single article by slug -----------------*/
 export async function getArticleBySlug(slug: string) {
@@ -58,7 +57,7 @@ export async function getArticleBySlug(slug: string) {
   }
 }
 
-
+/*----------------- Related posts -----------------*/
 export async function getRelatedPosts(params: {
   category_id?: number;
   author_id?: number;
@@ -70,24 +69,27 @@ export async function getRelatedPosts(params: {
       limit: 10,
     },
   });
+
   return response.data?.data || [];
 }
 
-/*----------------- Editor picks posts (limited 5) -----------------*/
+/*----------------- Editor picks -----------------*/
 export async function getEditorPicksPosts(params?: {
   category_id?: number;
   limit?: number;
 }) {
   const response = await api.get("/posts", {
     params: {
-      category_id: 5 ,
+      category_id: 5,
       limit: params?.limit ?? 5,
       latest: 1,
     },
   });
+
   return response.data?.data || [];
 }
 
+/*----------------- Types -----------------*/
 export interface Magazine {
   image: string;
   id: number;
@@ -99,5 +101,3 @@ export interface Magazine {
     name: string;
   };
 }
-
-

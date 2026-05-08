@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import type { Magazine } from "@/types";
 
-const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+const magazineBaseUrl =
+  process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+
 type Props = {
   magazine: Magazine;
   showTitle?: boolean;
@@ -16,12 +19,12 @@ export default function LatestIssue({
 }: Props) {
   if (!magazine) return null;
 
-  const data = magazine?.magazine ?? magazine;
   return (
     <div>
       <h3 className="text-[20px] text-[#333333] font-semibold tracking-wide mt-2">
         LATEST EDITION
       </h3>
+
       <div className="w-14 h-1 bg-[#c9060a] mt-1 mb-4"></div>
 
       <Link
@@ -30,11 +33,17 @@ export default function LatestIssue({
       >
         <Image
           src={
-            data?.image && magazineBaseUrl
-              ? `${magazineBaseUrl.replace(/\/$/, "")}/${data.image}`
+            magazine.image && magazineBaseUrl
+              ? `${magazineBaseUrl.replace(
+                  /\/$/,
+                  ""
+                )}/${magazine.image}`
               : "/placeholder.jpg"
           }
-          alt={data?.title || "Latest magazine edition"}
+          alt={
+            magazine.title ||
+            "Latest magazine edition"
+          }
           fill
           className="object-cover hover:shadow-md transition-shadow"
           sizes="300px"
@@ -43,9 +52,10 @@ export default function LatestIssue({
 
       {showTitle && (
         <p className="text-center text-[18px] font-semibold my-2">
-          {data.title}
+          {magazine.title}
         </p>
       )}
+
       {showUnderline && (
         <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
       )}

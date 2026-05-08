@@ -40,9 +40,9 @@ export default function PostList({
       </div>
     );
   }
-
-  console.log("Author Name", posts);
-  console.log("Author Name", posts?.authors?.name);
+// console.log("Author Name", posts?.authors?.name);
+//   console.log("Author Name", posts);
+  
   return (
     <div className="space-y-6">
       <hr className="border-gray-200" />
@@ -99,7 +99,7 @@ export default function PostList({
                     {author.name}
                   </Link>
 
-                  {index < article.authors.length - 1 && ", "}
+                 {index < (article.authors?.length ?? 0) - 1 && ", "}
                 </span>
               ))}
               {" | "}

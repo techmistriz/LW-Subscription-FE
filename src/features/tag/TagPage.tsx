@@ -19,40 +19,33 @@ import Pagination from "@/components/Pagination/Pagination";
 
 import { Post } from "@/types/models";
 
-const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postBaseUrl =
+  process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function TagPage() {
   const params = useParams();
-
-  const tagId = Number(params?.id);
-
-  const tagSlug = params?.slug as string;
-
-  const tagTitle = tagSlug?.replace(/-/g, " ") || "";
-
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const router = useRouter();
-
-  const pathname = usePathname();
+  const tagId = params?.id ? Number(params.id) : null;
+  const tagSlug = params?.slug as string;
+  const tagTitle = tagSlug?.replace(/-/g, " ") || "";
 
   const yearParam = searchParams.get("year");
+  const pageParam = Number(searchParams.get("page")) || 1;
 
   const [loading, setLoading] = useState(false);
-
   const [selectedYear, setSelectedYear] = useState<number | null>(
-    yearParam ? Number(yearParam) : null,
+    yearParam ? Number(yearParam) : null
   );
 
   const [currentPage, setCurrentPage] = useState(1);
-
   const [years, setYears] = useState<number[]>([]);
-
   const [posts, setPosts] = useState<Post[]>([]);
-
   const [lastPage, setLastPage] = useState(1);
 
-  /*---------------- FETCH POSTS ----------------*/
+  /* ---------------- FETCH POSTS ---------------- */
   const fetchPosts = useCallback(
     async (page: number = 1, year: number | null = null) => {
       if (!tagId) return;
@@ -61,48 +54,29 @@ export default function TagPage() {
 
       try {
         const response = await getPosts({
-          tag_id: tagId,
+          tag_id: tagId, 
           page,
           ...(year ? { year } : {}),
         });
 
-         console.log("Tag Posts", response)
-        const normalizedPosts = (response.data ?? []).map((post: Post) => ({
-          ...post,
-
-          author:
-            post.author && typeof post.author !== "string"
-              ? {
-                  ...post.author,
-                  linkedin: post.author.linkedin || "",
-                }
-              : post.author,
-        }));
-
-        setPosts(normalizedPosts);
-
+        setPosts(response.data ?? []);
         setLastPage(response.meta?.paging?.last_page ?? 1);
-
         setCurrentPage(page);
       } catch (error) {
         console.error("Failed to fetch tag posts:", error);
-
         setPosts([]);
-
         setLastPage(1);
       } finally {
         setLoading(false);
       }
     },
-    [tagId],
+    [tagId]
   );
 
- 
-  /*---------------- LOAD YEARS ----------------*/
+  /* ---------------- LOAD YEARS ---------------- */
   const loadYears = useCallback(async () => {
     try {
       const data = await getYears();
-
       setYears(data ?? []);
     } catch (error) {
       console.error("Failed to load years:", error);
@@ -113,17 +87,14 @@ export default function TagPage() {
     loadYears();
   }, [loadYears]);
 
-  const pageParam = Number(searchParams.get("page")) || 1;
-
   useEffect(() => {
-    if (tagId) {
-      const year = yearParam ? Number(yearParam) : null;
+    if (!tagId) return;
 
-      fetchPosts(pageParam, year);
-    }
+    const year = yearParam ? Number(yearParam) : null;
+    fetchPosts(pageParam, year);
   }, [tagId, pageParam, yearParam, fetchPosts]);
 
-  /*---------------- APPLY FILTER ----------------*/
+  /* ---------------- APPLY FILTER ---------------- */
   const handleApplyFilter = () => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -137,12 +108,6 @@ export default function TagPage() {
 
     router.push(`${pathname}?${params.toString()}`);
   };
-
-  const postsWithContent: Post[] = posts.map((p) => ({
-    ...p,
-
-    content: p.content ? <>{p.content}</> : <></>,
-  }));
 
   return (
     <section className="bg-white">
@@ -159,7 +124,7 @@ export default function TagPage() {
         ) : (
           <>
             <PostList
-              posts={postsWithContent}
+              posts={posts} // ✅ no JSX mutation
               fallbackAuthorName={tagTitle}
               postBaseUrl={postBaseUrl}
               loading={loading}

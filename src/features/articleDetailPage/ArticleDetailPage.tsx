@@ -244,7 +244,7 @@ export default function ArticleDetailPage() {
     .slice(0, 60)
     .join(" ");
 
-  console.log("Article", article);
+  // console.log("Article", article);
   return (
     <section className="bg-white">
       <article className="lg:col-span-9">
@@ -265,8 +265,8 @@ export default function ArticleDetailPage() {
         {/*----------------- AUTHOR + SOCIAL -----------------*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 text-sm text-[#333333]">
-            {article.authors?.length > 0 ? (
-              article.authors.map((author, index) => (
+           {(article.authors?.length ?? 0) > 0 ? (
+              article?.authors?.map((author, index) => (
                 <div key={author.id} className="flex items-center gap-2">
                   {/* AUTHOR NAME */}
                   <Link
@@ -296,7 +296,7 @@ export default function ArticleDetailPage() {
                   )}
 
                   {/* COMMA */}
-                  {index < article.authors.length - 1 && (
+                {index < (article.authors?.length ?? 0) - 1 && (
                     <span className="text-gray-500">,</span>
                   )}
                 </div>
@@ -399,11 +399,11 @@ export default function ArticleDetailPage() {
        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
   
   {/*----------------- TAGS -----------------*/}
-  {article.tags?.length > 0 && (
+  {(article.tags?.length ?? 0) > 0 && (
     <div className="flex flex-wrap items-center gap-1">
       <p className="font-normal text-[#333]">Tags:</p>
 
-      {article.tags.map((tag: any, index: number) => (
+      {article?.tags?.map((tag: any, index: number) => (
         <span key={tag.id} className="flex items-center">
           <Link
             href={`/tag/${tag.id}/${tag.slug}`}
@@ -412,7 +412,7 @@ export default function ArticleDetailPage() {
             {tag.name}
           </Link>
 
-          {index < article.tags.length - 1 && (
+            {index < (article.tags?.length ?? 0) - 1 && (
             <span className="mx-1 text-gray-500">,</span>
           )}
         </span>
@@ -429,13 +429,13 @@ export default function ArticleDetailPage() {
 </div>
 
         {/*----------------- AUTHOR SECTION -----------------*/}
-        {article.authors?.length > 0 && (
+          {(article.authors?.length ?? 0) > 0 && (
           <>
             <h3 className="font-bold text-xl mt-10">ABOUT AUTHORS</h3>
             <div className="w-10 h-1 bg-[#c9060a]" />
 
             <div className="space-y-4 mt-2">
-              {article.authors.map((author: Author) => (
+              {article.authors?.map((author: Author) => (
                 <div
                   key={author.id}
                   className="border border-gray-300 p-4 flex gap-4 hover:shadow-gray-300 hover:shadow-md"

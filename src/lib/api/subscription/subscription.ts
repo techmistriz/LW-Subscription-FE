@@ -72,7 +72,7 @@ export const verifySubscriptionPayment = async (payload: {
   razorpay_payment_id: string;
   razorpay_order_id: string;
   razorpay_signature: string;
-  purchase_type?: "RENEW" | "UPGRADE";
+purchase_type?: "NEW" | "RENEW" | "UPGRADE";
   membership_plan_id?: number;
 }) => {
   const res = await axiosInstance.post(
