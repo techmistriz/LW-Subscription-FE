@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { useRegisterForm } from "../hooks/useRegisterForm";
 import PersonalDetailsForm from "./PersonalDetailsForm";
 import SubscriptionSummary from "./SubscriptionSummary";
@@ -23,7 +21,7 @@ export default function RegisterForm() {
     handleSendOtp,
     handleSubmit,
     getError,
-    setForm
+    setForm,
   } = useRegisterForm();
 
   //  Show loading state during payment processing
@@ -89,7 +87,9 @@ export default function RegisterForm() {
               otherPlans={otherPlans}
               formPlan={form.plan}
               loading={loading}
-              onPlanSelect={(planId) => setForm(prev => ({ ...prev, plan: planId }))}
+              onPlanSelect={(planId) =>
+                setForm((prev) => ({ ...prev, plan: planId }))
+              }
               onSubmit={handleSubmit}
             />
           </div>

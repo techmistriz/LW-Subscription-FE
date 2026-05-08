@@ -89,9 +89,7 @@ export default function OTPInput({
 
       {/* ERROR */}
       {error && (
-        <p className="text-red-500 text-[10px] uppercase font-bold">
-          {error}
-        </p>
+        <p className="text-red-500 text-[10px] uppercase font-bold">{error}</p>
       )}
     </div>
   );

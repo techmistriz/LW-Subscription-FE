@@ -19,6 +19,7 @@ import {
   upgradePlan,
   buyNewPlan,
   verifySubscriptionPayment,
+  renewPlan,
 } from "@/lib/api/subscription/subscription";
 
 import PricingSkeleton from "../Skeletons/PricingSkeleton";

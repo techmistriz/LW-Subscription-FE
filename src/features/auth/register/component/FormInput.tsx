@@ -21,7 +21,7 @@ export default function FormInput({
   ...props
 }: FormInputProps) {
   const displayLabel = label.replace(" *", "");
-  
+
   return (
     <div className="space-y-1">
       <label className="text-[11px] font-bold text-gray-500 uppercase ml-1">

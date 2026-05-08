@@ -39,7 +39,7 @@ function SubscribeSidebar() {
       setTimeout(() => {
         setMessage(null);
       }, 3000);
-toast.success("Subscribed successfully!");
+      toast.success("Subscribed successfully!");
       setForm({ name: "", email: "", contact: "" });
     } catch (err: any) {
       // setError(err.message);

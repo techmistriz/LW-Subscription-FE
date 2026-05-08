@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, FormEvent } from "react";
-import { loginUser } from "@/lib/api/auth/auth";
 import Banner from "../../components/Common/Banner";
 import { useRouter } from "next/navigation";
 

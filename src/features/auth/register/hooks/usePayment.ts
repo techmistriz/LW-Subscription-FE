@@ -29,10 +29,14 @@ export function usePayment() {
     registrationToken: string | null,
     form: RegisterFormData,
     setProcessingPayment: (value: boolean) => void,
-    membershipPlanId?: number
+    membershipPlanId?: number,
   ) => {
-    console.log("Starting Razorpay payment with:", { payment, selectedPlan, membershipPlanId });
-    
+    console.log("Starting Razorpay payment with:", {
+      payment,
+      selectedPlan,
+      membershipPlanId,
+    });
+
     const isLoaded = await loadRazorpay();
     if (!isLoaded) throw new Error("Razorpay SDK failed to load");
 
@@ -60,7 +64,7 @@ export function usePayment() {
           console.log("Sending verification payload:", verifyPayload);
 
           const verifyRes = await verifyPayment(verifyPayload);
-          
+
           console.log("Verification response:", verifyRes);
 
           if (!verifyRes?.status) {
@@ -82,58 +86,66 @@ export function usePayment() {
           // Add subscription to user object
           const userWithSubscription = {
             ...userData,
-            active_subscription: subscriptionData ? {
-              id: subscriptionData.id,
-              plan_id: subscriptionData.membership_plan_id,
-              status: subscriptionData.status,
-              start_date: subscriptionData.start_date,
-              end_date: subscriptionData.end_date,
-              purchase_type: subscriptionData.purchase_type,
-              plan: subscriptionData.plan
-            } : null
+            active_subscription: subscriptionData
+              ? {
+                  id: subscriptionData.id,
+                  plan_id: subscriptionData.membership_plan_id,
+                  status: subscriptionData.status,
+                  start_date: subscriptionData.start_date,
+                  end_date: subscriptionData.end_date,
+                  purchase_type: subscriptionData.purchase_type,
+                  plan: subscriptionData.plan,
+                }
+              : null,
           };
 
           console.log("User with subscription:", userWithSubscription);
 
           // Dispatch to Redux
-          dispatch(setUser({ 
-            user: userWithSubscription, 
-            token: token 
-          }));
-          
+          dispatch(
+            setUser({
+              user: userWithSubscription,
+              token: token,
+            }),
+          );
+
           if (subscriptionData) {
-            dispatch(setSubscription({
-              id: subscriptionData.id,
-              plan_id: subscriptionData.membership_plan_id,
-              name: subscriptionData.plan?.name,
-              amount: Number(subscriptionData.plan?.price || 0),
-              status: subscriptionData.status,
-              start_date: subscriptionData.start_date,
-              end_date: subscriptionData.end_date,
-              duration_value: subscriptionData.plan?.duration_value,
-              duration_unit: subscriptionData.plan?.duration_unit,
-              purchase_type: subscriptionData.purchase_type,
-              features: subscriptionData.plan?.feature,
-              is_trial: String(subscriptionData.plan?.is_trial ?? ""),
-              tag: subscriptionData.plan?.tag,
-            }));
+            dispatch(
+              setSubscription({
+                id: subscriptionData.id,
+                plan_id: subscriptionData.membership_plan_id,
+                name: subscriptionData.plan?.name,
+                amount: Number(subscriptionData.plan?.price || 0),
+                status: subscriptionData.status,
+                start_date: subscriptionData.start_date,
+                end_date: subscriptionData.end_date,
+                duration_value: subscriptionData.plan?.duration_value,
+                duration_unit: subscriptionData.plan?.duration_unit,
+                purchase_type: subscriptionData.purchase_type,
+                features: subscriptionData.plan?.feature,
+                is_trial: String(subscriptionData.plan?.is_trial ?? ""),
+                tag: subscriptionData.plan?.tag,
+              }),
+            );
           }
 
           // Wait for Redux to persist to storage
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
           // Verify data was saved
           const savedUser = sessionStorage.getItem("user");
           const savedSubscription = sessionStorage.getItem("subscription");
-          
+
           console.log("Storage verification - User saved:", !!savedUser);
-          console.log("Storage verification - Subscription saved:", !!savedSubscription);
-          
+          console.log(
+            "Storage verification - Subscription saved:",
+            !!savedSubscription,
+          );
+
           toast.success("Payment successful! Registration completed.");
-          
+
           // Redirect to thank you page
           router.replace("/thankyou");
-          
         } catch (err: any) {
           console.error("Payment verification error:", err);
           toast.error(err.message || "Payment verification failed");
@@ -148,14 +160,14 @@ export function usePayment() {
       },
 
       theme: { color: "#c9060a" },
-      
+
       modal: {
         ondismiss: () => {
           console.log("Payment modal closed by user");
           toast.info("Payment cancelled");
           setProcessingPayment(false);
-        }
-      }
+        },
+      },
     });
 
     rzp.open();

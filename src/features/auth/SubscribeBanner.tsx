@@ -132,7 +132,7 @@ export default function SubscribeBanner() {
       //   type: "error",
       //   message: err?.message || "Something went wrong.",
       // });
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
