@@ -40,6 +40,9 @@ export default function PostList({
       </div>
     );
   }
+
+  console.log("Author Name", posts);
+  console.log("Author Name", posts?.authors?.name);
   return (
     <div className="space-y-6">
       <hr className="border-gray-200" />
@@ -87,20 +90,20 @@ export default function PostList({
             </h3>
 
             <p className="font-normal text-[16px] text-[#333333] mb-2 border-b border-gray-200 pb-2">
-              {article.author &&
-                (typeof article.author === "string" ? (
-                  <span className="text-[#c9060a]">{article.author}</span>
-                ) : (
+              {article.authors?.map((author, index) => (
+                <span key={author.id}>
                   <Link
-                    href={`/author/${article.author.slug}`}
-                    className="text-[#c9060a]"
+                    href={`/author/${author.slug}`}
+                    className="text-[#c9060a] hover:underline"
                   >
-                    {article.author.name}
+                    {author.name}
                   </Link>
-                ))}
+
+                  {index < article.authors.length - 1 && ", "}
+                </span>
+              ))}
               {" | "}
               {article.magazine?.month?.name} {article.magazine?.year}
-              {/* {article.publish_date || article.date || "N/A"} */}
             </p>
 
             <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-6">

@@ -12,7 +12,7 @@ import { formatArticleHTML } from "@/lib/utils/helper/formatArticle";
 import TestimonialCard from "@/components/Testimonial/Testimonial";
 import SocialShare from "@/components/SocialShare/SocialShare";
 
-import { Article } from "@/types";
+import { Article, Author } from "@/types";
 
 import "./style.css";
 import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
@@ -141,12 +141,8 @@ export default function ArticleDetailPage() {
   /* ---------------- AUTHOR IMAGE ---------------- */
 
   useEffect(() => {
-    if (
-      article?.author &&
-      typeof article.author !== "string" &&
-      article.author.image
-    ) {
-      setAuthorImage(`${authorImg}${article.author.image}`);
+    if (article?.authors?.[0]?.image) {
+      setAuthorImage(`${authorImg}${article.authors[0].image}`);
     } else {
       setAuthorImage("/avatar.jpg");
     }
@@ -248,6 +244,7 @@ export default function ArticleDetailPage() {
     .slice(0, 60)
     .join(" ");
 
+  console.log("Article", article);
   return (
     <section className="bg-white">
       <article className="lg:col-span-9">
@@ -266,30 +263,59 @@ export default function ArticleDetailPage() {
         <div className="w-10 h-1 bg-[#c9060a] mb-1" />
 
         {/*----------------- AUTHOR + SOCIAL -----------------*/}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-sm text-[#333333] flex items-center gap-2">
-            {article.author && typeof article.author !== "string" ? (
-              <Link
-                href={`/author/${article.author.slug}`}
-                className="text-[#c9060a] font-medium"
-              >
-                {article.author.name}
-              </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-[#333333]">
+            {article.authors?.length > 0 ? (
+              article.authors.map((author, index) => (
+                <div key={author.id} className="flex items-center gap-2">
+                  {/* AUTHOR NAME */}
+                  <Link
+                    href={`/author/${author.slug}`}
+                    className="text-[#c9060a] font-medium hover:underline"
+                  >
+                    {author.name}
+                  </Link>
+
+                  {/* LINKEDIN ICON */}
+                  {author.linkedin && (
+                    <a
+                      href={author.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#0A66C2] hover:opacity-80"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-4 h-4"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+                      </svg>
+                    </a>
+                  )}
+
+                  {/* COMMA */}
+                  {index < article.authors.length - 1 && (
+                    <span className="text-gray-500">,</span>
+                  )}
+                </div>
+              ))
             ) : (
               <span className="text-[#c9060a] font-medium">
-                {typeof article.author === "string"
-                  ? article.author
-                  : "Lex Witness Bureau"}
+                Lex Witness Bureau
               </span>
             )}
 
+            {/* MAGAZINE */}
             <span className="text-gray-500">|</span>
 
             <span>
               {article.magazine?.month?.name} {article.magazine?.year}
             </span>
-          </p>
+          </div>
 
+          {/* ARTICLE SHARE */}
           <SocialShare title={article.title} />
         </div>
 
@@ -315,7 +341,7 @@ export default function ArticleDetailPage() {
         <div className="my-6">
           {isSubscribed ? (
             <div
-              className="article-content text-[17px] leading-7.25 font-normal text-gray-800 text-justify"
+              className="article-content text-[15px] leading-7.25 font-normal text-gray-800 text-justify"
               dangerouslySetInnerHTML={{ __html: fullHTML }}
             />
           ) : (
@@ -370,61 +396,101 @@ export default function ArticleDetailPage() {
             </div>
           )}
 
-        {article.description && (
-          <div className="flex justify-end  ">
-            <SocialShare title={article.title} />
-          </div>
-        )}
+       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+  
+  {/*----------------- TAGS -----------------*/}
+  {article.tags?.length > 0 && (
+    <div className="flex flex-wrap items-center gap-1">
+      <p className="font-normal text-[#333]">Tags:</p>
+
+      {article.tags.map((tag: any, index: number) => (
+        <span key={tag.id} className="flex items-center">
+          <Link
+            href={`/tag/${tag.id}/${tag.slug}`}
+            className="text-[#c9060a] text-sm hover:underline"
+          >
+            {tag.name}
+          </Link>
+
+          {index < article.tags.length - 1 && (
+            <span className="mx-1 text-gray-500">,</span>
+          )}
+        </span>
+      ))}
+    </div>
+  )}
+
+  {/*----------------- SOCIAL SHARE -----------------*/}
+  {article.description && (
+    <div className="sm:ml-auto flex justify-end">
+      <SocialShare title={article.title} />
+    </div>
+  )}
+</div>
 
         {/*----------------- AUTHOR SECTION -----------------*/}
-        {article.author && typeof article.author !== "string" && (
+        {article.authors?.length > 0 && (
           <>
-            <h3 className="font-bold text-xl mt-10">ABOUT AUTHOR</h3>
+            <h3 className="font-bold text-xl mt-10">ABOUT AUTHORS</h3>
             <div className="w-10 h-1 bg-[#c9060a]" />
 
-            <div className="border border-gray-300 mt-2 p-4 flex gap-4 hover:shadow-gray-300 hover:shadow-md">
-              <div className="relative w-24 h-24 shrink-0">
-                <Image
-                  src={authorImage}
-                  alt={article.author.name}
-                  fill
-                  className="object-cover"
-                  onError={() => setAuthorImage("/avatar.jpg")}
-                />
-              </div>
+            <div className="space-y-4 mt-2">
+              {article.authors.map((author: Author) => (
+                <div
+                  key={author.id}
+                  className="border border-gray-300 p-4 flex gap-4 hover:shadow-gray-300 hover:shadow-md"
+                >
+                  {/* AUTHOR IMAGE */}
+                  <div className="relative w-24 h-24 shrink-0">
+                    <Image
+                      src={
+                        author.image
+                          ? `${authorImg}${author.image}`
+                          : "/avatar.jpg"
+                      }
+                      alt={author.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
 
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-base mb-2">
-                  {article.author.name.toUpperCase()}
-                </h4>
+                  {/* AUTHOR DETAILS */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col items-start gap-0">
+                      {/* AUTHOR NAME */}
+                      <h4 className="font-semibold text-base leading-6">
+                        {author.name.toUpperCase()}
+                      </h4>
 
-                <p className="text-xs text-[#333333] leading-5">
-                  {article.author.bio ||
-                    `${article.author.name} is a contributor at Lex Witness.`}
-                </p>
-                <div className="flex lg:mt-5 gap-4">
-                  {/*----------------- Author LinkedIn -----------------*/}
-                  {/* {article.author?.linkedin && ( */}
-                  <a
-                    href={article.author.linkedin}
-                    // target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative group w-10 h-6 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"
-                  >
-                    <svg
-                      className="w-4 h-4 z-10"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-                    </svg>
+                      {/* AUTHOR BIO */}
+                      <p className="text-xs text-[#333333] leading-6">
+                        {author.bio ||
+                          `${author.name} is a contributor at Lex Witness.`}
+                      </p>
 
-                    {/*----------------- Hover overlay -----------------*/}
-                    <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
-                  </a>
-                  {/* )} */}
+                      {/* LINKEDIN ICON */}
+                      {author.linkedin && (
+                        <a
+                          href={author.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="relative group mt-6 w-6 h-6 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"
+                        >
+                          <svg
+                            className="w-4 h-4 z-10"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
+                          </svg>
+
+                          <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </>
         )}

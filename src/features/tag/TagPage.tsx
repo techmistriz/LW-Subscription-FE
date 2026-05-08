@@ -1,30 +1,41 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import {
+  useParams,
+  useSearchParams,
+  useRouter,
+  usePathname,
+} from "next/navigation";
+
 import { useState, useEffect, useCallback } from "react";
-import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
+
 import { getPosts } from "@/lib/api/services/posts";
-import { getAuthors } from "@/lib/api/services/author";
 import { getYears } from "@/lib/api/services/years";
 
 import PageLoader from "@/components/Loader/PageLoader";
 import YearFilter from "@/components/Common/YearFilter";
 import PostList from "@/components/Common/PostList";
 import Pagination from "@/components/Pagination/Pagination";
+
 import { Post } from "@/types/models";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
-export default function AuthorPage() {
+export default function TagPage() {
   const params = useParams();
-  const authorSlug = params?.author as string;
-  const authorName = authorSlug?.replace(/-/g, " ") || "";
-  const authorTitle = toTitleCase(authorName);
+
+  const tagId = Number(params?.id);
+
+  const tagSlug = params?.slug as string;
+
+  const tagTitle = tagSlug?.replace(/-/g, " ") || "";
 
   const searchParams = useSearchParams();
+
   const router = useRouter();
+
   const pathname = usePathname();
+
   const yearParam = searchParams.get("year");
 
   const [loading, setLoading] = useState(false);
@@ -32,71 +43,66 @@ export default function AuthorPage() {
   const [selectedYear, setSelectedYear] = useState<number | null>(
     yearParam ? Number(yearParam) : null,
   );
+
   const [currentPage, setCurrentPage] = useState(1);
+
   const [years, setYears] = useState<number[]>([]);
+
   const [posts, setPosts] = useState<Post[]>([]);
+
   const [lastPage, setLastPage] = useState(1);
-  const [authorId, setAuthorId] = useState<number | null>(null);
 
-  /*----------------- Load Author -----------------*/
-  const loadAuthor = useCallback(async () => {
-    if (!authorSlug) return;
-
-    try {
-      const authors = await getAuthors();
-      const matched = authors.find((a) => a.slug === authorSlug);
-      setAuthorId(matched?.id ?? null);
-    } catch (error) {
-      console.error("Failed to load author:", error);
-      setAuthorId(null);
-    }
-  }, [authorSlug]);
-
-  /*----------------- Fetch Posts -----------------*/
+  /*---------------- FETCH POSTS ----------------*/
   const fetchPosts = useCallback(
     async (page: number = 1, year: number | null = null) => {
-      if (!authorId) return;
+      if (!tagId) return;
 
       setLoading(true);
 
       try {
         const response = await getPosts({
-          author_id: authorId,
+          tag_id: tagId,
           page,
           ...(year ? { year } : {}),
         });
 
-        console.log("Author Id", response)
-        /*----------------- Normalize posts so each author has a linkedin -----------------*/
+         console.log("Tag Posts", response)
         const normalizedPosts = (response.data ?? []).map((post: Post) => ({
           ...post,
+
           author:
             post.author && typeof post.author !== "string"
-              ? { ...post.author, linkedin: post.author.linkedin || "" }
+              ? {
+                  ...post.author,
+                  linkedin: post.author.linkedin || "",
+                }
               : post.author,
         }));
 
         setPosts(normalizedPosts);
+
         setLastPage(response.meta?.paging?.last_page ?? 1);
+
         setCurrentPage(page);
       } catch (error) {
-        console.error("Failed to fetch posts:", error);
+        console.error("Failed to fetch tag posts:", error);
+
         setPosts([]);
+
         setLastPage(1);
       } finally {
         setLoading(false);
       }
     },
-    [authorId],
+    [tagId],
   );
 
-
-  console.log("Author Page",posts)
-
-  /*----------------- Load Years -----------------*/
+ 
+  /*---------------- LOAD YEARS ----------------*/
   const loadYears = useCallback(async () => {
     try {
       const data = await getYears();
+
       setYears(data ?? []);
     } catch (error) {
       console.error("Failed to load years:", error);
@@ -104,20 +110,20 @@ export default function AuthorPage() {
   }, []);
 
   useEffect(() => {
-    loadAuthor();
     loadYears();
-  }, [loadAuthor, loadYears]);
+  }, [loadYears]);
 
   const pageParam = Number(searchParams.get("page")) || 1;
 
   useEffect(() => {
-    if (authorId) {
+    if (tagId) {
       const year = yearParam ? Number(yearParam) : null;
+
       fetchPosts(pageParam, year);
     }
-  }, [authorId, pageParam, yearParam, fetchPosts]);
+  }, [tagId, pageParam, yearParam, fetchPosts]);
 
-  /*----------------- Apply Year Filter -----------------*/
+  /*---------------- APPLY FILTER ----------------*/
   const handleApplyFilter = () => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -134,6 +140,7 @@ export default function AuthorPage() {
 
   const postsWithContent: Post[] = posts.map((p) => ({
     ...p,
+
     content: p.content ? <>{p.content}</> : <></>,
   }));
 
@@ -149,19 +156,17 @@ export default function AuthorPage() {
 
         {loading ? (
           <PageLoader />
-        ) : !authorId ? (
-          <div className="py-10 text-center text-gray-200">loading..</div>
         ) : (
           <>
             <PostList
-              posts={postsWithContent} //  mapped with content
-              fallbackAuthorName={authorTitle}
+              posts={postsWithContent}
+              fallbackAuthorName={tagTitle}
               postBaseUrl={postBaseUrl}
               loading={loading}
               emptyMessage={
                 selectedYear
-                  ? `${authorTitle} has not published any posts in ${selectedYear}`
-                  : `${authorTitle} has not published any posts yet`
+                  ? `No posts found for ${tagTitle} in ${selectedYear}`
+                  : `No posts found for ${tagTitle}`
               }
             />
 
@@ -172,6 +177,7 @@ export default function AuthorPage() {
                 loading={loading}
                 onPageChange={(page) => {
                   const params = new URLSearchParams(searchParams.toString());
+
                   params.set("page", page.toString());
 
                   if (selectedYear) {

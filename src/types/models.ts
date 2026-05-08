@@ -2,15 +2,22 @@ import { ReactNode } from "react";
 
 /*----------------- POST -----------------*/
 export interface Post {
-  magazine: any;
-  content: ReactNode; //required for PostList rendering
+  tag: boolean;
+  authors?: Author[];
+  magazine?: Magazine;
+
+  content: ReactNode;
   id: number;
   title: string;
   slug: string;
+
   published_at?: string;
   publish_date?: string;
+
   image?: string;
+
   author?: Author | string;
+
   short_description?: string;
   date?: string;
   excerpt?: string;
@@ -19,10 +26,15 @@ export interface Post {
 /*----------------- ARTICLE -----------------*/
 /*----------------- Article does NOT extend Post directly to avoid TypeScript errors -----------------*/
 export interface Article {
-  magazine: any;
+  tags: any;
+  tags: any;
+  authors?: Author[];
+  magazine?: Magazine;
+
   id: number;
   title: string;
   slug: string;
+
   content?: string;
   short_description?: string;
   excerpt?: string;
@@ -33,6 +45,7 @@ export interface Article {
   date?: string;
 
   image?: string;
+
   category?: ArticleCategoryType;
   category_id?: number;
 
@@ -41,6 +54,7 @@ export interface Article {
   author_slug?: string;
 
   magazine_id?: number;
+
   reader_feedbacks?: ReaderFeedback[] | null;
 }
 
