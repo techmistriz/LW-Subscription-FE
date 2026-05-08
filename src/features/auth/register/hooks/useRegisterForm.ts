@@ -273,6 +273,10 @@ export function useRegisterForm() {
               status: subscriptionData.status,
               start_date: subscriptionData.start_date,
               end_date: subscriptionData.end_date,
+
+              duration_value: subscriptionData.plan?.duration_value,
+              duration_unit: subscriptionData.plan?.duration_unit,
+
               purchase_type: subscriptionData.purchase_type,
               features: subscriptionData.plan?.feature,
               is_trial: String(subscriptionData.plan?.is_trial ?? ""),
