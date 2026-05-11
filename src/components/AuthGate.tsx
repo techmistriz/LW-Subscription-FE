@@ -1,35 +1,58 @@
 "use client";
 
 import { useState } from "react";
+
 import { usePathname } from "next/navigation";
+
 import RegisterModal from "../features/auth/PopupModal/Popup";
+
 import { useAppSelector } from "@/redux/store/hooks";
 
 const AuthGate = () => {
   const pathname = usePathname();
 
-  /*----------------- USE isInitialized instead of loading -----------------*/
-  const { user, isInitialized } = useAppSelector((state) => state.auth);
+  /* ---------------- AUTH ---------------- */
+  const { user, isInitialized } =
+    useAppSelector(
+      (state) => state.auth
+    );
 
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] =
+    useState(true);
 
-  /*----------------- Wait until Redux restores auth from sessionStorage -----------------*/
+  /* ---------------- WAIT FOR REDUX RESTORE ---------------- */
   if (!isInitialized) return null;
 
-  /*----------------- Routes where modal should NOT appear -----------------*/
-  const excludedRoutes = ["/sign-in", "/register", "/password-reset"];
-  if (excludedRoutes.includes(pathname)) return null;
+  /* ---------------- SHOW ONLY ON HOME PAGE ---------------- */
+  if (pathname !== "/") return null;
 
-  /*----------------- If logged in → allow app -----------------*/
+  /* ---------------- EXCLUDED ROUTES ---------------- */
+  const excludedRoutes = [
+    "/sign-in",
+    "/register",
+    "/password-reset",
+  ];
+
+  if (
+    excludedRoutes.includes(pathname)
+  )
+    return null;
+
+  /* ---------------- LOGGED IN ---------------- */
   if (user) return null;
 
-  /*----------------- If modal manually closed → don't show again -----------------*/
+  /* ---------------- MANUALLY CLOSED ---------------- */
   if (!showModal) return null;
 
   return (
     <>
       <div className="fixed inset-0 z-9998 bg-black/40 backdrop-blur-sm" />
-      <RegisterModal onClose={() => setShowModal(false)} />
+
+      <RegisterModal
+        onClose={() =>
+          setShowModal(false)
+        }
+      />
     </>
   );
 };

@@ -87,19 +87,17 @@ export default function SubscriptionPage() {
     fetchMagazines();
   }, []);
 
-  /* ---------------- CONTROLLED SCROLL (FIXED) ---------------- */
+  /* ---------------- SCROLL TO PRICING ---------------- */
   useEffect(() => {
     const shouldScroll = sessionStorage.getItem("scrollToPricing");
 
-    if (!shouldScroll) return;
+    const hasHash = window.location.hash === "#pricing";
+
+    if (!shouldScroll && !hasHash) return;
 
     sessionStorage.removeItem("scrollToPricing");
 
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
-    }
-
-    const scroll = () => {
+    const timeout = setTimeout(() => {
       const el = document.getElementById("pricing");
 
       if (el) {
@@ -108,17 +106,15 @@ export default function SubscriptionPage() {
           block: "start",
         });
       }
-    };
+    }, 50);
 
-    requestAnimationFrame(() => {
-      setTimeout(scroll, 150);
-    });
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
     <div className="bg-white">
       {/*----------------- HERO SECTION -----------------*/}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
         {/* LEFT CONTENT */}
         <div className="text-center lg:text-left">
           <h1 className="text-3xl sm:text-4xl lg:text-4xl text-[#c9060a] font-semibold mb-6">
@@ -144,14 +140,22 @@ export default function SubscriptionPage() {
             <button
               onClick={() => {
                 sessionStorage.setItem("scrollToPricing", "1");
-                window.location.href = "/subscription";
+                // window.location.href = "/subscription";
               }}
               className="bg-[#c9060a] text-sm text-white px-5 py-3 font-semibold hover:bg-[#333] transition"
             >
               Your First Year is on Us
             </button>
 
-            <button className="border text-sm border-gray-300 text-[#333] px-5 py-3 font-semibold shadow-md hover:shadow-lg transition">
+            <button
+              onClick={() => {
+                document.getElementById("pricing")?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+              className="border text-sm border-gray-300 text-[#333] px-5 py-3 font-semibold shadow-md hover:shadow-lg transition cursor-pointer"
+            >
               Choose your Subscription Plan
             </button>
           </div>

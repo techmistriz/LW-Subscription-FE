@@ -62,15 +62,20 @@ const Popup = ({ onClose }: PopupProps) => {
         }`;
 
   /* ---------------- REDIRECT ---------------- */
-  const handleRedirect = () => {
-    setLoading(true);
+/* ---------------- REDIRECT ---------------- */
+const handleRedirect = () => {
+  setLoading(true);
 
-    sessionStorage.setItem("scrollToPricing", "true");
+  sessionStorage.setItem(
+    "scrollToPricing",
+    "true"
+  );
 
-    onClose();
+  onClose();
 
-    router.push("/subscription");
-  };
+  window.location.href =
+    "/subscription#pricing";
+};
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center p-4 md:p-0">

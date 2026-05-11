@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -35,30 +30,20 @@ export default function PricingCard() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [selectedPlanId, setSelectedPlanId] =
-    useState<number>(2);
+  const [selectedPlanId, setSelectedPlanId] = useState<number>(2);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [plans, setPlans] = useState<any[]>(
-    []
+  const [plans, setPlans] = useState<any[]>([]);
+
+  const isAuthenticated = useAppSelector(
+    (state: any) => state.auth.isAuthenticated,
   );
 
-  const isAuthenticated =
-    useAppSelector(
-      (state: any) =>
-        state.auth.isAuthenticated
-    );
+  const user = useAppSelector((state: any) => state.auth.user);
 
-  const user = useAppSelector(
-    (state: any) => state.auth.user
-  );
-
- const activeSubscription =
-  useAppSelector(
-    (state: any) =>
-      state.subscription.data
+  const activeSubscription = useAppSelector(
+    (state: any) => state.subscription.data,
   );
 
   /* ---------------- FETCH PLANS ---------------- */
@@ -70,15 +55,12 @@ export default function PricingCard() {
         const data = Array.isArray(res)
           ? res
           : Array.isArray(res?.data)
-          ? res.data
-          : [];
+            ? res.data
+            : [];
 
         setPlans(data);
       } catch (err) {
-        console.error(
-          "Failed to load plans",
-          err
-        );
+        console.error("Failed to load plans", err);
 
         setPlans([]);
       }
@@ -95,9 +77,9 @@ export default function PricingCard() {
 
     div.innerHTML = html;
 
-    return Array.from(
-      div.querySelectorAll("li, p")
-    ).map((el) => el.textContent || "");
+    return Array.from(div.querySelectorAll("li, p")).map(
+      (el) => el.textContent || "",
+    );
   };
 
   /* ---------------- PLAN COLOR ---------------- */
@@ -120,480 +102,300 @@ export default function PricingCard() {
     }
   };
 
-//-------------------------
-  const isSubscriptionReady =
-  useAppSelector(
-    (state: any) =>
-      state.subscription.isLoaded
+  //-------------------------
+  const isSubscriptionReady = useAppSelector(
+    (state: any) => state.subscription.isLoaded,
   );
 
   /* ---------------- SUBSCRIBE / UPGRADE ---------------- */
-const handleSubscribe = useCallback(async () => {
-  console.log(
-    "========== SUBSCRIPTION FLOW START =========="
-  );
+  const handleSubscribe = useCallback(async () => {
+    console.log("========== SUBSCRIPTION FLOW START ==========");
 
-  try {
-    /* ---------------- READY CHECK ---------------- */
-    console.log(
-      "Subscription Ready =>",
-      isSubscriptionReady
-    );
+    try {
+      /* ---------------- READY CHECK ---------------- */
+      console.log("Subscription Ready =>", isSubscriptionReady);
 
-    if (!isSubscriptionReady) {
-      toast.error("Loading subscription...");
-      return;
-    }
+      if (!isSubscriptionReady) {
+        toast.error("Loading subscription...");
+        return;
+      }
 
-    setLoading(true);
+      setLoading(true);
 
-    /* ---------------- DEBUG ---------------- */
-    console.log(
-      "Selected Plan ID =>",
-      selectedPlanId
-    );
+      /* ---------------- DEBUG ---------------- */
+      console.log("Selected Plan ID =>", selectedPlanId);
 
-    console.log(
-      "Plans =>",
-      plans
-    );
+      console.log("Plans =>", plans);
 
-    console.log(
-      "User =>",
-      user
-    );
+      console.log("User =>", user);
 
-    console.log(
-      "Active Subscription =>",
-      activeSubscription
-    );
+      console.log("Active Subscription =>", activeSubscription);
 
-    /* ---------------- SELECT PLAN ---------------- */
-    const selectedPlan = plans.find(
-      (p) => Number(p.id) === Number(selectedPlanId)
-    );
+      /* ---------------- SELECT PLAN ---------------- */
+      const selectedPlan = plans.find(
+        (p) => Number(p.id) === Number(selectedPlanId),
+      );
 
-    console.log(
-      "Selected Plan =>",
-      selectedPlan
-    );
+      console.log("Selected Plan =>", selectedPlan);
 
-    if (!selectedPlan) {
-      toast.error("Please select a plan");
-      return;
-    }
+      if (!selectedPlan) {
+        toast.error("Please select a plan");
+        return;
+      }
 
-    /* ---------------- AUTH CHECK ---------------- */
-  if (!isAuthenticated) {
-  console.log(
-    "User not authenticated"
-  );
+      /* ---------------- AUTH CHECK ---------------- */
+      if (!isAuthenticated) {
+        console.log("User not authenticated");
 
-  router.push(
-    `/register?plan=${selectedPlanId}`
-  );
+        router.push(`/register?plan=${selectedPlanId}`);
 
-  return;
-}
+        return;
+      }
 
-    /* =====================================================
+      /* =====================================================
        SUBSCRIPTION LOGIC
     ===================================================== */
 
-    const subscriptionId =
-      activeSubscription?.id;
+      const subscriptionId = activeSubscription?.id;
 
-    const subscriptionAmount =
-      Number(activeSubscription?.amount || 0);
+      const subscriptionAmount = Number(activeSubscription?.amount || 0);
 
-    const subscriptionStatus =
-      activeSubscription?.status?.toUpperCase();
+      const subscriptionStatus = activeSubscription?.status?.toUpperCase();
 
-    const endDate =
-      activeSubscription?.end_date;
+      const endDate = activeSubscription?.end_date;
 
-    const isExpiredByDate =
-      endDate
-        ? new Date(endDate) < new Date()
-        : false;
+      const isExpiredByDate = endDate ? new Date(endDate) < new Date() : false;
 
-    const isExpired =
-      subscriptionStatus === "EXPIRED" ||
-      isExpiredByDate;
+      const isExpired = subscriptionStatus === "EXPIRED" || isExpiredByDate;
 
-    const isFreePlan =
-      subscriptionAmount === 0;
+      const isFreePlan = subscriptionAmount === 0;
 
-    const hasSubscription =
-      !!subscriptionId;
+      const hasSubscription = !!subscriptionId;
 
-    console.log(
-      "Subscription ID =>",
-      subscriptionId
-    );
+      console.log("Subscription ID =>", subscriptionId);
 
-    console.log(
-      "Subscription Amount =>",
-      subscriptionAmount
-    );
+      console.log("Subscription Amount =>", subscriptionAmount);
 
-    console.log(
-      "Subscription Status =>",
-      subscriptionStatus
-    );
+      console.log("Subscription Status =>", subscriptionStatus);
 
-    console.log(
-      "Is Expired =>",
-      isExpired
-    );
+      console.log("Is Expired =>", isExpired);
 
-    console.log(
-      "Is Free Plan =>",
-      isFreePlan
-    );
+      console.log("Is Free Plan =>", isFreePlan);
 
-    console.log(
-      "Has Subscription =>",
-      hasSubscription
-    );
+      console.log("Has Subscription =>", hasSubscription);
 
-    /* ---------------- API VARS ---------------- */
-    let apiResponse: any = null;
+      /* ---------------- API VARS ---------------- */
+      let apiResponse: any = null;
 
-    let paymentData: any = null;
+      let paymentData: any = null;
 
-    let purchaseType:
-      | "NEW"
-      | "RENEW"
-      | "UPGRADE" = "NEW";
+      let purchaseType: "NEW" | "RENEW" | "UPGRADE" = "NEW";
 
-    /* =====================================================
+      /* =====================================================
        CASE 1:
        NO SUBSCRIPTION
     ===================================================== */
-    if (!hasSubscription) {
-      purchaseType = "NEW";
+      if (!hasSubscription) {
+        purchaseType = "NEW";
 
-      console.log(
-        "========== BUY NEW : NO SUB =========="
-      );
+        console.log("========== BUY NEW : NO SUB ==========");
 
-      apiResponse = await buyNewPlan(
-        selectedPlan.id
-      );
-    }
+        apiResponse = await buyNewPlan(selectedPlan.id);
+      } else if (isFreePlan && isExpired) {
 
-    /* =====================================================
+      /* =====================================================
        CASE 2:
        FREE PLAN EXPIRED
        -> BUY NEW
     ===================================================== */
-    else if (isFreePlan && isExpired) {
-      purchaseType = "NEW";
+        purchaseType = "NEW";
 
-      console.log(
-        "========== BUY NEW : FREE PLAN EXPIRED =========="
-      );
+        console.log("========== BUY NEW : FREE PLAN EXPIRED ==========");
 
-      apiResponse = await buyNewPlan(
-        selectedPlan.id
-      );
-    }
+        apiResponse = await buyNewPlan(selectedPlan.id);
+      } else if (!isFreePlan && isExpired) {
 
-    /* =====================================================
+      /* =====================================================
        CASE 3:
        PAID PLAN EXPIRED
        -> RENEW
     ===================================================== */
-    else if (!isFreePlan && isExpired) {
-      purchaseType = "RENEW";
+        purchaseType = "RENEW";
 
-      console.log(
-        "========== RENEW PLAN =========="
-      );
+        console.log("========== RENEW PLAN ==========");
 
-      apiResponse = await renewPlan(
-        subscriptionId
-      );
-    }
+        apiResponse = await renewPlan(subscriptionId);
+      } else {
 
-    /* =====================================================
+      /* =====================================================
        CASE 4:
        ACTIVE PLAN
        -> UPGRADE
     ===================================================== */
-    else {
-      purchaseType = "UPGRADE";
+        purchaseType = "UPGRADE";
 
-      console.log(
-        "========== UPGRADE PLAN =========="
-      );
+        console.log("========== UPGRADE PLAN ==========");
 
-      apiResponse = await upgradePlan(
-        selectedPlan.id
-      );
-    }
+        apiResponse = await upgradePlan(selectedPlan.id);
+      }
 
-    console.log(
-      "API RESPONSE =>",
-      apiResponse
-    );
+      console.log("API RESPONSE =>", apiResponse);
 
-    /* ---------------- PAYMENT DATA ---------------- */
-    paymentData =
-      apiResponse?.data?.payment ||
-      apiResponse?.data;
+      /* ---------------- PAYMENT DATA ---------------- */
+      paymentData = apiResponse?.data?.payment || apiResponse?.data;
 
-    console.log(
-      "Payment Data =>",
-      paymentData
-    );
+      console.log("Payment Data =>", paymentData);
 
-    if (!paymentData) {
-      toast.error(
-        "Payment initiation failed"
-      );
+      if (!paymentData) {
+        toast.error("Payment initiation failed");
 
-      return;
-    }
+        return;
+      }
 
-    /* ---------------- RAZORPAY ---------------- */
-    const options = {
-      key:
-        paymentData?.razorpay_key ||
-        process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+      /* ---------------- RAZORPAY ---------------- */
+      const options = {
+        key: paymentData?.razorpay_key || process.env.NEXT_PUBLIC_RAZORPAY_KEY,
 
-      amount: paymentData?.amount,
+        amount: paymentData?.amount,
 
-      currency:
-        paymentData?.currency || "INR",
+        currency: paymentData?.currency || "INR",
 
-      order_id:
-        paymentData?.order_id,
+        order_id: paymentData?.order_id,
 
-      name: "Lex Witness",
+        name: "Lex Witness",
 
-      prefill: {
-        name: `${user?.first_name || ""} ${
-          user?.last_name || ""
-        }`,
+        prefill: {
+          name: `${user?.first_name || ""} ${user?.last_name || ""}`,
 
-        email: user?.email,
+          email: user?.email,
 
-        contact: user?.contact,
-      },
+          contact: user?.contact,
+        },
 
-      theme: {
-        color: "#c9060a",
-      },
+        theme: {
+          color: "#c9060a",
+        },
 
-      handler: async function (
-        response: any
-      ) {
-        console.log(
-          "========== PAYMENT SUCCESS =========="
-        );
+        handler: async function (response: any) {
+          console.log("========== PAYMENT SUCCESS ==========");
 
-        console.log(
-          "Razorpay Response =>",
-          response
-        );
+          console.log("Razorpay Response =>", response);
 
-        try {
-          const verifyPayload = {
-            razorpay_payment_id:
-              response.razorpay_payment_id,
+          try {
+            const verifyPayload = {
+              razorpay_payment_id: response.razorpay_payment_id,
 
-            razorpay_order_id:
-              response.razorpay_order_id,
+              razorpay_order_id: response.razorpay_order_id,
 
-            razorpay_signature:
-              response.razorpay_signature,
+              razorpay_signature: response.razorpay_signature,
 
-            membership_plan_id:
-              selectedPlan.id,
+              membership_plan_id: selectedPlan.id,
 
-            purchase_type:
-              purchaseType,
-          };
-
-          console.log(
-            "VERIFY PAYLOAD =>",
-            verifyPayload
-          );
-
-          const verifyRes =
-            await verifySubscriptionPayment(
-              verifyPayload
-            );
-
-          console.log(
-            "VERIFY RESPONSE =>",
-            verifyRes
-          );
-
-          const sub =
-            verifyRes?.data?.subscription ||
-            verifyRes?.data?.data
-              ?.subscription;
-
-          console.log(
-            "Verified Subscription =>",
-            sub
-          );
-
-          if (sub) {
-            const reduxSubscription = {
-              id: sub.id,
-
-              plan_id:
-                sub.membership_plan_id,
-
-              name: sub.plan?.name,
-
-              amount: Number(
-                sub.plan?.price || 0
-              ),
-
-              status: sub.status,
-
-              start_date:
-                sub.start_date,
-
-              end_date:
-                sub.end_date,
-
-              duration_value:
-                sub.plan?.duration_value,
-
-              duration_unit:
-                sub.plan?.duration_unit,
-
-              purchase_type:
-                sub.purchase_type,
-
-              features:
-                sub.plan?.feature,
-
-              tag: sub.plan?.tag,
+              purchase_type: purchaseType,
             };
 
-            console.log(
-              "Redux Subscription =>",
-              reduxSubscription
-            );
+            console.log("VERIFY PAYLOAD =>", verifyPayload);
 
-            dispatch(
-              setSubscription(
-                reduxSubscription
-              )
-            );
+            const verifyRes = await verifySubscriptionPayment(verifyPayload);
+
+            console.log("VERIFY RESPONSE =>", verifyRes);
+
+            const sub =
+              verifyRes?.data?.subscription ||
+              verifyRes?.data?.data?.subscription;
+
+            console.log("Verified Subscription =>", sub);
+
+            if (sub) {
+              const reduxSubscription = {
+                id: sub.id,
+
+                plan_id: sub.membership_plan_id,
+
+                name: sub.plan?.name,
+
+                amount: Number(sub.plan?.price || 0),
+
+                status: sub.status,
+
+                start_date: sub.start_date,
+
+                end_date: sub.end_date,
+
+                duration_value: sub.plan?.duration_value,
+
+                duration_unit: sub.plan?.duration_unit,
+
+                purchase_type: sub.purchase_type,
+
+                features: sub.plan?.feature,
+
+                tag: sub.plan?.tag,
+              };
+
+              console.log("Redux Subscription =>", reduxSubscription);
+
+              dispatch(setSubscription(reduxSubscription));
+            }
+
+            toast.success("Payment successful");
+
+            router.push("/dashboard");
+          } catch (err: any) {
+            console.log("VERIFY ERROR =>", err);
+
+            console.log("VERIFY ERROR RESPONSE =>", err?.response?.data);
+
+            toast.error(err?.response?.data?.message || "Verification failed");
           }
+        },
+      };
 
-          toast.success(
-            "Payment successful"
-          );
+      console.log("Razorpay Options =>", options);
 
-          router.push("/dashboard");
-        } catch (err: any) {
-          console.log(
-            "VERIFY ERROR =>",
-            err
-          );
+      const razorpay = new window.Razorpay(options);
 
-          console.log(
-            "VERIFY ERROR RESPONSE =>",
-            err?.response?.data
-          );
+      razorpay.on("payment.failed", function (response: any) {
+        console.log("PAYMENT FAILED =>", response);
 
-          toast.error(
-            err?.response?.data
-              ?.message ||
-              "Verification failed"
-          );
-        }
-      },
-    };
+        toast.error(response?.error?.description || "Payment failed");
+      });
 
-    console.log(
-      "Razorpay Options =>",
-      options
-    );
+      console.log("Opening Razorpay...");
 
-    const razorpay =
-      new window.Razorpay(options);
+      razorpay.open();
+    } catch (error: any) {
+      console.log("========== MAIN ERROR ==========");
 
-    razorpay.on(
-      "payment.failed",
-      function (response: any) {
-        console.log(
-          "PAYMENT FAILED =>",
-          response
-        );
+      console.log(error);
 
-        toast.error(
-          response?.error
-            ?.description ||
-            "Payment failed"
-        );
-      }
-    );
+      console.log("ERROR RESPONSE =>", error?.response?.data);
 
-    console.log(
-      "Opening Razorpay..."
-    );
+      toast.error(error?.response?.data?.message || "API ERROR");
+    } finally {
+      setLoading(false);
 
-    razorpay.open();
-  } catch (error: any) {
-    console.log(
-      "========== MAIN ERROR =========="
-    );
-
-    console.log(error);
-
-    console.log(
-      "ERROR RESPONSE =>",
-      error?.response?.data
-    );
-
-    toast.error(
-      error?.response?.data?.message ||
-        "API ERROR"
-    );
-  } finally {
-    setLoading(false);
-
-    console.log(
-      "========== FLOW END =========="
-    );
-  }
-}, [
-  selectedPlanId,
-  plans,
-  isAuthenticated,
-  activeSubscription,
-  user,
-  dispatch,
-  router,
-  isSubscriptionReady,
-]);
+      console.log("========== FLOW END ==========");
+    }
+  }, [
+    selectedPlanId,
+    plans,
+    isAuthenticated,
+    activeSubscription,
+    user,
+    dispatch,
+    router,
+    isSubscriptionReady,
+  ]);
 
   /* ---------------- FILTER PLANS ---------------- */
   const filteredPlans = useMemo(() => {
     if (!plans.length) return [];
 
-    if (isAuthenticated) {
-      return plans.filter(
-        (plan) =>
-          Number(plan.price) !== 0
-      );
-    }
-
     return plans;
-  }, [plans, isAuthenticated]);
+  }, [plans]);
 
-  const visibleCount =
-    filteredPlans.length;
+  const visibleCount = filteredPlans.length;
 
   /* ---------------- LOADER ---------------- */
   if (!plans.length) {
@@ -618,7 +420,6 @@ const handleSubscribe = useCallback(async () => {
       className="min-h-screen bg-gray-100 w-full py-24 sm:px-6 lg:px-8"
     >
       <div className="max-w-6xl mx-auto">
-
         {/* HEADER */}
         <div className="text-center mb-14">
           <h2 className="text-4xl font-black uppercase tracking-tight text-gray-900">
@@ -626,8 +427,7 @@ const handleSubscribe = useCallback(async () => {
           </h2>
 
           <p className="text-gray-500 mt-2 text-sm">
-            Flexible pricing built for
-            professionals
+            Flexible pricing built for professionals
           </p>
 
           <div className="w-20 h-1 bg-[#c9060a] mx-auto mt-5 rounded-full" />
@@ -642,28 +442,28 @@ const handleSubscribe = useCallback(async () => {
           }`}
         >
           {filteredPlans.map((plan) => {
-            const isSelected =
-              selectedPlanId === plan.id;
+            const isSelected = selectedPlanId === plan.id;
 
-            const features =
-              parseFeatures(plan.feature);
+            const features = parseFeatures(plan.feature);
+
+            const isFreePlanCard = Number(plan.price) === 0;
+
+            const alreadyUsedFreePlan = isAuthenticated && activeSubscription;
+
+            const disableFreePlan = isFreePlanCard && alreadyUsedFreePlan;
 
             return (
               <label
                 key={plan.id}
                 className="relative cursor-pointer group pt-4"
               >
-
                 {/* BADGE */}
                 {plan.tag && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span
                       className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md
                       ${
-                        plan.tag ===
-                          "Most Popular" ||
-                        plan.tag ===
-                          "Best Value"
+                        plan.tag === "Most Popular" || plan.tag === "Best Value"
                           ? "bg-[#c9060a] text-white"
                           : "bg-gray-300 text-[#333]"
                       }`}
@@ -679,32 +479,32 @@ const handleSubscribe = useCallback(async () => {
                   name="plan"
                   className="sr-only"
                   checked={isSelected}
-                  onChange={() =>
-                    setSelectedPlanId(
-                      plan.id
-                    )
-                  }
+                  onChange={() => {
+                    if (disableFreePlan) {
+                      toast.error("You have already used free plan");
+
+                      return;
+                    }
+
+                    setSelectedPlanId(plan.id);
+                  }}
                 />
 
                 {/* CARD */}
                 <div
-                  className={`relative h-full mx-4 p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 bg-white hover:shadow-xl hover:-translate-y-1
-                  ${
-                    isSelected
-                      ? "border-[#c9060a] shadow-2xl scale-[1.03]"
-                      : "border-gray-300"
-                  }`}
+                  className={`relative h-full mx-4 p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 bg-white
+${
+  disableFreePlan
+    ? "opacity-60 cursor-not-allowed border-gray-200"
+    : "hover:shadow-xl hover:-translate-y-1"
+}
+${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                 >
-
                   {/* RADIO ICON */}
                   <div className="flex justify-center mb-5">
                     <div
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
-                      ${
-                        isSelected
-                          ? "border-[#c9060a]"
-                          : "border-gray-300"
-                      }`}
+                      ${isSelected ? "border-[#c9060a]" : "border-gray-300"}`}
                     >
                       {isSelected && (
                         <div className="w-2.5 h-2.5 bg-[#c9060a] rounded-full" />
@@ -715,7 +515,7 @@ const handleSubscribe = useCallback(async () => {
                   {/* NAME */}
                   <h3
                     className={`text-lg md:text-xl font-black uppercase tracking-widest text-center mb-3 ${getPlanColor(
-                      plan.name
+                      plan.name,
                     )}`}
                   >
                     {plan.name}
@@ -723,40 +523,33 @@ const handleSubscribe = useCallback(async () => {
 
                   {/* FEATURES */}
                   <ul className="text-start space-y-1 min-h-[60px] list-disc marker:text-[#c9060a] list-inside">
-                    {features
-                      .slice(0, 3)
-                      .map(
-                        (
-                          f: string,
-                          i: number
-                        ) => (
-                          <li
-                            key={i}
-                            className="text-sm text-gray-800 font-semibold"
-                          >
-                            {f}
-                          </li>
-                        )
-                      )}
+                    {features.slice(0, 3).map((f: string, i: number) => (
+                      <li
+                        key={i}
+                        className="text-sm text-gray-800 font-semibold"
+                      >
+                        {f}
+                      </li>
+                    ))}
                   </ul>
 
                   {/* PRICE */}
                   <div className="mt-6 text-center">
                     <p className="text-2xl md:text-3xl font-black text-gray-900">
-                      {Number(plan.price) ===
-                      0
-                        ? "FREE"
-                        : `₹${plan.price}`}
+                      {Number(plan.price) === 0 ? "FREE" : `₹${plan.price}`}
                     </p>
 
-                    {Number(plan.price) !==
-                      0 && (
+                    {Number(plan.price) !== 0 && (
                       <p className="text-[11px] text-gray-400">
-                        + 18% GST
-                        applicable
+                        + 18% GST applicable
                       </p>
                     )}
                   </div>
+                  {disableFreePlan && (
+                    <p className="text-[11px] text-center text-red-600 font-bold mt-3 uppercase">
+                      You have already used free plan
+                    </p>
+                  )}
                 </div>
               </label>
             );
@@ -770,12 +563,9 @@ const handleSubscribe = useCallback(async () => {
             disabled={loading}
             className="w-full sm:w-auto bg-[#c9060a] text-white px-6 md:px-18 py-3 font-bold text-sm md:text-lg uppercase tracking-widest hover:bg-[#333] transition-all duration-300 active:scale-95 shadow-xl shadow-red-500/20 disabled:opacity-50 cursor-pointer"
           >
-            {loading
-              ? "Processing..."
-              : "Subscribe Now"}
+            {loading ? "Processing..." : "Subscribe Now"}
           </button>
         </div>
-
       </div>
     </section>
   );
