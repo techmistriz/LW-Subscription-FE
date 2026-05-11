@@ -128,10 +128,18 @@ export function useRegisterForm() {
       // toast.success("OTP sent");
 
       const otp = res?.data?.otp || res?.otp;
-      if (otp && process.env.NODE_ENV === "development") {
-        console.log("OTP:", otp);
-        toast.success(`Demo OTP: ${otp}`);
-      }
+
+/* ---------------- DEMO OTP SHOW ---------------- */
+const isDemoMode =
+  process.env.NEXT_PUBLIC_SHOW_DEMO_OTP === "true";
+
+if (otp && isDemoMode) {
+  console.log("OTP:", otp);
+
+  toast.success(`Demo OTP: ${otp}`, {
+    duration: 10000,
+  });
+}
     } catch (err: any) {
       toast.error(err.message);
     }
