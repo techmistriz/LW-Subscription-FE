@@ -5,13 +5,14 @@ import { setSubscription } from "./subscriptionSlice";
 
 /* ---------------- USER TYPE ---------------- */
 interface User {
-  active_subscription: boolean;
   id: number;
   first_name: string;
   last_name?: string;
   email: string;
   contact: string;
   address: string;
+
+  active_subscription?: any;
 }
 
 /* ---------------- STATE ---------------- */
@@ -170,11 +171,12 @@ const authSlice = createSlice({
       })
 
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-      })
+  state.loading = false;
+  state.user = action.payload.user;
+  state.token = action.payload.token;
+  state.isAuthenticated = true;
+  state.isInitialized = true;
+})
 
       .addCase(loginUser.rejected, (state, action: any) => {
         state.loading = false;
@@ -182,10 +184,11 @@ const authSlice = createSlice({
       })
 
       .addCase(logoutUser.fulfilled, (state) => {
-        state.user = null;
-        state.token = null;
-        state.isAuthenticated = false;
-      });
+  state.user = null;
+  state.token = null;
+  state.isAuthenticated = false;
+  state.isInitialized = true;
+});
   },
 });
 
