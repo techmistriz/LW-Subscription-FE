@@ -25,21 +25,16 @@ export default function SubscriptionSummary({
   const searchParams = useSearchParams();
 
   /* ---------------- PRESELECT PLAN FROM URL ---------------- */
-  useEffect(() => {
-    const planFromUrl =
-      searchParams.get("plan");
+ useEffect(() => {
+  const planFromUrl = searchParams.get("plan");
 
-    if (
-      planFromUrl &&
-      !formPlan
-    ) {
-      onPlanSelect(planFromUrl);
-    }
-  }, [
-    searchParams,
-    formPlan,
-    onPlanSelect,
-  ]);
+  if (!planFromUrl) return;
+
+  // avoid overwriting user action
+  if (formPlan) return;
+
+  onPlanSelect(planFromUrl);
+}, [searchParams, formPlan, onPlanSelect]);
 
   const price = Number(
     selectedPlan?.price || 0
@@ -56,7 +51,7 @@ export default function SubscriptionSummary({
     : price + gst;
 
   return (
-    <div className="bg-white p-6 border border-gray-200 shadow-sm rounded-xl sticky top-10 h-[650px] flex flex-col">
+    <div className="bg-white p-6 border border-gray-200 shadow-sm rounded-xl sticky top-10 h-167.5 flex flex-col">
       <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
         Subscription Summary
       </h2>

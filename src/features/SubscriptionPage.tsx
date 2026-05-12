@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Globe, BookOpen, Star, Newspaper, Clock, Layers } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const benefits = [
   {
@@ -50,6 +51,8 @@ const benefits = [
 export default function SubscriptionPage() {
   const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
   const [latestFive, setLatestFive] = useState<Magazine[]>([]);
+
+  const router = useRouter();
 
   /* ---------------- FETCH SINGLE MAGAZINE ---------------- */
   useEffect(() => {
@@ -114,71 +117,71 @@ export default function SubscriptionPage() {
   return (
     <div className="bg-white">
       {/*----------------- HERO SECTION -----------------*/}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-10 items-center">
-        {/* LEFT CONTENT */}
-        <div className="text-center lg:text-left">
-          <h1 className="text-3xl sm:text-4xl lg:text-4xl text-[#c9060a] font-semibold mb-6">
-            Making Sense of India
-          </h1>
+   <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-12 items-center">
 
-          <p className="text-gray-600 mb-6 text-sm sm:text-base">
-            From breaking news to in-depth analysis, we bring clarity.
-          </p>
+  {/* LEFT IMAGE */}
+  <div className="flex justify-center lg:justify-center items-center">
+    {singleMagazine?.image && (
+      <Link
+        href={`/magazines/${singleMagazine.slug}`}
+        className="relative w-64 sm:w-72 md:w-80 lg:w-80 aspect-[3/4] shadow-2xl overflow-hidden"
+      >
+        <Image
+          src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
+          alt={singleMagazine.title || "Latest Magazine"}
+          fill
+          className="object-cover"
+        />
+      </Link>
+    )}
+  </div>
 
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-[#333]">
-            How Delhi should deal with the reset in Dhaka
-          </h2>
+  {/* RIGHT CONTENT */}
+  <div className="text-center lg:text-left flex flex-col justify-center h-full">
 
-          <p className="mb-8 text-sm sm:text-base text-gray-700">
-            The new Tarique Rahman regime in Dhaka gives India a fresh chance to
-            resolve longstanding disputes with its neighbour.
-          </p>
+    <h1 className="text-3xl sm:text-4xl lg:text-4xl text-[#c9060a] font-semibold mb-6">
+      Making Sense of India
+    </h1>
 
-          {/* BUTTONS */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            {/* FIXED CTA (NO HASH, NO FLASH) */}
-            <button
-              onClick={() => {
-                sessionStorage.setItem("scrollToPricing", "1");
-                // window.location.href = "/subscription";
-              }}
-              className="bg-[#c9060a] text-sm text-white px-5 py-3 font-semibold hover:bg-[#333] transition"
-            >
-              Your First Year is on Us
-            </button>
+    <p className="text-gray-600 mb-6 text-sm sm:text-base">
+      From breaking news to in-depth analysis, we bring clarity.
+    </p>
 
-            <button
-              onClick={() => {
-                document.getElementById("pricing")?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }}
-              className="border text-sm border-gray-300 text-[#333] px-5 py-3 font-semibold shadow-md hover:shadow-lg transition cursor-pointer"
-            >
-              Choose your Subscription Plan
-            </button>
-          </div>
-        </div>
+    <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-[#333]">
+      How Delhi should deal with the reset in Dhaka
+    </h2>
 
-        {/* RIGHT IMAGE */}
-        <div className="flex justify-center lg:justify-end">
-          {singleMagazine?.image && (
-            <Link
-              href={`/magazines/${singleMagazine.slug}`}
-              className="relative w-64 sm:w-72 md:w-80 lg:w-76 aspect-[3/4] shadow-2xl overflow-hidden"
-            >
-              <Image
-                src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
-                alt={singleMagazine.title || "Latest Magazine"}
-                fill
-                className="object-cover"
-              />
-            </Link>
-          )}
-        </div>
-      </section>
+    <p className="mb-8 text-sm sm:text-base text-gray-700 leading-relaxed">
+      The new Tarique Rahman regime in Dhaka gives India a fresh chance to
+      resolve longstanding disputes with its neighbour.
+    </p>
 
+    {/* BUTTONS */}
+    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+
+      <button
+        onClick={() => router.push("/register?plan=1")}
+        className="bg-[#c9060a] text-sm text-white px-6 py-3 font-semibold hover:bg-[#333] transition cursor-pointer "
+      >
+        Your First Month is on Us
+      </button>
+
+      <button
+        onClick={() => {
+          document.getElementById("pricing")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }}
+        className="border text-sm border-gray-300 text-[#333] px-6 py-3 font-semibold shadow-md hover:shadow-lg transition cursor-pointer "
+      >
+        Choose your Subscription Plan
+      </button>
+
+    </div>
+  </div>
+
+</section>
       {/*----------------- LATEST EDITIONS -----------------*/}
       {latestFive.length > 0 && (
         <div className="bg-gray-100 py-10">
