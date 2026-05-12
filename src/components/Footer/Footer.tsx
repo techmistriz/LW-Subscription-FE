@@ -40,8 +40,8 @@ const Footer = () => {
             <div className="flex lg:mt-2 gap-3 items-center">
               {/* LinkedIn */}
               <a
-                href="https://www.linkedin.com"
-                target="_blank"
+                href="#"
+                // target="_blank"
                 rel="noopener noreferrer"
                 className="relative group w-8 h-8 rounded-lg flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-md transition-transform hover:scale-105"
               >
@@ -56,7 +56,8 @@ const Footer = () => {
 
               {/* Email Icon */}
               <a
-                href="mailto:info@lexwitness.com"
+                // href="mailto:info@lexwitness.com"
+                href="#"
                 className="relative bg-gray-700 border-gray-400 group w-8 h-8 rounded-lg flex items-center justify-center border  text-white  shadow-md transition-transform hover:scale-105"
               >
                 ✉

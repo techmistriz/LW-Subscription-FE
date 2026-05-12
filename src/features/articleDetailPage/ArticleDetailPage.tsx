@@ -265,7 +265,7 @@ export default function ArticleDetailPage() {
         {/*----------------- AUTHOR + SOCIAL -----------------*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 text-sm text-[#333333]">
-           {(article.authors?.length ?? 0) > 0 ? (
+            {(article.authors?.length ?? 0) > 0 ? (
               article?.authors?.map((author, index) => (
                 <div key={author.id} className="flex items-center gap-2">
                   {/* AUTHOR NAME */}
@@ -277,7 +277,7 @@ export default function ArticleDetailPage() {
                   </Link>
 
                   {/* LINKEDIN ICON */}
-                  {author.linkedin && (
+                  {/* {author.linkedin && (
                     <a
                       href={author.linkedin}
                       target="_blank"
@@ -293,11 +293,11 @@ export default function ArticleDetailPage() {
                         <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
                       </svg>
                     </a>
-                  )}
+                  )} */}
 
                   {/* COMMA */}
-                {index < (article.authors?.length ?? 0) - 1 && (
-                    <span className="text-gray-500">,</span>
+                  {index < (article.authors?.length ?? 0) - 1 && (
+                    <span className="text-gray-500 -ml-2">,</span>
                   )}
                 </div>
               ))
@@ -396,40 +396,39 @@ export default function ArticleDetailPage() {
             </div>
           )}
 
-       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-  
-  {/*----------------- TAGS -----------------*/}
-  {(article.tags?.length ?? 0) > 0 && (
-    <div className="flex flex-wrap items-center gap-1">
-      <p className="font-normal text-[#333]">Tags:</p>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          {/*----------------- TAGS -----------------*/}
+          {(article.tags?.length ?? 0) > 0 && (
+            <div className="flex flex-wrap items-center gap-1">
+              <p className="font-normal text-[#333]">Tags:</p>
 
-      {article?.tags?.map((tag: any, index: number) => (
-        <span key={tag.id} className="flex items-center">
-          <Link
-            href={`/tag/${tag.id}/${tag.slug}`}
-            className="text-[#c9060a] text-sm hover:underline"
-          >
-            {tag.name}
-          </Link>
+              {article?.tags?.map((tag: any, index: number) => (
+                <span key={tag.id} className="flex items-center">
+                  <Link
+                    href={`/tag/${tag.id}/${tag.slug}`}
+                    className="text-[#c9060a] text-sm hover:underline"
+                  >
+                    {tag.name}
+                  </Link>
 
-            {index < (article.tags?.length ?? 0) - 1 && (
-            <span className="mx-1 text-gray-500">,</span>
+                  {index < (article.tags?.length ?? 0) - 1 && (
+                    <span className=" text-gray-500">,</span>
+                  )}
+                </span>
+              ))}
+            </div>
           )}
-        </span>
-      ))}
-    </div>
-  )}
 
-  {/*----------------- SOCIAL SHARE -----------------*/}
-  {article.description && (
-    <div className="sm:ml-auto flex justify-end">
-      <SocialShare title={article.title} />
-    </div>
-  )}
-</div>
+          {/*----------------- SOCIAL SHARE -----------------*/}
+          {article.description && (
+            <div className="sm:ml-auto flex justify-end">
+              <SocialShare title={article.title} />
+            </div>
+          )}
+        </div>
 
         {/*----------------- AUTHOR SECTION -----------------*/}
-          {(article.authors?.length ?? 0) > 0 && (
+        {(article.authors?.length ?? 0) > 0 && (
           <>
             <h3 className="font-bold text-xl mt-10">ABOUT AUTHORS</h3>
             <div className="w-10 h-1 bg-[#c9060a]" />
@@ -464,7 +463,7 @@ export default function ArticleDetailPage() {
 
                       {/* AUTHOR BIO */}
                       <p className="text-xs text-[#333333] leading-6">
-                        {author.bio ||
+                        {author.description ||
                           `${author.name} is a contributor at Lex Witness.`}
                       </p>
 
