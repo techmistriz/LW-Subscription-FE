@@ -31,13 +31,17 @@ function Author({ data }: AuthorProps) {
         <div className="flex gap-4">
           {/* Image */}
           <div className="w-18 h-18 relative shrink-0 overflow-hidden">
-            <Image
-              src={`${authorImg}${data.image}`}
-              alt={data.name}
-              fill
-              sizes="96px"
-              className="object-cover"
-            />
+           <Image
+  src={
+    data.image
+      ? `${authorImg}${data.image}`
+      : "/avatar.jpg"
+  }
+  alt={data.name}
+  fill
+  sizes="96px"
+  className="object-cover"
+/>
           </div>
 
           {/* Content */}
