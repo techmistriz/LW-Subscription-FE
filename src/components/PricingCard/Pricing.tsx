@@ -202,8 +202,7 @@ export default function PricingCard() {
 
         apiResponse = await buyNewPlan(selectedPlan.id);
       } else if (isFreePlan && isExpired) {
-
-      /* =====================================================
+        /* =====================================================
        CASE 2:
        FREE PLAN EXPIRED
        -> BUY NEW
@@ -213,9 +212,10 @@ export default function PricingCard() {
         console.log("========== BUY NEW : FREE PLAN EXPIRED ==========");
 
         apiResponse = await buyNewPlan(selectedPlan.id);
-      } else if (!isFreePlan && isExpired) {
+              console.log("Buy New Plan API RESPONSE =>", apiResponse);
 
-      /* =====================================================
+      } else if (!isFreePlan && isExpired) {
+        /* =====================================================
        CASE 3:
        PAID PLAN EXPIRED
        -> RENEW
@@ -225,9 +225,11 @@ export default function PricingCard() {
         console.log("========== RENEW PLAN ==========");
 
         apiResponse = await renewPlan(subscriptionId);
-      } else {
 
-      /* =====================================================
+              console.log("Renew API RESPONSE =>", apiResponse);
+
+      } else {
+        /* =====================================================
        CASE 4:
        ACTIVE PLAN
        -> UPGRADE
@@ -239,7 +241,7 @@ export default function PricingCard() {
         apiResponse = await upgradePlan(selectedPlan.id);
       }
 
-      console.log("API RESPONSE =>", apiResponse);
+      console.log("Upgrade API RESPONSE =>", apiResponse);
 
       /* ---------------- PAYMENT DATA ---------------- */
       paymentData = apiResponse?.data?.payment || apiResponse?.data;
