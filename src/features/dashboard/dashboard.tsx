@@ -143,6 +143,9 @@ export default function Dashboard() {
     return Number(subscription.plan_id) === Number(highestPlan.id);
   }, [highestPlan, subscription?.plan_id]);
 
+  const isFreePlan = !subscription || Number(subscription?.amount || 0) === 0;
+  const isPaidPlan = !isFreePlan;
+
   const expiredDays = useMemo(() => {
     if (!subscription?.end_date) return 0;
     const end = new Date(subscription.end_date);
@@ -154,76 +157,6 @@ export default function Dashboard() {
   const isLocked = isHighestPlan && isActive;
 
   /* ---------------- BUTTON LABEL ---------------- */
-  /* ---------------- BUTTON STATE ---------------- */
-  const buttonState = useMemo(() => {
-    // No subscription
-    if (!subscription) {
-      return {
-        label: "Buy Plan",
-        link: "/subscription",
-        disabled: false,
-      };
-    }
-
-    // Highest active plan
-    if (isHighestPlan && isActive) {
-      return {
-        label: "Current Plan",
-        link: "#",
-        disabled: true,
-      };
-    }
-
-    // Expired plan
-    if (isExpired) {
-      // Within 10 days
-      if (expiredDays <= 10) {
-        return {
-          label: "Renew Plan",
-          link: "#",
-          disabled: false,
-        };
-      }
-
-      // After 10 days
-      return {
-        label: "Buy Plan",
-        link: "/subscription",
-        disabled: false,
-      };
-    }
-
-    // Active but not highest
-    if (isActive && !isHighestPlan) {
-      return {
-        label: "Upgrade Plan",
-        link: "/subscription",
-        disabled: false,
-      };
-    }
-
-    // Default
-    return {
-      label: "Buy Plan",
-      link: "/subscription",
-      disabled: false,
-    };
-  }, [subscription, isHighestPlan, isActive, isExpired, expiredDays]);
-
-  /* ---------------- BUTTON LINK ---------------- */
-  // const buttonLink = useMemo(() => {
-  //   if (isLocked) return "#";
-
-  //   if (!subscription) return "/subscription";
-
-  //   if (isExpired) {
-  //     return expiredDays <= 10 ? "/renew" : "/subscription";
-  //   }
-
-  //   if (isActive && !isHighestPlan) return "/upgrade";
-
-  //   return "/subscription";
-  // }, [subscription, isExpired, expiredDays, isHighestPlan, isActive, isLocked]);
 
   /* ---------------- DATE HELPERS ---------------- */
   const formatAmount = (amount?: number) =>
@@ -384,40 +317,43 @@ export default function Dashboard() {
 
           <div className="flex gap-3">
             {/* EXPIRED → SHOW BOTH BUTTONS */}
-            {isExpired ? (
-              <>
-                {/* Renew Button (HIDE if FREE PLAN) */}
-                {Number(subscription?.amount) > 0 && (
-                  <button
-                    onClick={handleRenewPlan}
-                    className="px-4 py-2 rounded-lg text-sm transition-all bg-[#333] text-white hover:bg-[#c6090a] cursor-pointer"
-                  >
-                    Renew Plan
-                  </button>
-                )}
-
-                {/* Buy New Plan (always show) */}
-                <Link
-                  href="/subscription?flow=buy-new"
-                  className="px-4 py-2 rounded-lg text-sm transition-all bg-[#c9060a] text-white hover:bg-[#333] cursor-pointer"
-                >
-                  Buy New Plan
-                </Link>
-              </>
-            ) : (
-              /* NORMAL SINGLE BUTTON */
+            {isFreePlan && (
               <Link
-                href={buttonState.disabled ? "#" : buttonState.link}
-                onClick={(e) => buttonState.disabled && e.preventDefault()}
-                className={`px-4 py-2 rounded-lg text-sm transition-all ${
-                  buttonState.disabled
-                    ? "bg-gray-400 text-white cursor-not-allowed pointer-events-none"
-                    : "bg-[#333] text-white hover:bg-[#c6090a]"
-                }`}
+                href="/subscription"
+                className="px-4 py-2 rounded-lg text-sm bg-[#333] text-white hover:bg-[#c6090a]"
               >
-                {buttonState.label}
+                Upgrade Your Plan
               </Link>
             )}
+            {isPaidPlan && isActive && !isHighestPlan && (
+              <>
+                <Link
+                  href="/subscription"
+                  className="px-4 py-2 rounded-lg text-sm bg-[#333] text-white hover:bg-[#c6090a]"
+                >
+                  Change Plan
+                </Link>
+
+                {remainingDays !== null && remainingDays <= 30 && (
+                  <button
+                    onClick={handleRenewPlan}
+                    className="px-4 py-2 rounded-lg text-sm bg-[#c9060a] text-white hover:bg-[#333]"
+                  >
+                    Renew Your Current Plan
+                  </button>
+                )}
+              </>
+            )}
+            {isPaidPlan && isExpired && !isHighestPlan && (
+              <Link
+                href="/subscription"
+                className="px-4 py-2 rounded-lg text-sm bg-[#333] text-white hover:bg-[#c6090a]"
+              >
+                Change Plan
+              </Link>
+            )}
+
+            {/* {isHighestPlan && null}  */}
           </div>
         </div>
 
