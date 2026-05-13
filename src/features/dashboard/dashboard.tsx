@@ -359,26 +359,39 @@ export default function Dashboard() {
 
         {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <StatCard title="Plan" value={subscription?.name || "No Plan"} />
-          <StatCard title="Price" value={formatAmount(subscription?.amount)} />
+          {/* <StatCard title="Plan" value={subscription?.name || "No Plan"} /> */}
           <StatCard
+            title="Plan"
+            value={
+              subscription?.name
+                ? `${subscription?.name}${
+                    subscription?.name
+                      ? ` (${subscription.duration_value} ${subscription.duration_unit || ""})`
+                      : ""
+                  }`
+                : "No Plan"
+            }
+          />
+          <StatCard title="Price" value={formatAmount(subscription?.amount)} />
+          {/* <StatCard
             title="Duration"
             value={
               subscription?.duration_value
                 ? `${subscription.duration_value} ${subscription.duration_unit || ""}`
                 : "—"
             }
+          /> */}
+          <StatCard
+            title="Remaining"
+            value={remainingDaysLabel}
+            status={remainingDays === 0}
           />
+
           <StatCard
             title="Status"
             // value={isActive ? "Active" : "Expired"}
             value={status || "No Plan"}
             status={isActive}
-          />
-          <StatCard
-            title="Remaining"
-            value={remainingDaysLabel}
-            status={remainingDays === 0}
           />
         </div>
 
