@@ -37,20 +37,34 @@ export default function AuthorPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
+const [authorData, setAuthorData] =
+  useState<any>(null);
 
   /*----------------- Load Author -----------------*/
-  const loadAuthor = useCallback(async () => {
-    if (!authorSlug) return;
+ const loadAuthor = useCallback(async () => {
+  if (!authorSlug) return;
 
-    try {
-      const authors = await getAuthors();
-      const matched = authors.find((a) => a.slug === authorSlug);
-      setAuthorId(matched?.id ?? null);
-    } catch (error) {
-      console.error("Failed to load author:", error);
-      setAuthorId(null);
-    }
-  }, [authorSlug]);
+  try {
+    const authors = await getAuthors();
+
+    const matched = authors.find(
+      (a) => a.slug === authorSlug,
+    );
+
+    setAuthorId(matched?.id ?? null);
+
+    setAuthorData(matched ?? null);
+  } catch (error) {
+    console.error(
+      "Failed to load author:",
+      error,
+    );
+
+    setAuthorId(null);
+
+    setAuthorData(null);
+  }
+}, [authorSlug]);
 
   /*----------------- Fetch Posts -----------------*/
   const fetchPosts = useCallback(
@@ -138,6 +152,7 @@ export default function AuthorPage() {
   }));
 
   return (
+    
     <section className="bg-white">
       <div className="lg:col-span-9">
         <YearFilter

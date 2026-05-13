@@ -9,9 +9,11 @@ export async function getAuthors(): Promise<Author[]> {
 
   const authors = response.data?.data ?? [];
 
-  return authors.map((a: any) => ({
-    id: a.id,
-    name: a.name,
-    slug: a.slug,
-  }));
+  // return authors.map((a: any) => ({
+  //   id: a.id,
+  //   name: a.name,
+  //   slug: a.slug,
+  // }));
+
+  return authors;
 }

@@ -1,17 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import SubscribeSidebar from "../../features/auth/SubscribeSidebar";
 import SidebarAdvertisement from "../SidebarAdvertisment/SidebarAdvertisement";
 import LatestEditionSingle from "../LatestEdition/LatestEditionSingle";
+import Author from "@/components/AuthorDetail/Author";
+
 import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
+
 import type { Magazine } from "@/types";
-function RightSidebar() {
-  const [magazine, setMagazine] = useState<Magazine | null>(null);
+
+interface RightSidebarProps {
+  showAuthor?: boolean;
+  authorData?: any;
+}
+
+function RightSidebar({
+  showAuthor = false,
+  authorData,
+}: RightSidebarProps) {
+  const [magazine, setMagazine] =
+    useState<Magazine | null>(null);
 
   useEffect(() => {
     const loadLatest = async () => {
-      const latest = await getLatestSingleMagazines();
+      const latest =
+        await getLatestSingleMagazines();
+
       setMagazine(latest);
     };
 
@@ -19,7 +35,13 @@ function RightSidebar() {
   }, []);
 
   return (
-    <aside className="lg:col-span-3 space-y-8">
+    <aside className="space-y-8">
+      {/* Author Card */}
+      {showAuthor && authorData && (
+        <Author data={authorData} />
+      )}
+
+      {/* Magazine */}
       {magazine && (
         <LatestEditionSingle
           magazine={magazine}
@@ -27,7 +49,9 @@ function RightSidebar() {
           showUnderline={false}
         />
       )}
+
       <SubscribeSidebar />
+
       <SidebarAdvertisement />
     </aside>
   );
