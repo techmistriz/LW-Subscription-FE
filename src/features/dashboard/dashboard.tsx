@@ -156,8 +156,6 @@ export default function Dashboard() {
 
   const isLocked = isHighestPlan && isActive;
 
-  /* ---------------- BUTTON LABEL ---------------- */
-
   /* ---------------- DATE HELPERS ---------------- */
   const formatAmount = (amount?: number) =>
     !amount ? "0.00" : `₹${amount.toLocaleString("en-IN")}`;
@@ -476,7 +474,17 @@ function StatCard({
     <div className="bg-white p-4 rounded-xl shadow">
       <p className="text-sm text-gray-500">{title}</p>
       <h3
-        className={`text-xl font-semibold ${status ? "text-green-600" : "text-[#333]"}`}
+        className={`text-xl font-semibold ${
+          title === "Remaining"
+            ? value.includes("0 day")
+              ? "text-red-600"
+              : parseInt(value) <= 30
+                ? "text-orange-500"
+                : "text-[#333]"
+            : status
+              ? "text-green-600"
+              : "text-[#333]"
+        }`}
       >
         {value}
       </h3>
