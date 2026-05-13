@@ -136,6 +136,7 @@ export interface ReaderFeedback {
 
 /*==================== MAGAZINE ====================*/
 export interface Magazine {
+  data(data: any): unknown;
   id: number;
 
   slug: string;

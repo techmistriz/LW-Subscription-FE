@@ -406,7 +406,7 @@ export default function ArticleDetailPage() {
                 <span key={tag.id} className="flex items-center">
                   <Link
                     href={`/tag/${tag.id}/${tag.slug}`}
-                    className="text-[#c9060a] text-sm hover:underline"
+                    className="text-[#c9060a] text-sm mt-1 hover:underline"
                   >
                     {tag.name}
                   </Link>

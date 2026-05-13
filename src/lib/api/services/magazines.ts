@@ -105,19 +105,21 @@ export async function getLatestSingleMagazines(): Promise<Magazine | null> {
       params: {
         page: 1,
         limit: 1,
-        latest: 1, // ensure latest order
+        latest: 1,
       },
     });
 
-    const result = response.data;
-    const magazines = result?.data?.data ?? result?.data ?? result ?? [];
+    console.log("RAW API RESPONSE:", response.data);
 
-    return magazines[0] ?? null;
+    const magazines = response.data?.data ?? [];
+
+    return magazines.length > 0 ? magazines[0] : null;
   } catch (error) {
     console.error("Error fetching latest magazine:", error);
     return null;
   }
 }
+
 
 type LatestEditionResponse = {
   magazine: Magazine;
