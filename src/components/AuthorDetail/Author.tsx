@@ -64,7 +64,7 @@ function Author({ data }: AuthorProps) {
                 href={data.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative group mt-4 w-8 h-8 flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"
+                className="relative group mt-6 w-6 h-6  flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-sm overflow-hidden"
               >
                 <svg
                   className="w-4 h-4 z-10"

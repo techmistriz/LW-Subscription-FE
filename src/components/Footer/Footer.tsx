@@ -43,7 +43,7 @@ const Footer = () => {
                 href="#"
                 // target="_blank"
                 rel="noopener noreferrer"
-                className="relative group w-8 h-8 rounded-lg flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-md transition-transform hover:scale-105"
+                className="relative group w-8 h-6 flex items-center justify-center border border-[#fff] text-white bg-[#0A66C2] shadow-md transition-transform hover:scale-105"
               >
                 <svg
                   className="w-4 h-4"
@@ -58,7 +58,7 @@ const Footer = () => {
               <a
                 // href="mailto:info@lexwitness.com"
                 href="#"
-                className="relative bg-gray-700 border-gray-400 group w-8 h-8 rounded-lg flex items-center justify-center border  text-white  shadow-md transition-transform hover:scale-105"
+                className="relative  group w-8 h-6  flex items-center justify-center border  text-white  shadow-md transition-transform hover:scale-105"
               >
                 ✉
               </a>
