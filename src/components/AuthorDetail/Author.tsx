@@ -1,7 +1,6 @@
 import Image from "next/image";
 
-const authorImg =
-  process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
+const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
 
 interface AuthorProps {
   data: {
@@ -19,11 +18,11 @@ function Author({ data }: AuthorProps) {
   return (
     <div className="w-full">
       {/* Heading */}
-      <h2 className="text-xl font-semibold uppercase text-[#333]">
+      <h2 className="text-lg mt-2 font-semibold uppercase text-[#333]">
         About Author
       </h2>
 
-      <div className="w-12 h-1 bg-[#c9060a] mt-1 mb-4"></div>
+      <div className="w-12 h-1 bg-[#c9060a]  mb-3"></div>
 
       {/* Card */}
       <div className="border border-gray-200 bg-white p-4 flex flex-col hover:shadow">
@@ -31,28 +30,20 @@ function Author({ data }: AuthorProps) {
         <div className="flex gap-4">
           {/* Image */}
           <div className="w-18 h-18 relative shrink-0 overflow-hidden">
-           <Image
-  src={
-    data.image
-      ? `${authorImg}${data.image}`
-      : "/avatar.jpg"
-  }
-  alt={data.name}
-  fill
-  sizes="96px"
-  className="object-cover"
-/>
+            <Image
+              src={data.image ? `${authorImg}${data.image}` : "/avatar.jpg"}
+              alt={data.name}
+              fill
+              sizes="96px"
+              className="object-cover"
+            />
           </div>
 
           {/* Content */}
           <div className="flex-1">
-            <p className="font-semibold text-md text-[#c9060a]">
-              {data.name}
-            </p>
+            <p className="font-semibold text-md text-[#c9060a]">{data.name}</p>
 
-            <p className="text-sm text-[#333] mt-1">
-              {data.designation}
-            </p>
+            <p className="text-sm text-[#333] mt-1">{data.designation}</p>
 
             <p className="text-sm text-[#c9060a] mt-1 font-medium">
               {data.company_name}
@@ -85,7 +76,7 @@ function Author({ data }: AuthorProps) {
         </div>
 
         {/* Full Description */}
-        <p className="text-[14px] font-normal text-gray-600 mt-4 leading-6">
+        <p className="text-[14px] font-normal text-gray-600 mt-4 leading-6 text-justify">
           {data.description}
         </p>
       </div>

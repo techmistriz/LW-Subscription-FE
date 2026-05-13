@@ -106,7 +106,7 @@ export default function PostList({
               {article.magazine?.month?.name} {article.magazine?.year}
             </p>
 
-            <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-6">
+            <p className="text-[16px] text-gray-600 line-clamp-2 mb-3 leading-6 text-justify">
               {article.short_description || "No description available"}
             </p>
 
