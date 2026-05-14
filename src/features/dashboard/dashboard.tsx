@@ -313,7 +313,14 @@ export default function Dashboard() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
+  {/* Invoice Button */}
+  <Link
+    href="/invoice"
+    className="px-4 py-2 rounded-lg text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
+  >
+    View Invoices
+  </Link>
             {/* EXPIRED → SHOW BOTH BUTTONS */}
             {isFreePlan && (
               <Link
