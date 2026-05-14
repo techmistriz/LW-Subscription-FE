@@ -12,36 +12,41 @@ export default function ThankYou() {
   const email = user?.email || "Not available";
   const planName = subscription?.name || "Your Plan";
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center px-6">
-
+return (
+  <div className="min-h-[85vh] bg-white flex items-center justify-center px-4 pb-24">
+    <div className="w-full max-w-2xl border border-gray-200 shadow-sm rounded-2xl px-8 py-14 text-center bg-white">
+      
       {/* SUCCESS ICON */}
-      <div className="text-green-500 text-6xl mb-6 -mt-30">✔</div>
+      <div className="text-green-500 text-6xl mb-6">
+        ✔
+      </div>
 
       {/* TITLE */}
       <h1 className="text-3xl sm:text-4xl font-bold text-[#333] mb-4">
         Thank You
       </h1>
- {/* <p>
-  Your Gold Subscription has been activated successfully.
- </p> */}
+
       {/* MESSAGE */}
-      <p className="text-lg text-gray-700 mb-2">
-        Your <span className="font-semibold">{planName}</span> has been activated successfully.
+      <p className="text-lg text-gray-700 mb-3 leading-relaxed">
+        Your <span className="font-semibold">{planName}</span> has been
+        activated successfully.
       </p>
 
-      <p className="text-gray-600 mb-8">
-        Your login credentials have been shared with you on your email id{" "}
-        <span className="font-medium text-[#c9060a]">{email}</span>.
+      <p className="text-gray-600 mb-8 leading-relaxed">
+        Your login credentials have been shared with your email id{" "}
+        <span className="font-medium text-[#c9060a]">
+          {email}
+        </span>.
       </p>
 
       {/* BUTTON */}
       <button
         onClick={() => router.push("/")}
-        className="bg-[#c6090a] cursor-pointer hover:bg-[#333] text-white px-8 py-3 rounded-sm text-lg font-medium transition"
+        className="bg-[#c6090a] cursor-pointer hover:bg-[#333] text-white px-8 py-3  text-lg font-medium transition"
       >
         Start Your Access Now
       </button>
     </div>
-  );
+  </div>
+);
 }
