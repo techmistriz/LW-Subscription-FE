@@ -44,10 +44,26 @@ export interface Invoice {
   transaction: Transaction | null;
 }
 
+/* ---------------- RESPONSE TYPE ---------------- */
+
+export interface InvoiceResponse {
+  status: boolean;
+  data: Invoice[];
+  meta: {
+    paging: {
+      current_page: number;
+      per_page: number;
+      total: number;
+      last_page: number;
+    };
+  };
+  message: string;
+}
+
 /* ---------------- GET INVOICES ---------------- */
 
 export const getUserInvoices = async () => {
-  return request<Invoice[]>(
+  return request<InvoiceResponse>(
     "GET",
     "/subscription/plan-history"
   );

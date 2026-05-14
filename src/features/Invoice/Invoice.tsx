@@ -84,22 +84,16 @@ export default function InvoicePage({ invoices }: Props) {
             </p>
           </div>
 
-         <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-6 min-w-[180px]">
-  <div>
-    <p className="text-sm text-gray-500">
-      Total Invoices
-    </p>
-
-  </div>
-    <h2 className="text-2xl font-bold text-gray-900 ">
-      {invoices.length}
-    </h2>
-
- 
-</div>
+          <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-6 min-w-[180px]">
+            <div>
+              <p className="text-sm text-gray-500">Total Invoices</p>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 ">
+              {invoices.length}
+            </h2>
+          </div>
         </div>
 
-        {/* Invoice Cards */}
         {/* Invoice Cards */}
         <div className="space-y-4">
           {invoices.map((invoice) => (
@@ -166,7 +160,7 @@ export default function InvoicePage({ invoices }: Props) {
                     <button
                       onClick={() => downloadInvoice(invoice)}
                       disabled={downloadingId === invoice.id}
-                      className="inline-flex items-center justify-center gap-2 bg-[#c9060a] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                      className="inline-flex items-center justify-center gap-2 bg-[#c9060a] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
 

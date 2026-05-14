@@ -12,25 +12,25 @@ export default function Page() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchInvoices = async () => {
-      try {
-        const res = await getUserInvoices();
-console.log("Invoice", res)
-        console.log("API RESPONSE:", res);
+useEffect(() => {
+  const fetchInvoices = async () => {
+    try {
+      const res = await getUserInvoices();
 
-        if (res.status && res.data?.data) {
-          setInvoices(res.data.data);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+      console.log("Invoice", res);
+
+      if (res.data?.status) {
+        setInvoices(res.data.data);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchInvoices();
-  }, []);
+  fetchInvoices();
+}, []);
 
   if (loading) {
     return (
