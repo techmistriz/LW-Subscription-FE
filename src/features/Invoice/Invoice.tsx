@@ -70,10 +70,10 @@ export default function InvoicePage({ invoices }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] py-10 px-4">
-      <div className="max-w-5xl mx-auto">
+   <div className="min-h-screen bg-[#f5f5f7]   py-10 ">
+      <div className="max-w-6xl mx-auto border border-gray-300 p-6 ">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-10">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-10 ">
           <div>
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
               Invoice History
@@ -160,7 +160,7 @@ export default function InvoicePage({ invoices }: Props) {
                     <button
                       onClick={() => downloadInvoice(invoice)}
                       disabled={downloadingId === invoice.id}
-                      className="inline-flex items-center justify-center gap-2 bg-[#c9060a] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 bg-[#c9060a] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5  text-sm font-medium transition-all duration-200 cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
 

@@ -69,7 +69,8 @@ export const getUserInvoices = async () => {
   );
 };
 
-/* ---------------- OPEN PDF PREVIEW ---------------- */
+
+/* ---------------- DIRECT DOWNLOAD PDF ---------------- */
 
 export const downloadInvoicePdf = async (
   subscriptionId: number
@@ -83,22 +84,34 @@ export const downloadInvoicePdf = async (
     );
 
     // Create PDF blob
-    const file = new Blob([response.data], {
+    const blob = new Blob([response.data], {
       type: "application/pdf",
     });
 
-    // Create temporary URL
-    const fileURL = window.URL.createObjectURL(file);
+    // Create temp URL
+    const url = window.URL.createObjectURL(blob);
 
-    // Open browser PDF viewer
-    window.open(fileURL, "_blank");
+    // Create hidden anchor
+    const link = document.createElement("a");
 
-    // Cleanup memory later
-    setTimeout(() => {
-      window.URL.revokeObjectURL(fileURL);
-    }, 1000);
+    link.href = url;
+
+    // Dynamic filename
+    link.download = `invoice-${subscriptionId}.pdf`;
+
+    // Append to body
+    document.body.appendChild(link);
+
+    // Trigger download
+    link.click();
+
+    // Cleanup
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error("Invoice preview failed:", error);
+    console.error("Invoice download failed:", error);
+
     throw error;
   }
 };

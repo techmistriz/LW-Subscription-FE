@@ -40,5 +40,5 @@ useEffect(() => {
     );
   }
 
-  return <InvoicePage invoices={invoices} />;
+  return <InvoicePage  invoices={invoices} />;
 }
