@@ -109,7 +109,7 @@ export async function getLatestSingleMagazines(): Promise<Magazine | null> {
       },
     });
 
-    console.log("RAW API RESPONSE:", response.data);
+    // console.log("RAW API RESPONSE:", response.data);
 
     const magazines = response.data?.data ?? [];
 
