@@ -107,14 +107,14 @@ export default function PricingCard() {
     (state: any) => state.subscription.isLoaded,
   );
 
+  // For registered users, free plan is always disabled
+  const isFreePlanDisabled = useMemo(() => {
+    return isAuthenticated === true;
+  }, [isAuthenticated]);
+
   /* ---------------- SUBSCRIBE / UPGRADE ---------------- */
   const handleSubscribe = useCallback(async () => {
-    console.log("========== SUBSCRIPTION FLOW START ==========");
-
     try {
-      /* ---------------- READY CHECK ---------------- */
-      console.log("Subscription Ready =>", isSubscriptionReady);
-
       if (!isSubscriptionReady) {
         toast.error("Loading subscription...");
         return;
@@ -122,262 +122,139 @@ export default function PricingCard() {
 
       setLoading(true);
 
-      /* ---------------- DEBUG ---------------- */
-      console.log("Selected Plan ID =>", selectedPlanId);
-
-      console.log("Plans =>", plans);
-
-      console.log("User =>", user);
-
-      console.log("Active Subscription =>", activeSubscription);
-
-      /* ---------------- SELECT PLAN ---------------- */
       const selectedPlan = plans.find(
         (p) => Number(p.id) === Number(selectedPlanId),
       );
-
-      console.log("Selected Plan =>", selectedPlan);
 
       if (!selectedPlan) {
         toast.error("Please select a plan");
         return;
       }
 
-      /* ---------------- AUTH CHECK ---------------- */
-      if (!isAuthenticated) {
-        console.log("User not authenticated");
-
-        router.push(`/register?plan=${selectedPlanId}`);
-
+      // Check if trying to select free plan as registered user
+      const isFreePlanSelected = Number(selectedPlan.price) === 0;
+      if (isFreePlanSelected && isAuthenticated) {
+        toast.error(
+          "Free plan is only available for new users. Please choose a paid plan to continue your journey! 🚀",
+        );
+        setLoading(false);
         return;
       }
 
-      /* =====================================================
-       SUBSCRIPTION LOGIC
-    ===================================================== */
-
-      const subscriptionId = activeSubscription?.id;
-
-      const subscriptionAmount = Number(activeSubscription?.amount || 0);
-
-      const subscriptionStatus = activeSubscription?.status?.toUpperCase();
-
-      const endDate = activeSubscription?.end_date;
-
-      const isExpiredByDate = endDate ? new Date(endDate) < new Date() : false;
-
-      const isExpired = subscriptionStatus === "EXPIRED" || isExpiredByDate;
-
-      const isFreePlan = subscriptionAmount === 0;
-
-      const hasSubscription = !!subscriptionId;
-
-      console.log("Subscription ID =>", subscriptionId);
-
-      console.log("Subscription Amount =>", subscriptionAmount);
-
-      console.log("Subscription Status =>", subscriptionStatus);
-
-      console.log("Is Expired =>", isExpired);
-
-      console.log("Is Free Plan =>", isFreePlan);
-
-      console.log("Has Subscription =>", hasSubscription);
-
-      /* ---------------- API VARS ---------------- */
-      let apiResponse: any = null;
-
-      let paymentData: any = null;
-
-      let purchaseType: "NEW" | "RENEW" | "UPGRADE" = "NEW";
-
-      /* =====================================================
-       CASE 1:
-       NO SUBSCRIPTION
-    ===================================================== */
-      if (!hasSubscription) {
-        purchaseType = "NEW";
-
-        console.log("========== BUY NEW : NO SUB ==========");
-
-        apiResponse = await buyNewPlan(selectedPlan.id);
-      } else if (isFreePlan && isExpired) {
-        /* =====================================================
-       CASE 2:
-       FREE PLAN EXPIRED
-       -> BUY NEW
-    ===================================================== */
-        purchaseType = "NEW";
-
-        console.log("========== BUY NEW : FREE PLAN EXPIRED ==========");
-
-        apiResponse = await buyNewPlan(selectedPlan.id);
-              console.log("Buy New Plan API RESPONSE =>", apiResponse);
-
-      } else if (!isFreePlan && isExpired) {
-        /* =====================================================
-       CASE 3:
-       PAID PLAN EXPIRED
-       -> RENEW
-    ===================================================== */
-        purchaseType = "RENEW";
-
-        console.log("========== RENEW PLAN ==========");
-
-        apiResponse = await renewPlan(subscriptionId);
-
-              console.log("Renew API RESPONSE =>", apiResponse);
-
-      } else {
-        /* =====================================================
-       CASE 4:
-       ACTIVE PLAN
-       -> UPGRADE
-    ===================================================== */
-        purchaseType = "UPGRADE";
-
-        console.log("========== UPGRADE PLAN ==========");
-
-        apiResponse = await upgradePlan(selectedPlan.id);
+      if (!isAuthenticated) {
+        router.push(`/register?plan=${selectedPlanId}`);
+        return;
       }
 
-      console.log("Upgrade API RESPONSE =>", apiResponse);
+      const subscriptionId = activeSubscription?.id;
+      const subscriptionAmount = Number(activeSubscription?.amount || 0);
+      const subscriptionStatus = activeSubscription?.status?.toUpperCase();
+      const endDate = activeSubscription?.end_date;
+      const isExpiredByDate = endDate ? new Date(endDate) < new Date() : false;
+      const isExpired = subscriptionStatus === "EXPIRED" || isExpiredByDate;
+      const isFreePlan = subscriptionAmount === 0;
+      const hasSubscription = !!subscriptionId;
 
-      /* ---------------- PAYMENT DATA ---------------- */
+      let apiResponse: any = null;
+      let paymentData: any = null;
+      let purchaseType: "NEW" | "RENEW" | "UPGRADE" = "NEW";
+
+      /* ---------------- CASE 1: NO SUBSCRIPTION ---------------- */
+      if (!hasSubscription) {
+        purchaseType = "NEW";
+        apiResponse = await upgradePlan(selectedPlan.id);
+      } else if (isFreePlan && isExpired) {
+        /* ---------------- CASE 2: FREE PLAN EXPIRED -> Upgrade ---------------- */
+        purchaseType = "NEW";
+        apiResponse = await upgradePlan(selectedPlan.id);
+      } else if (!isFreePlan && isExpired) {
+        /* ---------------- CASE 3: PAID PLAN EXPIRED -> RENEW ---------------- */
+        purchaseType = "RENEW";
+        apiResponse = await renewPlan(subscriptionId);
+        console.log("Renew API RESPONSE =>", apiResponse);
+      } else {
+        /* ---------------- CASE 4: ACTIVE PLAN -> UPGRADE ---------------- */
+        purchaseType = "UPGRADE";
+        apiResponse = await upgradePlan(selectedPlan.id);
+        console.log("Upgrade API RESPONSE =>", apiResponse);
+      }
+
       paymentData = apiResponse?.data?.payment || apiResponse?.data;
-
-      console.log("Payment Data =>", paymentData);
 
       if (!paymentData) {
         toast.error("Payment initiation failed");
-
         return;
       }
 
       /* ---------------- RAZORPAY ---------------- */
       const options = {
         key: paymentData?.razorpay_key || process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-
         amount: paymentData?.amount,
-
         currency: paymentData?.currency || "INR",
-
         order_id: paymentData?.order_id,
-
         name: "Lex Witness",
-
         prefill: {
           name: `${user?.first_name || ""} ${user?.last_name || ""}`,
-
           email: user?.email,
-
           contact: user?.contact,
         },
-
         theme: {
           color: "#c9060a",
         },
-
         handler: async function (response: any) {
-          console.log("========== PAYMENT SUCCESS ==========");
-
-          console.log("Razorpay Response =>", response);
-
           try {
             const verifyPayload = {
               razorpay_payment_id: response.razorpay_payment_id,
-
               razorpay_order_id: response.razorpay_order_id,
-
               razorpay_signature: response.razorpay_signature,
-
               membership_plan_id: selectedPlan.id,
-
               purchase_type: purchaseType,
             };
 
-            console.log("VERIFY PAYLOAD =>", verifyPayload);
-
             const verifyRes = await verifySubscriptionPayment(verifyPayload);
-
-            console.log("VERIFY RESPONSE =>", verifyRes);
 
             const sub =
               verifyRes?.data?.subscription ||
               verifyRes?.data?.data?.subscription;
 
-            console.log("Verified Subscription =>", sub);
-
             if (sub) {
               const reduxSubscription = {
                 id: sub.id,
-
                 plan_id: sub.membership_plan_id,
-
                 name: sub.plan?.name,
-
                 amount: Number(sub.plan?.price || 0),
-
                 status: sub.status,
-
                 start_date: sub.start_date,
-
                 end_date: sub.end_date,
-
                 duration_value: sub.plan?.duration_value,
-
                 duration_unit: sub.plan?.duration_unit,
-
                 purchase_type: sub.purchase_type,
-
                 features: sub.plan?.feature,
-
                 tag: sub.plan?.tag,
               };
-
-              console.log("Redux Subscription =>", reduxSubscription);
 
               dispatch(setSubscription(reduxSubscription));
             }
 
             toast.success("Payment successful");
-
             router.push("/dashboard");
           } catch (err: any) {
-            console.log("VERIFY ERROR =>", err);
-
-            console.log("VERIFY ERROR RESPONSE =>", err?.response?.data);
-
             toast.error(err?.response?.data?.message || "Verification failed");
           }
         },
       };
 
-      console.log("Razorpay Options =>", options);
-
       const razorpay = new window.Razorpay(options);
 
       razorpay.on("payment.failed", function (response: any) {
-        console.log("PAYMENT FAILED =>", response);
-
         toast.error(response?.error?.description || "Payment failed");
       });
 
-      console.log("Opening Razorpay...");
-
       razorpay.open();
     } catch (error: any) {
-      console.log("========== MAIN ERROR ==========");
-
-      console.log(error);
-
-      console.log("ERROR RESPONSE =>", error?.response?.data);
-
       toast.error(error?.response?.data?.message || "API ERROR");
     } finally {
       setLoading(false);
-
-      console.log("========== FLOW END ==========");
     }
   }, [
     selectedPlanId,
@@ -425,11 +302,13 @@ export default function PricingCard() {
         {/* HEADER */}
         <div className="text-center mb-14">
           <h2 className="text-4xl font-black uppercase tracking-tight text-gray-900">
-            Choose Your Plan
+            {isAuthenticated ? "Choose Your Premium Plan" : "Choose Your Plan"}
           </h2>
 
           <p className="text-gray-500 mt-2 text-sm">
-            Flexible pricing built for professionals
+            {isAuthenticated
+              ? "Select a paid plan to unlock all premium features"
+              : "Flexible pricing built for professionals"}
           </p>
 
           <div className="w-20 h-1 bg-[#c9060a] mx-auto mt-5 rounded-full" />
@@ -445,14 +324,9 @@ export default function PricingCard() {
         >
           {filteredPlans.map((plan) => {
             const isSelected = selectedPlanId === plan.id;
-
             const features = parseFeatures(plan.feature);
-
             const isFreePlanCard = Number(plan.price) === 0;
-
-            const alreadyUsedFreePlan = isAuthenticated && activeSubscription;
-
-            const disableFreePlan = isFreePlanCard && alreadyUsedFreePlan;
+            const disableFreePlan = isFreePlanCard && isFreePlanDisabled;
 
             return (
               <label
@@ -460,7 +334,7 @@ export default function PricingCard() {
                 className="relative cursor-pointer group pt-4"
               >
                 {/* BADGE */}
-                {plan.tag && (
+                {plan.tag && !disableFreePlan && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span
                       className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md
@@ -475,6 +349,15 @@ export default function PricingCard() {
                   </div>
                 )}
 
+                {/* FREE PLAN LOCKED BADGE */}
+                {isFreePlanCard && disableFreePlan && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md bg-gray-500 text-white">
+                      Not Available
+                    </span>
+                  </div>
+                )}
+
                 {/* RADIO */}
                 <input
                   type="radio"
@@ -483,11 +366,11 @@ export default function PricingCard() {
                   checked={isSelected}
                   onChange={() => {
                     if (disableFreePlan) {
-                      toast.error("You have already used free plan");
-
+                      toast.error(
+                        "Free plan is only available for new users. Please choose a paid plan!",
+                      );
                       return;
                     }
-
                     setSelectedPlanId(plan.id);
                   }}
                 />
@@ -497,18 +380,18 @@ export default function PricingCard() {
                   className={`relative h-full mx-4 p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 bg-white
 ${
   disableFreePlan
-    ? "opacity-60 cursor-not-allowed border-gray-200"
+    ? "opacity-60 cursor-not-allowed border-gray-200 bg-gray-50"
     : "hover:shadow-xl hover:-translate-y-1"
 }
-${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
+${isSelected && !disableFreePlan ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                 >
                   {/* RADIO ICON */}
                   <div className="flex justify-center mb-5">
                     <div
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center
-                      ${isSelected ? "border-[#c9060a]" : "border-gray-300"}`}
+                      ${isSelected && !disableFreePlan ? "border-[#c9060a]" : "border-gray-300"}`}
                     >
-                      {isSelected && (
+                      {isSelected && !disableFreePlan && (
                         <div className="w-2.5 h-2.5 bg-[#c9060a] rounded-full" />
                       )}
                     </div>
@@ -521,6 +404,12 @@ ${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                     )}`}
                   >
                     {plan.name}
+                    {activeSubscription?.plan_id === plan.id &&
+                      !disableFreePlan && (
+                        <span className="block text-xs text-green-600 font-normal mt-1">
+                          Current Plan
+                        </span>
+                      )}
                   </h3>
 
                   {/* FEATURES */}
@@ -528,7 +417,7 @@ ${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                     {features.slice(0, 3).map((f: string, i: number) => (
                       <li
                         key={i}
-                        className="text-sm text-gray-800 font-semibold"
+                        className={`text-sm font-semibold ${disableFreePlan ? "text-gray-500" : "text-gray-800"}`}
                       >
                         {f}
                       </li>
@@ -537,7 +426,9 @@ ${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
 
                   {/* PRICE */}
                   <div className="mt-6 text-center">
-                    <p className="text-2xl md:text-3xl font-black text-gray-900">
+                    <p
+                      className={`text-2xl md:text-3xl font-black ${disableFreePlan ? "text-gray-500" : "text-gray-900"}`}
+                    >
                       {Number(plan.price) === 0 ? "FREE" : `₹${plan.price}`}
                     </p>
 
@@ -548,9 +439,14 @@ ${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                     )}
                   </div>
                   {disableFreePlan && (
-                    <p className="text-[11px] text-center text-red-600 font-bold mt-3 uppercase">
-                      You have already used free plan
-                    </p>
+                    <div className="mt-3">
+                      <p className="text-[11px] text-center text-amber-600 font-bold">
+                        For New Users Only
+                      </p>
+                      <p className="text-[10px] text-center text-gray-500 mt-1">
+                        ✨ Choose a paid plan to get started
+                      </p>
+                    </div>
                   )}
                 </div>
               </label>
@@ -565,7 +461,11 @@ ${isSelected ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
             disabled={loading}
             className="w-full sm:w-auto bg-[#c9060a] text-white px-6 md:px-18 py-3 font-bold text-sm md:text-lg uppercase tracking-widest hover:bg-[#333] transition-all duration-300 active:scale-95 shadow-xl shadow-red-500/20 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? "Processing..." : "Subscribe Now"}
+            {loading
+              ? "Processing..."
+              : isAuthenticated
+                ? "Upgrade Now"
+                : "Subscribe Now"}
           </button>
         </div>
       </div>

@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 /*----------------- REDUX -----------------*/
 import { useAppDispatch } from "@/redux/store/hooks";
 import { loginUser as loginRedux } from "@/redux/store/slices/authSlice";
-import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 import { toast } from "sonner";
 
 export default function SignInForm() {
@@ -28,26 +27,9 @@ export default function SignInForm() {
     try {
       const result = await dispatch(loginRedux({ email, password })).unwrap();
 
-      const user = result.user;
+      // The subscription handling is now done inside the authSlice
+      // No need to dispatch setSubscription here anymore
 
-      const sub = user?.active_subscription;
-
-      if (sub) {
-        dispatch(
-          setSubscription({
-            id: sub?.id,
-            plan_id: sub?.plan?.id,
-            name: sub?.plan?.name,
-            amount: Number(sub?.plan?.price),
-            status: sub?.status,
-            start_date: sub?.start_date,
-            end_date: sub?.end_date,
-            duration_value: sub?.plan?.duration_value,
-            duration_unit: sub?.plan?.duration_unit,
-            purchase_type: sub?.purchase_type,
-          }),
-        );
-      }
       toast.success("Login successful!");
       router.replace("/dashboard");
     } catch (error: any) {

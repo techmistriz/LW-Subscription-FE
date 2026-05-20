@@ -11,7 +11,7 @@ interface User {
   email: string;
   contact: string;
   address: string;
-
+  active_subscription_id?: number;
   active_subscription?: any;
 }
 
@@ -34,61 +34,90 @@ const initialState: AuthState = {
   isInitialized: false,
 };
 
+/* ---------------- HELPER FUNCTION TO FORMAT SUBSCRIPTION ---------------- */
+const formatSubscription = (subscription: any) => {
+  if (!subscription) return null;
+
+  return {
+    id: subscription.id,
+    plan_id: subscription.membership_plan_id,
+    name: subscription.plan?.name,
+    amount: Number(subscription.plan?.price || 0),
+    total_amount: subscription.total_amount,
+    subtotal_amount: subscription.subtotal_amount,
+    tax_amount: subscription.tax_amount,
+    tax_percent: subscription.tax_percent,
+    status: subscription.status,
+    start_date: subscription.start_date,
+    end_date: subscription.end_date,
+    duration_value: subscription.plan?.duration_value,
+    duration_unit: subscription.plan?.duration_unit,
+    purchase_type: subscription.purchase_type,
+    features: subscription.plan?.feature,
+    is_trial: String(subscription.plan?.is_trial ?? ""),
+    tag: subscription.plan?.tag,
+    next_subscription_id: subscription.next_subscription_id,
+    previous_subscription_id: subscription.previous_subscription_id,
+  };
+};
+
 /* ---------------- LOGIN THUNK ---------------- */
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (
     { email, password }: { email: string; password: string },
-    { rejectWithValue, dispatch }
+    { rejectWithValue, dispatch },
   ) => {
     try {
       const res = await loginApi(email, password);
 
       const token = res?.token || res?.data?.token;
       const user = res?.user || res?.data?.user;
+      const subscriptionData = res?.subscription || res?.data?.subscription;
 
       if (!token || !user) {
         throw new Error("Invalid login response");
       }
 
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${token}`;
 
       /* ---------------- SUBSCRIPTION HANDLING ---------------- */
       let subscription = null;
+      let nextSubscription = null;
 
       // 1. Try API
       try {
         const subRes = await axiosInstance.get("/user/subscription");
         subscription = subRes?.data?.data || null;
+        if (subscription?.next_subscription) {
+          nextSubscription = subscription.next_subscription;
+        }
       } catch (err) {
         console.log("Subscription API failed");
       }
 
       // 2. Fallback: from login response (IMPORTANT FIX)
-      if (!subscription) {
-        subscription = res?.subscription || res?.data?.subscription;
+      if (!subscription && subscriptionData) {
+        subscription = subscriptionData;
+        if (subscriptionData.next_subscription) {
+          nextSubscription = subscriptionData.next_subscription;
+        }
       }
 
       // 3. Dispatch subscription if exists
       if (subscription) {
+        const formattedCurrentSubscription = formatSubscription(subscription);
+        const formattedNextSubscription = nextSubscription
+          ? formatSubscription(nextSubscription)
+          : null;
+
+        // Dispatch both current and next subscription
         dispatch(
           setSubscription({
-            id: subscription.id,
-            plan_id: subscription.membership_plan_id,
-            name: subscription.plan?.name,
-            amount: Number(subscription.plan?.price || 0),
-            status: subscription.status,
-            start_date: subscription.start_date,
-            end_date: subscription.end_date,
-            duration_value: subscription.plan?.duration_value,
-            duration_unit: subscription.plan?.duration_unit,
-            purchase_type: subscription.purchase_type,
-            features: subscription.plan?.feature,
-            is_trial: String(subscription.plan?.is_trial ?? ""),
-            tag: subscription.plan?.tag,
-          })
+            subscription: formattedCurrentSubscription,
+            next_subscription: formattedNextSubscription,
+          }),
         );
       }
 
@@ -100,7 +129,7 @@ export const loginUser = createAsyncThunk(
     } catch (err: any) {
       return rejectWithValue(err.message || "Login failed");
     }
-  }
+  },
 );
 
 /* ---------------- LOGOUT ---------------- */
@@ -139,17 +168,13 @@ const authSlice = createSlice({
 
       state.token = token;
 
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${token}`;
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${token}`;
 
       state.isInitialized = true;
     },
 
-    setUser: (
-      state,
-      action: PayloadAction<{ user: User; token: string }>
-    ) => {
+    setUser: (state, action: PayloadAction<{ user: User; token: string }>) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
@@ -157,9 +182,8 @@ const authSlice = createSlice({
       sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       sessionStorage.setItem("token", action.payload.token);
 
-      axiosInstance.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${action.payload.token}`;
+      axiosInstance.defaults.headers.common["Authorization"] =
+        `Bearer ${action.payload.token}`;
     },
   },
 
@@ -171,12 +195,12 @@ const authSlice = createSlice({
       })
 
       .addCase(loginUser.fulfilled, (state, action) => {
-  state.loading = false;
-  state.user = action.payload.user;
-  state.token = action.payload.token;
-  state.isAuthenticated = true;
-  state.isInitialized = true;
-})
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.isInitialized = true;
+      })
 
       .addCase(loginUser.rejected, (state, action: any) => {
         state.loading = false;
@@ -184,11 +208,11 @@ const authSlice = createSlice({
       })
 
       .addCase(logoutUser.fulfilled, (state) => {
-  state.user = null;
-  state.token = null;
-  state.isAuthenticated = false;
-  state.isInitialized = true;
-});
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.isInitialized = true;
+      });
   },
 });
 

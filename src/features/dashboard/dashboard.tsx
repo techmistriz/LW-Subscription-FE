@@ -3,6 +3,21 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  ChevronDown,
+  Calendar,
+  Sparkles,
+  Clock,
+  CreditCard,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar as CalendarIcon,
+  FileText,
+  RefreshCw,
+  ArrowUpRight,
+} from "lucide-react";
 
 import { getPlans } from "@/features/auth/services/plans";
 import { useAppSelector, useAppDispatch } from "@/redux/store/hooks";
@@ -30,8 +45,12 @@ export default function Dashboard() {
   const { user, loading, isAuthenticated, isInitialized } = useAppSelector(
     (state) => state.auth,
   );
-  const subscriptionFromSlice = useAppSelector(
-    (state) => state.subscription.data,
+
+  const activeSubscription = useAppSelector(
+    (state) => state.subscription.active,
+  );
+  const pendingSubscription = useAppSelector(
+    (state) => state.subscription.pending,
   );
   const isSubscriptionLoaded = useAppSelector(
     (state) => state.subscription.isLoaded,
@@ -39,49 +58,54 @@ export default function Dashboard() {
 
   const [plans, setPlans] = useState<any[]>([]);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [expandedUpgrades, setExpandedUpgrades] = useState<{
+    [key: number]: boolean;
+  }>({});
 
-  // Force load data from storage on mount
   useEffect(() => {
-    console.log("Dashboard mounted, loading data from storage...");
     dispatch(loadUserFromStorage());
     dispatch(loadSubscriptionFromStorage());
   }, [dispatch]);
 
-  // Debug: Log what's in storage and Redux
   useEffect(() => {
     if (isInitialized) {
-      console.log("=== DASHBOARD DATA DEBUG ===");
-      console.log("User from Redux:", user);
-      console.log("Subscription from slice:", subscriptionFromSlice);
-      console.log("User has active_subscription:", user?.active_subscription);
-      console.log("Session user:", sessionStorage.getItem("user"));
-      console.log(
-        "Session subscription:",
-        sessionStorage.getItem("subscription"),
-      );
-      console.log("Session token:", sessionStorage.getItem("token"));
       setDataLoaded(true);
     }
-  }, [user, subscriptionFromSlice, isInitialized]);
+  }, [user, activeSubscription, pendingSubscription, isInitialized]);
 
-  // In your Dashboard.tsx, update the subscription mapping
-  //  FIXED: direct Redux subscription reference
-  const subscription = subscriptionFromSlice;
+  const subscription = activeSubscription;
 
-  // debug only
-  useEffect(() => {
-    console.log(" LIVE SUBSCRIPTION UPDATE:", subscriptionFromSlice);
-  }, [subscriptionFromSlice]);
-  /* ---------------- AUTH GUARD ---------------- */
+  const pendingSubscriptions = useMemo(() => {
+    if (Array.isArray(pendingSubscription)) {
+      return pendingSubscription.filter(
+        (sub) => sub.status?.toUpperCase() === "PENDING",
+      );
+    }
+    if (
+      pendingSubscription &&
+      pendingSubscription.status?.toUpperCase() === "PENDING"
+    ) {
+      return [pendingSubscription];
+    }
+    return [];
+  }, [pendingSubscription]);
+
+  const hasPendingUpgrades = pendingSubscriptions.length > 0;
+
+  const toggleUpgradeExpand = (planId: number) => {
+    setExpandedUpgrades((prev) => ({
+      ...prev,
+      [planId]: !prev[planId],
+    }));
+  };
+
   useEffect(() => {
     if (loading) return;
     if (!isAuthenticated || !user) {
-      console.log("User not authenticated, redirecting to sign-in");
       router.replace("/sign-in");
     }
   }, [user, loading, isAuthenticated, router]);
 
-  /* ---------------- SYNC USER DETAILS ---------------- */
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -92,7 +116,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
-
     setFormData({
       firstName: user.first_name || "",
       lastName: user.last_name || "",
@@ -102,7 +125,6 @@ export default function Dashboard() {
     });
   }, [user]);
 
-  /* ---------------- FETCH PLANS ---------------- */
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -112,51 +134,18 @@ export default function Dashboard() {
         setPlans([]);
       }
     };
-
     fetchPlans();
   }, []);
 
-  /* ---------------- DERIVED DATA ---------------- */
-  const highestPlan = useMemo(() => {
-    if (!plans.length) return null;
-    return plans.reduce((prev, curr) =>
-      Number(curr.price) > Number(prev.price) ? curr : prev,
-    );
-  }, [plans]);
-
   const status = subscription?.status?.toUpperCase();
-
-  console.log("statusss", status);
-
   const now = new Date();
-
   const hasExpiredByDate = subscription?.end_date
     ? new Date(subscription.end_date) < now
     : false;
-
   const isActive = status === "ACTIVE" && !hasExpiredByDate;
-
-  const isExpired = status === "EXPIRED" || hasExpiredByDate;
-
-  const isHighestPlan = useMemo(() => {
-    if (!highestPlan || !subscription?.plan_id) return false;
-    return Number(subscription.plan_id) === Number(highestPlan.id);
-  }, [highestPlan, subscription?.plan_id]);
-
   const isFreePlan = !subscription || Number(subscription?.amount || 0) === 0;
   const isPaidPlan = !isFreePlan;
 
-  const expiredDays = useMemo(() => {
-    if (!subscription?.end_date) return 0;
-    const end = new Date(subscription.end_date);
-    const now = new Date();
-    if (now <= end) return 0;
-    return Math.floor((now.getTime() - end.getTime()) / (1000 * 60 * 60 * 24));
-  }, [subscription?.end_date]);
-
-  const isLocked = isHighestPlan && isActive;
-
-  /* ---------------- DATE HELPERS ---------------- */
   const formatAmount = (amount?: number) =>
     !amount ? "0.00" : `₹${amount.toLocaleString("en-IN")}`;
 
@@ -164,10 +153,9 @@ export default function Dashboard() {
     date ? new Date(date).toDateString() : "—";
 
   const endDate = subscription?.end_date;
-
   const remainingDays = useMemo(() => {
     if (!endDate) return null;
-    const end = new Date(endDate.replace(" ", "T"));
+    const end = new Date(endDate);
     const now = new Date();
     const diff = end.getTime() - now.getTime();
     return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
@@ -175,18 +163,19 @@ export default function Dashboard() {
 
   const remainingDaysLabel = useMemo(() => {
     if (remainingDays === null) return "—";
-    if (remainingDays === 0) return "0 days";
+    if (remainingDays === 0) return "Expired";
     return `${remainingDays} day${remainingDays > 1 ? "s" : ""} left`;
   }, [remainingDays]);
 
   const handleRenewPlan = async () => {
     try {
       if (!subscription?.id) return;
+      if (isFreePlan) {
+        alert("Free plan cannot be renewed. Please upgrade to a paid plan.");
+        return;
+      }
 
       const res = await renewPlan(subscription.id);
-
-      console.log("Renew response", res);
-
       const payment = res?.data?.payment;
 
       if (!payment) {
@@ -199,13 +188,9 @@ export default function Dashboard() {
         amount: payment.amount,
         currency: payment.currency || "INR",
         order_id: payment.order_id,
-
         name: "Lex Witness",
-
         handler: async function (response: any) {
           try {
-            console.log(" Razorpay Success Response:", response);
-
             const verifyRes = await verifyRenewPayment({
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
@@ -214,20 +199,8 @@ export default function Dashboard() {
               purchase_type: "RENEW",
             });
 
-            //  FULL RESPONSE LOG (MOST IMPORTANT)
-            console.log(" VERIFY API FULL RESPONSE:", verifyRes);
-            console.log(" VERIFY DATA:", verifyRes?.data);
-            console.log(
-              " UPDATED SUBSCRIPTION:",
-              verifyRes?.data?.subscription,
-            );
-
             if (verifyRes?.status) {
               const sub = verifyRes.data.subscription;
-
-              console.log(" RAW SUB FROM API:", sub);
-
-              //  NORMALIZE like your dashboard expects
               const formattedSub = {
                 id: sub.id,
                 plan_id: sub.membership_plan_id,
@@ -242,40 +215,22 @@ export default function Dashboard() {
                 features: sub.plan?.feature,
                 tag: sub.plan?.tag,
               };
-
-              console.log(" FORMATTED SUB FOR REDUX:", formattedSub);
-
-              //  update Redux instantly
               dispatch(setSubscription(formattedSub));
-
-              //  force React refresh (important)
               setDataLoaded(false);
               requestAnimationFrame(() => setDataLoaded(true));
             }
           } catch (error) {
-            console.error(" Verify failed:", error);
+            console.error("Verify failed:", error);
           }
         },
-
         prefill: {
           name: `${user?.first_name || ""} ${user?.last_name || ""}`,
           email: user?.email,
           contact: user?.contact,
         },
-
-        theme: {
-          color: "#c9060a",
-        },
-
-        retry: {
-          enabled: true,
-        },
-
-        modal: {
-          ondismiss: function () {
-            console.log("Payment popup closed");
-          },
-        },
+        theme: { color: "#c9060a" },
+        retry: { enabled: true },
+        modal: { ondismiss: function () {} },
       };
 
       if (!window.Razorpay) {
@@ -286,13 +241,10 @@ export default function Dashboard() {
       const razor = new window.Razorpay(options);
       razor.open();
     } catch (error: any) {
-      console.log("RENEW ERROR =>", error?.response?.data);
-
       alert(error?.response?.data?.message || "Renew failed");
     }
   };
 
-  /* ---------------- LOADER ---------------- */
   if (loading || !dataLoaded || !isInitialized || !isSubscriptionLoaded) {
     return (
       <div className="min-h-screen flex justify-center items-center">
@@ -301,218 +253,469 @@ export default function Dashboard() {
     );
   }
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
-  /* ---------------- UI ---------------- */
   return (
-    <div className="min-h-screen mt-10">
-      <div className="max-w-6xl mx-auto p-4 md:p-8 border border-gray-200">
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold">Dashboard</h1>
-
-          <div className="flex flex-wrap gap-3">
-  {/* Invoice Button */}
-  <Link
-    href="/invoice"
-    className="px-4 py-2 rounded-lg text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
-  >
-    View Invoices
-  </Link>
-            {/* EXPIRED → SHOW BOTH BUTTONS */}
-            {isFreePlan && (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 border border-gray-300 my-5">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-2xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                Welcome back, {formData.firstName || "User"}!
+              </h1>
+              <p className="text-gray-500 text-sm  mt-1">
+                Manage your subscription and account settings
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/invoice"
+                className="inline-flex items-center gap-2 px-4 py-2 shadow-2xl  text-sm font-medium border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200"
+              >
+                <FileText className="w-4 h-4" />
+                Invoices
+              </Link>
               <Link
                 href="/subscription"
-                className="px-4 py-2 rounded-lg text-sm bg-[#333] text-white hover:bg-[#c6090a]"
+                className="inline-flex items-center gap-2 px-5 py-2  text-sm font-medium bg-gradient-to-r from-red-800 to-[#c9060a] text-white hover:from-gray-900 hover:to-[#333] transition-all duration-200 shadow-lg shadow-gray-200"
               >
-                Upgrade Your Plan
+                <Sparkles className="w-4 h-4" />
+                {isFreePlan ? "Upgrade Plan" : "Change Plan"}
               </Link>
-            )}
-            {isPaidPlan && isActive && !isHighestPlan && (
-              <>
-                <Link
-                  href="/subscription"
-                  className="px-4 py-2 rounded-lg text-sm bg-[#333] text-white hover:bg-[#c6090a]"
-                >
-                  Change Plan
-                </Link>
-
-                {remainingDays !== null && remainingDays <= 30 && (
+              {isPaidPlan &&
+                isActive &&
+                remainingDays !== null &&
+                remainingDays <= 30 &&
+                remainingDays > 0 && (
                   <button
                     onClick={handleRenewPlan}
-                    className="px-4 py-2 rounded-lg text-sm bg-[#c9060a] text-white hover:bg-[#333]"
+                    className="inline-flex items-center cursor-pointer gap-2 px-5 py-2  text-sm font-medium bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg shadow-red-100"
                   >
-                    Renew Your Current Plan
+                    <RefreshCw className="w-4 h-4" />
+                    Renew ({remainingDays} days)
                   </button>
                 )}
-              </>
-            )}
-            {isPaidPlan && isExpired && !isHighestPlan && (
-              <Link
-                href="/subscription"
-                className="px-4 py-2 rounded-lg text-sm bg-[#333] text-white hover:bg-[#c6090a]"
-              >
-                Change Plan
-              </Link>
-            )}
-
-            {/* {isHighestPlan && null}  */}
+            </div>
           </div>
         </div>
 
-        {/* STATS */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          {/* <StatCard title="Plan" value={subscription?.name || "No Plan"} /> */}
+        {/* Pending Upgrades Banner */}
+        {hasPendingUpgrades && (
+          <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-[#c9060a] rounded-xl p-4 shadow-sm">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-[#c9060a]" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-800">
+                    {pendingSubscriptions.length} Upcoming Plan
+                    {pendingSubscriptions.length > 1 ? "s" : ""} Scheduled
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Your plan will be automatically upgraded on{" "}
+                    {formatDate(pendingSubscription?.start_date)}
+                    {pendingSubscriptions.length > 1 ? "s are" : " is"} waiting
+                    to be activated
+                  </p>
+
+                  {/* <p className="text-sm text-gray-600">
+                    Your new plan
+                    {pendingSubscriptions.length > 1 ? "s are" : " is"} waiting
+                    to be activated
+                  </p> */}
+                </div>
+
+                {/* <div>
+                <p className="text-blue-800 font-semibold">
+                  Upgrade to {pendingSubscription.name} is scheduled
+                </p>
+                <p className="text-blue-600 text-sm">
+                  Your plan will be automatically upgraded on {pendingActivationDate?.toDateString()}
+                  {daysUntilUpgrade && daysUntilUpgrade > 0 && ` (in ${daysUntilUpgrade} days)`}
+                </p>
+              </div> */}
+              </div>
+              <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
+                Pending Activation
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           <StatCard
-            title="Plan"
-            value={
-              subscription?.name
-                ? `${subscription?.name}${
-                    subscription?.name
-                      ? ` (${subscription.duration_value} ${subscription.duration_unit || ""})`
-                      : ""
-                  }`
-                : "No Plan"
+            icon={<Sparkles className="w-5 h-5" />}
+            title="Current Plan"
+            value={subscription?.name || "No Plan"}
+            subtitle={
+              subscription?.duration_value
+                ? `${subscription.duration_value} ${subscription.duration_unit}`
+                : ""
             }
           />
-          <StatCard title="Price" value={formatAmount(subscription?.amount)} />
+          {hasPendingUpgrades && (
+            <StatCard
+              icon={<Calendar className="w-5 h-5" />}
+              title="Upcoming Plans"
+              value={`${pendingSubscriptions.length} Plan${pendingSubscriptions.length > 1 ? "s" : ""}`}
+              subtitle="Pending activation"
+            />
+          )}
+          <StatCard
+            icon={<CreditCard className="w-5 h-5" />}
+            title="Base Price"
+            value={formatAmount(subscription?.amount)}
+            subtitle={subscription?.amount ? "+18% GST" : ""}
+          />
           {/* <StatCard
-            title="Duration"
-            value={
-              subscription?.duration_value
-                ? `${subscription.duration_value} ${subscription.duration_unit || ""}`
-                : "—"
+            icon={<Clock className="w-5 h-5" />}
+            title="Remaining"
+            value={remainingDaysLabel}
+            subtitle={remainingDays && remainingDays > 0 ? "until expiry" : ""}
+            alert={
+              remainingDays !== null && remainingDays <= 7 && remainingDays > 0
             }
           /> */}
           <StatCard
-            title="Remaining"
-            value={remainingDaysLabel}
-            status={remainingDays === 0}
-          />
-
-          <StatCard
+            icon={
+              <div
+                className={`w-2 h-2 rounded-full ${isActive ? "bg-green-500" : "bg-red-500"}`}
+              />
+            }
             title="Status"
-            // value={isActive ? "Active" : "Expired"}
-            value={status || "No Plan"}
+            value={
+              isActive ? "Active" : isExpired ? "Expired" : status || "No Plan"
+            }
+            subtitle={
+              isActive && remainingDays ? `${remainingDays} days remaining` : ""
+            }
             status={isActive}
           />
         </div>
 
-        {/* GRID */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* USER */}
-          <div className="bg-white rounded-xl shadow-sm p-5">
-            <h2 className="font-semibold mb-3">User Details</h2>
-            <div className="space-y-2 text-sm">
-              <Row
-                label="Name"
-                value={`${formData.firstName} ${formData.lastName}`}
-              />
-              <Row label="Email" value={formData.email} />
-              <Row label="Contact" value={formData.contact || "—"} />
-              <Row label="Address" value={formData.address || "—"} />
-              <Row
-                label="Member Since"
-                value={formatDate(subscription?.start_date)}
-              />
-              <Row label="Subscription ID" value={subscription?.id || "—"} />
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-5">
+          {/* User Details Card - Compact */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-gray-100">
+              <h2 className="font-semibold text-gray-800 text-sm">
+                Account Details
+              </h2>
             </div>
-          </div>
-
-          {/* PLAN */}
-          <div className="bg-[#c9060a] rounded-xl p-5 text-white">
-            <p className="text-xs text-[#ffe4e6] uppercase tracking-wider">
-              Your Current Plan
-            </p>
-            <div className="border-t border-white/20 my-4" />
-
-            {subscription?.features && (
-              <div className="mb-6">
-                <p className="text-[10px] text-[#fecaca] mb-2 uppercase font-semibold">
-                  Included Features
-                </p>
-                <div
-                  className="text-sm leading-relaxed"
-                  dangerouslySetInnerHTML={{
-                    __html: subscription.features,
-                  }}
-                />
+            <div className="p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Name</span>
+                <span className="text-sm font-medium text-gray-800">{`${formData.firstName} ${formData.lastName}`}</span>
               </div>
-            )}
-
-            <div className="space-y-2 text-sm">
-              <RowWhite
-                label="Valid till"
-                value={formatDate(subscription?.end_date)}
-              />
-              <RowWhite
-                label="Duration"
-                value={
-                  subscription?.duration_value
-                    ? `${subscription.duration_value} ${subscription.duration_unit}`
-                    : "—"
-                }
-              />
-              <RowWhite
-                label="Type"
-                value={subscription?.purchase_type || "—"}
-              />
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Email</span>
+                <span className="text-sm font-medium text-gray-800 truncate ml-2">
+                  {formData.email}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Contact</span>
+                <span className="text-sm font-medium text-gray-800">
+                  {formData.contact || "—"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Address</span>
+                <span className="text-sm font-medium text-gray-800 truncate ml-2">
+                  {formData.address || "—"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Member Since</span>
+                <span className="text-sm font-medium text-gray-800">
+                  {formatDate(subscription?.start_date)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Subscription ID</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-800">
+                    {subscription?.id || "—"}
+                  </span>
+                  {subscription?.id && (
+                    <button
+                      onClick={() =>
+                        navigator.clipboard.writeText(String(subscription.id))
+                      }
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <FileText className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Current Plan Card - Compact like reference */}
+          <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl shadow-lg overflow-hidden">
+            <div className="px-4 py-2.5 bg-white/10">
+              <h2 className="font-semibold text-white text-sm">
+                YOUR CURRENT PLAN
+              </h2>
+            </div>
+            <div className="p-4 text-white space-y-3">
+              {/* Features Section */}
+              {subscription?.features && (
+                <div>
+                  <p className="text-[10px] text-red-200 uppercase tracking-wider font-semibold mb-1.5">
+                    INCLUDED FEATURES
+                  </p>
+                  <div
+                    className="text-sm text-red-100 space-y-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-0.5"
+                    dangerouslySetInnerHTML={{ __html: subscription.features }}
+                  />
+                </div>
+              )}
+
+              {/* Plan Details */}
+              <div className="flex justify-between items-center pt-2">
+                <span className="text-sm text-red-200">Valid till</span>
+                <span className="text-sm font-medium text-white">
+                  {formatDate(subscription?.end_date)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-red-200">Duration</span>
+                <span className="text-sm font-medium text-white">
+                  {subscription?.duration_value
+                    ? `${subscription.duration_value} ${subscription.duration_unit}`
+                    : "—"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-red-200">Type</span>
+                <span className="text-sm font-medium text-white">
+                  {subscription?.purchase_type || "—"}
+                </span>
+              </div>
+              {subscription?.total_amount && (
+                <div className="flex justify-between items-center pt-1 border-t border-white/20">
+                  <span className="text-sm text-red-200">Total Amount</span>
+                  <span className="text-sm font-bold text-white">
+                    ₹
+                    {parseFloat(subscription.total_amount).toLocaleString(
+                      "en-IN",
+                    )}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Upcoming Plans Section */}
+        {hasPendingUpgrades && (
+          <div className="mt-10">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-1 h-6 bg-[#c9060a] rounded-full"></div>
+              <h2 className="text-xl font-bold text-gray-800">
+                Upcoming Plans
+              </h2>
+              <span className="px-2.5 py-0.5 bg-blue-100 text-[#c9060a] text-sm font-medium rounded-full">
+                {pendingSubscriptions.length}
+              </span>
+            </div>
+            <div className="space-y-4">
+              {pendingSubscriptions.map((pendingPlan, index) => {
+                const pendingActivationDate = new Date(pendingPlan.start_date);
+                const daysUntilUpgrade = Math.ceil(
+                  (pendingActivationDate.getTime() - new Date().getTime()) /
+                    (1000 * 60 * 60 * 24),
+                );
+                const isExpanded = expandedUpgrades[pendingPlan.id] || false;
+
+                return (
+                  <div
+                    key={pendingPlan.id}
+                    className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-all duration-300"
+                  >
+                    <button
+                      onClick={() => toggleUpgradeExpand(pendingPlan.id)}
+                      className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors duration-200 text-left"
+                    >
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center">
+                            <Calendar className="w-5 h-5 text-[#c9060a]" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              Plan {index + 1}: {pendingPlan.name}
+                            </p>
+                            <p className="text-sm text-gray-500 mt-0.5">
+                              {pendingPlan.duration_value}{" "}
+                              {pendingPlan.duration_unit}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`px-2.5 py-1 text-sm font-medium rounded-full ${daysUntilUpgrade > 0 ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}
+                          >
+                            {daysUntilUpgrade > 0
+                              ? `Activates in ${daysUntilUpgrade} day${daysUntilUpgrade > 1 ? "s" : ""}`
+                              : "Ready to activate"}
+                          </span>
+                          <ChevronDown
+                            className={`w-5 h-5 text-gray-400 cursor-pointer hover:text-[#c9060a] transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                          />
+                        </div>
+                      </div>
+                    </button>
+
+                    <div
+                      className={`transition-all duration-300 ease-in-out ${isExpanded ? "block" : "hidden"}`}
+                    >
+                      <div className="px-5 pb-5 pt-0 border-t border-gray-100">
+                        <div className="grid md:grid-cols-2 gap-6 mt-5">
+                          <div className="bg-gray-50 rounded-xl p-4">
+                            <p className="text-sm font-medium text-gray-700 mb-3">
+                              Plan Details
+                            </p>
+                            <div className="space-y-2">
+                              <DetailRowSimple
+                                label="Plan Name"
+                                value={pendingPlan.name}
+                              />
+                              <DetailRowSimple
+                                label="Duration"
+                                value={`${pendingPlan.duration_value} ${pendingPlan.duration_unit}`}
+                              />
+                              <DetailRowSimple
+                                label="Base Price"
+                                value={formatAmount(pendingPlan.amount)}
+                              />
+                              <DetailRowSimple
+                                label="Valid From"
+                                value={formatDate(pendingPlan.start_date)}
+                              />
+                              <DetailRowSimple
+                                label="Valid Until"
+                                value={formatDate(pendingPlan.end_date)}
+                              />
+                              {pendingPlan.total_amount && (
+                                <DetailRowSimple
+                                  label="Total Amount"
+                                  value={`₹${pendingPlan.total_amount}`}
+                                  highlight
+                                />
+                              )}
+                            </div>
+                          </div>
+                          <div className="bg-gray-50 rounded-xl p-4">
+                            <p className="text-sm font-medium text-gray-700 mb-3">
+                              Features
+                            </p>
+                            {pendingPlan.features ? (
+                              <div
+                                className="text-sm text-gray-600 space-y-1 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-1"
+                                dangerouslySetInnerHTML={{
+                                  __html: pendingPlan.features,
+                                }}
+                              />
+                            ) : (
+                              <p className="text-sm text-gray-400">
+                                No features listed
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                          <p className="text-sm text-blue-700 text-center flex items-center justify-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            This plan will automatically activate on{" "}
+                            {formatDate(pendingPlan.start_date)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Enhanced Components
+function StatCard({ icon, title, value, subtitle, status, alert }: any) {
+  return (
+    <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm text-gray-500 font-medium mb-1">{title}</p>
+          <p
+            className={`text-2xl font-semibold ${alert ? "text-[#c9060a]" : status ? "text-green-600" : "text-gray-800"}`}
+          >
+            {value}
+          </p>
+          {subtitle && <p className="text-sm text-gray-400 mt-1">{subtitle}</p>}
+        </div>
+        <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+          {icon}
         </div>
       </div>
     </div>
   );
 }
 
-/* ---------------- COMPONENTS ---------------- */
-function StatCard({
-  title,
-  value,
-  status = false,
-}: {
-  title: string;
-  value: string;
-  status?: boolean;
-}) {
+// function DetailRow({ icon, label, value, copyable }: any) {
+//   return (
+//     <div className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
+//       <div className="text-gray-400 mt-0.5">{icon}</div>
+//       <div className="flex-1">
+//         <p className="text-sm text-gray-400 uppercase tracking-wide">{label}</p>
+//         <p className="text-sm font-medium text-gray-800 mt-0.5">
+//           {value || "—"}
+//         </p>
+//       </div>
+//       {copyable && value && value !== "—" && (
+//         <button
+//           onClick={() => navigator.clipboard.writeText(value)}
+//           className="text-gray-400 hover:text-gray-600 transition-colors"
+//         >
+//           <FileText className="w-3 h-3" />
+//         </button>
+//       )}
+//     </div>
+//   );
+// }
+
+// function DetailRowWhite({ label, value, bold }: any) {
+//   return (
+//     <div className="flex justify-between items-center py-2">
+//       <span className="text-red-100 text-sm">{label}</span>
+//       <span
+//         className={`text-white text-sm ${bold ? "font-bold" : "font-medium"}`}
+//       >
+//         {value}
+//       </span>
+//     </div>
+//   );
+// }
+
+function DetailRowSimple({ label, value, highlight }: any) {
   return (
-    <div className="bg-white p-4 rounded-xl shadow">
-      <p className="text-sm text-gray-500">{title}</p>
-      <h3
-        className={`text-xl font-semibold ${
-          title === "Remaining"
-            ? value.includes("0 day")
-              ? "text-red-600"
-              : parseInt(value) <= 30
-                ? "text-orange-500"
-                : "text-[#333]"
-            : status
-              ? "text-green-600"
-              : "text-[#333]"
-        }`}
+    <div className="flex justify-between items-center py-1.5">
+      <span className="text-gray-500 text-sm">{label}</span>
+      <span
+        className={`text-sm ${highlight ? "font-bold text-red-600" : "font-medium text-gray-800"}`}
       >
         {value}
-      </h3>
-    </div>
-  );
-}
-
-function Row({ label, value }: any) {
-  return (
-    <div className="flex justify-between">
-      <span className="text-gray-500">{label}</span>
-      <span className="font-medium">{value}</span>
-    </div>
-  );
-}
-
-function RowWhite({ label, value }: any) {
-  return (
-    <div className="flex justify-between">
-      <span className="opacity-70">{label}</span>
-      <span className="font-medium">{value}</span>
+      </span>
     </div>
   );
 }
