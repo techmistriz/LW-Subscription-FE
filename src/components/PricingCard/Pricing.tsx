@@ -43,7 +43,7 @@ export default function PricingCard() {
   const user = useAppSelector((state: any) => state.auth.user);
 
   const activeSubscription = useAppSelector(
-    (state: any) => state.subscription.data,
+    (state: any) => state.subscription.active,
   );
 
   /* ---------------- FETCH PLANS ---------------- */

@@ -108,14 +108,14 @@ export const loginUser = createAsyncThunk(
       // 3. Dispatch subscription if exists
       if (subscription) {
         const formattedCurrentSubscription = formatSubscription(subscription);
+
         const formattedNextSubscription = nextSubscription
           ? formatSubscription(nextSubscription)
-          : null;
+          : undefined;
 
-        // Dispatch both current and next subscription
         dispatch(
           setSubscription({
-            subscription: formattedCurrentSubscription,
+            subscription: formattedCurrentSubscription || undefined,
             next_subscription: formattedNextSubscription,
           }),
         );

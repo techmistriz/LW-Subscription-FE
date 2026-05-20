@@ -37,7 +37,7 @@ export function useRegisterForm() {
   const { handleRazorpayPayment } = usePayment();
 
   const { user, token } = useAppSelector((state) => state.auth);
-  const subscriptionData = useAppSelector((state) => state.subscription.data);
+  const subscriptionData = useAppSelector((state) => state.subscription.active);
 
   const [form, setForm] = useState<RegisterFormData>(initialForm);
   const [plans, setPlans] = useState<Plan[]>([]);

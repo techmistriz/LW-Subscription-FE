@@ -138,11 +138,15 @@ export default function Dashboard() {
   }, []);
 
   const status = subscription?.status?.toUpperCase();
+
   const now = new Date();
   const hasExpiredByDate = subscription?.end_date
     ? new Date(subscription.end_date) < now
     : false;
+
   const isActive = status === "ACTIVE" && !hasExpiredByDate;
+
+  const isExpired = hasExpiredByDate || status === "EXPIRED";
   const isFreePlan = !subscription || Number(subscription?.amount || 0) === 0;
   const isPaidPlan = !isFreePlan;
 
@@ -502,10 +506,7 @@ export default function Dashboard() {
                 <div className="flex justify-between items-center pt-1 border-t border-white/20">
                   <span className="text-sm text-red-200">Total Amount</span>
                   <span className="text-sm font-bold text-white">
-                    ₹
-                    {parseFloat(subscription.total_amount).toLocaleString(
-                      "en-IN",
-                    )}
+                    ₹{Number(subscription.total_amount).toLocaleString("en-IN")}
                   </span>
                 </div>
               )}
@@ -671,41 +672,6 @@ function StatCard({ icon, title, value, subtitle, status, alert }: any) {
     </div>
   );
 }
-
-// function DetailRow({ icon, label, value, copyable }: any) {
-//   return (
-//     <div className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
-//       <div className="text-gray-400 mt-0.5">{icon}</div>
-//       <div className="flex-1">
-//         <p className="text-sm text-gray-400 uppercase tracking-wide">{label}</p>
-//         <p className="text-sm font-medium text-gray-800 mt-0.5">
-//           {value || "—"}
-//         </p>
-//       </div>
-//       {copyable && value && value !== "—" && (
-//         <button
-//           onClick={() => navigator.clipboard.writeText(value)}
-//           className="text-gray-400 hover:text-gray-600 transition-colors"
-//         >
-//           <FileText className="w-3 h-3" />
-//         </button>
-//       )}
-//     </div>
-//   );
-// }
-
-// function DetailRowWhite({ label, value, bold }: any) {
-//   return (
-//     <div className="flex justify-between items-center py-2">
-//       <span className="text-red-100 text-sm">{label}</span>
-//       <span
-//         className={`text-white text-sm ${bold ? "font-bold" : "font-medium"}`}
-//       >
-//         {value}
-//       </span>
-//     </div>
-//   );
-// }
 
 function DetailRowSimple({ label, value, highlight }: any) {
   return (

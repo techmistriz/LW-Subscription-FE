@@ -33,7 +33,9 @@ export default function ArticleDetailPage() {
   /*----------------- Only subscribes User Read full article content -----------------*/
 
   const { user } = useAppSelector((state) => state.auth);
-  const subscription = useAppSelector((state) => state.subscription.data);
+  const subscription = useAppSelector(
+  (state) => state.subscription.active
+);
 
   const isSubscribed = Boolean(
     user && // MUST HAVE
