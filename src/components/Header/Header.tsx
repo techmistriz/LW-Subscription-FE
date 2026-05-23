@@ -21,13 +21,16 @@ import { Category } from "@/types";
 import { logoutUser } from "@/redux/store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 import { toast } from "sonner";
+import { getCategories } from "@/lib/api/services/categories";
 
-export default function Header({ categories }: { categories: Category[] }) {
+export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   const dispatch = useAppDispatch();
   const { user, loading } = useAppSelector((state) => state.auth);
@@ -76,6 +79,21 @@ export default function Header({ categories }: { categories: Category[] }) {
     }
   }, [open, pathname]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data || []);
+      } catch (error) {
+        console.error("Category fetch failed:", error);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const isActive = (slug: string) =>
     pathname === `/category/${slug}` ||
     pathname.startsWith(`/category/${slug}/`);
@@ -93,8 +111,8 @@ export default function Header({ categories }: { categories: Category[] }) {
 
   return (
     <>
-      <header className="border-b border-gray-300 bg-white text-black">
-        <div className="relative flex items-center justify-start gap-7 h-25 max-w-6xl mx-auto px-4">
+      <header className="sticky top-0 z-30 border-b border-gray-300 bg-white text-black w-full">
+        <div className="relative flex items-center justify-start gap-7 h-[100px] max-w-6xl mx-auto px-4">
           {/* LEFT — Explore */}
           <div className="flex items-center z-10">
             <button
@@ -140,7 +158,9 @@ export default function Header({ categories }: { categories: Category[] }) {
             </button>
 
             <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-3">
-              {isLoggedIn ? (
+              {loading ? (
+                <div className="w-[120px] h-8" />
+              ) : isLoggedIn ? (
                 <HeadlessMenu
                   as="div"
                   className="relative inline-block text-left"
@@ -218,24 +238,35 @@ export default function Header({ categories }: { categories: Category[] }) {
         </div>
 
         {/*----------------- NAV BAR -----------------*/}
-        <nav className="border-t border-gray-300 bg-gray-100">
-          <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-hide">
-            {categories.map((item, index) => (
-              <li key={`${item.slug}-${index}`} className="shrink-0">
-                <Link
-                  href={`/category/${item.slug}`}
-                  className={`hover:text-[#c9060a] transition-colors ${
-                    item.slug && isActive(item.slug)
-                      ? "text-[#c9060a] border-[#c9060a] pb-1"
-                      : "text-[#333]"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <nav className="border-t border-gray-300 bg-gray-100">
+  {categoriesLoading ? (
+    <div className="h-11 max-w-280 mx-auto px-4 md:px-0 flex items-center gap-6 overflow-hidden">
+      {[...Array(8)].map((_, i) => (
+        <div
+          key={i}
+          className="h-4 w-20 rounded bg-gray-200 animate-pulse shrink-0"
+        />
+      ))}
+    </div>
+  ) : (
+    <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-hide">
+      {categories.map((item, index) => (
+        <li key={`${item.slug}-${index}`} className="shrink-0">
+          <Link
+            href={`/category/${item.slug}`}
+            className={`hover:text-[#c9060a] transition-colors ${
+              item.slug && isActive(item.slug)
+                ? "text-[#c9060a] border-[#c9060a] pb-1"
+                : "text-[#333]"
+            }`}
+          >
+            {item.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )}
+</nav>
       </header>
 
       {/*----------------- MOBILE SIDEBAR -----------------*/}

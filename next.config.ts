@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // IMPORTANT FIX
+    unoptimized: true,
+
     remotePatterns: [
       {
         protocol: "https",
@@ -13,7 +16,7 @@ const nextConfig = {
         pathname: "/uploads/**",
       },
       {
-        protocol: "http",
+        protocol: "https",
         hostname: "portal.demoserver.co.in",
         pathname: "/**",
       },
