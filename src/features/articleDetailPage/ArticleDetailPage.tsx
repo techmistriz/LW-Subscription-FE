@@ -192,6 +192,7 @@ export default function ArticleDetailPage() {
               duration_value: sub.plan?.duration_value,
               duration_unit: sub.plan?.duration_unit,
               purchase_type: sub.purchase_type,
+              created_at:sub.created_at
             }),
           );
         }

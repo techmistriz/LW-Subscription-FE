@@ -5,7 +5,7 @@ import {
   loginUser as loginApi,
   logoutApi,
 } from "@/lib/api/auth/auth";
-import { setSubscription } from "./subscriptionSlice";
+import { setSubscription, Subscription } from "./subscriptionSlice";
 
 /* ---------------- USER TYPE ---------------- */
 interface User {
@@ -39,8 +39,8 @@ const initialState: AuthState = {
 };
 
 /* ---------------- HELPER FUNCTION TO FORMAT SUBSCRIPTION ---------------- */
-const formatSubscription = (subscription: any) => {
-  if (!subscription) return null;
+const formatSubscription = (subscription: any): Subscription | undefined => {
+  if (!subscription) return undefined;
 
   return {
     id: subscription.id,
@@ -63,6 +63,7 @@ const formatSubscription = (subscription: any) => {
     next_subscription_id: subscription.next_subscription_id,
     previous_subscription_id: subscription.previous_subscription_id,
     plan: subscription.plan,
+    created_at: subscription.created_at,
   };
 };
 /* ---------------- LOGIN THUNK ---------------- */
@@ -90,12 +91,10 @@ export const loginUser = createAsyncThunk(
       return {
         token,
       };
-    }catch (err: any) {
-      return rejectWithValue(
-        err?.message || "Login failed"
-      );
+    } catch (err: any) {
+      return rejectWithValue(err?.message || "Login failed");
     }
-  }
+  },
 );
 
 /* ---------------- PROFILE ---------------- */
@@ -115,9 +114,9 @@ export const fetchProfile = createAsyncThunk(
             ? formatSubscription(subscription)
             : undefined,
 
-          next_subscriptions: nextSubscriptions.map((sub: any) =>
-            formatSubscription(sub),
-          ),
+          next_subscriptions: nextSubscriptions
+            .map((sub: any) => formatSubscription(sub))
+            .filter(Boolean) as Subscription[],
         }),
       );
 
@@ -192,12 +191,11 @@ const authSlice = createSlice({
         state.error = null;
       })
 
-    .addCase(loginUser.fulfilled, (state, action) => {
-  state.loading = false;
-  state.token = action.payload.token;
-  state.isAuthenticated = true;
-})
-
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+      })
 
       .addCase(loginUser.rejected, (state, action: any) => {
         state.loading = false;
@@ -205,11 +203,10 @@ const authSlice = createSlice({
       })
 
       .addCase(fetchProfile.fulfilled, (state, action) => {
-  state.user = action.payload;
-  state.isAuthenticated = true;
-  state.isInitialized = true;
-})
-
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.isInitialized = true;
+      })
 
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;

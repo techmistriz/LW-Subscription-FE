@@ -87,6 +87,12 @@ export default function Dashboard() {
   }, [dispatch]);
 
   useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchProfile());
+    }
+  }, [isAuthenticated, dispatch]);
+
+  useEffect(() => {
     if (isInitialized) {
       setDataLoaded(true);
     }
@@ -96,20 +102,9 @@ export default function Dashboard() {
 
   console.log("Current Plan End:", subscription?.end_date);
 
-  const pendingSubscriptions = useMemo(() => {
-    if (Array.isArray(pendingSubscription)) {
-      return pendingSubscription.filter(
-        (sub) => sub.status?.toUpperCase() === "PENDING",
-      );
-    }
-    if (
-      pendingSubscription &&
-      pendingSubscription.status?.toUpperCase() === "PENDING"
-    ) {
-      return [pendingSubscription];
-    }
-    return [];
-  }, [pendingSubscription]);
+  const pendingSubscriptions = pendingSubscription.filter(
+    (sub) => sub.status?.toUpperCase() === "PENDING",
+  );
 
   const hasPendingUpgrades = pendingSubscriptions.length > 0;
 
@@ -186,11 +181,11 @@ export default function Dashboard() {
     return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
   }, [endDate]);
 
-  const remainingDaysLabel = useMemo(() => {
-    if (remainingDays === null) return "—";
-    if (remainingDays === 0) return "Expired";
-    return `${remainingDays} day${remainingDays > 1 ? "s" : ""} left`;
-  }, [remainingDays]);
+  // const remainingDaysLabel = useMemo(() => {
+  //   if (remainingDays === null) return "—";
+  //   if (remainingDays === 0) return "Expired";
+  //   return `${remainingDays} day${remainingDays > 1 ? "s" : ""} left`;
+  // }, [remainingDays]);
 
   const handleRenewPlan = async () => {
     try {
@@ -227,24 +222,25 @@ export default function Dashboard() {
             });
 
             if (verifyRes?.status) {
-              const sub = verifyRes.data.subscription;
+              // const sub = verifyRes.data.subscription;
 
-              const formattedSub = {
-                id: sub.id,
-                plan_id: sub.membership_plan_id,
-                name: sub.plan?.name,
-                amount: Number(sub.plan?.price || sub.total_amount || 0),
-                status: sub.status,
-                start_date: sub.start_date,
-                end_date: sub.end_date,
-                duration_value: sub.plan?.duration_value,
-                duration_unit: sub.plan?.duration_unit,
-                purchase_type: sub.purchase_type,
-                features: sub.plan?.feature,
-                tag: sub.plan?.tag,
-              };
+              // const formattedSub = {
+              //   id: sub.id,
+              //   plan_id: sub.membership_plan_id,
+              //   name: sub.plan?.name,
+              //   amount: Number(sub.plan?.price || sub.total_amount || 0),
+              //   status: sub.status,
+              //   start_date: sub.start_date,
+              //   end_date: sub.end_date,
+              //   duration_value: sub.plan?.duration_value,
+              //   duration_unit: sub.plan?.duration_unit,
+              //   purchase_type: sub.purchase_type,
+              //   features: sub.plan?.feature,
+              //   tag: sub.plan?.tag,
+              //   created_at: sub.plan?.created_at,
+              // };
 
-              dispatch(setSubscription(formattedSub));
+              // dispatch(setSubscription(formattedSub));
               await dispatch(fetchProfile()).unwrap();
 
               setRenewLoading(false);
@@ -350,7 +346,7 @@ export default function Dashboard() {
                   </p>
                   <p className="text-sm text-gray-600">
                     Your plan will be automatically upgraded on{" "}
-                    {formatDate(pendingSubscription?.start_date)}
+                    {formatDate(pendingSubscriptions[0]?.start_date)}
                     {pendingSubscriptions.length > 1 ? "s are" : " is"} waiting
                     to be activated
                   </p>
@@ -558,26 +554,31 @@ export default function Dashboard() {
             </div>
             <div className="space-y-4 ">
               {pendingSubscriptions.map((pendingPlan, index) => {
-                const pendingActivationDate = new Date(pendingPlan.start_date);
+                const pendingActivationDate = pendingPlan.start_date
+                  ? new Date(pendingPlan.start_date)
+                  : new Date();
                 const daysUntilUpgrade = Math.ceil(
                   (pendingActivationDate.getTime() - new Date().getTime()) /
                     (1000 * 60 * 60 * 24),
                 );
-                const isExpanded = expandedUpgrades[pendingPlan.id] || false;
+                const isExpanded = pendingPlan.id
+                  ? expandedUpgrades[pendingPlan.id] || false
+                  : false;
                 console.log(pendingPlan);
-                const DetailItem = ({ label, value, subValue }) => (
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-                      {label}
-                    </p>
-                    <p className="text-sm font-bold text-gray-800">{value}</p>
-                    {subValue && (
-                      <p className="text-[10px] text-gray-500 font-medium">
-                        {subValue}
-                      </p>
-                    )}
-                  </div>
-                );
+
+                // const DetailItem = ({ label, value, subValue }) => (
+                //   <div className="space-y-1">
+                //     <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+                //       {label}
+                //     </p>
+                //     <p className="text-sm font-bold text-gray-800">{value}</p>
+                //     {subValue && (
+                //       <p className="text-[10px] text-gray-500 font-medium">
+                //         {subValue}
+                //       </p>
+                //     )}
+                //   </div>
+                // );
 
                 console.log("Pending Plan Start:", pendingPlan.start_date);
 
@@ -593,7 +594,11 @@ export default function Dashboard() {
                     className="group  bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                   >
                     <button
-                      onClick={() => toggleUpgradeExpand(pendingPlan.id)}
+                      onClick={() => {
+                        if (pendingPlan.id) {
+                          toggleUpgradeExpand(pendingPlan.id);
+                        }
+                      }}
                       className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition text-left  cursor-pointer"
                     >
                       {/* LEFT SIDE */}
@@ -706,7 +711,7 @@ export default function Dashboard() {
                                     Valid From
                                   </p>
                                   <p className="text-base font-semibold text-gray-800">
-                                    {formatDate(pendingPlan.start_date)}
+                                    {formatDate(activationDate)}
                                   </p>
                                 </div>
                                 <div className="relative pl-6 border-l-2 border-gray-200">

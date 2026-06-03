@@ -143,6 +143,7 @@ export function usePayment() {
                 features: subscriptionData.plan?.feature,
                 is_trial: String(subscriptionData.plan?.is_trial ?? ""),
                 tag: subscriptionData.plan?.tag,
+                created_at:subscriptionData.plan?.created_at,
               }),
             );
           }
