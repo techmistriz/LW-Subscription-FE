@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 
 import { Globe, BookOpen, Star, Newspaper, Clock, Layers } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/redux/store/hooks";
 
 const benefits = [
   {
@@ -53,6 +54,8 @@ export default function SubscriptionPage() {
   const [latestFive, setLatestFive] = useState<Magazine[]>([]);
 
   const router = useRouter();
+
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   /* ---------------- FETCH SINGLE MAGAZINE ---------------- */
   useEffect(() => {
@@ -157,8 +160,13 @@ export default function SubscriptionPage() {
           {/* BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <button
+              disabled={isAuthenticated}
               onClick={() => router.push("/register?plan=1")}
-              className="bg-[#c9060a] text-sm text-white px-6 py-3 font-semibold hover:bg-[#333] transition cursor-pointer "
+              className={`text-sm px-6 py-3 font-semibold transition cursor-pointer ${
+                isAuthenticated
+                  ? "bg-gray-500 text-white cursor-not-allowed opacity-60"
+                  : "bg-[#c9060a] text-white hover:bg-[#333]"
+              }`}
             >
               Your First Month is on Us
             </button>
@@ -170,9 +178,11 @@ export default function SubscriptionPage() {
                   block: "start",
                 });
               }}
-              className="border text-sm border-gray-300 text-[#333] px-6 py-3 font-semibold shadow-md hover:shadow-lg transition cursor-pointer "
+              className="border text-sm border-gray-300 text-[#333] px-6 py-3 font-semibold shadow-md hover:shadow-lg transition cursor-pointer"
             >
-              Choose your Subscription Plan
+              {isAuthenticated
+                ? "Choose your Upgrade Plan"
+                : "Choose your Subscription Plan"}
             </button>
           </div>
         </div>

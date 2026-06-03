@@ -111,6 +111,9 @@ export default function PersonalDetailsForm({
           onChange={onChange}
           error={getError("pincode")}
           required
+          maxLength={6}
+          inputMode="numeric"
+          pattern="[0-9]*"
         />
 
         <FormInput

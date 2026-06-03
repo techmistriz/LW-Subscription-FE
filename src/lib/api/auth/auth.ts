@@ -19,9 +19,27 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
+/*----------------- PROFILE -----------------*/
+export async function getProfile() {
+  try {
+    const res = await axiosInstance.get("/profile");
+
+    console.log("Profile Data", res.data);
+
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Failed to fetch profile";
+
+    throw new Error(message);
+  }
+}
+
 /*----------------- REGISTER -----------------*/
 export async function registerUser(
-  payload: RegisterPayload
+  payload: RegisterPayload,
 ): Promise<RegisterResponse> {
   try {
     const res = await axiosInstance.post("/auth/register", payload);

@@ -3,22 +3,20 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/redux/store/hooks";
 
-import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
 import { useAppSelector } from "@/redux/store/hooks";
 
 import { getPlans } from "@/features/auth/services/plans";
-
 import {
   upgradePlan,
-  buyNewPlan,
   verifySubscriptionPayment,
   renewPlan,
 } from "@/lib/api/subscription/subscription";
 
 import PricingSkeleton from "../Skeletons/PricingSkeleton";
 import { toast } from "sonner";
+import { fetchProfile } from "@/redux/store/slices/authSlice";
 
 declare global {
   interface Window {
@@ -26,13 +24,35 @@ declare global {
   }
 }
 
+// const formatSubscription = (sub: any) => ({
+//   id: sub.id,
+//   plan_id: sub.membership_plan_id,
+//   name: sub.plan?.name,
+//   amount: Number(sub.plan?.price || 0),
+//   total_amount: Number(sub.total_amount || 0),
+//   subtotal_amount: Number(sub.subtotal_amount || 0),
+//   tax_amount: Number(sub.tax_amount || 0),
+//   tax_percent: Number(sub.tax_percent || 0),
+//   status: sub.status,
+//   start_date: sub.start_date,
+//   end_date: sub.end_date,
+//   duration_value: sub.plan?.duration_value,
+//   duration_unit: sub.plan?.duration_unit,
+//   purchase_type: sub.purchase_type,
+//   features: sub.plan?.feature,
+//   tag: sub.plan?.tag,
+//   next_subscription_id: sub.next_subscription_id,
+//   previous_subscription_id: sub.previous_subscription_id,
+// });
+
 export default function PricingCard() {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [selectedPlanId, setSelectedPlanId] = useState<number>(2);
 
   const [loading, setLoading] = useState(false);
+  const [redirectLoading, setRedirectLoading] = useState(false);
 
   const [plans, setPlans] = useState<any[]>([]);
 
@@ -202,6 +222,7 @@ export default function PricingCard() {
           color: "#c9060a",
         },
         handler: async function (response: any) {
+          setRedirectLoading(true);
           try {
             const verifyPayload = {
               razorpay_payment_id: response.razorpay_payment_id,
@@ -213,33 +234,17 @@ export default function PricingCard() {
 
             const verifyRes = await verifySubscriptionPayment(verifyPayload);
 
-            const sub =
-              verifyRes?.data?.subscription ||
-              verifyRes?.data?.data?.subscription;
+            console.log("VERIFY RESPONSE =>", verifyRes);
 
-            if (sub) {
-              const reduxSubscription = {
-                id: sub.id,
-                plan_id: sub.membership_plan_id,
-                name: sub.plan?.name,
-                amount: Number(sub.plan?.price || 0),
-                status: sub.status,
-                start_date: sub.start_date,
-                end_date: sub.end_date,
-                duration_value: sub.plan?.duration_value,
-                duration_unit: sub.plan?.duration_unit,
-                purchase_type: sub.purchase_type,
-                features: sub.plan?.feature,
-                tag: sub.plan?.tag,
-              };
-
-              dispatch(setSubscription(reduxSubscription));
-            }
+            await dispatch(fetchProfile()).unwrap();
 
             toast.success("Payment successful");
+
             router.push("/dashboard");
           } catch (err: any) {
             toast.error(err?.response?.data?.message || "Verification failed");
+          } finally {
+            setRedirectLoading(false); // optional (won’t matter after redirect)
           }
         },
       };
@@ -353,7 +358,7 @@ export default function PricingCard() {
                 {isFreePlanCard && disableFreePlan && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md bg-gray-500 text-white">
-                      Not Available
+                      For New Users
                     </span>
                   </div>
                 )}
@@ -469,6 +474,33 @@ ${isSelected && !disableFreePlan ? "border-[#c9060a] shadow-2xl scale-[1.03]" : 
           </button>
         </div>
       </div>
+      {redirectLoading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="w-[360px] rounded-3xl bg-white p-8 text-center shadow-2xl border border-gray-100">
+            <div className="relative flex justify-center mb-6">
+              <div className="absolute w-16 h-16 rounded-full bg-red-100 animate-ping" />
+
+              <div className="relative w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
+                <div className="w-8 h-8 border-[3px] border-red-200 border-t-[#c9060a] rounded-full animate-spin" />
+              </div>
+            </div>
+
+            <h2 className="text-lg font-semibold text-gray-900">
+              Verifying Payment
+            </h2>
+
+            <p className="text-sm text-gray-500 mt-2">
+              Please wait while we confirm your transaction.
+            </p>
+
+            <div className="mt-5 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full w-1/3 bg-[#c9060a] animate-[slide_1.2s_linear_infinite]" />
+            </div>
+
+            <p className="text-xs text-gray-400 mt-5">Secured by Razorpay</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

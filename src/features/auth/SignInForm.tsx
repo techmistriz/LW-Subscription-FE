@@ -7,7 +7,11 @@ import { useRouter } from "next/navigation";
 
 /*----------------- REDUX -----------------*/
 import { useAppDispatch } from "@/redux/store/hooks";
-import { loginUser as loginRedux } from "@/redux/store/slices/authSlice";
+import {
+  loginUser as loginRedux,
+  fetchProfile,
+} from "@/redux/store/slices/authSlice";
+
 import { toast } from "sonner";
 
 export default function SignInForm() {
@@ -21,18 +25,27 @@ export default function SignInForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setError("");
     setLoading(true);
 
     try {
-      const result = await dispatch(loginRedux({ email, password })).unwrap();
+      // Login -> Save token
+      await dispatch(
+        loginRedux({
+          email,
+          password,
+        }),
+      ).unwrap();
 
-      // The subscription handling is now done inside the authSlice
-      // No need to dispatch setSubscription here anymore
+      // Fetch fresh profile data
+      await dispatch(fetchProfile()).unwrap();
 
       toast.success("Login successful!");
+
       router.replace("/dashboard");
     } catch (error: any) {
+      setError(error || "Login failed");
       toast.error(error || "Login failed");
     } finally {
       setLoading(false);
@@ -60,6 +73,7 @@ export default function SignInForm() {
               <label className="block text-sm font-medium mb-2">
                 Email Address
               </label>
+
               <input
                 required
                 type="email"
@@ -70,6 +84,7 @@ export default function SignInForm() {
               />
 
               <label className="block text-sm font-medium mb-2">Password</label>
+
               <input
                 required
                 type="password"
@@ -88,7 +103,7 @@ export default function SignInForm() {
               </button>
             </form>
 
-            <p className="text-sm text-[#c9060a] mt-4 cursor-pointer ">
+            <p className="text-sm text-[#c9060a] mt-4 cursor-pointer">
               <Link href="/register" className="hover:underline">
                 Register
               </Link>{" "}

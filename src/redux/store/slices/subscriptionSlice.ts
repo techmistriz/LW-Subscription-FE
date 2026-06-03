@@ -2,176 +2,183 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { logoutUser } from "./authSlice";
 
 export interface Subscription {
+  created_at: string | number | Date;
   id?: number;
   plan_id?: number;
+  membership_plan_id?: number;
+
   name?: string;
   amount?: number;
   total_amount?: number;
   subtotal_amount?: number;
   tax_amount?: number;
   tax_percent?: number;
+
   status?: string;
   start_date?: string;
   end_date?: string;
+
   duration_value?: number;
   duration_unit?: string;
+
   purchase_type?: string;
   features?: string;
   is_trial?: string;
   tag?: string;
+
   next_subscription_id?: number | null;
   previous_subscription_id?: number | null;
+
+  plan?: any;
 }
 
 interface SubscriptionState {
-  active: Subscription | null;   // Current active subscription
-  pending: Subscription | null;  // Pending upgrade subscription (next_subscription)
+  active: Subscription | null;
+  pending: Subscription[];
   isLoaded: boolean;
 }
 
 const initialState: SubscriptionState = {
   active: null,
-  pending: null,
+  pending: [],
   isLoaded: false,
+};
+
+const saveToStorage = (
+  active: Subscription | null,
+  pending: Subscription[],
+) => {
+  if (typeof window !== "undefined") {
+    sessionStorage.setItem(
+      "subscription",
+      JSON.stringify({
+        active,
+        pending,
+      }),
+    );
+  }
 };
 
 const subscriptionSlice = createSlice({
   name: "subscription",
   initialState,
+
   reducers: {
-    // Main setter that handles both active and pending subscriptions from API response
-    setSubscription: (state, action: PayloadAction<{
-      subscription?: Subscription;
-      next_subscription?: Subscription | null;
-    } | Subscription>) => {
-      // Handle the case where the payload is the subscription object directly (backward compatibility)
-      if (!action.payload || ('id' in action.payload && !('subscription' in action.payload))) {
-        const subscription = action.payload as Subscription;
-        const status = subscription.status?.toUpperCase();
-        
-        if (status === "PENDING") {
-          state.pending = subscription;
-        } else if (status === "ACTIVE") {
+    setSubscription: (
+      state,
+      action: PayloadAction<
+        | Subscription
+        | {
+            subscription?: Subscription;
+            next_subscriptions?: Subscription[];
+          }
+      >,
+    ) => {
+      const payload = action.payload;
+
+      // Backward compatibility
+      if ("id" in payload && !("subscription" in payload)) {
+        const subscription = payload as Subscription;
+
+        if (subscription.status?.toUpperCase() === "ACTIVE") {
           state.active = subscription;
-          // Clear pending if it's the same plan (activation completed)
-          if (state.pending?.plan_id === subscription.plan_id) {
-            state.pending = null;
-          }
         }
-      } 
-      // Handle the case where payload has both subscription and next_subscription
-      else {
-        const { subscription, next_subscription } = action.payload as {
+
+        if (subscription.status?.toUpperCase() === "PENDING") {
+          state.pending = [subscription];
+        }
+      } else {
+        const { subscription, next_subscriptions } = payload as {
           subscription?: Subscription;
-          next_subscription?: Subscription | null;
+          next_subscriptions?: Subscription[];
         };
-        
-        // Set active subscription
-        if (subscription) {
-          const status = subscription.status?.toUpperCase();
-          if (status === "ACTIVE") {
-            state.active = subscription;
-          } else if (status === "PENDING") {
-            state.pending = subscription;
-          }
-        }
-        
-        // Set pending subscription (next_subscription)
-        if (next_subscription) {
-          state.pending = {
-            ...next_subscription,
-            status: next_subscription.status || "PENDING"
-          };
-        } else if (next_subscription === null) {
-          state.pending = null;
-        }
+
+        state.active = subscription ?? null;
+        state.pending = next_subscriptions ?? [];
       }
-      
+
       state.isLoaded = true;
-      
-      // Store in sessionStorage
-      sessionStorage.setItem(
-        "subscription",
-        JSON.stringify({
-          active: state.active,
-          pending: state.pending,
-        })
-      );
+
+      saveToStorage(state.active, state.pending);
     },
 
-    // Set only active subscription
-    setActiveSubscription: (state, action: PayloadAction<Subscription>) => {
+    setActiveSubscription: (
+      state,
+      action: PayloadAction<Subscription | null>,
+    ) => {
       state.active = action.payload;
       state.isLoaded = true;
-      
-      sessionStorage.setItem(
-        "subscription",
-        JSON.stringify({
-          active: state.active,
-          pending: state.pending,
-        })
-      );
+
+      saveToStorage(state.active, state.pending);
     },
 
-    // Set only pending subscription
-    setPendingSubscription: (state, action: PayloadAction<Subscription>) => {
+    setPendingSubscription: (state, action: PayloadAction<Subscription[]>) => {
       state.pending = action.payload;
       state.isLoaded = true;
-      
-      sessionStorage.setItem(
-        "subscription",
-        JSON.stringify({
-          active: state.active,
-          pending: state.pending,
-        })
-      );
+
+      saveToStorage(state.active, state.pending);
     },
 
-    // Clear pending subscription
+    addPendingSubscription: (state, action: PayloadAction<Subscription>) => {
+      state.pending.push(action.payload);
+
+      saveToStorage(state.active, state.pending);
+    },
+
     clearPendingSubscription: (state) => {
-      state.pending = null;
-      
-      sessionStorage.setItem(
-        "subscription",
-        JSON.stringify({
-          active: state.active,
-          pending: state.pending,
-        })
-      );
+      state.pending = [];
+
+      saveToStorage(state.active, state.pending);
     },
 
-    // Load from storage
     loadSubscriptionFromStorage: (state) => {
+      if (typeof window === "undefined") {
+        state.isLoaded = true;
+        return;
+      }
+
       const stored = sessionStorage.getItem("subscription");
 
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          state.active = parsed.active || null;
-          state.pending = parsed.pending || null;
-        } catch (e) {
-          console.error("Failed to parse subscription", e);
+
+          state.active = parsed.active ?? null;
+          state.pending = parsed.pending ?? [];
+        } catch (error) {
+          console.error(
+            "Failed to parse subscription from sessionStorage",
+            error,
+          );
+
+          state.active = null;
+          state.pending = [];
         }
       }
 
       state.isLoaded = true;
     },
 
-    // Clear all subscription data
     clearSubscription: (state) => {
       state.active = null;
-      state.pending = null;
+      state.pending = [];
       state.isLoaded = false;
-      sessionStorage.removeItem("subscription");
+
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("subscription");
+      }
     },
   },
 
   extraReducers: (builder) => {
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.active = null;
-      state.pending = null;
+      state.pending = [];
       state.isLoaded = false;
-      sessionStorage.removeItem("subscription");
+
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("subscription");
+      }
     });
   },
 });
@@ -180,6 +187,7 @@ export const {
   setSubscription,
   setActiveSubscription,
   setPendingSubscription,
+  addPendingSubscription,
   clearPendingSubscription,
   loadSubscriptionFromStorage,
   clearSubscription,

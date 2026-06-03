@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/api/axios";
-import { loginUser as loginApi, logoutApi } from "@/lib/api/auth/auth";
+import {
+  getProfile,
+  loginUser as loginApi,
+  logoutApi,
+} from "@/lib/api/auth/auth";
 import { setSubscription } from "./subscriptionSlice";
 
 /* ---------------- USER TYPE ---------------- */
@@ -41,12 +45,12 @@ const formatSubscription = (subscription: any) => {
   return {
     id: subscription.id,
     plan_id: subscription.membership_plan_id,
-    name: subscription.plan?.name,
+    name: subscription.plan?.name || "",
     amount: Number(subscription.plan?.price || 0),
-    total_amount: subscription.total_amount,
-    subtotal_amount: subscription.subtotal_amount,
-    tax_amount: subscription.tax_amount,
-    tax_percent: subscription.tax_percent,
+    total_amount: Number(subscription.total_amount || 0),
+    subtotal_amount: Number(subscription.subtotal_amount || 0),
+    tax_amount: Number(subscription.tax_amount || 0),
+    tax_percent: Number(subscription.tax_percent || 0),
     status: subscription.status,
     start_date: subscription.start_date,
     end_date: subscription.end_date,
@@ -58,76 +62,70 @@ const formatSubscription = (subscription: any) => {
     tag: subscription.plan?.tag,
     next_subscription_id: subscription.next_subscription_id,
     previous_subscription_id: subscription.previous_subscription_id,
+    plan: subscription.plan,
   };
 };
-
 /* ---------------- LOGIN THUNK ---------------- */
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (
     { email, password }: { email: string; password: string },
-    { rejectWithValue, dispatch },
+    { rejectWithValue },
   ) => {
     try {
       const res = await loginApi(email, password);
 
       const token = res?.token || res?.data?.token;
-      const user = res?.user || res?.data?.user;
-      const subscriptionData = res?.subscription || res?.data?.subscription;
 
-      if (!token || !user) {
+      if (!token) {
         throw new Error("Invalid login response");
       }
 
+      // Save auth data
       axiosInstance.defaults.headers.common["Authorization"] =
         `Bearer ${token}`;
 
-      /* ---------------- SUBSCRIPTION HANDLING ---------------- */
-      let subscription = null;
-      let nextSubscription = null;
-
-      // 1. Try API
-      try {
-        const subRes = await axiosInstance.get("/user/subscription");
-        subscription = subRes?.data?.data || null;
-        if (subscription?.next_subscription) {
-          nextSubscription = subscription.next_subscription;
-        }
-      } catch (err) {
-        console.log("Subscription API failed");
-      }
-
-      // 2. Fallback: from login response (IMPORTANT FIX)
-      if (!subscription && subscriptionData) {
-        subscription = subscriptionData;
-        if (subscriptionData.next_subscription) {
-          nextSubscription = subscriptionData.next_subscription;
-        }
-      }
-
-      // 3. Dispatch subscription if exists
-      if (subscription) {
-        const formattedCurrentSubscription = formatSubscription(subscription);
-
-        const formattedNextSubscription = nextSubscription
-          ? formatSubscription(nextSubscription)
-          : undefined;
-
-        dispatch(
-          setSubscription({
-            subscription: formattedCurrentSubscription || undefined,
-            next_subscription: formattedNextSubscription,
-          }),
-        );
-      }
-
-      /* ---------------- STORAGE ---------------- */
-      sessionStorage.setItem("user", JSON.stringify(user));
       sessionStorage.setItem("token", token);
 
-      return { user, token };
+      return {
+        token,
+      };
+    }catch (err: any) {
+      return rejectWithValue(
+        err?.message || "Login failed"
+      );
+    }
+  }
+);
+
+/* ---------------- PROFILE ---------------- */
+export const fetchProfile = createAsyncThunk(
+  "auth/profile",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await getProfile();
+
+      const user = res.data.user;
+      const subscription = res.data.subscription;
+      const nextSubscriptions = res.data.next_subscriptions || [];
+
+      dispatch(
+        setSubscription({
+          subscription: subscription
+            ? formatSubscription(subscription)
+            : undefined,
+
+          next_subscriptions: nextSubscriptions.map((sub: any) =>
+            formatSubscription(sub),
+          ),
+        }),
+      );
+
+      sessionStorage.setItem("user", JSON.stringify(user));
+
+      return user;
     } catch (err: any) {
-      return rejectWithValue(err.message || "Login failed");
+      return rejectWithValue(err?.message || "Failed to fetch profile");
     }
   },
 );
@@ -194,18 +192,24 @@ const authSlice = createSlice({
         state.error = null;
       })
 
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.isInitialized = true;
-      })
+    .addCase(loginUser.fulfilled, (state, action) => {
+  state.loading = false;
+  state.token = action.payload.token;
+  state.isAuthenticated = true;
+})
+
 
       .addCase(loginUser.rejected, (state, action: any) => {
         state.loading = false;
         state.error = action.payload;
       })
+
+      .addCase(fetchProfile.fulfilled, (state, action) => {
+  state.user = action.payload;
+  state.isAuthenticated = true;
+  state.isInitialized = true;
+})
+
 
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;

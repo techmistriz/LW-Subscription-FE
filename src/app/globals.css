@@ -94,7 +94,6 @@ select::-ms-expand {
   @apply w-full border px-3 py-2 mt-1 rounded bg-gray-50 focus:ring-2 focus:ring-[#c9060a] outline-none;
 }
 
-
 .plan-features ul {
   list-style: disc;
   padding-left: 1.2rem;
@@ -124,4 +123,13 @@ html {
 
 body {
   overflow-x: hidden;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
 }
