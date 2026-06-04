@@ -28,7 +28,6 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   const [categories, setCategories] = useState<any[]>([]);
 
   /*----------------- UI state for rotation -----------------*/
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeField, setActiveField] = useState<string | null>(null);
 

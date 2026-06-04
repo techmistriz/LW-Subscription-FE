@@ -77,9 +77,7 @@ export interface ArticleCategory {
   slug?: string;
 }
 
-export type ArticleCategoryType =
-  | ArticleCategory
-  | string;
+export type ArticleCategoryType = ArticleCategory | string;
 
 /*==================== AUTHOR ====================*/
 export interface Author {
@@ -190,8 +188,7 @@ export interface RegisterForm {
   address: string;
 }
 
-export interface FormData
-  extends RegisterForm {
+export interface FormData extends RegisterForm {
   plan: string;
 
   auto_renew: boolean;
@@ -211,7 +208,6 @@ export interface FormData
   country: string;
 }
 
-export interface RegisterPayload
-  extends RegisterForm {
+export interface RegisterPayload extends RegisterForm {
   membership_plan_id: number;
 }

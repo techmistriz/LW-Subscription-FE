@@ -1,9 +1,6 @@
 import Banner from "@/components/Common/Banner";
-import Link from "next/link";
 
 const PrivacyPage = () => {
-  const effectiveDate = "February 24, 2026";
-
   return (
     <section className="w-full">
       <Banner title="Privacy Policy" />

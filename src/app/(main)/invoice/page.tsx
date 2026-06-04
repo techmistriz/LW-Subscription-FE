@@ -1,10 +1,7 @@
 "use client";
 
 import InvoicePage from "@/features/Invoice/Invoice";
-import {
-  getUserInvoices,
-  Invoice,
-} from "@/lib/api/invoice/invoice";
+import { getUserInvoices, Invoice } from "@/lib/api/invoice/invoice";
 
 import { useEffect, useState } from "react";
 
@@ -12,25 +9,25 @@ export default function Page() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchInvoices = async () => {
-    try {
-      const res = await getUserInvoices();
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const res = await getUserInvoices();
 
-      console.log("Invoice", res);
+        console.log("Invoice", res);
 
-      if (res.data?.status) {
-        setInvoices(res.data.data);
+        if (res.data?.status) {
+          setInvoices(res.data.data);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchInvoices();
-}, []);
+    fetchInvoices();
+  }, []);
 
   if (loading) {
     return (
@@ -40,5 +37,5 @@ useEffect(() => {
     );
   }
 
-  return <InvoicePage  invoices={invoices} />;
+  return <InvoicePage invoices={invoices} />;
 }

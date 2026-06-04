@@ -45,14 +45,6 @@ export default function Header() {
     router.replace("/sign-in");
   };
 
-  // const handleLogout = async () => {
-  //   await dispatch(logoutUser());
-  //   toast.success("Logout successful!");
-
-  //     router.replace("/sign-in");
-  //     router.refresh();
-  //   };
-
   // Ref to track the active item for scrolling
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 

@@ -129,17 +129,16 @@ export function useRegisterForm() {
 
       const otp = res?.data?.otp || res?.otp;
 
-/* ---------------- DEMO OTP SHOW ---------------- */
-const isDemoMode =
-  process.env.NEXT_PUBLIC_SHOW_DEMO_OTP === "true";
+      /* ---------------- DEMO OTP SHOW ---------------- */
+      const isDemoMode = process.env.NEXT_PUBLIC_SHOW_DEMO_OTP === "true";
 
-if (otp && isDemoMode) {
-  console.log("OTP:", otp);
+      if (otp && isDemoMode) {
+        console.log("OTP:", otp);
 
-  toast.success(`Demo OTP: ${otp}`, {
-    duration: 10000,
-  });
-}
+        toast.success(`Demo OTP: ${otp}`, {
+          duration: 10000,
+        });
+      }
     } catch (err: any) {
       toast.error(err.message);
     }

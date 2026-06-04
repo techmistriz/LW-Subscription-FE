@@ -128,10 +128,6 @@ export default function SubscribeBanner() {
 
       setForm({ name: "", email: "", contact: "" });
     } catch (err: any) {
-      // setAlert({
-      //   type: "error",
-      //   message: err?.message || "Something went wrong.",
-      // });
       toast.error(err.message);
     } finally {
       setLoading(false);

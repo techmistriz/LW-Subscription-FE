@@ -24,27 +24,6 @@ declare global {
   }
 }
 
-// const formatSubscription = (sub: any) => ({
-//   id: sub.id,
-//   plan_id: sub.membership_plan_id,
-//   name: sub.plan?.name,
-//   amount: Number(sub.plan?.price || 0),
-//   total_amount: Number(sub.total_amount || 0),
-//   subtotal_amount: Number(sub.subtotal_amount || 0),
-//   tax_amount: Number(sub.tax_amount || 0),
-//   tax_percent: Number(sub.tax_percent || 0),
-//   status: sub.status,
-//   start_date: sub.start_date,
-//   end_date: sub.end_date,
-//   duration_value: sub.plan?.duration_value,
-//   duration_unit: sub.plan?.duration_unit,
-//   purchase_type: sub.purchase_type,
-//   features: sub.plan?.feature,
-//   tag: sub.plan?.tag,
-//   next_subscription_id: sub.next_subscription_id,
-//   previous_subscription_id: sub.previous_subscription_id,
-// });
-
 export default function PricingCard() {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -383,12 +362,12 @@ export default function PricingCard() {
                 {/* CARD */}
                 <div
                   className={`relative h-full mx-4 p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 bg-white
-${
-  disableFreePlan
-    ? "opacity-60 cursor-not-allowed border-gray-200 bg-gray-50"
-    : "hover:shadow-xl hover:-translate-y-1"
-}
-${isSelected && !disableFreePlan ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
+                  ${
+                    disableFreePlan
+                      ? "opacity-60 cursor-not-allowed border-gray-200 bg-gray-50"
+                      : "hover:shadow-xl hover:-translate-y-1"
+                  }
+                  ${isSelected && !disableFreePlan ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                 >
                   {/* RADIO ICON */}
                   <div className="flex justify-center mb-5">

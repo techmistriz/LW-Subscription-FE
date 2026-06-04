@@ -1,4 +1,3 @@
-// app/articles/layout.tsx
 import React from "react";
 import RightSidebar from "@/components/RightSidebar/RightSidebar";
 

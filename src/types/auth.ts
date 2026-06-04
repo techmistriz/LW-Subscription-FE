@@ -16,8 +16,8 @@ export interface RegisterPayload {
   email: string;
   contact: string;
   password: string;
-  otp:string;
-  dob:string;
+  otp: string;
+  dob: string;
   password_confirmation: string;
   address: string;
   membership_plan_id: number;
@@ -39,7 +39,8 @@ export interface RegisterResponse {
       razorpay_key: string;
     };
 
-    subscription?: {   // ✅ ADD THIS
+    subscription?: {
+      //  ADD THIS
       id: number;
       status: string;
       start_date: string;

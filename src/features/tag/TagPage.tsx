@@ -19,8 +19,7 @@ import Pagination from "@/components/Pagination/Pagination";
 
 import { Post } from "@/types/models";
 
-const postBaseUrl =
-  process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 export default function TagPage() {
   const params = useParams();
@@ -37,7 +36,7 @@ export default function TagPage() {
 
   const [loading, setLoading] = useState(false);
   const [selectedYear, setSelectedYear] = useState<number | null>(
-    yearParam ? Number(yearParam) : null
+    yearParam ? Number(yearParam) : null,
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +53,7 @@ export default function TagPage() {
 
       try {
         const response = await getPosts({
-          tag_id: tagId, 
+          tag_id: tagId,
           page,
           ...(year ? { year } : {}),
         });
@@ -70,7 +69,7 @@ export default function TagPage() {
         setLoading(false);
       }
     },
-    [tagId]
+    [tagId],
   );
 
   /* ---------------- LOAD YEARS ---------------- */
@@ -124,7 +123,7 @@ export default function TagPage() {
         ) : (
           <>
             <PostList
-              posts={posts} // ✅ no JSX mutation
+              posts={posts} //  no JSX mutation
               fallbackAuthorName={tagTitle}
               postBaseUrl={postBaseUrl}
               loading={loading}

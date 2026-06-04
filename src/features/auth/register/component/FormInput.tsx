@@ -9,11 +9,11 @@ interface FormInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   error?: string;
   type?: string;
-    maxLength?: number;
+  maxLength?: number;
   required?: boolean;
   autoComplete?: string;
-   inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
-   pattern?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  pattern?: string;
 }
 
 export default function FormInput({

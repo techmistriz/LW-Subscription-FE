@@ -37,34 +37,28 @@ export default function AuthorPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
-const [authorData, setAuthorData] =
-  useState<any>(null);
+  const [authorData, setAuthorData] = useState<any>(null);
 
   /*----------------- Load Author -----------------*/
- const loadAuthor = useCallback(async () => {
-  if (!authorSlug) return;
+  const loadAuthor = useCallback(async () => {
+    if (!authorSlug) return;
 
-  try {
-    const authors = await getAuthors();
+    try {
+      const authors = await getAuthors();
 
-    const matched = authors.find(
-      (a) => a.slug === authorSlug,
-    );
+      const matched = authors.find((a) => a.slug === authorSlug);
 
-    setAuthorId(matched?.id ?? null);
+      setAuthorId(matched?.id ?? null);
 
-    setAuthorData(matched ?? null);
-  } catch (error) {
-    console.error(
-      "Failed to load author:",
-      error,
-    );
+      setAuthorData(matched ?? null);
+    } catch (error) {
+      console.error("Failed to load author:", error);
 
-    setAuthorId(null);
+      setAuthorId(null);
 
-    setAuthorData(null);
-  }
-}, [authorSlug]);
+      setAuthorData(null);
+    }
+  }, [authorSlug]);
 
   /*----------------- Fetch Posts -----------------*/
   const fetchPosts = useCallback(
@@ -80,7 +74,7 @@ const [authorData, setAuthorData] =
           ...(year ? { year } : {}),
         });
 
-        console.log("Author Id", response)
+        console.log("Author Id", response);
         /*----------------- Normalize posts so each author has a linkedin -----------------*/
         const normalizedPosts = (response.data ?? []).map((post: Post) => ({
           ...post,
@@ -104,8 +98,7 @@ const [authorData, setAuthorData] =
     [authorId],
   );
 
-
-  console.log("Author Page",posts)
+  console.log("Author Page", posts);
 
   /*----------------- Load Years -----------------*/
   const loadYears = useCallback(async () => {
@@ -152,7 +145,6 @@ const [authorData, setAuthorData] =
   }));
 
   return (
-    
     <section className="bg-white">
       <div className="lg:col-span-9">
         <YearFilter

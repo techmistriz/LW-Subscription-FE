@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/store/hooks";
 import { setUser } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
-import axiosInstance from "@/lib/api/axios";
 import { Plan, RegisterFormData } from "@/types/register.types";
 import { verifyPayment } from "../../services/payment";
 

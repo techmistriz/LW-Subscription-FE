@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  CalendarDays,
-  CreditCard,
-  Download,
-  FileText,
-  Receipt,
-} from "lucide-react";
+import { CalendarDays, Download, Receipt } from "lucide-react";
 
 import { downloadInvoicePdf } from "@/lib/api/invoice/invoice";
 
@@ -70,7 +64,7 @@ export default function InvoicePage({ invoices }: Props) {
   };
 
   return (
-   <div className="min-h-screen bg-[#f5f5f7]   py-10 ">
+    <div className="min-h-screen bg-[#f5f5f7]   py-10 ">
       <div className="max-w-6xl mx-auto border border-gray-300 p-6 ">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-10 ">

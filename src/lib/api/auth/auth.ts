@@ -19,7 +19,7 @@ export async function loginUser(email: string, password: string) {
   }
 }
 
-/*----------------- PROFILE -----------------*/
+/*-----------------IUSER PROFILE -----------------*/
 export async function getProfile() {
   try {
     const res = await axiosInstance.get("/profile");

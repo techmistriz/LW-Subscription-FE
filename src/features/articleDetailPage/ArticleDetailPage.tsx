@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -278,25 +278,6 @@ export default function ArticleDetailPage() {
                   >
                     {author.name}
                   </Link>
-
-                  {/* LINKEDIN ICON */}
-                  {/* {author.linkedin && (
-                    <a
-                      href={author.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#0A66C2] hover:opacity-80"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-                      </svg>
-                    </a>
-                  )} */}
 
                   {/* COMMA */}
                   {index < (article.authors?.length ?? 0) - 1 && (

@@ -20,7 +20,6 @@ export async function generateMetadata({
   let imageUrl = "https://lwsubscription.vercel.app/default-og-image.jpg";
   
   if (article.image) {
-    // NEXT_PUBLIC_POSTS_BASE_URL = https://admin.lexwitness.com/uploads/posts/
     const postsBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || 'https://admin.lexwitness.com/uploads/posts/';
     imageUrl = `${postsBaseUrl}${article.image}`;
   }

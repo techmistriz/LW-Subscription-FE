@@ -1,8 +1,10 @@
-
 import { forgotPassword, resetPassword } from "@/lib/api/auth/auth";
 import { AppDispatch } from "../store/store";
-import { resetFail, resetStart, resetSuccess } from "../store/slices/resetSlice";
-
+import {
+  resetFail,
+  resetStart,
+  resetSuccess,
+} from "../store/slices/resetSlice";
 
 /* FORGOT PASSWORD */
 export const forgotPasswordAction =

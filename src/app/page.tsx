@@ -51,7 +51,6 @@ export default async function HomePage() {
 
   return (
     <main className="bg-white">
-      
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 pt-5">
         {hasHeroContent ? (

@@ -1,6 +1,4 @@
-// app/terms/page.tsx
 import Banner from "@/components/Common/Banner";
-import Link from "next/link";
 
 const TermsPage = () => {
   return (

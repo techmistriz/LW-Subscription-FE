@@ -7,25 +7,16 @@ import {
   ChevronDown,
   Calendar,
   Sparkles,
-  Clock,
   CreditCard,
-  User,
-  Mail,
-  Phone,
-  MapPin,
   Calendar as CalendarIcon,
   FileText,
   RefreshCw,
-  ArrowUpRight,
   CalendarCheck,
 } from "lucide-react";
 
 import { getPlans } from "@/features/auth/services/plans";
 import { useAppSelector, useAppDispatch } from "@/redux/store/hooks";
-import {
-  setSubscription,
-  loadSubscriptionFromStorage,
-} from "@/redux/store/slices/subscriptionSlice";
+import { loadSubscriptionFromStorage } from "@/redux/store/slices/subscriptionSlice";
 import {
   fetchProfile,
   loadUserFromStorage,
@@ -181,12 +172,6 @@ export default function Dashboard() {
     return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
   }, [endDate]);
 
-  // const remainingDaysLabel = useMemo(() => {
-  //   if (remainingDays === null) return "—";
-  //   if (remainingDays === 0) return "Expired";
-  //   return `${remainingDays} day${remainingDays > 1 ? "s" : ""} left`;
-  // }, [remainingDays]);
-
   const handleRenewPlan = async () => {
     try {
       if (!subscription?.id) return;
@@ -222,25 +207,6 @@ export default function Dashboard() {
             });
 
             if (verifyRes?.status) {
-              // const sub = verifyRes.data.subscription;
-
-              // const formattedSub = {
-              //   id: sub.id,
-              //   plan_id: sub.membership_plan_id,
-              //   name: sub.plan?.name,
-              //   amount: Number(sub.plan?.price || sub.total_amount || 0),
-              //   status: sub.status,
-              //   start_date: sub.start_date,
-              //   end_date: sub.end_date,
-              //   duration_value: sub.plan?.duration_value,
-              //   duration_unit: sub.plan?.duration_unit,
-              //   purchase_type: sub.purchase_type,
-              //   features: sub.plan?.feature,
-              //   tag: sub.plan?.tag,
-              //   created_at: sub.plan?.created_at,
-              // };
-
-              // dispatch(setSubscription(formattedSub));
               await dispatch(fetchProfile()).unwrap();
 
               setRenewLoading(false);
@@ -350,23 +316,7 @@ export default function Dashboard() {
                     {pendingSubscriptions.length > 1 ? "s are" : " is"} waiting
                     to be activated
                   </p>
-
-                  {/* <p className="text-sm text-gray-600">
-                    Your new plan
-                    {pendingSubscriptions.length > 1 ? "s are" : " is"} waiting
-                    to be activated
-                  </p> */}
                 </div>
-
-                {/* <div>
-                <p className="text-blue-800 font-semibold">
-                  Upgrade to {pendingSubscription.name} is scheduled
-                </p>
-                <p className="text-blue-600 text-sm">
-                  Your plan will be automatically upgraded on {pendingActivationDate?.toDateString()}
-                  {daysUntilUpgrade && daysUntilUpgrade > 0 && ` (in ${daysUntilUpgrade} days)`}
-                </p>
-              </div> */}
               </div>
               <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
                 Pending Activation
@@ -564,21 +514,8 @@ export default function Dashboard() {
                 const isExpanded = pendingPlan.id
                   ? expandedUpgrades[pendingPlan.id] || false
                   : false;
-                console.log(pendingPlan);
 
-                // const DetailItem = ({ label, value, subValue }) => (
-                //   <div className="space-y-1">
-                //     <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
-                //       {label}
-                //     </p>
-                //     <p className="text-sm font-bold text-gray-800">{value}</p>
-                //     {subValue && (
-                //       <p className="text-[10px] text-gray-500 font-medium">
-                //         {subValue}
-                //       </p>
-                //     )}
-                //   </div>
-                // );
+                console.log(pendingPlan);
 
                 console.log("Pending Plan Start:", pendingPlan.start_date);
 
@@ -769,32 +706,6 @@ export default function Dashboard() {
         )}
       </div>
       {renewLoading && (
-        // <div className="fixed inset-0 z-[99999] bg-black/60 flex items-center justify-center">
-        //   <div className="h-12 w-12 animate-spin rounded-full border-4 border-white border-t-transparent" />
-        // </div>
-        //         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-md">
-        //   <div className="w-[360px] rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 p-8 text-center shadow-2xl">
-
-        //     <div className="mx-auto mb-5 w-14 h-14 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-
-        //     <h2 className="text-white text-lg font-semibold">
-        //       Verifying Payment
-        //     </h2>
-
-        //     <p className="text-white/70 text-sm mt-2">
-        //       Please wait while we confirm your transaction
-        //     </p>
-
-        //     <div className="mt-5 h-1 bg-white/10 rounded-full overflow-hidden">
-        //       <div className="h-full w-1/3 bg-white animate-[slide_1.2s_linear_infinite]" />
-        //     </div>
-
-        //     <p className="text-white/50 text-xs mt-5">
-        //       Secured by Razorpay
-        //     </p>
-        //   </div>
-        // </div>
-
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="w-[360px] rounded-3xl bg-white p-8 text-center shadow-2xl border border-gray-100">
             <div className="relative flex justify-center mb-6">
@@ -880,19 +791,6 @@ function StatCard({ icon, title, value, subtitle, status, alert }: any) {
           {icon}
         </div>
       </div>
-    </div>
-  );
-}
-
-function DetailRowSimple({ label, value, highlight }: any) {
-  return (
-    <div className="flex justify-between items-center py-1.5">
-      <span className="text-gray-500 text-sm">{label}</span>
-      <span
-        className={`text-sm ${highlight ? "font-bold text-red-600" : "font-medium text-gray-800"}`}
-      >
-        {value}
-      </span>
     </div>
   );
 }

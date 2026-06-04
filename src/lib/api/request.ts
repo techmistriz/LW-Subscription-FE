@@ -1,5 +1,3 @@
-// lib/api/request.ts
-
 import axios, { AxiosError } from "axios";
 import api from "./axios";
 import { ApiResponse } from "@/types";

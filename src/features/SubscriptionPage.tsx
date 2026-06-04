@@ -52,6 +52,7 @@ const benefits = [
 export default function SubscriptionPage() {
   const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
   const [latestFive, setLatestFive] = useState<Magazine[]>([]);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const router = useRouter();
 
@@ -64,12 +65,19 @@ export default function SubscriptionPage() {
         const single = await getLatestSingleMagazines();
         setSingleMagazine(single);
       } catch (error) {
-        console.error("Error fetching magazines:", error);
+        console.error(error);
+      } finally {
       }
     };
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (singleMagazine?.image) {
+      setImageLoading(true);
+    }
+  }, [singleMagazine?.image]);
 
   /* ---------------- FETCH LATEST MAGAZINES ---------------- */
   useEffect(() => {
@@ -122,20 +130,27 @@ export default function SubscriptionPage() {
       {/*----------------- HERO SECTION -----------------*/}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-12 items-center">
         {/* LEFT IMAGE */}
-        <div className="flex justify-center lg:justify-center items-center">
-          {singleMagazine?.image && (
-            <Link
-              href={`/magazines/${singleMagazine.slug}`}
-              className="relative w-64 sm:w-72 md:w-80 lg:w-80 aspect-[3/4] shadow-2xl overflow-hidden"
-            >
-              <Image
-                src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
-                alt={singleMagazine.title || "Latest Magazine"}
-                fill
-                className="object-cover"
-              />
-            </Link>
-          )}
+        <div className="flex justify-center items-center">
+          <div className="relative w-64 sm:w-72 md:w-80 lg:w-80 aspect-[3/4] shadow-2xl overflow-hidden">
+            {(imageLoading || !singleMagazine?.image) && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-gray-100">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#c9060a]" />
+              </div>
+            )}
+
+            {singleMagazine?.image && (
+              <Link href={`/magazines/${singleMagazine.slug}`}>
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
+                  alt={singleMagazine.title || "Latest Magazine"}
+                  fill
+                  priority
+                  className="object-cover"
+                  onLoad={() => setImageLoading(false)}
+                />
+              </Link>
+            )}
+          </div>
         </div>
 
         {/* RIGHT CONTENT */}

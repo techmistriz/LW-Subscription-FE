@@ -15,8 +15,7 @@ interface PopupProps {
 const Popup = ({ onClose }: PopupProps) => {
   const router = useRouter();
 
-  const [singleMagazine, setSingleMagazine] =
-    useState<Magazine | null>(null);
+  const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
@@ -49,33 +48,27 @@ const Popup = ({ onClose }: PopupProps) => {
   }, [router]);
 
   /* ---------------- DATA MAPPING ---------------- */
-  const magazineName =
-    singleMagazine?.magazine_name || "Lex Witness Magazine";
+  const magazineName = singleMagazine?.magazine_name || "Lex Witness Magazine";
 
   const magazineSlug = singleMagazine?.slug || "latest";
 
-  const imageSrc =
-    singleMagazine?.image?.startsWith("http")
-      ? singleMagazine.image
-      : `${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${
-          singleMagazine?.image || "fallback.jpg"
-        }`;
+  const imageSrc = singleMagazine?.image?.startsWith("http")
+    ? singleMagazine.image
+    : `${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${
+        singleMagazine?.image || "fallback.jpg"
+      }`;
 
   /* ---------------- REDIRECT ---------------- */
-/* ---------------- REDIRECT ---------------- */
-const handleRedirect = () => {
-  setLoading(true);
+  /* ---------------- REDIRECT ---------------- */
+  const handleRedirect = () => {
+    setLoading(true);
 
-  sessionStorage.setItem(
-    "scrollToPricing",
-    "true"
-  );
+    sessionStorage.setItem("scrollToPricing", "true");
 
-  onClose();
+    onClose();
 
-  window.location.href =
-    "/subscription#pricing";
-};
+    window.location.href = "/subscription#pricing";
+  };
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center p-4 md:p-0">
@@ -131,8 +124,7 @@ const handleRedirect = () => {
           {/* HEADLINE */}
           <div className="mt-8">
             <h2 className="text-2xl font-black leading-tight text-[#333] md:text-xl">
-              Start Your{" "}
-              <span className="text-[#c9060a]">Free Month</span> Now
+              Start Your <span className="text-[#c9060a]">Free Month</span> Now
             </h2>
 
             <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">

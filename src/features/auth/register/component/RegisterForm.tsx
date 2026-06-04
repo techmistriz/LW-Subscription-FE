@@ -9,7 +9,6 @@ import Banner from "@/components/Common/Banner";
 export default function RegisterForm() {
   const {
     form,
-    plans,
     loading,
     plansLoading,
     processingPayment, //  ADD THIS - it was missing!

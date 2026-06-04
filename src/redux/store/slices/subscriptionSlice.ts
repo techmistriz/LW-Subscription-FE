@@ -28,7 +28,6 @@ export interface Subscription {
 
   next_subscription_id?: number | null;
   previous_subscription_id?: number | null;
-  
 
   plan?: any;
 }

@@ -65,8 +65,8 @@ const Footer = () => {
 
               {/* Email Text */}
               {/* <span className="text-sm text-[#E2E2E2]">
-    info@lexwitness.com
-  </span> */}
+                info@lexwitness.com
+              </span> */}
             </div>
 
             {/* App Buttons */}

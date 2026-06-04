@@ -1,5 +1,3 @@
-// lib/api/services/invoices.ts
-
 import api from "../axios";
 import { request } from "../request";
 
@@ -63,24 +61,18 @@ export interface InvoiceResponse {
 /* ---------------- GET INVOICES ---------------- */
 
 export const getUserInvoices = async () => {
-  return request<InvoiceResponse>(
-    "GET",
-    "/subscription/plan-history"
-  );
+  return request<InvoiceResponse>("GET", "/subscription/plan-history");
 };
-
 
 /* ---------------- DIRECT DOWNLOAD PDF ---------------- */
 
-export const downloadInvoicePdf = async (
-  subscriptionId: number
-) => {
+export const downloadInvoicePdf = async (subscriptionId: number) => {
   try {
     const response = await api.get(
       `/subscription/plan-invoice/${subscriptionId}`,
       {
         responseType: "blob",
-      }
+      },
     );
 
     // Create PDF blob

@@ -42,11 +42,7 @@ const resetSlice = createSlice({
   },
 });
 
-export const {
-  resetStart,
-  resetSuccess,
-  resetFail,
-  clearResetState,
-} = resetSlice.actions;
+export const { resetStart, resetSuccess, resetFail, clearResetState } =
+  resetSlice.actions;
 
 export default resetSlice.reducer;

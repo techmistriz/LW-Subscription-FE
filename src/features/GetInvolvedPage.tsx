@@ -1,5 +1,4 @@
 import Banner from "@/components/Common/Banner";
-import Link from "next/link";
 
 const GetInvolvedPage = () => {
   return (
@@ -8,7 +7,6 @@ const GetInvolvedPage = () => {
 
       <div className="min-h-screen bg-gray-50">
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 sm:space-y-12">
-          
           {/*----------------- Intro -----------------*/}
           <section className="text-center space-y-3">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-gray-900 tracking-tight">

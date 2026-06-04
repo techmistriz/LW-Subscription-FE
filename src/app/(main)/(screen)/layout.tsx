@@ -72,7 +72,6 @@ export default function ScreenLayout({ children }: ScreenLayoutProps) {
         <div className="lg:col-span-9 space-y-6">{children}</div>
 
         {/* Sidebar */}
-        {/* Sidebar */}
         <aside className={`lg:col-span-3 ${isArchive ? "lg:mt-12" : ""}`}>
           <RightSidebar showAuthor={isAuthorPage} authorData={authorData} />
         </aside>

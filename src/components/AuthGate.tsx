@@ -12,13 +12,9 @@ const AuthGate = () => {
   const pathname = usePathname();
 
   /* ---------------- AUTH ---------------- */
-  const { user, isInitialized } =
-    useAppSelector(
-      (state) => state.auth
-    );
+  const { user, isInitialized } = useAppSelector((state) => state.auth);
 
-  const [showModal, setShowModal] =
-    useState(true);
+  const [showModal, setShowModal] = useState(true);
 
   /* ---------------- WAIT FOR REDUX RESTORE ---------------- */
   if (!isInitialized) return null;
@@ -27,16 +23,9 @@ const AuthGate = () => {
   if (pathname !== "/") return null;
 
   /* ---------------- EXCLUDED ROUTES ---------------- */
-  const excludedRoutes = [
-    "/sign-in",
-    "/register",
-    "/password-reset",
-  ];
+  const excludedRoutes = ["/sign-in", "/register", "/password-reset"];
 
-  if (
-    excludedRoutes.includes(pathname)
-  )
-    return null;
+  if (excludedRoutes.includes(pathname)) return null;
 
   /* ---------------- LOGGED IN ---------------- */
   if (user) return null;
@@ -48,11 +37,7 @@ const AuthGate = () => {
     <>
       <div className="fixed inset-0 z-9998 bg-black/40 backdrop-blur-sm" />
 
-      <RegisterModal
-        onClose={() =>
-          setShowModal(false)
-        }
-      />
+      <RegisterModal onClose={() => setShowModal(false)} />
     </>
   );
 };
