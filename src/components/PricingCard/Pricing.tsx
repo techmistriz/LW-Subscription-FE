@@ -162,22 +162,22 @@ export default function PricingCard() {
       if (!hasSubscription) {
         purchaseType = "NEW";
         apiResponse = await upgradePlan(selectedPlan.id);
-        console.log(apiResponse)
+        // console.log(apiResponse)
       } else if (isFreePlan && isExpired) {
         /* ---------------- CASE 2: FREE PLAN EXPIRED -> Upgrade ---------------- */
         purchaseType = "NEW";
         apiResponse = await upgradePlan(selectedPlan.id);
-        console.log(apiResponse)
+        // console.log(apiResponse)
       } else if (!isFreePlan && isExpired) {
         /* ---------------- CASE 3: PAID PLAN EXPIRED -> RENEW ---------------- */
         purchaseType = "RENEW";
         apiResponse = await renewPlan(subscriptionId);
-        console.log("Renew API RESPONSE =>", apiResponse);
+        // console.log("Renew API RESPONSE =>", apiResponse);
       } else {
         /* ---------------- CASE 4: ACTIVE PLAN -> UPGRADE ---------------- */
         purchaseType = "UPGRADE";
         apiResponse = await upgradePlan(selectedPlan.id);
-        console.log("Upgrade API RESPONSE =>", apiResponse);
+        // console.log("Upgrade API RESPONSE =>", apiResponse);
       }
 
       paymentData = apiResponse?.data?.payment || apiResponse?.data;
@@ -215,7 +215,7 @@ export default function PricingCard() {
 
             const verifyRes = await verifySubscriptionPayment(verifyPayload);
 
-            console.log("VERIFY RESPONSE =>", verifyRes);
+            // console.log("VERIFY RESPONSE =>", verifyRes);
 
             await dispatch(fetchProfile()).unwrap();
 

@@ -42,7 +42,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       ? stripInlineStyles(magazine.description)
       : "<p>Description not available.</p>";
 
-      console.log("magazinee", magazine)
+      // console.log("magazinee", magazine)
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
       {/*----------------- Main magazine content -----------------*/}

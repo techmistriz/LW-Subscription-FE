@@ -41,7 +41,7 @@ export default function ScreenLayout({ children }: ScreenLayoutProps) {
         const authors = await getAuthors();
 
         const matched = authors.find((a) => a.slug === params.author);
-        console.log(authors);
+        // console.log(authors);
         setAuthorData(matched ?? null);
       } catch (error) {
         console.error("Failed to load author:", error);

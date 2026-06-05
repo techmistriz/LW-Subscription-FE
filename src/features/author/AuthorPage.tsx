@@ -74,7 +74,7 @@ export default function AuthorPage() {
           ...(year ? { year } : {}),
         });
 
-        console.log("Author Id", response);
+        // console.log("Author Id", response);
         /*----------------- Normalize posts so each author has a linkedin -----------------*/
         const normalizedPosts = (response.data ?? []).map((post: Post) => ({
           ...post,
@@ -98,7 +98,7 @@ export default function AuthorPage() {
     [authorId],
   );
 
-  console.log("Author Page", posts);
+  // console.log("Author Page", posts);
 
   /*----------------- Load Years -----------------*/
   const loadYears = useCallback(async () => {

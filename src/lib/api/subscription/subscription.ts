@@ -9,7 +9,7 @@ export const buyNewPlan = async (membership_plan_id: number) => {
 
     const res = await axiosInstance.post("/subscription/buy-new-plan", body);
 
-    console.log("BUY NEW PLAN RESPONSE DATA =>", res.data);
+    // console.log("BUY NEW PLAN RESPONSE DATA =>", res.data);
 
     return res.data;
   } catch (error: any) {
@@ -28,7 +28,7 @@ export const renewPlan = async (subscription_id: number) => {
 
     const res = await axiosInstance.post("/subscription/renew-plan", body);
 
-    console.log("RENEW RESPONSE DATA =>", res.data);
+    // console.log("RENEW RESPONSE DATA =>", res.data);
 
     return res.data;
   } catch (error: any) {
@@ -47,7 +47,7 @@ export const upgradePlan = async (membership_plan_id: number) => {
 
     const res = await axiosInstance.post("/subscription/upgrade-plan", body);
 
-    console.log("UPGRADE RESPONSE DATA =>", res.data);
+    // console.log("UPGRADE RESPONSE DATA =>", res.data);
 
     return res.data;
   } catch (error: any) {
@@ -71,7 +71,7 @@ export const verifySubscriptionPayment = async (payload: {
       payload,
     );
 
-    console.log("VERIFY RESPONSE DATA =>", res.data);
+    // console.log("VERIFY RESPONSE DATA =>", res.data);
 
     return res.data;
   } catch (error: any) {

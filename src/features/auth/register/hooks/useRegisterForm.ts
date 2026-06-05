@@ -152,7 +152,7 @@ export function useRegisterForm() {
       });
       return response.data;
     } catch (error: any) {
-      console.log("No pending payment found");
+      // console.log("No pending payment found");
       return null;
     }
   };
@@ -215,10 +215,10 @@ export function useRegisterForm() {
         const payment = responseData.payment;
         const membershipPlanId = responseData.membership_plan_id;
 
-        console.log("Payment initiation response:", {
-          payment,
-          membershipPlanId,
-        });
+        // console.log("Payment initiation response:", {
+        //   payment,
+        //   membershipPlanId,
+        // });
 
         if (payment && payment.amount > 0) {
           await handleRazorpayPayment(
@@ -240,9 +240,9 @@ export function useRegisterForm() {
         subscription: subscriptionData,
       } = responseData;
 
-      console.log("Free plan response - User:", userData);
-      console.log("Free plan response - Subscription:", subscriptionData);
-      console.log("Free plan response - Token:", token);
+      // console.log("Free plan response - User:", userData);
+      // console.log("Free plan response - Subscription:", subscriptionData);
+      // console.log("Free plan response - Token:", token);
 
       if (token && userData) {
         axiosInstance.defaults.headers.common["Authorization"] =
@@ -264,7 +264,7 @@ export function useRegisterForm() {
             : null,
         };
 
-        console.log("User with subscription:", userWithSubscription);
+        // console.log("User with subscription:", userWithSubscription);
 
         // Dispatch to Redux
         dispatch(setUser({ user: userWithSubscription, token }));

@@ -14,7 +14,7 @@ export default function Page() {
       try {
         const res = await getUserInvoices();
 
-        console.log("Invoice", res);
+        // console.log("Invoice", res);
 
         if (res.data?.status) {
           setInvoices(res.data.data);

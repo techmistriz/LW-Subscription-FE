@@ -28,7 +28,7 @@ const Popup = ({ onClose }: PopupProps) => {
       try {
         const res = await getLatestSingleMagazines();
 
-        console.log("Single Magazine:", res);
+        // console.log("Single Magazine:", res);
 
         if (mounted && res) {
           setSingleMagazine(res);

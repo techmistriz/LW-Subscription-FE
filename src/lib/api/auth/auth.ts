@@ -24,7 +24,7 @@ export async function getProfile() {
   try {
     const res = await axiosInstance.get("/profile");
 
-    console.log("Profile Data", res.data);
+    // console.log("Profile Data", res.data);
 
     return res.data;
   } catch (error: any) {

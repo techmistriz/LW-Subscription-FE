@@ -30,11 +30,11 @@ export function usePayment() {
     setProcessingPayment: (value: boolean) => void,
     membershipPlanId?: number,
   ) => {
-    console.log("Starting Razorpay payment with:", {
-      payment,
-      selectedPlan,
-      membershipPlanId,
-    });
+    // console.log("Starting Razorpay payment with:", {
+    //   payment,
+    //   selectedPlan,
+    //   membershipPlanId,
+    // });
 
     const isLoaded = await loadRazorpay();
     if (!isLoaded) throw new Error("Razorpay SDK failed to load");
@@ -50,24 +50,24 @@ export function usePayment() {
     handler: async (response: any) => {
   setProcessingPayment(true);
 
-  console.log(
-    "========== RAZORPAY SUCCESS =========="
-  );
+  // console.log(
+  //   "========== RAZORPAY SUCCESS =========="
+  // );
 
-  console.log(
-    "RAZORPAY RESPONSE =>",
-    response
-  );
+  // console.log(
+  //   "RAZORPAY RESPONSE =>",
+  //   response
+  // );
 
-  console.log(
-    "SELECTED PLAN =>",
-    selectedPlan
-  );
+  // console.log(
+  //   "SELECTED PLAN =>",
+  //   selectedPlan
+  // );
 
-  console.log(
-    "MEMBERSHIP PLAN ID =>",
-    membershipPlanId
-  );
+  // console.log(
+  //   "MEMBERSHIP PLAN ID =>",
+  //   membershipPlanId
+  // );
 
   try {
           const verifyPayload = {
@@ -78,11 +78,11 @@ export function usePayment() {
             razorpay_signature: response.razorpay_signature,
           };
 
-          console.log("Sending verification payload:", verifyPayload);
+          // console.log("Sending verification payload:", verifyPayload);
 
           const verifyRes = await verifyPayment(verifyPayload);
 
-          console.log("Verification response:", verifyRes);
+          // console.log("Verification response:", verifyRes);
 
           if (!verifyRes?.status) {
             throw new Error(verifyRes?.message || "Verification failed");
@@ -92,9 +92,9 @@ export function usePayment() {
           const subscriptionData = verifyRes.data?.subscription;
           const token = verifyRes.data?.token;
 
-          console.log("User data:", userData);
-          console.log("Subscription data:", subscriptionData);
-          console.log("Token:", token);
+          // console.log("User data:", userData);
+          // console.log("Subscription data:", subscriptionData);
+          // console.log("Token:", token);
 
           if (!userData || !token) {
             throw new Error("Missing user data in verification response");
@@ -116,7 +116,7 @@ export function usePayment() {
               : null,
           };
 
-          console.log("User with subscription:", userWithSubscription);
+          // console.log("User with subscription:", userWithSubscription);
 
           // Dispatch to Redux
           dispatch(
@@ -154,11 +154,11 @@ export function usePayment() {
           const savedUser = sessionStorage.getItem("user");
           const savedSubscription = sessionStorage.getItem("subscription");
 
-          console.log("Storage verification - User saved:", !!savedUser);
-          console.log(
-            "Storage verification - Subscription saved:",
-            !!savedSubscription,
-          );
+          // console.log("Storage verification - User saved:", !!savedUser);
+          // console.log(
+          //   "Storage verification - Subscription saved:",
+          //   !!savedSubscription,
+          // );
 
           toast.success("Payment successful! Registration completed.");
 
@@ -181,7 +181,7 @@ export function usePayment() {
 
       modal: {
         ondismiss: () => {
-          console.log("Payment modal closed by user");
+          // console.log("Payment modal closed by user");
           toast.info("Payment cancelled");
           setProcessingPayment(false);
         },
