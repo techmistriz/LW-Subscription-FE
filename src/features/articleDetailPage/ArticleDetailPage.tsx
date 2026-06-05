@@ -18,6 +18,7 @@ import "./style.css";
 import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
 import { setUser } from "@/redux/store/slices/authSlice";
 import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
+import SafeImage from "@/components/SafeImage/SafeImage";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
@@ -33,9 +34,7 @@ export default function ArticleDetailPage() {
   /*----------------- Only subscribes User Read full article content -----------------*/
 
   const { user } = useAppSelector((state) => state.auth);
-  const subscription = useAppSelector(
-  (state) => state.subscription.active
-);
+  const subscription = useAppSelector((state) => state.subscription.active);
 
   const isSubscribed = Boolean(
     user && // MUST HAVE
@@ -192,7 +191,7 @@ export default function ArticleDetailPage() {
               duration_value: sub.plan?.duration_value,
               duration_unit: sub.plan?.duration_unit,
               purchase_type: sub.purchase_type,
-              created_at:sub.created_at
+              created_at: sub.created_at,
             }),
           );
         }
@@ -492,21 +491,18 @@ export default function ArticleDetailPage() {
                   className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col hover:shadow-gray-400 hover:shadow-md"
                 >
                   <div className="h-60 lg:h-40 w-full relative bg-white">
-                    {post.image ? (
-                      <Image
-                        src={
-                          post.image.startsWith("https")
-                            ? post.image
-                            : `${postBaseUrl}/${post.image}`
-                        }
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                        sizes="300px"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center" />
-                    )}
+                    <SafeImage
+                      src={
+                        post.image?.startsWith("https")
+                          ? post.image
+                          : post.image
+                            ? `${postBaseUrl}/${post.image}`
+                            : undefined
+                      }
+                      alt={post.title}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
 
                   <div className="px-3 py-4 border-t border-gray-400">

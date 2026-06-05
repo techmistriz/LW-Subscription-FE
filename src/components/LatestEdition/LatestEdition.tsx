@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Magazine } from "@/types";
+import SafeImage from "../SafeImage/SafeImage";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 
@@ -29,7 +30,7 @@ export default function LatestEdition({ magazines }: Props) {
             className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center  hover:shadow-gray-400 hover:shadow-md cursor-pointer"
           >
             <div className="relative w-full aspect-3/4">
-              <Image
+              <SafeImage
                 src={
                   magazine.image
                     ? `${magazineBaseUrl}/${magazine.image}`

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getEditorial } from "./service";
 import Link from "next/link";
+import SafeImage from "../SafeImage/SafeImage";
 
 const imgUrl = process.env.NEXT_PUBLIC_EDITORIAL_IMAGE_URL || "";
 
@@ -30,13 +31,7 @@ async function NirmalaSitaraman() {
         <div className="flex gap-4">
           {/* Right Image */}
           <div className="w-24 h-24 relative shrink-0 overflow-hidden">
-            <Image
-              src={`${imgUrl}${data.image}`}
-              alt={data.name}
-              fill
-              sizes="96px"
-              className="object-cover"
-            />
+            <SafeImage src={imgUrl} alt="..." fill className="object-cover" />
           </div>
 
           {/* Left Content */}

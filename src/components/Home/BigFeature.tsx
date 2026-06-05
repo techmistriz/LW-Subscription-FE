@@ -1,20 +1,21 @@
 import Image from "next/image";
 import { Post } from "./service";
 import Link from "next/link";
+import SafeImage from "../SafeImage/SafeImage";
 
 const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
 
 export default function BigFeature({ post }: { post?: Post }) {
   if (!post) return null;
 
-  const imageUrl = post.image ? `${baseUrl}${post.image}` : "/placeholder.jpg";
+  const imageUrl = post.image ? `${baseUrl}${post.image}` : undefined;
 
   return (
     <div
       className="lg:col-span-6 relative overflow-hidden"
       style={{ height: "384px" }}
     >
-      <Image
+      <SafeImage
         src={imageUrl}
         alt={post.title || "Post image"}
         fill

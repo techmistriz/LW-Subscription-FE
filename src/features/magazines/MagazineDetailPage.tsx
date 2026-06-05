@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import RelatedPosts from "./RelatedPosts";
 import { stripInlineStyles } from "@/lib/utils/helper/toTitleCase";
 import LatestEdition from "@/components/LatestEdition/LatestEdition";
+import SafeImage from "@/components/SafeImage/SafeImage";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 
@@ -41,6 +42,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       ? stripInlineStyles(magazine.description)
       : "<p>Description not available.</p>";
 
+      console.log("magazinee", magazine)
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
       {/*----------------- Main magazine content -----------------*/}
@@ -49,11 +51,11 @@ export default async function MagazineDetailPage({ params }: Props) {
           {/*----------------- Magazine cover image -----------------*/}
           <div className="w-full sm:w-80 md:w-72 shrink-0 mb-4 lg:mb-0 md:mb-0">
             <div className="relative w-full aspect-3/4">
-              <Image
+              <SafeImage
                 src={
                   magazine.image
                     ? `${magazineBaseUrl}/${magazine.image}`
-                    : "/placeholder.jpg"
+                    : undefined
                 }
                 alt={magazine.title || "Magazine cover"}
                 fill

@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { getMagazines } from "@/lib/api/services/magazines";
@@ -12,6 +11,7 @@ import Banner from "@/components/Common/Banner";
 import YearFilter from "@/components/Common/YearFilter";
 import PageLoader from "@/components/Loader/PageLoader";
 import { useRouter, useSearchParams } from "next/navigation";
+import SafeImage from "@/components/SafeImage/SafeImage";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 
@@ -161,11 +161,11 @@ export default function MagazinesPage({
               >
                 {/*----------------- Magazine cover -----------------*/}
                 <div className="relative w-full aspect-3/4">
-                  <Image
+                  <SafeImage
                     src={
                       magazine.image
                         ? `${magazineBaseUrl}/${magazine.image}`
-                        : "/placeholder.jpg"
+                        : undefined
                     }
                     alt={magazine.title || "Magazine edition"}
                     fill

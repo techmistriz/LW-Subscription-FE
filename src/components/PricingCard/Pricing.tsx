@@ -162,10 +162,12 @@ export default function PricingCard() {
       if (!hasSubscription) {
         purchaseType = "NEW";
         apiResponse = await upgradePlan(selectedPlan.id);
+        console.log(apiResponse)
       } else if (isFreePlan && isExpired) {
         /* ---------------- CASE 2: FREE PLAN EXPIRED -> Upgrade ---------------- */
         purchaseType = "NEW";
         apiResponse = await upgradePlan(selectedPlan.id);
+        console.log(apiResponse)
       } else if (!isFreePlan && isExpired) {
         /* ---------------- CASE 3: PAID PLAN EXPIRED -> RENEW ---------------- */
         purchaseType = "RENEW";

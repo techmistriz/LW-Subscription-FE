@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import SafeImage from "../SafeImage/SafeImage";
 
 const postImageBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
@@ -26,11 +26,11 @@ export default function RelatedMagazineArticles({ articles }: Props) {
             href={`/${article.slug}`}
             className="relative w-full h-50 md:w-30 md:h-25 shrink-0 block"
           >
-            <Image
+            <SafeImage
               src={
                 article.image
                   ? `${postImageBaseUrl}/${article.image}`
-                  : "/placeholder.jpg"
+                  : undefined
               }
               alt={article.title || "Article thumbnail"}
               fill

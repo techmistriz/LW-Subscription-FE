@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SafeImage from "../SafeImage/SafeImage";
 
 interface Props {
   img?: string;
@@ -11,7 +11,7 @@ export default function EditorPickCard({ img, title, author }: Props) {
     <div className="bg-[#F8F8F8] border  border-gray-300 flex flex-col items-center transition-none hover:shadow-gray-400 hover:shadow-md cursor-pointer">
       <div className="h-40 w-full relative bg-white">
         {img ? (
-          <Image
+          <SafeImage
             src={img}
             alt={title}
             fill

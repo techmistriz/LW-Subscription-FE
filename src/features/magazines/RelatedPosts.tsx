@@ -1,25 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
 import { Article } from "@/types";
-import { useState } from "react";
+import SafeImage from "@/components/SafeImage/SafeImage";
+import Link from "next/link";
 
 const postsImgBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 function PostImage({ article }: { article: Article }) {
-  const [src, setSrc] = useState(
-    article.image ? `${postsImgBaseUrl}${article.image}` : "/default_img.png",
-  );
+  const src = article.image?.trim()
+    ? `${postsImgBaseUrl}${article.image}`
+    : undefined;
 
   return (
-    <Image
+    <SafeImage
       src={src}
       alt={article.title}
       fill
       sizes="(max-width:640px) 100vw, (max-width:768px) 50vw, (max-width:1024px) 33vw, 25vw"
       className="object-cover"
-      onError={() => setSrc("/placeholder.jpg")}
     />
   );
 }

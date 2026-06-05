@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import type { Magazine } from "@/types";
+import SafeImage from "../SafeImage/SafeImage";
 
-const magazineBaseUrl =
-  process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 
 type Props = {
   magazine: Magazine;
@@ -31,19 +30,13 @@ export default function LatestIssue({
         href={`/magazines/${magazine.slug}`}
         className="block relative w-full aspect-3/4"
       >
-        <Image
+        <SafeImage
           src={
-            magazine.image && magazineBaseUrl
-              ? `${magazineBaseUrl.replace(
-                  /\/$/,
-                  ""
-                )}/${magazine.image}`
-              : "/placeholder.jpg"
+            magazine.image?.trim() && magazineBaseUrl
+              ? `${magazineBaseUrl.replace(/\/$/, "")}/${magazine.image}`
+              : undefined
           }
-          alt={
-            magazine.title ||
-            "Latest magazine edition"
-          }
+          alt={magazine.title || "Latest magazine edition"}
           fill
           className="object-cover hover:shadow-md transition-shadow"
           sizes="300px"

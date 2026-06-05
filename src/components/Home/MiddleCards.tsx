@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Post } from "./service";
+import SafeImage from "../SafeImage/SafeImage";
+
 
 const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
 
@@ -12,7 +14,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
       {posts.map((post) => {
         const imageUrl = post.image
           ? `${baseUrl}/${post.image}`
-          : "/placeholder.jpg";
+          : undefined;
 
         return (
           <div
@@ -21,7 +23,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
             style={{ height: "188px" }}
           >
             {/* Image */}
-            <Image
+            <SafeImage
               src={imageUrl}
               alt={post.title || "Post image"}
               fill
