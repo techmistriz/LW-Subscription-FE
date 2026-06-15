@@ -21,6 +21,49 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           {/* LEFT */}
           <div className="lg:col-span-4">
+            <h1 className="text-[#c9060a] font-semibold text-[18px] mb-4">
+              CONTACT
+            </h1>
+            <div className="space-y-6 text-sm text-[#E2E2E2] mb-8">
+              <div>
+                <p className="font-semibold text-white">Bhupinder Kaur</p>
+                <p>Sr. Manager - Brand Innovation</p>
+
+                <a
+                  href="mailto:bhupinder@witnesslive.in"
+                  className="block hover:text-[#c9060a] transition"
+                >
+                  bhupinder@witnesslive.in
+                </a>
+
+                <a
+                  href="tel:+919654155065"
+                  className="hover:text-[#c9060a] transition"
+                >
+                  +91-9654155065
+                </a>
+              </div>
+
+              <div>
+                <p className="font-semibold text-white">Neelima Maheshwari</p>
+                <p>Sr. Manager - Brand Innovation</p>
+
+                <a
+                  href="mailto:neelima.maheshwari@witnesslive.in"
+                  className="block hover:text-[#c9060a] transition"
+                >
+                  neelima.maheshwari@witnesslive.in
+                </a>
+
+                <a
+                  href="tel:+918800841600"
+                  className="hover:text-[#c9060a] transition"
+                >
+                  +91-8800841600
+                </a>
+              </div>
+            </div>
+
             <Image
               src="https://lexwitness.com/wp-content/themes/lexwitness/images/logo-white.png"
               alt="Lex Witness"
@@ -29,16 +72,6 @@ const Footer = () => {
               className="mb-4 w-48 h-15 object-contain -ml-6"
               priority
             />
-
-            <h3 className="text-white text-[18px] font-semibold mb-2">
-              ABOUT <span className="text-[#c9060a]">WITNESS</span>
-            </h3>
-
-            <p className="text-sm leading-relaxed text-[#E2E2E2]">
-              For over 10 years, since its inception in 2009 as a monthly, Lex
-              Witness has become India’s most credible platform for the legal
-              luminaries to opine, comment and share their views. more...
-            </p>
 
             <p className="mt-4 text-sm text-[#E2E2E2]">Connect Us:</p>
 
@@ -97,11 +130,11 @@ const Footer = () => {
 
           {/* MIDDLE */}
           <div className="lg:col-span-4">
-            <h3 className="text-white font-semibold text-[18px] mb-4">
+            <h3 className="text-[#c9060a] font-semibold text-[18px] mb-4">
               THE LEX WITNESS SUMMITS LEGACY
             </h3>
 
-            <ul className="space-y-4 text-sm">
+            <ul className="space-y-6 text-sm">
               {[
                 [
                   "The Grand Masters – A Corporate Counsel Legal Best Practices Summit Series",
@@ -129,23 +162,19 @@ const Footer = () => {
                   "www.plcs.co.in",
                   "Mumbai",
                 ],
-              ].map(([title, link, country], i) => (
+              ].map(([title, link, cities], i) => (
                 <li key={i}>
-                  <p className="text-gray-200">{title}</p>
-                  <p className="text-[#c9060a] text-xs">
-                    <a
-                      href={`https://${link}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#c9060a] hover:underline"
-                    >
-                      {link}
-                    </a>
-                    <span className="text-[#E2E2E2]">
-                      {" "}
-                      | {country} | 8 Years & Counting
-                    </span>
-                  </p>
+                  <a
+                    href={`https://${link}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <p className="text-gray-200 font-semibold hover:text-[#c9060a] transition-colors">
+                      {title}
+                    </p>
+                  </a>
+                  <p className="text-xs text-[#E2E2E2] mt-1">{cities}</p>
                 </li>
               ))}
             </ul>
@@ -153,7 +182,7 @@ const Footer = () => {
 
           {/* RIGHT */}
           <div className="lg:col-span-4">
-            <h3 className="text-white font-semibold text-[18px] mb-4">
+            <h3 className="text-[#c9060a] font-semibold text-[18px] mb-4">
               EXPLORE FURTHER!
             </h3>
 
@@ -164,42 +193,44 @@ const Footer = () => {
               better.
             </p>
 
-            <h3 className="text-white font-semibold text-[18px] mb-4 mt-10">
+            {/* <h3 className="text-white font-semibold text-[18px] mb-4 mt-10">
               OTHER LINKS
-            </h3>
-            <div className="flex flex-col gap-2 text-sm">
-              <Link
-                href="/about"
-                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+            </h3> */}
+
+            <div className="grid grid-cols-2 gap-4 mt-6">
+              {/* <Link
+                href="/brand-deck"
+                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
-                About Us
-              </Link>
-              <Link
-                href="/contact"
-                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
-              >
-                Contact Us
-              </Link>
+                OUR BRAND DECK
+              </Link> */}
 
               <Link
-                href="/terms"
-                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+                href="/about"
+                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
-                Terms & Conditions
+                About Lex Witnes
               </Link>
 
               <Link
                 href="/privacy"
-                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
-                Privacy Policy
+                PRIVACY POLICY
+              </Link>
+
+              <Link
+                href="/terms"
+                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+              >
+                TERMS & CONDITIONS
               </Link>
 
               <Link
                 href="/get-involved"
-                className="text-[#E2E2E2] hover:text-[#c9060a] transition"
+                className="border border-[#c9060a] leading-5 rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
-                Get Involved
+                Get-Involved
               </Link>
             </div>
           </div>
