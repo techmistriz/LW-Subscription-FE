@@ -69,13 +69,13 @@ const Footer = () => {
               alt="Lex Witness"
               width={200}
               height={68}
-              className="mb-4 w-48 h-15 object-contain -ml-6"
+              className="mb-6 w-48 h-auto object-contain -ml-2 "
               priority
             />
 
-            <div className="text-sm text-[#E2E2E2] mb-4">
-              <p className="font-semibold text-white">Address:</p>
-              <p>Suite # B 1/6, LGF,</p>
+            <div className="text-sm text-[#E2E2E2] my-4">
+              {/* <p className="font-semibold text-white">Address:</p> */}
+              <p><span className="font-semibold text-white">Address:  </span>Suite # B 1/6, LGF,</p>
               <p>Hauz Khas, New Delhi - 110016</p>
             </div>
 
