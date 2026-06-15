@@ -73,6 +73,12 @@ const Footer = () => {
               priority
             />
 
+            <div className="text-sm text-[#E2E2E2] mb-4">
+              <p className="font-semibold text-white">Address:</p>
+              <p>Suite # B 1/6, LGF,</p>
+              <p>Hauz Khas, New Delhi - 110016</p>
+            </div>
+
             <p className="mt-4 text-sm text-[#E2E2E2]">Connect Us:</p>
 
             <div className="flex items-center gap-2.5 mt-3.5">
@@ -190,7 +196,7 @@ const Footer = () => {
               We at Lex Witness strategically assist firms in reaching out to
               the relevant audience sets through various knowledge sharing
               initiatives. Here are some more info decks for you to know us
-              better.
+              better :)
             </p>
 
             {/* <h3 className="text-white font-semibold text-[18px] mb-4 mt-10">
