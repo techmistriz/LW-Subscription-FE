@@ -153,17 +153,17 @@ const Popup = ({ onClose }: PopupProps) => {
           </div>
 
           {/* CTA */}
-          <div className="mt-10">
+          <div className="mt-6">
             <button
               onClick={handleRedirect}
               disabled={loading}
-              className="w-full md:w-fit px-4 py-3 md:py-3.5 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm md:text-base transition disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full md:w-fit px-4 py-3 md:py-3 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm md:text-base transition disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? "Redirecting..." : "Subscribe Now"}
             </button>
           </div>
           {/* CONTACT INFO */}
-          <div className="mt-6 border-t pt-4">
+          <div className="mt-4 border-t pt-4">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               Questions?
             </p>
