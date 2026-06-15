@@ -86,7 +86,7 @@ const Popup = ({ onClose }: PopupProps) => {
         {/* TOP SECTION */}
         <div className="flex flex-col md:flex-row">
           {/* LEFT IMAGE */}
-          <div className="flex items-center justify-center w-full p-4 border-b border-gray-100 md:w-5/12 bg-gradient-to-b from-gray-50 to-white md:p-12 md:border-b-0 md:border-r">
+          <div className="flex items-center justify-center w-full p-4 border-b border-gray-100 md:w-5/12 md:p-12 md:border-b-0 ">
             <Link
               href={`/magazines/${magazineSlug}`}
               onClick={onClose}
@@ -165,12 +165,12 @@ const Popup = ({ onClose }: PopupProps) => {
         </div>
 
         {/* BOTTOM CONTACT BAR */}
-        <div className="border-t border-gray-200 px-6 py-5 bg-gray-50">
-          <p className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-            Questions?
-          </p>
+        <div className="border-t border-gray-200 mx-10 px-6 py-5 ">
 
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+          <p className="text-center text-xs font-bold text-black uppercase tracking-wider ">
+            Questions?
+          </p>
             <a
               href="tel:7982771770"
               className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c9060a] transition"

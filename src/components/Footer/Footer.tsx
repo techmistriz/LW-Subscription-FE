@@ -43,47 +43,36 @@ const Footer = () => {
             <p className="mt-4 text-sm text-[#E2E2E2]">Connect Us:</p>
 
             <div className="flex items-center gap-2.5 mt-3.5">
-              {/* WhatsApp */}
               <a
                 href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="WhatsApp"
-                className="w-8 h-8 rounded-md bg-[#25D366] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+                className="w-8 h-8 rounded-md bg-[#4CAF7A] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaWhatsapp className="text-2xl" />
+                <FaWhatsapp className="text-sm" />
               </a>
 
-              {/* Phone */}
               <a
                 href="tel:+7982771770"
-                aria-label="Call Us"
-                className="w-8 h-8 rounded-md bg-[#ff6b35] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+                className="w-8 h-8 rounded-md bg-[#E89B72] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaPhoneAlt className="text-lg" />
+                <FaPhoneAlt className="text-xs" />
               </a>
 
-              {/* Email */}
               <a
                 href="mailto:info@witnesslive.in"
-                aria-label="Email Us"
-                className="w-8 h-8 rounded-md bg-[#EA4335] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+                className="w-8 h-8 rounded-md bg-[#D97A72] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaEnvelope className="text-lg" />
+                <FaEnvelope className="text-xs" />
               </a>
 
-              {/* LinkedIn */}
               <a
                 href="#"
-                // target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="w-8 h-8 rounded-md bg-[#0A66C2] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+                className="w-8 h-8 rounded-md bg-[#5C8FD6] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaLinkedinIn className="text-lg" />
+                <FaLinkedinIn className="text-xs" />
               </a>
             </div>
-
             {/* App Buttons */}
             {/* <div className="flex gap-3 mt-5 flex-wrap">
               <Image
