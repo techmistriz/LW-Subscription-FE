@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { usePathname } from "next/navigation";
 
-import RegisterModal from "../features/auth/PopupModal/Popup";
+import RegisterModal from "../features/PopupModal/Popup";
 
 import { useAppSelector } from "@/redux/store/hooks";
 

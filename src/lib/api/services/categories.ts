@@ -2,9 +2,22 @@ import { request } from "@/lib/api/request";
 import { Category } from "@/types";
 
 export async function getCategories(): Promise<Category[]> {
-  const response = await request<any>("GET", "/categories?is_show_in_menu=1");
+  const response = await request<any>(
+    "GET",
+    "/categories?is_show_in_menu=1"
+  );
 
-  if (!response?.status) return [];
+  console.log("CATEGORIES RESPONSE:", response);
+
+  if (response?.data?.status === false) {
+    console.error("❌ Categories API Error");
+    console.error("Message:", response.data.message);
+    console.error("Developer Message:", response.data.developer_message);
+    console.error("Code:", response.data.code);
+    console.error("Full Response:", response.data);
+
+    throw new Error(response.data.message);
+  }
 
   return response.data?.data ?? [];
 }

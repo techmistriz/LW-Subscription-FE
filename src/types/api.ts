@@ -23,6 +23,8 @@ export interface PaginationMeta {
 }
 
 export interface PaginatedResponse<T> {
+  message: string;
+  status: any;
   data: T[];
   meta: PaginationMeta;
 }

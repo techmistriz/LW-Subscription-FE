@@ -18,33 +18,33 @@ import { useAppSelector } from "@/redux/store/hooks";
 
 const benefits = [
   {
-    title: "Unlimited Access",
-    desc: "Read all articles across web and app without limits",
+    title: "Unlimited Digital Reading",
+    desc: "Access Lex Witness content anytime on desktop, tablet, or mobile.",
     icon: Globe,
   },
   {
-    title: "Weekly Magazine",
-    desc: "Get the latest print edition delivered to your doorstep",
+    title: "Print Magazine Delivery",
+    desc: "Get every issue delivered to your doorstep with paid plans.",
     icon: BookOpen,
   },
   {
-    title: "Premium Analysis",
-    desc: "Expert opinions and deep-dive editorial insights",
+    title: "Expert Legal Insights",
+    desc: "In-depth analysis covering law, policy, and business.",
     icon: Star,
   },
   {
-    title: "Daily News Brief",
-    desc: "Stay updated with concise daily summaries",
+    title: "12–36 Print Editions",
+    desc: "Receive up to 36 print editions depending on your plan.",
     icon: Newspaper,
   },
   {
-    title: "Early Access",
-    desc: "Read selected stories before they are publicly available",
+    title: "Flexible Subscription Options",
+    desc: "Choose from 1 month, 1 year, 2 year, or 3 year access.",
     icon: Clock,
   },
   {
-    title: "Archive Access",
-    desc: "Explore past editions and historical articles anytime",
+    title: "Trusted Industry Coverage",
+    desc: "Stay updated on developments shaping India's legal ecosystem.",
     icon: Layers,
   },
 ];
@@ -131,7 +131,7 @@ export default function SubscriptionPage() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid lg:grid-cols-2 gap-12 items-center">
         {/* LEFT IMAGE */}
         <div className="flex justify-center items-center">
-          <div className="relative w-64 sm:w-72 md:w-80 lg:w-80 aspect-[3/4] shadow-2xl overflow-hidden">
+          <div className="relative w-56 sm:w-64 md:w-72 lg:w-80 aspect-[3/4] shadow-2xl overflow-hidden">
             {(imageLoading || !singleMagazine?.image) && (
               <div className="absolute inset-0 z-20 flex items-center justify-center bg-gray-100">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#c9060a]" />
@@ -154,53 +154,79 @@ export default function SubscriptionPage() {
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="text-center lg:text-left flex flex-col justify-center h-full">
-          <h1 className="text-3xl sm:text-4xl lg:text-4xl text-[#c9060a] font-semibold mb-6">
-            Making Sense of India
-          </h1>
+     <div className="text-center lg:text-left flex flex-col justify-center h-full">
+  <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
+    Latest Issue
+  </span>
 
-          <p className="text-gray-600 mb-6 text-sm sm:text-base">
-            From breaking news to in-depth analysis, we bring clarity.
-          </p>
+  <Link
+    href={`/magazines/${singleMagazine?.slug}`}
+   className="mt-2 text-xl lg:text-2xl font-bold text-[#333] hover:text-[#c9060a] transition leading-snug max-w-[500px]"
+  >
+    {singleMagazine?.magazine_name}
+  </Link>
 
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-[#333]">
-            How Delhi should deal with the reset in Dhaka
-          </h2>
+  <p className="mt-3 text-gray-600 text-sm lg:text-base max-w-lg">
+  Join thousands of legal professionals, business leaders, and policymakers who rely on Lex Witness for trusted insights.
+</p>
 
-          <p className="mb-8 text-sm sm:text-base text-gray-700 leading-relaxed">
-            The new Tarique Rahman regime in Dhaka gives India a fresh chance to
-            resolve longstanding disputes with its neighbour.
-          </p>
+  <div className="mt-6">
+    <h1 className="text-3xl lg:text34xl font-black text-[#333] leading-tight">
+      Your <span className="text-[#c9060a]">1st Month</span> is on Us.
+    </h1>
 
-          {/* BUTTONS */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <button
-              disabled={isAuthenticated}
-              onClick={() => router.push("/register?plan=1")}
-              className={`text-sm px-6 py-3 font-semibold transition cursor-pointer ${
-                isAuthenticated
-                  ? "bg-gray-500 text-white cursor-not-allowed opacity-60"
-                  : "bg-[#c9060a] text-white hover:bg-[#333]"
-              }`}
-            >
-              Your First Month is on Us
-            </button>
+    <div className="mt-6 space-y-4">
+      <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
+        <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+          ✓
+        </span>
+        Full access to Lex Witness portal
+      </p>
 
-            <button
-              onClick={() => {
-                document.getElementById("pricing")?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }}
-              className="border text-sm border-gray-300 text-[#333] px-6 py-3 font-semibold shadow-md hover:shadow-lg transition cursor-pointer"
-            >
-              {isAuthenticated
-                ? "Choose your Upgrade Plan"
-                : "Choose your Subscription Plan"}
-            </button>
-          </div>
-        </div>
+      <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
+        <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+          ✓
+        </span>
+        No card details required
+      </p>
+
+      <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
+        <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+          ✓
+        </span>
+        Upgrade or Cancel anytime
+      </p>
+    </div>
+  </div>
+
+  <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
+    <button
+      disabled={isAuthenticated}
+      onClick={() => router.push("/register?plan=1")}
+      className={`text-sm px-6 py-3 font-semibold transition cursor-pointer ${
+        isAuthenticated
+          ? "bg-gray-500 text-white cursor-not-allowed opacity-60"
+          : "bg-[#c9060a] text-white hover:bg-[#333]"
+      }`}
+    >
+      Your First Month is on Us
+    </button>
+
+    <button
+      onClick={() => {
+        document.getElementById("pricing")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }}
+      className="border border-gray-300 text-[#333] px-6 py-3 text-sm font-semibold hover:bg-gray-50 cursor-pointer"
+    >
+      {isAuthenticated
+        ? "Choose your Upgrade Plan"
+        : "Choose your Subscription Plan"}
+    </button>
+  </div>
+</div>
       </section>
       {/*----------------- LATEST EDITIONS -----------------*/}
       {latestFive.length > 0 && (

@@ -37,6 +37,7 @@ export default function MagazinesPage({
   const [yearOpen, setYearOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
+  const [error, setError] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   // const searchParams = useSearchParams();
@@ -46,13 +47,24 @@ export default function MagazinesPage({
   const fetchMagazines = useCallback(
     async (year?: number, pageNumber: number = 1) => {
       setLoading(true);
+
       try {
         const result = await getMagazines(year, pageNumber);
+
+        if (result?.status === false) {
+          throw new Error(result?.message || "Failed to load magazines");
+        }
+
+        setError("");
         setMagazines(result.data ?? []);
+
         setLastPage(result.meta?.paging?.last_page ?? 1);
         setPage(result.meta?.paging?.current_page ?? 1);
-      } catch (error) {
-        console.error("Failed to load magazines:", error);
+      } catch (err: any) {
+        console.error("Failed to load magazines:", err);
+
+        setError(err.message || "Something went wrong");
+
         setMagazines([]);
         setLastPage(1);
         setPage(1);
@@ -144,13 +156,10 @@ export default function MagazinesPage({
             <div className="col-span-full flex justify-center py-16">
               <PageLoader />
             </div>
-          ) : magazines.length === 0 ? (
-            /*----------------- Empty state -----------------*/
-            <p className="col-span-full text-center text-[#333333] py-12">
-              {selectedYearLabel
-                ? `No magazines found for ${selectedYearLabel}`
-                : "No magazines found"}
-            </p>
+          ) : error ? (
+            <div className="col-span-full text-center py-12 text-red-600">
+              {error}
+            </div>
           ) : (
             /*----------------- Magazines list -----------------*/
             magazines.map((magazine) => (

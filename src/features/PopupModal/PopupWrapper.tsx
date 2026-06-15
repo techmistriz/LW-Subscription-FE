@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import RegisterModal from "./Popup";
+import PopupModal from "./Popup";
 
 /*----------------- REDUX -----------------*/
 import { useAppSelector } from "@/redux/store/hooks";
@@ -27,7 +27,7 @@ const PopupWrapper = () => {
 
   if (!showModal) return null;
 
-  return <RegisterModal onClose={() => setShowModal(false)} />;
+  return <PopupModal onClose={() => setShowModal(false)} />;
 };
 
 export default PopupWrapper;

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { FaWhatsapp, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
 import { Magazine } from "@/types";
 import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
@@ -72,12 +73,12 @@ const Popup = ({ onClose }: PopupProps) => {
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-center justify-center p-4 md:p-0">
-      <div className="relative flex flex-col w-full max-w-4xl overflow-y-auto bg-white border border-gray-100 shadow-2xl md:flex-row md:min-h-[520px] max-h-[95vh] md:overflow-visible">
+      <div className="relative flex flex-col w-full max-w-4xl overflow-y-auto bg-white border border-gray-100 shadow-2xl rounded-lg md:flex-row max-h-[90vh] md:max-h-none">
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute z-10 flex items-center justify-center w-9 h-9 text-[#333] transition bg-gray-100 rounded-full cursor-pointer top-4 right-4 hover:bg-[#c2b9b9]"
+          className="absolute z-10 flex items-center justify-center w-10 h-10 md:w-9 md:h-9 text-[#333] transition bg-gray-100 rounded-full cursor-pointer top-4 right-4 hover:bg-[#c2b9b9]"
         >
           <span className="text-2xl leading-none">&times;</span>
         </button>
@@ -87,7 +88,7 @@ const Popup = ({ onClose }: PopupProps) => {
           <Link
             href={`/magazines/${magazineSlug}`}
             onClick={onClose}
-            className="group relative w-[65%] md:w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
+            className="group relative w-[45%] sm:w-[40%] md:w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
           >
             {/* SKELETON */}
             {imageLoading && (
@@ -116,27 +117,39 @@ const Popup = ({ onClose }: PopupProps) => {
           <Link
             href={`/magazines/${magazineSlug}`}
             onClick={onClose}
-            className="mt-2 text-xl font-bold text-[#333] transition hover:text-[#c9060a] md:text-2xl"
+            className="mt-2 max-w-[370px] text-lg md:text-2xl font-bold text-[#333] transition hover:text-[#c9060a] leading-snug break-words"
           >
             {magazineName}
           </Link>
 
           {/* HEADLINE */}
-          <div className="mt-8">
+          <div className="mt-5 md:mt-8">
             <h2 className="text-2xl font-black leading-tight text-[#333] md:text-xl">
-              Start Your <span className="text-[#c9060a]">Free Month</span> Now
+              Your <span className="text-[#c9060a]">1st Month</span> is on Us.
             </h2>
 
             <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
               <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
                 ✓
               </span>
-              Full access to all premium insights
+              Full access to Lex Witness portal
+            </p>
+            <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
+              <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                ✓
+              </span>
+              No card details required
+            </p>
+            <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
+              <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                ✓
+              </span>
+              Upgrade or Cancel anytime
             </p>
 
-            <p className="text-[#333]/50 mt-1 text-xs italic">
+            {/* <p className="text-[#333]/50 mt-1 text-xs italic">
               No credit card required
-            </p>
+            </p> */}
           </div>
 
           {/* CTA */}
@@ -144,10 +157,50 @@ const Popup = ({ onClose }: PopupProps) => {
             <button
               onClick={handleRedirect}
               disabled={loading}
-              className="w-fit px-4 py-3 md:py-3.5 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm md:text-base transition disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full md:w-fit px-4 py-3 md:py-3.5 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm md:text-base transition disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? "Redirecting..." : "Subscribe Now"}
             </button>
+          </div>
+          {/* CONTACT INFO */}
+          <div className="mt-6 border-t pt-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              Questions?
+            </p>
+
+            <div className="flex flex-row md:flex-col flex-wrap gap-4 text-sm">
+              {/* Phone */}
+              <a
+                href="tel:7982771770"
+                className="flex items-center gap-2 text-[#333] hover:text-[#c9060a] transition"
+                aria-label="Call us"
+              >
+                <FaPhoneAlt className="text-[#c9060a] text-lg" />
+                <span className="hidden md:inline">+91 7982771770</span>
+              </a>
+
+              {/* Email */}
+              <a
+                href="mailto:info@witnesslive.in"
+                className="flex items-center gap-2 text-[#333] hover:text-[#c9060a] transition"
+                aria-label="Email us"
+              >
+                <FaEnvelope className="text-[#c9060a] text-lg" />
+                <span className="hidden md:inline">info@witnesslive.in</span>
+              </a>
+
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#333] hover:text-[#25D366] transition"
+                aria-label="Chat on WhatsApp"
+              >
+                <FaWhatsapp className="text-[#25D366] text-xl" />
+                <span className="hidden md:inline">Chat on WhatsApp</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
