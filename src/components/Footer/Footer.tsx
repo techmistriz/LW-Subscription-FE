@@ -24,7 +24,7 @@ const Footer = () => {
             <h1 className="text-[#c9060a] font-semibold text-[18px] mb-4">
               CONTACT
             </h1>
-            <div className="space-y-6 text-sm text-[#E2E2E2] mb-8">
+            <div className="space-y-6 text-sm text-[#E2E2E2] mb-6">
               <div>
                 <p className="font-semibold text-white">Bhupinder Kaur</p>
                 <p>Sr. Manager - Brand Innovation</p>
