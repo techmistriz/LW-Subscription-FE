@@ -95,31 +95,24 @@
 // design-3
 "use client";
 
-import {
-  FaFacebookF,
-  FaLinkedinIn,
-  FaWhatsapp,
-} from "react-icons/fa";
-
+import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 interface Props {
-  title: string;
+  title?: string;
 }
 
-export default function SocialShare({
-  title,
-}: Props) {
+export default function SocialShare({ title = "" }: Props) {
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.href
       : "";
 
   const socialClass =
-    "relative group w-9 h-6 flex items-center justify-center text-white   shadow-sm";
+    "relative group w-9 h-7 flex items-center justify-center transition-all duration-200 hover:opacity-80";
 
   return (
-    <div className="flex items-center gap-2 pt-2">
+    <div className="flex items-center gap-2">
       {/* LinkedIn */}
       <a
         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
@@ -128,11 +121,9 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on LinkedIn"
-        className={`${socialClass} bg-[#0A66C2]   shadow-[0_2px_0_0_#084482] `}
+        className={`${socialClass} bg-[#0A66C2]`}
       >
-        <FaLinkedinIn className="w-4 h-4 z-10" />
-
-        <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <FaLinkedinIn className="w-4 h-4 text-white" />
       </a>
 
       {/* Facebook */}
@@ -143,28 +134,22 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on Facebook"
-        className={`${socialClass} bg-[#1877F2] `}
+        className={`${socialClass} bg-[#1877F2]`}
       >
-        <FaFacebookF className="w-4 h-4 z-10" />
-
-        <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <FaFacebookF className="w-4 h-4 text-white" />
       </a>
 
       {/* X / Twitter */}
       <a
         href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
           shareUrl,
-        )}&text=${encodeURIComponent(
-          title,
-        )}`}
+        )}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on X"
-        className={`${socialClass} bg-black `}
+        className={`${socialClass} bg-black`}
       >
-        <FaXTwitter className="w-4 h-4 z-10" />
-
-        <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <FaXTwitter className="w-4 h-4 text-white" />
       </a>
 
       {/* WhatsApp */}
@@ -175,11 +160,9 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on WhatsApp"
-        className={`${socialClass} bg-[#25D366] `}
+        className={`${socialClass} bg-[#25D366]`}
       >
-        <FaWhatsapp className="w-4 h-4 z-10" />
-
-        <span className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <FaWhatsapp className="w-4 h-4 text-white" />
       </a>
     </div>
   );

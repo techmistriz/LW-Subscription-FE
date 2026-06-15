@@ -73,13 +73,12 @@ const Popup = ({ onClose }: PopupProps) => {
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
-      <div className="relative w-full max-w-4xl overflow-hidden bg-white border border-gray-100 shadow-2xl ">
+    <div className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-white border border-gray-100 shadow-2xl rounded-lg md:rounded-none">
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute z-20 flex items-center justify-center w-10 h-10 text-[#333] bg-gray-100 rounded-full top-4 right-4 hover:bg-gray-200 cursor-pointer"
-        >
+className="absolute z-20 flex items-center justify-center w-8 h-8 md:w-10 md:h-10 text-[#333] bg-gray-100 rounded-full top-3 right-3 md:top-4 md:right-4 hover:bg-gray-200 cursor-pointer"        >
           <span className="text-2xl leading-none">&times;</span>
         </button>
 
@@ -90,7 +89,7 @@ const Popup = ({ onClose }: PopupProps) => {
             <Link
               href={`/magazines/${magazineSlug}`}
               onClick={onClose}
-              className="group relative w-[45%] sm:w-[40%] md:w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
+             className="group relative w-[55%] sm:w-[45%] md:w-full aspect-[3/4] overflow-hidden shadow-md hover:shadow-xl transition"
             >
               {imageLoading && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
@@ -110,7 +109,7 @@ const Popup = ({ onClose }: PopupProps) => {
           </div>
 
           {/* RIGHT CONTENT */}
-          <div className="flex flex-col justify-center w-full p-6 md:w-7/12 md:p-14">
+         <div className="flex flex-col justify-center w-full p-5 md:w-7/12 md:p-14">
             <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
               Latest Issue
             </span>
@@ -124,7 +123,7 @@ const Popup = ({ onClose }: PopupProps) => {
             </Link>
 
             <div className="mt-6">
-              <h2 className="text-2xl font-black text-[#333]">
+             <h2 className="text-xl md:text-2xl font-black text-[#333]">
                 Your <span className="text-[#c9060a]">1st Month</span> is on Us.
               </h2>
 
@@ -156,8 +155,7 @@ const Popup = ({ onClose }: PopupProps) => {
               <button
                 onClick={handleRedirect}
                 disabled={loading}
-                className="w-full md:w-fit px-5 py-3 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm transition disabled:opacity-70 cursor-pointer"
-              >
+className="w-full sm:w-full md:w-fit px-5 py-3 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm transition disabled:opacity-70 cursor-pointer"              >
                 {loading ? "Redirecting..." : "Subscribe Now"}
               </button>
             </div>
@@ -165,9 +163,9 @@ const Popup = ({ onClose }: PopupProps) => {
         </div>
 
         {/* BOTTOM CONTACT BAR */}
-        <div className="border-t border-gray-200 mx-10 px-6 py-5 ">
+        <div className="border-t border-gray-200 mx-4 md:mx-10 px-4 md:px-6 py-5">
 
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+         <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-10">
           <p className="text-center text-xs font-bold text-black uppercase tracking-wider ">
             Questions?
           </p>
