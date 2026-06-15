@@ -128,20 +128,20 @@ const Popup = ({ onClose }: PopupProps) => {
               Your <span className="text-[#c9060a]">1st Month</span> is on Us.
             </h2>
 
-            <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
-              <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+            <p className="text-[#333]/70 mt-3 italic flex items-center gap-2 text-sm">
+              <span className="w-4 h-4 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
                 ✓
               </span>
               Full access to Lex Witness portal
             </p>
-            <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
-              <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+            <p className="text-[#333]/70 mt-2 italic flex items-center gap-2 text-sm">
+              <span className="w-4 h-4 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
                 ✓
               </span>
               No card details required
             </p>
-            <p className="text-[#333]/70 mt-3 flex items-center gap-2 text-sm">
-              <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+            <p className="text-[#333]/70 mt-2 italic flex items-center gap-2 text-sm">
+              <span className="w-4 h-4 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
                 ✓
               </span>
               Upgrade or Cancel anytime
