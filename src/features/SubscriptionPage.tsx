@@ -154,79 +154,80 @@ export default function SubscriptionPage() {
         </div>
 
         {/* RIGHT CONTENT */}
-     <div className="text-center lg:text-left flex flex-col justify-center h-full">
-  <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
-    Latest Issue
-  </span>
+        <div className="text-center lg:text-left flex flex-col justify-center h-full">
+          <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
+            Latest Issue
+          </span>
 
-  <Link
-    href={`/magazines/${singleMagazine?.slug}`}
-   className="mt-2 text-xl lg:text-2xl font-bold text-[#333] hover:text-[#c9060a] transition leading-snug max-w-[500px]"
-  >
-    {singleMagazine?.magazine_name}
-  </Link>
+          <Link
+            href={`/magazines/${singleMagazine?.slug}`}
+            className="mt-2 text-xl lg:text-2xl font-bold text-[#333] hover:text-[#c9060a] transition leading-snug max-w-[500px]"
+          >
+            {singleMagazine?.magazine_name}
+          </Link>
 
-  <p className="mt-3 text-gray-600 text-sm lg:text-base max-w-lg">
-  Join thousands of legal professionals, business leaders, and policymakers who rely on Lex Witness for trusted insights.
-</p>
+          <p className="mt-3 text-gray-600 text-sm lg:text-base max-w-lg">
+            Join thousands of legal professionals, business leaders, and
+            policymakers who rely on Lex Witness for trusted insights.
+          </p>
 
-  <div className="mt-6">
-    <h1 className="text-3xl lg:text34xl font-black text-[#333] leading-tight">
-      Your <span className="text-[#c9060a]">1st Month</span> is on Us.
-    </h1>
+          <div className="mt-6">
+            <h1 className="text-3xl lg:text34xl font-black text-[#333] leading-tight">
+              Your <span className="text-[#c9060a]">1st Month</span> is on Us.
+            </h1>
 
-    <div className="mt-6 space-y-4">
-      <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
-        <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
-          ✓
-        </span>
-        Full access to Lex Witness portal
-      </p>
+            <div className="mt-6 space-y-4">
+              <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
+                <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                  ✓
+                </span>
+                Full access to Lex Witness portal
+              </p>
 
-      <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
-        <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
-          ✓
-        </span>
-        No card details required
-      </p>
+              <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
+                <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                  ✓
+                </span>
+                No card details required
+              </p>
 
-      <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
-        <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
-          ✓
-        </span>
-        Upgrade or Cancel anytime
-      </p>
-    </div>
-  </div>
+              <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
+                <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                  ✓
+                </span>
+                Upgrade or Cancel anytime
+              </p>
+            </div>
+          </div>
 
-  <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
-    <button
-      disabled={isAuthenticated}
-      onClick={() => router.push("/register?plan=1")}
-      className={`text-sm px-6 py-3 font-semibold transition cursor-pointer ${
-        isAuthenticated
-          ? "bg-gray-500 text-white cursor-not-allowed opacity-60"
-          : "bg-[#c9060a] text-white hover:bg-[#333]"
-      }`}
-    >
-      Your First Month is on Us
-    </button>
+          <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center lg:justify-start">
+            <button
+              disabled={isAuthenticated}
+              onClick={() => router.push("/register?plan=1")}
+              className={`text-sm px-6 py-3 font-semibold transition cursor-pointer ${
+                isAuthenticated
+                  ? "bg-gray-500 text-white cursor-not-allowed opacity-60"
+                  : "bg-[#c9060a] text-white hover:bg-[#333]"
+              }`}
+            >
+              Start First Month is on Us
+            </button>
 
-    <button
-      onClick={() => {
-        document.getElementById("pricing")?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }}
-      className="border border-gray-300 text-[#333] px-6 py-3 text-sm font-semibold hover:bg-gray-50 cursor-pointer"
-    >
-      {isAuthenticated
-        ? "Choose your Upgrade Plan"
-        : "Choose your Subscription Plan"}
-    </button>
-  </div>
-</div>
+            <button
+              onClick={() => {
+                document.getElementById("pricing")?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+              className="border border-gray-300 text-[#333] px-6 py-3 text-sm font-semibold hover:bg-gray-50 cursor-pointer"
+            >
+              {isAuthenticated
+                ? "Choose your Upgrade Plan"
+                : "Choose your Subscription Plan"}
+            </button>
+          </div>
+        </div>
       </section>
       {/*----------------- LATEST EDITIONS -----------------*/}
       {latestFive.length > 0 && (

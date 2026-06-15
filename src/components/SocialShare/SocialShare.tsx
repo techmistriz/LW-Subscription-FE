@@ -116,7 +116,7 @@ export default function SocialShare({
       : "";
 
   const socialClass =
-    "relative group w-9 h-6 flex items-center justify-center text-white overflow-hidden transition-all duration-300 hover:-translate-y-0.5 shadow-sm";
+    "relative group w-9 h-6 flex items-center justify-center text-white   shadow-sm";
 
   return (
     <div className="flex items-center gap-2 pt-2">
@@ -128,7 +128,7 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on LinkedIn"
-        className={`${socialClass} bg-[#0A66C2] rounded-md shadow-[0_2px_0_0_#084482] hover:shadow-[0_1px_0_0_#084482] active:translate-y-[1px] active:shadow-[0_1px_0_0_#084482]`}
+        className={`${socialClass} bg-[#0A66C2]   shadow-[0_2px_0_0_#084482] `}
       >
         <FaLinkedinIn className="w-4 h-4 z-10" />
 
@@ -143,7 +143,7 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on Facebook"
-        className={`${socialClass} bg-[#1877F2] rounded-md shadow-[0_2px_0_0_#1361c4] hover:shadow-[0_1px_0_0_#1361c4] active:translate-y-[1px] active:shadow-[0_1px_0_0_#1361c4]`}
+        className={`${socialClass} bg-[#1877F2] `}
       >
         <FaFacebookF className="w-4 h-4 z-10" />
 
@@ -160,7 +160,7 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on X"
-        className={`${socialClass} bg-black rounded-md shadow-[0_2px_0_0_#1a1a1a] hover:shadow-[0_1px_0_0_#1a1a1a] active:translate-y-[1px] active:shadow-[0_1px_0_0_#1a1a1a]`}
+        className={`${socialClass} bg-black `}
       >
         <FaXTwitter className="w-4 h-4 z-10" />
 
@@ -175,7 +175,7 @@ export default function SocialShare({
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on WhatsApp"
-        className={`${socialClass} bg-[#25D366] rounded-md shadow-[0_2px_0_0_#1da15a] hover:shadow-[0_1px_0_0_#1da15a] active:translate-y-[1px] active:shadow-[0_1px_0_0_#1da15a]`}
+        className={`${socialClass} bg-[#25D366] `}
       >
         <FaWhatsapp className="w-4 h-4 z-10" />
 

@@ -293,8 +293,8 @@ export default function PricingCard() {
 
           <p className="text-gray-500 mt-2 text-sm">
             {isAuthenticated
-              ? "Select a paid plan to unlock all premium features"
-              : "Flexible pricing built for professionals"}
+              ? "More the Merrier. We Value Your Readership."
+              : "More the Merrier. We Value Your Readership."}
           </p>
 
           <div className="w-20 h-1 bg-[#c9060a] mx-auto mt-5 rounded-full" />

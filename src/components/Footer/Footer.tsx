@@ -2,6 +2,12 @@ import React from "react";
 import Image from "next/image";
 import { Linkedin } from "lucide-react";
 import Link from "next/link";
+import {
+  FaLinkedinIn,
+  FaWhatsapp,
+  FaPhoneAlt,
+  FaEnvelope,
+} from "react-icons/fa";
 
 const Footer = () => {
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -34,39 +40,48 @@ const Footer = () => {
               luminaries to opine, comment and share their views. more...
             </p>
 
-            <p className="mt-4 text-sm">Connect Us:</p>
+            <p className="mt-4 text-sm text-[#E2E2E2]">Connect Us:</p>
 
-            {/* Social */}
-            <div className="flex lg:mt-2 gap-3 items-center">
+            <div className="flex items-center gap-2.5 mt-3.5">
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="w-8 h-8 rounded-md bg-[#25D366] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+              >
+                <FaWhatsapp className="text-2xl" />
+              </a>
+
+              {/* Phone */}
+              <a
+                href="tel:+7982771770"
+                aria-label="Call Us"
+                className="w-8 h-8 rounded-md bg-[#ff6b35] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+              >
+                <FaPhoneAlt className="text-lg" />
+              </a>
+
+              {/* Email */}
+              <a
+                href="mailto:info@witnesslive.in"
+                aria-label="Email Us"
+                className="w-8 h-8 rounded-md bg-[#EA4335] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
+              >
+                <FaEnvelope className="text-lg" />
+              </a>
+
               {/* LinkedIn */}
               <a
                 href="#"
                 // target="_blank"
                 rel="noopener noreferrer"
-                className="relative group w-8 h-6 flex items-center justify-center border border-[#fff] text-white bg-[#0A66C2] shadow-md transition-transform hover:scale-105"
+                aria-label="LinkedIn"
+                className="w-8 h-8 rounded-md bg-[#0A66C2] flex items-center justify-center text-white transition-all duration-300  hover:brightness-110 shadow-xs"
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
-                </svg>
+                <FaLinkedinIn className="text-lg" />
               </a>
-
-              {/* Email Icon */}
-              <a
-                // href="mailto:info@lexwitness.com"
-                href="#"
-                className="relative  group w-8 h-6  flex items-center justify-center border  text-white  shadow-md transition-transform hover:scale-105"
-              >
-                ✉
-              </a>
-
-              {/* Email Text */}
-              {/* <span className="text-sm text-[#E2E2E2]">
-                info@lexwitness.com
-              </span> */}
             </div>
 
             {/* App Buttons */}
@@ -102,24 +117,45 @@ const Footer = () => {
                 [
                   "The Grand Masters – A Corporate Counsel Legal Best Practices Summit Series",
                   "www.grandmasters.in",
+                  "New Delhi, Mumbai, Bengaluru, Chennai, Hyderabad, Ahmedabad and Pune",
                 ],
-                ["The Real Estate & Construction Legal Summit", "www.rcls.in"],
+                [
+                  "The Real Estate & Construction Legal Summit",
+                  "www.rcls.in",
+                  "New Delhi",
+                ],
                 [
                   "The Information Technology Legal Summit",
                   "www.itlegalsummit.com",
+                  "Bengaluru",
                 ],
-                ["The Banking & Finance Legal Summit", "www.bfls.in"],
+                ["The Banking & Finance Legal Summit", "www.bfls.in", "Mumbai"],
                 [
                   "The Media, Advertising and Entertainment Legal Summit",
                   "www.maels.in",
+                  "Mumbai",
                 ],
-                ["The Pharma Legal & Compliance Summit", "www.plcs.co.in"],
-              ].map(([title, link], i) => (
+                [
+                  "The Pharma Legal & Compliance Summit",
+                  "www.plcs.co.in",
+                  "Mumbai",
+                ],
+              ].map(([title, link, country], i) => (
                 <li key={i}>
                   <p className="text-gray-200">{title}</p>
                   <p className="text-[#c9060a] text-xs">
-                    {link}{" "}
-                    <span className="text-[#E2E2E2]">| 8 Years & Counting</span>
+                    <a
+                      href={`https://${link}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#c9060a] hover:underline"
+                    >
+                      {link}
+                    </a>
+                    <span className="text-[#E2E2E2]">
+                      {" "}
+                      | {country} | 8 Years & Counting
+                    </span>
                   </p>
                 </li>
               ))}
