@@ -210,7 +210,7 @@ export default function SubscriptionPage() {
                   : "bg-[#c9060a] text-white hover:bg-[#333]"
               }`}
             >
-              Start First Month is on Us
+              Start First Month with Us
             </button>
 
             <button

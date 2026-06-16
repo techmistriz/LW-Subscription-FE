@@ -114,35 +114,33 @@ export function useRegisterForm() {
     }
   };
 
-  const handleSendOtp = async () => {
-    if (form.contact.length !== 10) {
-      return toast.error("Enter valid number");
-    }
+const handleSendOtp = async () => {
+  if (!form.email || !form.contact) {
+    return toast.error("Please enter email and mobile number");
+  }
 
-    try {
-      const res = await sendOtp(form.contact);
-      if (!res?.status) throw new Error(res?.message);
+  if (form.contact.length !== 10) {
+    return toast.error("Enter valid number");
+  }
 
-      setIsOtpSent(true);
-      setOtpTimer(60);
-      // toast.success("OTP sent");
+  try {
+    const res = await sendOtp({
+      contact: form.contact,
+      email: form.email,
+    });
 
-      const otp = res?.data?.otp || res?.otp;
+    if (!res?.status) throw new Error(res?.message);
 
-      /* ---------------- DEMO OTP SHOW ---------------- */
-      const isDemoMode = process.env.NEXT_PUBLIC_SHOW_DEMO_OTP === "true";
+    setIsOtpSent(true);
+    setOtpTimer(60);
 
-      if (otp && isDemoMode) {
-        console.log("OTP:", otp);
+    // ✅ OTP SENT TOAST
+    toast.success("OTP sent successfully");
+  } catch (err: any) {
+    toast.error(err.message || "Failed to send OTP");
+  }
+};
 
-        toast.success(`Demo OTP: ${otp}`, {
-          duration: 10000,
-        });
-      }
-    } catch (err: any) {
-      toast.error(err.message);
-    }
-  };
 
   const cancelPendingPayment = async () => {
     try {

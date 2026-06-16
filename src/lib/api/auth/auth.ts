@@ -55,11 +55,9 @@ export async function registerUser(
 }
 
 /*----------------- SEND OTP -----------------*/
-export async function sendOtp(contact: string) {
+export async function sendOtp(data: { contact: string; email: string }) {
   try {
-    const res = await axiosInstance.post("/auth/send-otp", {
-      contact,
-    });
+    const res = await axiosInstance.post("/auth/send-otp", data);
 
     return res.data;
   } catch (error: any) {

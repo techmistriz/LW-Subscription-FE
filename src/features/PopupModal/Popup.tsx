@@ -166,9 +166,9 @@ className="w-full sm:w-full md:w-fit px-5 py-3 bg-[#c9060a] hover:bg-[#333] text
         <div className="border-t border-gray-200 mx-4 md:mx-10 px-4 md:px-6 py-5">
 
          <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-10">
-          <p className="text-center text-xs font-bold text-black uppercase tracking-wider ">
+          {/* <p className="text-center text-xs font-bold text-black uppercase tracking-wider ">
             Questions?
-          </p>
+          </p> */}
             <a
               href="tel:7982771770"
               className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c9060a] transition"

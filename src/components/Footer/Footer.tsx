@@ -88,7 +88,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="w-8 h-8 rounded-md bg-[#4CAF7A] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaWhatsapp className="text-sm" />
+                <FaWhatsapp className="lg" />
               </a>
 
               <a
@@ -137,7 +137,7 @@ const Footer = () => {
           {/* MIDDLE */}
           <div className="lg:col-span-4">
             <h3 className="text-[#c9060a] font-semibold text-[18px] mb-4">
-              THE LEX WITNESS SUMMITS LEGACY
+              THE LEX WITNESS SUMMITS LEGACY - 10 YEARS & COUNTING!
             </h3>
 
             <ul className="space-y-6 text-sm">
@@ -248,6 +248,7 @@ const Footer = () => {
             Copyright © {year} Lex Witness – India’s 1st Magazine On Legal &
             Corporate Affairs
           </p>
+          {"|"}
           <p>Rights Of Admission Reserved</p>
         </div>
       </div>

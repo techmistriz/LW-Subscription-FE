@@ -29,7 +29,7 @@ export default function OTPInput({
 
       {/* CONTACT INPUT */}
       {!isOtpSent && (
-        <div className="flex gap-2">
+       <div className="flex flex-col sm:flex-row gap-2">
           <input
             name="contact"
             value={contact}
@@ -42,7 +42,7 @@ export default function OTPInput({
             type="button"
             onClick={onSendOtp}
             disabled={otpTimer > 0}
-            className={`px-3 py-1 rounded-md text-[10px] font-bold uppercase whitespace-nowrap transition-all ${
+            className={`px-3 py-3 rounded-md text-[10px] font-bold uppercase whitespace-nowrap transition-all ${
               otpTimer > 0
                 ? "bg-gray-300 cursor-not-allowed text-gray-600"
                 : "bg-[#c9060a] text-white cursor-pointer"

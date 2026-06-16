@@ -109,7 +109,7 @@ export default function SocialShare({ title = "" }: Props) {
       : "";
 
   const socialClass =
-    "relative group w-9 h-7 flex items-center justify-center transition-all duration-200 hover:opacity-80";
+    "relative group w-9 h-6 flex items-center justify-center transition-all duration-200 hover:opacity-80";
 
   return (
     <div className="flex items-center gap-2">
