@@ -1,6 +1,8 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
-import { Linkedin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
 import {
   FaLinkedinIn,
@@ -8,6 +10,7 @@ import {
   FaPhoneAlt,
   FaEnvelope,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const Footer = () => {
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -75,12 +78,15 @@ const Footer = () => {
 
             <div className="text-sm text-[#E2E2E2] my-4">
               {/* <p className="font-semibold text-white">Address:</p> */}
-              <p><span className="font-semibold text-white">Address:  </span>Suite # B 1/6, LGF,</p>
+              <p>
+                <span className="font-semibold text-white">Address: </span>Suite
+                # B 1/6, LGF,
+              </p>
               <p>Hauz Khas, New Delhi - 110016</p>
             </div>
 
             <p className="mt-4 text-sm text-[#E2E2E2]">Connect Us:</p>
-
+            {/* 
             <div className="flex items-center gap-2.5 mt-3.5">
               <a
                 href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
@@ -111,6 +117,52 @@ const Footer = () => {
               >
                 <FaLinkedinIn className="text-lg" />
               </a>
+            </div> */}
+
+            <div className="mt-4">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="flex gap-2.5">
+                  {[
+                    {
+                      icon: FaWhatsapp,
+                      href: "https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness",
+                    },
+                    {
+                      icon: FaPhoneAlt,
+                      href: "tel:+7982771770",
+                    },
+                    {
+                      icon: FaEnvelope,
+                      href: "mailto:info@witnesslive.in",
+                    },
+                    {
+                      icon: FaLinkedinIn,
+                      href: "#",
+                    },
+                  ].map((item, i) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <motion.a
+                        key={i}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-8 h-8 rounded-md bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                      >
+                        <Icon className="text-lg" />
+                      </motion.a>
+                    );
+                  })}
+                </div>
+              </motion.div>
             </div>
             {/* App Buttons */}
             {/* <div className="flex gap-3 mt-5 flex-wrap">

@@ -279,6 +279,8 @@ export default function PricingCard() {
     );
   }
 
+  console.log("Actual_price", plans);
+
   return (
     <section
       id="pricing"
@@ -302,7 +304,7 @@ export default function PricingCard() {
 
         {/* GRID */}
         <div
-          className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
+          className={`grid grid-cols-1 md:grid-cols-2 gap-1 ${
             visibleCount === 3
               ? "lg:grid-cols-3 justify-items-center"
               : "lg:grid-cols-4"
@@ -412,16 +414,37 @@ export default function PricingCard() {
 
                   {/* PRICE */}
                   <div className="mt-6 text-center">
-                    <p
-                      className={`text-2xl md:text-3xl font-black ${disableFreePlan ? "text-gray-500" : "text-gray-900"}`}
-                    >
-                      {Number(plan.price) === 0 ? "FREE" : `₹${plan.price}`}
-                    </p>
+                    {Number(plan.price) === 0 ? (
+                      <>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                          Price
+                        </p>
+                        <p className="text-3xl font-black text-gray-900 mt-1">
+                          FREE
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                          Actual Price
+                        </p>
 
-                    {Number(plan.price) !== 0 && (
-                      <p className="text-[11px] text-gray-400">
-                        + 18% GST applicable
-                      </p>
+                        <p className="text-lg font-medium text-gray-400 line-through">
+                          ₹{plan.actual_price}
+                        </p>
+
+                        <p className="text-xs font-semibold text-[#c9060a] uppercase tracking-wider mt-3">
+                          Offer Price
+                        </p>
+
+                        <p className="text-3xl font-black text-gray-900">
+                          ₹{Number(plan.price).toLocaleString()}
+                        </p>
+
+                        <p className="text-[11px] text-gray-500 mt-2">
+                          + 18% GST applicable
+                        </p>
+                      </>
                     )}
                   </div>
                   {disableFreePlan && (
