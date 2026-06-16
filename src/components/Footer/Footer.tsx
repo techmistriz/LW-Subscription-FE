@@ -88,28 +88,28 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="w-8 h-8 rounded-md bg-[#4CAF7A] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaWhatsapp className="lg" />
+                <FaWhatsapp className="text-lg" />
               </a>
 
               <a
                 href="tel:+7982771770"
                 className="w-8 h-8 rounded-md bg-[#E89B72] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaPhoneAlt className="text-xs" />
+                <FaPhoneAlt className="text-lg" />
               </a>
 
               <a
                 href="mailto:info@witnesslive.in"
                 className="w-8 h-8 rounded-md bg-[#D97A72] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaEnvelope className="text-xs" />
+                <FaEnvelope className="text-lg" />
               </a>
 
               <a
                 href="#"
                 className="w-8 h-8 rounded-md bg-[#5C8FD6] flex items-center justify-center text-white hover:brightness-110 transition"
               >
-                <FaLinkedinIn className="text-xs" />
+                <FaLinkedinIn className="text-lg" />
               </a>
             </div>
             {/* App Buttons */}
