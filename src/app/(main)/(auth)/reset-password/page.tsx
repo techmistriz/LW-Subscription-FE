@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     if (success) {
       toast.success(success);
-      router.push("/login"); // redirect after success
+      router.push("/sign-in"); // redirect after success
     }
 
     if (error) {
