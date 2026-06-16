@@ -153,7 +153,7 @@ const Footer = () => {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        whileHover={{ scale: 1.1, y: -2 }}
+                        // whileHover={{ scale: 1.1, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                         className="w-8 h-8 rounded-md bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                       >
