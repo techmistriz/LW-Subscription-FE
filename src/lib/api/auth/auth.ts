@@ -73,7 +73,7 @@ export async function sendOtp(data: { contact: string; email: string }) {
 /*----------------- FORGOT PASSWORD -----------------*/
 export async function forgotPassword(email: string) {
   try {
-    const res = await axiosInstance.post("/auth/forgot-password", {
+    const res = await axiosInstance.post("/forgot-password", {
       email,
     });
     return res.data;
@@ -95,7 +95,7 @@ export async function resetPassword(data: {
   password_confirmation: string;
 }) {
   try {
-    const res = await axiosInstance.post("/auth/reset-password", data);
+    const res = await axiosInstance.post("/reset-password", data);
     return res.data;
   } catch (error: any) {
     const message =
