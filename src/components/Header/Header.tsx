@@ -349,7 +349,7 @@ export default function Header() {
             <div className="flex items-center justify-end">
               <div className="flex gap-2 ml-4 justify-end items-end">
                 <a
-                  href="https://www.linkedin.com"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative group w-8 h-8 rounded-lg flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-md overflow-hidden transition-transform hover:scale-105"
@@ -365,7 +365,7 @@ export default function Header() {
                   <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 pointer-events-none"></span>
                 </a>
                 <a
-                  href="https://www.linkedin.com"
+                 href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative group w-8 h-8 rounded-lg flex items-center justify-center  text-white bg-[#25D366] shadow-md overflow-hidden transition-transform hover:scale-105"
