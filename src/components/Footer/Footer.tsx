@@ -271,6 +271,12 @@ const Footer = () => {
               </Link>
 
               <Link
+                href="/events"
+                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+              >
+                EVENTS
+              </Link>
+               <Link
                 href="/privacy"
                 className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >

@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function EventsPage() {
   return (
     <section className="py-8 bg-white min-h-screen">
-      <div className="text-center max-w-4xl mx-auto mb-12 px-4">
+      <div className="text-center max-w-4xl mx-auto mb-6 px-4">
         <span className="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-[#c9060a] border border-red-100">
           LEXWITNESS EVENTS
         </span>
