@@ -191,7 +191,7 @@ className="w-full sm:w-full md:w-fit px-5 py-3 bg-[#c9060a] hover:bg-[#333] text
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-[#333] hover:text-[#25D366] transition"
             >
-              <FaWhatsapp className="text-[#25D366]" />
+              <FaWhatsapp className="text-[#25D366] text-[16px]" />
               <span>WhatsApp</span>
             </a>
           </div>
