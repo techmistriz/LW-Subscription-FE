@@ -93,6 +93,83 @@
 // }
 
 // design-3
+// "use client";
+
+// import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+// import { FaXTwitter } from "react-icons/fa6";
+
+// interface Props {
+//   title?: string;
+// }
+
+// export default function SocialShare({ title = "" }: Props) {
+//   const shareUrl =
+//     typeof window !== "undefined"
+//       ? window.location.href
+//       : "";
+
+//   const socialClass =
+//     "relative group w-9 h-6 flex items-center justify-center transition-all duration-200 hover:opacity-80";
+
+//   return (
+//     <div className="flex items-center gap-2">
+//       {/* LinkedIn */}
+//       <a
+//         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+//           shareUrl,
+//         )}`}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         aria-label="Share on LinkedIn"
+//         className={`${socialClass} bg-[#0A66C2]`}
+//       >
+//         <FaLinkedinIn className="w-4 h-4 text-white" />
+//       </a>
+
+//       {/* Facebook */}
+//       <a
+//         href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+//           shareUrl,
+//         )}`}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         aria-label="Share on Facebook"
+//         className={`${socialClass} bg-[#1877F2]`}
+//       >
+//         <FaFacebookF className="w-4 h-4 text-white" />
+//       </a>
+
+//       {/* X / Twitter */}
+//       <a
+//         href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+//           shareUrl,
+//         )}&text=${encodeURIComponent(title)}`}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         aria-label="Share on X"
+//         className={`${socialClass} bg-black`}
+//       >
+//         <FaXTwitter className="w-4 h-4 text-white" />
+//       </a>
+
+//       {/* WhatsApp */}
+//       <a
+//         href={`https://wa.me/?text=${encodeURIComponent(
+//           `${title} - ${shareUrl}`,
+//         )}`}
+//         target="_blank"
+//         rel="noopener noreferrer"
+//         aria-label="Share on WhatsApp"
+//         className={`${socialClass} bg-[#25D366]`}
+//       >
+//         <FaWhatsapp className="w-4 h-4 text-white" />
+//       </a>
+//     </div>
+//   );
+// }
+
+
+//desihn 8
 "use client";
 
 import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
@@ -108,8 +185,9 @@ export default function SocialShare({ title = "" }: Props) {
       ? window.location.href
       : "";
 
+  // Combined your brand red, gray #333 border, and a smooth hover transition to the platform colors
   const socialClass =
-    "relative group w-9 h-6 flex items-center justify-center transition-all duration-200 hover:opacity-80";
+    "relative group w-9 h-6 flex items-center justify-center border border-[#333] bg-[#c9060a] transition-all duration-300 ease-in-out hover:opacity-90";
 
   return (
     <div className="flex items-center gap-2">
@@ -121,7 +199,7 @@ export default function SocialShare({ title = "" }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on LinkedIn"
-        className={`${socialClass} bg-[#0A66C2]`}
+        className={`${socialClass} hover:bg-[#0A66C2] hover:border-[#0A66C2]`}
       >
         <FaLinkedinIn className="w-4 h-4 text-white" />
       </a>
@@ -134,7 +212,7 @@ export default function SocialShare({ title = "" }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on Facebook"
-        className={`${socialClass} bg-[#1877F2]`}
+        className={`${socialClass} hover:bg-[#1877F2] hover:border-[#1877F2]`}
       >
         <FaFacebookF className="w-4 h-4 text-white" />
       </a>
@@ -147,7 +225,7 @@ export default function SocialShare({ title = "" }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on X"
-        className={`${socialClass} bg-black`}
+        className={`${socialClass} hover:bg-black hover:border-black`}
       >
         <FaXTwitter className="w-4 h-4 text-white" />
       </a>
@@ -160,13 +238,101 @@ export default function SocialShare({ title = "" }: Props) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on WhatsApp"
-        className={`${socialClass} bg-[#25D366]`}
+        className={`${socialClass} hover:bg-[#25D366] hover:border-[#25D366]`}
       >
         <FaWhatsapp className="w-4 h-4 text-white" />
       </a>
     </div>
   );
 }
+
+
+//design 7
+
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+// import { FaXTwitter } from "react-icons/fa6";
+
+// interface Props {
+//   title?: string;
+// }
+
+// export default function SocialShare({ title = "" }: Props) {
+//   const [shareUrl, setShareUrl] = useState("");
+
+//   useEffect(() => {
+//     setShareUrl(window.location.href);
+//   }, []);
+
+//   const encodedUrl = encodeURIComponent(shareUrl);
+//   const encodedTitle = encodeURIComponent(title);
+
+//   const networks = [
+//     {
+//       name: "LinkedIn",
+//       href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+//       icon: <FaLinkedinIn className="h-3.5 w-3.5" />,
+//       aria: "Share on LinkedIn",
+//       hoverColor: "hover:border-[#0A66C2]/30 hover:text-[#0A66C2]",
+//     },
+//     {
+//       name: "Twitter",
+//       href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+//       icon: <FaXTwitter className="h-3.5 w-3.5" />,
+//       aria: "Share on X",
+//       hoverColor: "hover:border-black/30 hover:text-black",
+//     },
+//     {
+//       name: "Facebook",
+//       href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+//       icon: <FaFacebookF className="h-3.5 w-3.5" />,
+//       aria: "Share on Facebook",
+//       hoverColor: "hover:border-[#1877F2]/30 hover:text-[#1877F2]",
+//     },
+//     {
+//       name: "WhatsApp",
+//       href: `https://wa.me/?text=${encodeURIComponent(`${title} - ${shareUrl}`)}`,
+//       icon: <FaWhatsapp className="h-3.5 w-3.5" />,
+//       aria: "Share on WhatsApp",
+//       hoverColor: "hover:border-[#25D366]/30 hover:text-[#25D366]",
+//     },
+//   ];
+
+//   return (
+//     <div className="inline-flex items-center gap-2">
+//       {/* Structural Label using your site's #333 text color */}
+//       {/* <span className="text-[10px] font-bold uppercase tracking-wider text-[#333] select-none mr-1">
+//         Share
+//       </span> */}
+
+//       {/* Grid Matrix of Compact Squares */}
+//       <div className="flex items-center gap-2">
+//         {networks.map((network) => (
+//           <a
+//             key={network.name}
+//             href={network.href}
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             aria-label={network.aria}
+// className={`flex h-8 w-8 items-center justify-center rounded-lg
+// border border-gray-200 bg-white text-gray-500
+// shadow-sm transition-all duration-300
+// hover:-translate-y-0.5
+// hover:shadow-[0_4px_12px_rgba(201,6,10,0.15)]
+// active:scale-95
+// ${network.hoverColor}`}          >
+//             {network.icon}
+//           </a>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+
 // "use client";
 
 // import { FaFacebookF } from "react-icons/fa";
