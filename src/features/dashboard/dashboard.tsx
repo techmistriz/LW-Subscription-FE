@@ -97,6 +97,8 @@ export default function Dashboard() {
     (sub) => sub.status?.toUpperCase() === "PENDING",
   );
 
+  console.log("pendingSubscriptions",pendingSubscriptions)
+
   const hasPendingUpgrades = pendingSubscriptions.length > 0;
 
   const toggleUpgradeExpand = (planId: number) => {

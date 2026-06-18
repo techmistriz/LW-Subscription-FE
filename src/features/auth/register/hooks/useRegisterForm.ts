@@ -134,7 +134,7 @@ const handleSendOtp = async () => {
     setIsOtpSent(true);
     setOtpTimer(60);
 
-    // ✅ OTP SENT TOAST
+    //  OTP SENT TOAST
     toast.success("OTP sent successfully");
   } catch (err: any) {
     toast.error(err.message || "Failed to send OTP");

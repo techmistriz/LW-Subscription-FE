@@ -127,6 +127,7 @@ export default function PricingCard() {
 
       if (!selectedPlan) {
         toast.error("Please select a plan");
+        setLoading(false);
         return;
       }
 
@@ -142,6 +143,7 @@ export default function PricingCard() {
 
       if (!isAuthenticated) {
         router.push(`/register?plan=${selectedPlanId}`);
+        setLoading(false);
         return;
       }
 
@@ -162,28 +164,25 @@ export default function PricingCard() {
       if (!hasSubscription) {
         purchaseType = "NEW";
         apiResponse = await upgradePlan(selectedPlan.id);
-        // console.log(apiResponse)
       } else if (isFreePlan && isExpired) {
         /* ---------------- CASE 2: FREE PLAN EXPIRED -> Upgrade ---------------- */
         purchaseType = "NEW";
         apiResponse = await upgradePlan(selectedPlan.id);
-        // console.log(apiResponse)
       } else if (!isFreePlan && isExpired) {
         /* ---------------- CASE 3: PAID PLAN EXPIRED -> RENEW ---------------- */
         purchaseType = "RENEW";
         apiResponse = await renewPlan(subscriptionId);
-        // console.log("Renew API RESPONSE =>", apiResponse);
       } else {
         /* ---------------- CASE 4: ACTIVE PLAN -> UPGRADE ---------------- */
         purchaseType = "UPGRADE";
         apiResponse = await upgradePlan(selectedPlan.id);
-        // console.log("Upgrade API RESPONSE =>", apiResponse);
       }
 
       paymentData = apiResponse?.data?.payment || apiResponse?.data;
 
       if (!paymentData) {
         toast.error("Payment initiation failed");
+        setLoading(false);
         return;
       }
 
@@ -203,8 +202,9 @@ export default function PricingCard() {
           color: "#c9060a",
         },
         handler: async function (response: any) {
-          setRedirectLoading(true);
           try {
+            setRedirectLoading(true);
+            
             const verifyPayload = {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
@@ -215,17 +215,40 @@ export default function PricingCard() {
 
             const verifyRes = await verifySubscriptionPayment(verifyPayload);
 
-            // console.log("VERIFY RESPONSE =>", verifyRes);
-
-            await dispatch(fetchProfile()).unwrap();
-
-            toast.success("Payment successful");
-
-            router.push("/dashboard");
+            // Check if verification was successful
+            if (verifyRes?.success || verifyRes?.data?.success) {
+              // Fetch updated profile
+              await dispatch(fetchProfile()).unwrap();
+              
+              toast.success("Payment successful! 🎉");
+              
+              // Redirect to dashboard
+              router.push("/dashboard");
+            } else {
+              // Verification failed but payment was successful
+              toast.error(
+                verifyRes?.message || 
+                verifyRes?.data?.message || 
+                "Payment verification failed. Please contact support."
+              );
+              setRedirectLoading(false);
+            }
           } catch (err: any) {
-            toast.error(err?.response?.data?.message || "Verification failed");
-          } finally {
-            setRedirectLoading(false); // optional (won’t matter after redirect)
+            console.error("Verification error:", err);
+            
+            // Check if it's a network error or API error
+            if (err?.response?.status === 404) {
+              toast.error("Payment verification endpoint not found. Please contact support.");
+            } else if (err?.response?.status === 500) {
+              toast.error("Server error during verification. Please contact support.");
+            } else {
+              toast.error(
+                err?.response?.data?.message || 
+                err?.message || 
+                "Payment verification failed. Please check your subscription status."
+              );
+            }
+            setRedirectLoading(false);
           }
         },
       };
@@ -233,12 +256,17 @@ export default function PricingCard() {
       const razorpay = new window.Razorpay(options);
 
       razorpay.on("payment.failed", function (response: any) {
+        setLoading(false);
+        setRedirectLoading(false);
         toast.error(response?.error?.description || "Payment failed");
       });
 
       razorpay.open();
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "API ERROR");
+      console.error("Payment error:", error);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+      setLoading(false);
+      setRedirectLoading(false);
     } finally {
       setLoading(false);
     }
@@ -278,8 +306,6 @@ export default function PricingCard() {
       </section>
     );
   }
-
-  console.log("Actual_price", plans);
 
   return (
     <section
@@ -478,6 +504,8 @@ export default function PricingCard() {
           </button>
         </div>
       </div>
+
+      {/* Redirect Loading Overlay */}
       {redirectLoading && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="w-[360px] rounded-3xl bg-white p-8 text-center shadow-2xl border border-gray-100">
