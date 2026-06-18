@@ -267,7 +267,7 @@ const Footer = () => {
                 href="/about"
                 className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
-                About Lex Witnes
+                ABOUT LEX WITNESS
               </Link>
 
               <Link
@@ -292,9 +292,9 @@ const Footer = () => {
 
               <Link
                 href="/get-involved"
-                className="border border-[#c9060a] leading-5 rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c9060a] leading-5 rounded-lg px-3 py-5 text-center text-xs font-medium  whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
-                Get-Involved
+                GET-INVOLVED
               </Link>
             </div>
           </div>
