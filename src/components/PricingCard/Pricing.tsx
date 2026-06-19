@@ -112,174 +112,158 @@ export default function PricingCard() {
   }, [isAuthenticated]);
 
   /* ---------------- SUBSCRIBE / UPGRADE ---------------- */
-  const handleSubscribe = useCallback(async () => {
-    try {
-      if (!isSubscriptionReady) {
-        toast.error("Loading subscription...");
-        return;
-      }
+const handleSubscribe = useCallback(async () => {
+  try {
+    if (!isSubscriptionReady) {
+      toast.error("Loading subscription...");
+      return;
+    }
 
-      setLoading(true);
+    setLoading(true);
 
-      const selectedPlan = plans.find(
-        (p) => Number(p.id) === Number(selectedPlanId),
+    const selectedPlan = plans.find(
+      (p) => Number(p.id) === Number(selectedPlanId),
+    );
+
+    if (!selectedPlan) {
+      toast.error("Please select a plan");
+      setLoading(false);
+      return;
+    }
+
+    const isFreePlanSelected = Number(selectedPlan.price) === 0;
+    if (isFreePlanSelected && isAuthenticated) {
+      toast.error(
+        "Free plan is only available for new users. Please choose a paid plan to continue your journey! 🚀",
       );
+      setLoading(false);
+      return;
+    }
 
-      if (!selectedPlan) {
-        toast.error("Please select a plan");
-        setLoading(false);
-        return;
-      }
+    if (!isAuthenticated) {
+      router.push(`/register?plan=${selectedPlanId}`);
+      setLoading(false);
+      return;
+    }
 
-      // Check if trying to select free plan as registered user
-      const isFreePlanSelected = Number(selectedPlan.price) === 0;
-      if (isFreePlanSelected && isAuthenticated) {
-        toast.error(
-          "Free plan is only available for new users. Please choose a paid plan to continue your journey! 🚀",
-        );
-        setLoading(false);
-        return;
-      }
+    const subscriptionId = activeSubscription?.id;
+    const subscriptionAmount = Number(activeSubscription?.amount || 0);
+    const subscriptionStatus = activeSubscription?.status?.toUpperCase();
+    const endDate = activeSubscription?.end_date;
+    const isExpiredByDate = endDate ? new Date(endDate) < new Date() : false;
+    const isExpired = subscriptionStatus === "EXPIRED" || isExpiredByDate;
+    const isFreePlan = subscriptionAmount === 0;
+    const hasSubscription = !!subscriptionId;
 
-      if (!isAuthenticated) {
-        router.push(`/register?plan=${selectedPlanId}`);
-        setLoading(false);
-        return;
-      }
+    let apiResponse: any = null;
+    let paymentData: any = null;
+    let purchaseType: "NEW" | "RENEW" | "UPGRADE" = "NEW";
 
-      const subscriptionId = activeSubscription?.id;
-      const subscriptionAmount = Number(activeSubscription?.amount || 0);
-      const subscriptionStatus = activeSubscription?.status?.toUpperCase();
-      const endDate = activeSubscription?.end_date;
-      const isExpiredByDate = endDate ? new Date(endDate) < new Date() : false;
-      const isExpired = subscriptionStatus === "EXPIRED" || isExpiredByDate;
-      const isFreePlan = subscriptionAmount === 0;
-      const hasSubscription = !!subscriptionId;
+    if (!hasSubscription) {
+      purchaseType = "NEW";
+      apiResponse = await upgradePlan(selectedPlan.id);
+    } else if (isFreePlan && isExpired) {
+      purchaseType = "NEW";
+      apiResponse = await upgradePlan(selectedPlan.id);
+    } else if (!isFreePlan && isExpired) {
+      purchaseType = "RENEW";
+      apiResponse = await renewPlan(subscriptionId);
+    } else {
+      purchaseType = "UPGRADE";
+      apiResponse = await upgradePlan(selectedPlan.id);
+    }
 
-      let apiResponse: any = null;
-      let paymentData: any = null;
-      let purchaseType: "NEW" | "RENEW" | "UPGRADE" = "NEW";
+    paymentData = apiResponse?.data?.payment || apiResponse?.data;
 
-      /* ---------------- CASE 1: NO SUBSCRIPTION ---------------- */
-      if (!hasSubscription) {
-        purchaseType = "NEW";
-        apiResponse = await upgradePlan(selectedPlan.id);
-      } else if (isFreePlan && isExpired) {
-        /* ---------------- CASE 2: FREE PLAN EXPIRED -> Upgrade ---------------- */
-        purchaseType = "NEW";
-        apiResponse = await upgradePlan(selectedPlan.id);
-      } else if (!isFreePlan && isExpired) {
-        /* ---------------- CASE 3: PAID PLAN EXPIRED -> RENEW ---------------- */
-        purchaseType = "RENEW";
-        apiResponse = await renewPlan(subscriptionId);
-      } else {
-        /* ---------------- CASE 4: ACTIVE PLAN -> UPGRADE ---------------- */
-        purchaseType = "UPGRADE";
-        apiResponse = await upgradePlan(selectedPlan.id);
-      }
+    if (!paymentData) {
+      toast.error("Payment initiation failed");
+      setLoading(false);
+      return;
+    }
 
-      paymentData = apiResponse?.data?.payment || apiResponse?.data;
+    const options = {
+      key: paymentData?.razorpay_key || process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+      amount: paymentData?.amount,
+      currency: paymentData?.currency || "INR",
+      order_id: paymentData?.order_id,
+      name: "Lex Witness",
+      prefill: {
+        name: `${user?.first_name || ""} ${user?.last_name || ""}`,
+        email: user?.email,
+        contact: user?.contact,
+      },
+      theme: {
+        color: "#c9060a",
+      },
+  handler: async function (response: any) {
+  try {
+    setRedirectLoading(true);
 
-      if (!paymentData) {
-        toast.error("Payment initiation failed");
-        setLoading(false);
-        return;
-      }
+    const verifyPayload = {
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_signature: response.razorpay_signature,
+      membership_plan_id: selectedPlan.id,
+      purchase_type: purchaseType,
+    };
 
-      /* ---------------- RAZORPAY ---------------- */
-      const options = {
-        key: paymentData?.razorpay_key || process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-        amount: paymentData?.amount,
-        currency: paymentData?.currency || "INR",
-        order_id: paymentData?.order_id,
-        name: "Lex Witness",
-        prefill: {
-          name: `${user?.first_name || ""} ${user?.last_name || ""}`,
-          email: user?.email,
-          contact: user?.contact,
-        },
-        theme: {
-          color: "#c9060a",
-        },
-        handler: async function (response: any) {
-          try {
-            setRedirectLoading(true);
-            
-            const verifyPayload = {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              membership_plan_id: selectedPlan.id,
-              purchase_type: purchaseType,
-            };
+    const verifyRes = await verifySubscriptionPayment(verifyPayload);
 
-            const verifyRes = await verifySubscriptionPayment(verifyPayload);
+    console.log("VERIFY RESPONSE", verifyRes);
 
-            // Check if verification was successful
-            if (verifyRes?.success || verifyRes?.data?.success) {
-              // Fetch updated profile
-              await dispatch(fetchProfile()).unwrap();
-              
-              toast.success("Payment successful! 🎉");
-              
-              // Redirect to dashboard
-              router.push("/dashboard");
-            } else {
-              // Verification failed but payment was successful
-              toast.error(
-                verifyRes?.message || 
-                verifyRes?.data?.message || 
-                "Payment verification failed. Please contact support."
-              );
-              setRedirectLoading(false);
-            }
-          } catch (err: any) {
-            console.error("Verification error:", err);
-            
-            // Check if it's a network error or API error
-            if (err?.response?.status === 404) {
-              toast.error("Payment verification endpoint not found. Please contact support.");
-            } else if (err?.response?.status === 500) {
-              toast.error("Server error during verification. Please contact support.");
-            } else {
-              toast.error(
-                err?.response?.data?.message || 
-                err?.message || 
-                "Payment verification failed. Please check your subscription status."
-              );
-            }
-            setRedirectLoading(false);
-          }
-        },
-      };
+    if (verifyRes?.status) {
+      sessionStorage.setItem("just_paid", "true");
 
-      const razorpay = new window.Razorpay(options);
+      await dispatch(fetchProfile()).unwrap();
 
-      razorpay.on("payment.failed", function (response: any) {
-        setLoading(false);
-        setRedirectLoading(false);
-        toast.error(response?.error?.description || "Payment failed");
-      });
+      toast.success("Payment successful! 🎉");
 
-      razorpay.open();
-    } catch (error: any) {
-      console.error("Payment error:", error);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      router.push("/dashboard");
+    } else {
+      toast.error(
+        verifyRes?.message || "Payment verification failed"
+      );
+    }
+  } catch (err: any) {
+    console.error(err);
+    toast.error(
+      err?.response?.data?.message ||
+      err?.message ||
+      "Payment verification failed"
+    );
+  } finally {
+    setRedirectLoading(false);
+  }
+}
+    };
+
+    const razorpay = new window.Razorpay(options);
+
+    razorpay.on("payment.failed", function (response: any) {
       setLoading(false);
       setRedirectLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    selectedPlanId,
-    plans,
-    isAuthenticated,
-    activeSubscription,
-    user,
-    dispatch,
-    router,
-    isSubscriptionReady,
-  ]);
+      toast.error(response?.error?.description || "Payment failed");
+    });
+
+    razorpay.open();
+  } catch (error: any) {
+    console.error("Payment error:", error);
+    toast.error(error?.response?.data?.message || "Something went wrong");
+    setLoading(false);
+    setRedirectLoading(false);
+  } finally {
+    setLoading(false);
+  }
+}, [
+  selectedPlanId,
+  plans,
+  isAuthenticated,
+  activeSubscription,
+  user,
+  dispatch,
+  router,
+  isSubscriptionReady,
+]);
 
   /* ---------------- FILTER PLANS ---------------- */
   const filteredPlans = useMemo(() => {

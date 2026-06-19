@@ -146,6 +146,24 @@ export default function Dashboard() {
     fetchPlans();
   }, []);
 
+
+  useEffect(() => {
+  // Check if we just came from payment (using sessionStorage flag)
+  const justPaid = sessionStorage.getItem('just_paid');
+  
+  if (justPaid === 'true' && isAuthenticated) {
+    // Clear the flag
+    sessionStorage.removeItem('just_paid');
+    
+    // Force refresh both profile and subscription
+    dispatch(fetchProfile());
+    
+    // Also reload subscription from storage
+    dispatch(loadSubscriptionFromStorage());
+  }
+}, [isAuthenticated, dispatch]);
+
+
   const status = subscription?.status?.toUpperCase();
 
   const now = new Date();
@@ -209,6 +227,7 @@ export default function Dashboard() {
             });
 
             if (verifyRes?.status) {
+                sessionStorage.setItem('just_paid', 'true');
               await dispatch(fetchProfile()).unwrap();
 
               setRenewLoading(false);

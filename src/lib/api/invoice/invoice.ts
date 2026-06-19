@@ -67,43 +67,68 @@ export const getUserInvoices = async () => {
 /* ---------------- DIRECT DOWNLOAD PDF ---------------- */
 
 export const downloadInvoicePdf = async (subscriptionId: number) => {
-  try {
-    const response = await api.get(
-      `/subscription/plan-invoice/${subscriptionId}`,
-      {
-        responseType: "blob",
+  const response = await api.get(
+    `/subscription/plan-invoice/${subscriptionId}`,
+    {
+      responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
       },
-    );
+    }
+  );
 
-    // Create PDF blob
-    const blob = new Blob([response.data], {
-      type: "application/pdf",
-    });
+  console.log("===== INVOICE RESPONSE =====");
+  console.log("Status:", response.status);
+  console.log("Status Text:", response.statusText);
+  console.log("Headers:", response.headers);
+  console.log("Content-Type:", response.headers["content-type"]);
+  console.log("Blob Size:", response.data.size);
+  console.log("Request Headers:", {
+    Accept: "application/pdf",
+  });
 
-    // Create temp URL
-    const url = window.URL.createObjectURL(blob);
+  // Read response if backend returned JSON
+  if (response.headers["content-type"]?.includes("application/json")) {
+    const text = await response.data.text();
 
-    // Create hidden anchor
-    const link = document.createElement("a");
+    console.log("JSON Response:", text);
 
-    link.href = url;
+    try {
+      console.log("Parsed JSON:", JSON.parse(text));
+    } catch (e) {
+      console.log("Failed to parse JSON");
+    }
 
-    // Dynamic filename
-    link.download = `invoice-${subscriptionId}.pdf`;
-
-    // Append to body
-    document.body.appendChild(link);
-
-    // Trigger download
-    link.click();
-
-    // Cleanup
-    document.body.removeChild(link);
-
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error("Invoice download failed:", error);
-
-    throw error;
+    return;
   }
+
+  const blob = new Blob([response.data], {
+    type: "application/pdf",
+  });
+
+
+  console.log("Request Headers:", {
+  Accept: "application/pdf",
+});
+  console.log("PDF Blob:", blob);
+
+  const url = window.URL.createObjectURL(blob);
+
+  console.log("Blob URL:", url);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `invoice-${subscriptionId}.pdf`;
+
+  document.body.appendChild(link);
+
+  console.log("Starting download...");
+
+  link.click();
+
+  document.body.removeChild(link);
+
+  window.URL.revokeObjectURL(url);
+
+  console.log("Download complete");
 };
