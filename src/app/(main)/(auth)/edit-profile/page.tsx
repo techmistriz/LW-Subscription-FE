@@ -44,6 +44,22 @@ export default function EditProfilePage() {
         newPassword: "",
         confirmPassword: "",
     });
+    const [initialFormData, setInitialFormData] = useState<FormData>({
+        firstName: "",
+        lastName: "",
+        email: "",
+        contact: "",
+        otp: "",
+        dob: "",
+        organisation: "",
+        gstNumber: "",
+        address: "",
+        city: "",
+        pincode: "",
+        state: "",
+        country: "",
+    });
+
 
     const user = useAppSelector((state) => state.auth.user)
     const dispatch = useAppDispatch();
@@ -69,7 +85,7 @@ export default function EditProfilePage() {
     useEffect(() => {
         if (!user) return;
 
-        setFormData({
+        const data = {
             firstName: user.first_name || "",
             lastName: user.last_name || "",
             email: user.email || "",
@@ -83,7 +99,10 @@ export default function EditProfilePage() {
             pincode: user.pincode || "",
             state: user.state || "",
             country: user.country || "",
-        });
+        };
+
+        setFormData(data);
+        setInitialFormData(data);
     }, [user]);
 
     const handleChange = (
@@ -228,6 +247,11 @@ export default function EditProfilePage() {
 
             await dispatch(fetchProfile());
 
+            setInitialFormData({
+                ...formData,
+                otp: "",
+            });
+
             setOtpSent(false);
 
             setPasswordForm({
@@ -255,6 +279,22 @@ export default function EditProfilePage() {
     const originalContact = user?.contact || "";
 
     const isContactChanged = formData.contact !== originalContact;
+
+    const hasFormChanged =
+        JSON.stringify({
+            ...formData,
+            otp: "",
+        }) !==
+        JSON.stringify({
+            ...initialFormData,
+            otp: "",
+        });
+
+    const hasPasswordChanged =
+        passwordForm.newPassword.trim() !== "" ||
+        passwordForm.confirmPassword.trim() !== "";
+
+    const canUpdate = hasFormChanged || hasPasswordChanged;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 px-4 py-10">
@@ -562,17 +602,22 @@ export default function EditProfilePage() {
 
 
                     {/* Actions */}
-                    <div className="md:col-span-2 mt-2 flex justify-end gap-3 border-t border-gray-200 pt-5">
-                        <button
+                    <div className="md:col-span-2 mt-2 flex justify-end gap-3 border-t border-[#c9060a] pt-5">
+                        {/* <button
                             type="button"
                             className="  border border-gray-300 px-5 py-2.5 text-sm font-medium text-[#333] transition hover:bg-gray-100 cursor-pointer"
                         >
                             Cancel
-                        </button>
+                        </button> */}
 
                         <button
                             type="submit"
-                            className="  bg-[#C9060A] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[#a30508] cursor-pointer"
+                            disabled={!canUpdate}
+                            className={`px-6 py-2.5 text-sm font-medium text-white transition
+                              ${canUpdate
+                                    ? "bg-[#C9060A] hover:bg-[#a30508] cursor-pointer"
+                                    : "bg-gray-300 cursor-not-allowed"
+                                }`}
                         >
                             Update Profile
                         </button>
