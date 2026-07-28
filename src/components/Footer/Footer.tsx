@@ -265,34 +265,34 @@ const Footer = () => {
 
               <Link
                 href="/about"
-                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c9060a]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
                 ABOUT LEX WITNESS
               </Link>
 
               <Link
                 href="/events"
-                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c9060a]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
                 EVENTS
               </Link>
                <Link
                 href="/privacy"
-                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c9060a]  px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
                 PRIVACY POLICY
               </Link>
 
               <Link
                 href="/terms"
-                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c9060a]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
                 TERMS & CONDITIONS
               </Link>
 
               <Link
                 href="/get-involved"
-                className="border border-[#c9060a] leading-5 rounded-lg px-3 py-5 text-center text-xs font-medium  whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c9060a] leading-5   px-3 py-5 text-center text-xs font-medium  whitespace-nowrap text-white hover:bg-[#c9060a] transition"
               >
                 GET-INVOLVED
               </Link>

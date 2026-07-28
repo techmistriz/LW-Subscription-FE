@@ -9,6 +9,12 @@ import { setSubscription, Subscription } from "./subscriptionSlice";
 
 /* ---------------- USER TYPE ---------------- */
 interface User {
+  country: string;
+  state: string;
+  pincode: string;
+  dob: string;
+  city: string;
+  organisation: string;
   id: number;
   first_name: string;
   last_name?: string;

@@ -84,7 +84,17 @@ export default function PersonalDetailsForm({
           onChange={onChange}
         />
 
-        <div className="md:col-span-2">
+        <FormInput
+          label="GST Number"
+          name="gst_number"
+          value={form.gst_number}
+          onChange={onChange}
+          error={getError("gst_number")}
+          maxLength={15}
+          autoComplete="off"
+        />
+
+        <div className="md:col-span-1">
           <FormInput
             label="Address *"
             name="address"

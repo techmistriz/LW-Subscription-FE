@@ -6,6 +6,7 @@ export interface RegisterForm {
   password: string;
   password_confirmation: string;
   address: string;
+  gst_number: string; 
   plan: string; // UI only
   auto_renew: boolean; // UI only
 }
@@ -20,6 +21,7 @@ export interface RegisterPayload {
   dob: string;
   password_confirmation: string;
   address: string;
+  gst_number: string; 
   membership_plan_id: number;
 }
 

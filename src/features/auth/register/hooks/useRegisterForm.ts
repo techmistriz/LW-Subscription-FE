@@ -20,6 +20,7 @@ const initialForm: RegisterFormData = {
   otp: "",
   dob: "",
   organisation: "",
+  gst_number: "",
   address: "",
   city: "",
   pincode: "",

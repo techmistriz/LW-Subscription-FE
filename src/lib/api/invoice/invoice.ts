@@ -77,15 +77,15 @@ export const downloadInvoicePdf = async (subscriptionId: number) => {
     }
   );
 
-  console.log("===== INVOICE RESPONSE =====");
-  console.log("Status:", response.status);
-  console.log("Status Text:", response.statusText);
-  console.log("Headers:", response.headers);
-  console.log("Content-Type:", response.headers["content-type"]);
-  console.log("Blob Size:", response.data.size);
-  console.log("Request Headers:", {
-    Accept: "application/pdf",
-  });
+  // console.log("===== INVOICE RESPONSE =====");
+  // console.log("Status:", response.status);
+  // console.log("Status Text:", response.statusText);
+  // console.log("Headers:", response.headers);
+  // console.log("Content-Type:", response.headers["content-type"]);
+  // console.log("Blob Size:", response.data.size);
+  // console.log("Request Headers:", {
+  //   Accept: "application/pdf",
+  // });
 
   // Read response if backend returned JSON
   if (response.headers["content-type"]?.includes("application/json")) {

@@ -209,7 +209,7 @@ const handleSubscribe = useCallback(async () => {
 
     const verifyRes = await verifySubscriptionPayment(verifyPayload);
 
-    console.log("VERIFY RESPONSE", verifyRes);
+    // console.log("VERIFY RESPONSE", verifyRes);
 
     if (verifyRes?.status) {
       sessionStorage.setItem("just_paid", "true");

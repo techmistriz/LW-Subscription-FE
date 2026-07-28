@@ -175,13 +175,23 @@ export default function Header() {
                   >
                     <HeadlessMenu.Items className="absolute right-0 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                       <div className="py-1">
-                        <HeadlessMenu.Item>
+                            <HeadlessMenu.Item>
+                              {({ active }) => (
+                                <Link
+                                  href="/dashboard"
+                                  className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
+                                >
+                                  Dashboard
+                                </Link>
+                              )}
+                            </HeadlessMenu.Item>
+                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
-                              href="/dashboard"
+                              href="/edit-profile"
                               className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
                             >
-                              Dashboard
+                              Edit Profile
                             </Link>
                           )}
                         </HeadlessMenu.Item>
@@ -195,6 +205,7 @@ export default function Header() {
                             </Link>
                           )}
                         </HeadlessMenu.Item> */}
+                        
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <button

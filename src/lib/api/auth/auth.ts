@@ -59,6 +59,7 @@ export async function sendOtp(data: { contact: string; email: string }) {
   try {
     const res = await axiosInstance.post("/auth/send-otp", data);
 
+    console.log(res)
     console.log(res.data.data.otp)
     console.log(res.data.data)
     return res.data;

@@ -97,7 +97,7 @@ export default function Dashboard() {
     (sub) => sub.status?.toUpperCase() === "PENDING",
   );
 
-  console.log("pendingSubscriptions",pendingSubscriptions)
+  // console.log("pendingSubscriptions",pendingSubscriptions)
 
   const hasPendingUpgrades = pendingSubscriptions.length > 0;
 
