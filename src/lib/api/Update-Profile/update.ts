@@ -18,14 +18,9 @@ export interface UpdateProfilePayload {
   otp: string;
 }
 
-export async function updateProfile(
-  payload: UpdateProfilePayload
-) {
+export async function updateProfile(payload: UpdateProfilePayload) {
   try {
-    const res = await api.post(
-      "/update-profile",
-      payload
-    );
+    const res = await api.post("/update-profile", payload);
 
     return res.data;
   } catch (error: any) {
@@ -38,15 +33,11 @@ export async function updateProfile(
   }
 }
 
-
 /*----------------- SEND UPDATE OTP -----------------*/
-export async function sendUpdateOtp(data: {
-  email: string;
-  contact: string;
-}) {
+export async function sendUpdateOtp(data: { email: string; contact: string }) {
   try {
     const res = await api.post("/send-update-otp", data);
-    console.log("Update OTP", res)
+    console.log("Update OTP", res);
     return res.data;
   } catch (error: any) {
     const message =

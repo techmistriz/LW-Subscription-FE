@@ -9,6 +9,7 @@ import { setSubscription, Subscription } from "./subscriptionSlice";
 
 /* ---------------- USER TYPE ---------------- */
 interface User {
+  gst_number: string;
   country: string;
   state: string;
   pincode: string;

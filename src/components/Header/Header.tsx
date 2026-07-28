@@ -175,17 +175,17 @@ export default function Header() {
                   >
                     <HeadlessMenu.Items className="absolute right-0 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                       <div className="py-1">
-                            <HeadlessMenu.Item>
-                              {({ active }) => (
-                                <Link
-                                  href="/dashboard"
-                                  className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
-                                >
-                                  Dashboard
-                                </Link>
-                              )}
-                            </HeadlessMenu.Item>
-                         <HeadlessMenu.Item>
+                        <HeadlessMenu.Item>
+                          {({ active }) => (
+                            <Link
+                              href="/dashboard"
+                              className={`block px-4 py-2 text-sm text-gray-700 hover:text-[#c6090a] ${active ? "bg-gray-100" : ""}`}
+                            >
+                              Dashboard
+                            </Link>
+                          )}
+                        </HeadlessMenu.Item>
+                        <HeadlessMenu.Item>
                           {({ active }) => (
                             <Link
                               href="/edit-profile"
@@ -205,7 +205,7 @@ export default function Header() {
                             </Link>
                           )}
                         </HeadlessMenu.Item> */}
-                        
+
                         <HeadlessMenu.Item>
                           {({ active }) => (
                             <button
@@ -241,35 +241,34 @@ export default function Header() {
         </div>
 
         {/*----------------- NAV BAR -----------------*/}
-      <nav className="border-t border-gray-300 bg-gray-100">
-  {categoriesLoading ? (
-    <div className="h-11 max-w-280 mx-auto px-4 md:px-0 flex items-center gap-6 overflow-hidden">
-      {[...Array(8)].map((_, i) => (
-        <div
-          key={i}
-          className="h-4 w-20 rounded bg-gray-200 animate-pulse shrink-0"
-        />
-      ))}
-    </div>
-  ) : (
-    <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-hide">
-      {categories.map((item, index) => (
-        <li key={`${item.slug}-${index}`} className="shrink-0">
-          <Link
-            href={`/category/${item.slug}`}
-            className={`hover:text-[#c9060a] transition-colors ${
-              item.slug && isActive(item.slug)
-                ? "text-[#c9060a] border-[#c9060a] pb-1"
-                : "text-[#333]"
-            }`}
-          >
-            {item.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  )}
-</nav>
+        <nav className="border-t border-gray-300 bg-gray-100">
+          {categoriesLoading ? (
+            <div className="h-11 max-w-280 mx-auto px-4 md:px-0 flex items-center gap-6 overflow-hidden">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-4 w-20 rounded bg-gray-200 animate-pulse shrink-0"
+                />
+              ))}
+            </div>
+          ) : (
+            <ul className="flex gap-6 h-11 items-center font-normal text-[16px] max-w-280 mx-auto px-4 md:px-0 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-hide">
+              {categories.map((item, index) => (
+                <li key={`${item.slug}-${index}`} className="shrink-0">
+                  <Link
+                    href={`/category/${item.slug}`}
+                    className={`hover:text-[#c9060a] transition-colors ${item.slug && isActive(item.slug)
+                        ? "text-[#c9060a] border-[#c9060a] pb-1"
+                        : "text-[#333]"
+                      }`}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </nav>
       </header>
 
       {/*----------------- MOBILE SIDEBAR -----------------*/}
@@ -282,9 +281,8 @@ export default function Header() {
 
       <aside
         style={{ width: "300px" }} //  FORCE WIDTH (bypasses Tailwind issues)
-        className={`fixed top-0 left-0 h-full bg-[#333333] text-white z-50 flex flex-col transform transition-transform duration-500 ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 h-full bg-[#333333] text-white z-50 flex flex-col transform transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="h-20 border-b border-[#808080] flex items-center">
           <div className="w-full px-4 flex items-center justify-between">
@@ -340,11 +338,10 @@ export default function Header() {
                   <Link
                     href={`/category/${item.slug}`}
                     onClick={() => setOpen(false)}
-                    className={`block py-4 px-1 transition  ${
-                      active
+                    className={`block py-4 px-1 transition  ${active
                         ? "text-[#c9060a] bg-[#3a3a3a]"
                         : "text-white hover:bg-[#3a3a3a]"
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </Link>
@@ -376,7 +373,7 @@ export default function Header() {
                   <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 pointer-events-none"></span>
                 </a>
                 <a
-                 href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
+                  href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative group w-8 h-8 rounded-lg flex items-center justify-center  text-white bg-[#25D366] shadow-md overflow-hidden transition-transform hover:scale-105"

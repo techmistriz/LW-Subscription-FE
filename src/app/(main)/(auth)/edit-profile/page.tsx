@@ -5,7 +5,6 @@ import { useAppSelector } from "@/redux/store/hooks";
 import { Eye, EyeOff } from "lucide-react";
 import { sendUpdateOtp, updateProfile } from "@/lib/api/Update-Profile/update";
 import { toast } from "sonner";
-import { setUser } from "@/redux/store/slices/authSlice";
 import { fetchProfile } from "@/redux/store/slices/authSlice";
 import { useAppDispatch } from "@/redux/store/hooks";
 
@@ -54,6 +53,7 @@ export default function EditProfilePage() {
         lastName: "",
         email: "",
         contact: "",
+        otp: "",
         dob: "",
         organisation: "",
         gstNumber: "",
@@ -74,6 +74,7 @@ export default function EditProfilePage() {
             lastName: user.last_name || "",
             email: user.email || "",
             contact: user.contact || "",
+            otp: "",
             dob: user.dob || "",
             organisation: user.organisation || "",
             gstNumber: user.gst_number || "",
