@@ -8,6 +8,7 @@ interface FormInputProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   error?: string;
+  placeholder?: string;
   type?: string;
   maxLength?: number;
   required?: boolean;

@@ -257,10 +257,11 @@ export default function Header() {
                 <li key={`${item.slug}-${index}`} className="shrink-0">
                   <Link
                     href={`/category/${item.slug}`}
-                    className={`hover:text-[#c9060a] transition-colors ${item.slug && isActive(item.slug)
+                    className={`hover:text-[#c9060a] transition-colors ${
+                      item.slug && isActive(item.slug)
                         ? "text-[#c9060a] border-[#c9060a] pb-1"
                         : "text-[#333]"
-                      }`}
+                    }`}
                   >
                     {item.name}
                   </Link>
@@ -281,8 +282,9 @@ export default function Header() {
 
       <aside
         style={{ width: "300px" }} //  FORCE WIDTH (bypasses Tailwind issues)
-        className={`fixed top-0 left-0 h-full bg-[#333333] text-white z-50 flex flex-col transform transition-transform duration-500 ${open ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed top-0 left-0 h-full bg-[#333333] text-white z-50 flex flex-col transform transition-transform duration-500 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="h-20 border-b border-[#808080] flex items-center">
           <div className="w-full px-4 flex items-center justify-between">
@@ -338,10 +340,11 @@ export default function Header() {
                   <Link
                     href={`/category/${item.slug}`}
                     onClick={() => setOpen(false)}
-                    className={`block py-4 px-1 transition  ${active
+                    className={`block py-4 px-1 transition  ${
+                      active
                         ? "text-[#c9060a] bg-[#3a3a3a]"
                         : "text-white hover:bg-[#3a3a3a]"
-                      }`}
+                    }`}
                   >
                     {item.name}
                   </Link>

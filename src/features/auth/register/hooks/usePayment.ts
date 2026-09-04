@@ -47,29 +47,29 @@ export function usePayment() {
       name: "Lexwitness",
       description: selectedPlan.name,
 
-    handler: async (response: any) => {
-  setProcessingPayment(true);
+      handler: async (response: any) => {
+        setProcessingPayment(true);
 
-  // console.log(
-  //   "========== RAZORPAY SUCCESS =========="
-  // );
+        // console.log(
+        //   "========== RAZORPAY SUCCESS =========="
+        // );
 
-  // console.log(
-  //   "RAZORPAY RESPONSE =>",
-  //   response
-  // );
+        // console.log(
+        //   "RAZORPAY RESPONSE =>",
+        //   response
+        // );
 
-  // console.log(
-  //   "SELECTED PLAN =>",
-  //   selectedPlan
-  // );
+        // console.log(
+        //   "SELECTED PLAN =>",
+        //   selectedPlan
+        // );
 
-  // console.log(
-  //   "MEMBERSHIP PLAN ID =>",
-  //   membershipPlanId
-  // );
+        // console.log(
+        //   "MEMBERSHIP PLAN ID =>",
+        //   membershipPlanId
+        // );
 
-  try {
+        try {
           const verifyPayload = {
             purchase_type: "NEW",
             membership_plan_id: membershipPlanId || Number(selectedPlan.id),
@@ -142,7 +142,7 @@ export function usePayment() {
                 features: subscriptionData.plan?.feature,
                 is_trial: String(subscriptionData.plan?.is_trial ?? ""),
                 tag: subscriptionData.plan?.tag,
-                created_at:subscriptionData.plan?.created_at,
+                created_at: subscriptionData.plan?.created_at,
               }),
             );
           }

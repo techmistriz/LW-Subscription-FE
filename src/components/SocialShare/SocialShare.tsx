@@ -1,4 +1,3 @@
-
 //design 2
 // "use client";
 
@@ -168,7 +167,6 @@
 //   );
 // }
 
-
 //desihn 8
 // "use client";
 
@@ -246,7 +244,6 @@
 //   );
 // }
 
-
 //design 8
 // "use client";
 
@@ -310,7 +307,6 @@
 
 // export default SocialShare;
 
-
 //design 9
 "use client";
 
@@ -323,8 +319,7 @@ interface Props {
 }
 
 export default function SocialShare({ title = "" }: Props) {
-  const shareUrl =
-    typeof window !== "undefined" ? window.location.href : "";
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
 
   const socialIcons = [
     {
@@ -332,7 +327,7 @@ export default function SocialShare({ title = "" }: Props) {
       label: "LinkedIn",
       color: "#0A66C2",
       href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        shareUrl
+        shareUrl,
       )}`,
     },
     {
@@ -340,7 +335,7 @@ export default function SocialShare({ title = "" }: Props) {
       label: "Facebook",
       color: "#1877F2",
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        shareUrl
+        shareUrl,
       )}`,
     },
     {
@@ -348,7 +343,7 @@ export default function SocialShare({ title = "" }: Props) {
       label: "X",
       color: "#000000",
       href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-        shareUrl
+        shareUrl,
       )}&text=${encodeURIComponent(title)}`,
     },
     {
@@ -356,7 +351,7 @@ export default function SocialShare({ title = "" }: Props) {
       label: "WhatsApp",
       color: "#25D366",
       href: `https://wa.me/?text=${encodeURIComponent(
-        `${title} - ${shareUrl}`
+        `${title} - ${shareUrl}`,
       )}`,
     },
   ];
@@ -484,7 +479,6 @@ export default function SocialShare({ title = "" }: Props) {
 //   );
 // }
 
-
 // "use client";
 
 // import { FaFacebookF } from "react-icons/fa";
@@ -562,7 +556,6 @@ export default function SocialShare({ title = "" }: Props) {
 //   );
 // }
 
-
 // "use client";
 
 // import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
@@ -616,8 +609,8 @@ export default function SocialShare({ title = "" }: Props) {
 //           rel="noopener noreferrer"
 //           aria-label={`Share on ${social.name}`}
 //           className={`
-//             group relative flex items-center justify-center 
-//             w-10 h-10 rounded-full text-white shadow-md 
+//             group relative flex items-center justify-center
+//             w-10 h-10 rounded-full text-white shadow-md
 //             transition-all duration-300 ease-out
 //             hover:scale-110 hover:-translate-y-1 active:scale-95
 //             ${social.color} ${social.hover}
@@ -627,7 +620,7 @@ export default function SocialShare({ title = "" }: Props) {
 //           <span className="absolute -top-10 scale-0 transition-all rounded bg-gray-800 p-2 text-xs text-white group-hover:scale-100 font-medium">
 //             {social.name}
 //           </span>
-          
+
 //           {/* Icon */}
 //           <div className="z-10 transition-transform duration-300">
 //             {social.icon}

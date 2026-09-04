@@ -16,17 +16,12 @@ interface RightSidebarProps {
   authorData?: any;
 }
 
-function RightSidebar({
-  showAuthor = false,
-  authorData,
-}: RightSidebarProps) {
-  const [magazine, setMagazine] =
-    useState<Magazine | null>(null);
+function RightSidebar({ showAuthor = false, authorData }: RightSidebarProps) {
+  const [magazine, setMagazine] = useState<Magazine | null>(null);
 
   useEffect(() => {
     const loadLatest = async () => {
-      const latest =
-        await getLatestSingleMagazines();
+      const latest = await getLatestSingleMagazines();
 
       setMagazine(latest);
     };
@@ -37,9 +32,7 @@ function RightSidebar({
   return (
     <aside className="space-y-8">
       {/* Author Card */}
-      {showAuthor && authorData && (
-        <Author data={authorData} />
-      )}
+      {showAuthor && authorData && <Author data={authorData} />}
 
       {/* Magazine */}
       {magazine && (

@@ -15,6 +15,7 @@ export default function RegisterForm() {
     selectedPlan,
     otherPlans,
     isOtpSent,
+    isSendingOtp, // ADD
     otpTimer,
     handleChange,
     handleSendOtp,
@@ -76,6 +77,7 @@ export default function RegisterForm() {
               getError={getError}
               isOtpSent={isOtpSent}
               otpTimer={otpTimer}
+              isSendingOtp={isSendingOtp} // ADD
               onSendOtp={handleSendOtp}
             />
           </div>

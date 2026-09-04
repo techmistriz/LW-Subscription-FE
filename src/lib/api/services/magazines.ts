@@ -18,23 +18,23 @@ export async function getMagazines(
 
     const response = await api.get("/magazines", { params });
     return response.data;
-  }catch (error) {
-  console.error("Error fetching magazines:", error);
+  } catch (error) {
+    console.error("Error fetching magazines:", error);
 
-  return {
-    message: "Failed to fetch magazines",
-    status: false,
-    data: [],
-    meta: {
-      paging: {
-        current_page: 1,
-        last_page: 1,
-        total: 0,
-        per_page,
+    return {
+      message: "Failed to fetch magazines",
+      status: false,
+      data: [],
+      meta: {
+        paging: {
+          current_page: 1,
+          last_page: 1,
+          total: 0,
+          per_page,
+        },
       },
-    },
-  };
-}
+    };
+  }
 }
 
 export async function getSingleMagazine(slugOrId: string): Promise<Magazine> {

@@ -11,6 +11,7 @@ interface PersonalDetailsFormProps {
   getError: (name: string) => string | undefined;
   isOtpSent: boolean;
   otpTimer: number;
+  isSendingOtp: boolean; // ADD
   onSendOtp: () => void;
 }
 
@@ -20,6 +21,7 @@ export default function PersonalDetailsForm({
   getError,
   isOtpSent,
   otpTimer,
+  isSendingOtp, // ADD
   onSendOtp,
 }: PersonalDetailsFormProps) {
   return (
@@ -47,24 +49,28 @@ export default function PersonalDetailsForm({
           required
         />
 
-        <FormInput
-          label="Email *"
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={onChange}
-          error={getError("email")}
-          required
-        />
-
         <OTPInput
           isOtpSent={isOtpSent}
-          contact={form.contact}
+          email={form.email}
           otp={form.otp}
           otpTimer={otpTimer}
+          isSendingOtp={isSendingOtp} // ADD
           onChange={onChange}
           onSendOtp={onSendOtp}
+          error={getError("otp")}
+        />
+
+        <FormInput
+          label="Contact Number *"
+          name="contact"
+          value={form.contact}
+          onChange={onChange}
           error={getError("contact")}
+          required
+          maxLength={10}
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="WhatsApp preferred"
         />
 
         <FormInput

@@ -8,9 +8,7 @@ export default function ThankYou() {
 
   const { user } = useAppSelector((state) => state.auth);
 
-  const subscription = useAppSelector(
-    (state) => state.subscription.active
-  );
+  const subscription = useAppSelector((state) => state.subscription.active);
 
   const email = user?.email || "Not available";
   const planName = subscription?.name || "Your Plan";
@@ -18,10 +16,7 @@ export default function ThankYou() {
   return (
     <div className="min-h-[85vh] bg-white flex items-center justify-center px-4 pb-24">
       <div className="w-full max-w-2xl border border-gray-200 shadow-sm rounded-2xl px-8 py-14 text-center bg-white">
-        
-        <div className="text-green-500 text-6xl mb-6">
-          ✔
-        </div>
+        <div className="text-green-500 text-6xl mb-6">✔</div>
 
         <h1 className="text-3xl sm:text-4xl font-bold text-[#333] mb-4">
           Thank You
@@ -34,9 +29,7 @@ export default function ThankYou() {
 
         <p className="text-gray-600 mb-8 leading-relaxed">
           Your login credentials have been shared with your email id{" "}
-          <span className="font-medium text-[#c9060a]">
-            {email}
-          </span>.
+          <span className="font-medium text-[#c9060a]">{email}</span>.
         </p>
 
         <button

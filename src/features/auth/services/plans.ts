@@ -19,7 +19,6 @@ export async function getPlans() {
   }
 }
 
-
 export async function getMembershipPlan(is_trial = 1) {
   try {
     const response = await api.get(`/membership-plan?is_trial=${is_trial}`);

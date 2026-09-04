@@ -146,14 +146,13 @@ export default function Dashboard() {
     fetchPlans();
   }, []);
 
-
   useEffect(() => {
     // Check if we just came from payment (using sessionStorage flag)
-    const justPaid = sessionStorage.getItem('just_paid');
+    const justPaid = sessionStorage.getItem("just_paid");
 
-    if (justPaid === 'true' && isAuthenticated) {
+    if (justPaid === "true" && isAuthenticated) {
       // Clear the flag
-      sessionStorage.removeItem('just_paid');
+      sessionStorage.removeItem("just_paid");
 
       // Force refresh both profile and subscription
       dispatch(fetchProfile());
@@ -162,7 +161,6 @@ export default function Dashboard() {
       dispatch(loadSubscriptionFromStorage());
     }
   }, [isAuthenticated, dispatch]);
-
 
   const status = subscription?.status?.toUpperCase();
 
@@ -227,7 +225,7 @@ export default function Dashboard() {
             });
 
             if (verifyRes?.status) {
-              sessionStorage.setItem('just_paid', 'true');
+              sessionStorage.setItem("just_paid", "true");
               await dispatch(fetchProfile()).unwrap();
 
               setRenewLoading(false);
@@ -247,7 +245,7 @@ export default function Dashboard() {
         },
         theme: { color: "#c9060a" },
         retry: { enabled: true },
-        modal: { ondismiss: function () { } },
+        modal: { ondismiss: function () {} },
       };
 
       if (!window.Razorpay) {
@@ -530,7 +528,7 @@ export default function Dashboard() {
                   : new Date();
                 const daysUntilUpgrade = Math.ceil(
                   (pendingActivationDate.getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60 * 24),
+                    (1000 * 60 * 60 * 24),
                 );
                 const isExpanded = pendingPlan.id
                   ? expandedUpgrades[pendingPlan.id] || false
@@ -580,27 +578,30 @@ export default function Dashboard() {
                       {/* RIGHT SIDE */}
                       <div className="flex items-center gap-3">
                         <span
-                          className={`px-3 py-1 text-xs font-semibold rounded-full ${daysUntilUpgrade > 0
+                          className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                            daysUntilUpgrade > 0
                               ? "bg-amber-100 text-amber-700"
                               : "bg-green-100 text-green-700"
-                            }`}
+                          }`}
                         >
                           {getActivationLabel(activationDate)}
                         </span>
 
                         <ChevronDown
-                          className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""
-                            }`}
+                          className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
                         />
                       </div>
                     </button>
 
                     {/* EXPAND AREA */}
                     <div
-                      className={`grid transition-all duration-500 ease-in-out ${isExpanded
+                      className={`grid transition-all duration-500 ease-in-out ${
+                        isExpanded
                           ? "grid-rows-[1fr] opacity-100"
                           : "grid-rows-[0fr] opacity-0"
-                        }`}
+                      }`}
                     >
                       <div className="overflow-hidden">
                         <div className="px-6 pb-6 pt-2">

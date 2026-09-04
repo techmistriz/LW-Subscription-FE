@@ -370,9 +370,7 @@ export default function ArticleDetailPage() {
                       reader_designation: item.reader_designation,
                       text_alignment:
                         (item.text_aligment?.replace("text-", "") as
-                          | "left"
-                          | "right"
-                          | "center") || "left",
+                          "left" | "right" | "center") || "left",
                     }}
                   />
                 ))}

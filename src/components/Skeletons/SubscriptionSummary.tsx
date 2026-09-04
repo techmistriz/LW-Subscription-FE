@@ -24,10 +24,7 @@ const SubscriptionSummarySkeleton = () => {
 
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="p-4 rounded-xl border border-gray-100"
-              >
+              <div key={i} className="p-4 rounded-xl border border-gray-100">
                 <div className="flex justify-between items-center">
                   <div className="h-4 w-28 bg-gray-200 rounded" />
                   <div className="h-4 w-12 bg-gray-200 rounded" />
@@ -65,4 +62,4 @@ const SubscriptionSummarySkeleton = () => {
   );
 };
 
-export default  SubscriptionSummarySkeleton;
+export default SubscriptionSummarySkeleton;

@@ -2,7 +2,7 @@ import ForgetForm from "@/features/auth/ForgetForm";
 import React from "react";
 
 function page() {
-  return <ForgetForm/>
+  return <ForgetForm />;
 }
 
 export default page;

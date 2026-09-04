@@ -137,7 +137,9 @@ export default function SubscribeBanner() {
   return (
     <section className="mt-10 bg-[#333333] py-12 px-4">
       <div className="max-w-5xl mx-auto text-center">
-        <h2 className="font-bold text-white text-2xl">SUBSCRIBE US</h2>
+        <h2 className="font-semibold text-white text-2xl uppercase">
+          Signup for Lex Witness Newsletter
+        </h2>
         <div className="w-15 h-1 bg-[#c9060a] mx-auto mt-1"></div>
 
         <form onSubmit={handleSubmit} noValidate>

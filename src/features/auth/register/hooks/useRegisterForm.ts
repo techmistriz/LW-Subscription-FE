@@ -50,6 +50,7 @@ export function useRegisterForm() {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
   const [processingPayment, setProcessingPayment] = useState(false); //  ADD THIS
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   // Fetch plans
   useEffect(() => {
@@ -115,33 +116,39 @@ export function useRegisterForm() {
     }
   };
 
-const handleSendOtp = async () => {
-  if (!form.email || !form.contact) {
-    return toast.error("Please enter email and mobile number");
-  }
+  const handleSendOtp = async () => {
+    if (!form.email || !form.contact) {
+      return toast.error("Please enter email and mobile number");
+    }
 
-  if (form.contact.length !== 10) {
-    return toast.error("Enter valid number");
-  }
+    if (form.contact.length !== 10) {
+      return toast.error("Enter valid number");
+    }
 
-  try {
-    const res = await sendOtp({
-      contact: form.contact,
-      email: form.email,
-    });
+    if (isSendingOtp) return;
 
-    if (!res?.status) throw new Error(res?.message);
+    setIsSendingOtp(true);
 
-    setIsOtpSent(true);
-    setOtpTimer(60);
+    try {
+      const res = await sendOtp({
+        contact: form.contact,
+        email: form.email,
+      });
 
-    //  OTP SENT TOAST
-    toast.success("OTP sent successfully");
-  } catch (err: any) {
-    toast.error(err.message || "Failed to send OTP");
-  }
-};
+      if (!res?.status) {
+        throw new Error(res?.message || "Failed to send OTP");
+      }
 
+      setIsOtpSent(true);
+      setOtpTimer(60);
+
+      toast.success("OTP sent successfully");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send OTP");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
   const cancelPendingPayment = async () => {
     try {
@@ -314,6 +321,7 @@ const handleSendOtp = async () => {
     loading,
     plansLoading,
     fieldErrors,
+    isSendingOtp,
     isOtpSent,
     otpTimer,
     processingPayment, //  Export this

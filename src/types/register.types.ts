@@ -6,7 +6,7 @@ export interface RegisterFormData {
   otp: string;
   dob: string;
   organisation: string;
-   gst_number: string; 
+  gst_number: string;
   address: string;
   city: string;
   pincode: string;

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Post } from "./service";
 import SafeImage from "../SafeImage/SafeImage";
 
-
 const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
 
 export function MiddleCards({ posts }: { posts: Post[] }) {
@@ -12,9 +11,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
   return (
     <div className="lg:col-span-3 flex flex-col gap-2">
       {posts.map((post) => {
-        const imageUrl = post.image
-          ? `${baseUrl}/${post.image}`
-          : undefined;
+        const imageUrl = post.image ? `${baseUrl}/${post.image}` : undefined;
 
         return (
           <div

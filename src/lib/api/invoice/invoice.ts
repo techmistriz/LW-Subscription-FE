@@ -74,7 +74,7 @@ export const downloadInvoicePdf = async (subscriptionId: number) => {
       headers: {
         Accept: "application/pdf",
       },
-    }
+    },
   );
 
   // console.log("===== INVOICE RESPONSE =====");
@@ -106,10 +106,9 @@ export const downloadInvoicePdf = async (subscriptionId: number) => {
     type: "application/pdf",
   });
 
-
   console.log("Request Headers:", {
-  Accept: "application/pdf",
-});
+    Accept: "application/pdf",
+  });
   console.log("PDF Blob:", blob);
 
   const url = window.URL.createObjectURL(blob);
