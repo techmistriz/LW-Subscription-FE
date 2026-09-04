@@ -61,7 +61,7 @@ export default function SignInForm() {
           <h2 className="text-2xl font-bold tracking-wide">SIGN IN YOURSELF</h2>
 
           <p className="text-[#333333] text-sm mt-2 max-w-xl mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+           Welcome back. Sign in to access your account and continue.
           </p>
 
           <div className="w-12 h-1 bg-[#c9060a] mx-auto mt-4"></div>
