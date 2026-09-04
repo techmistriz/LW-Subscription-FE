@@ -124,7 +124,7 @@ const Popup = ({ onClose }: PopupProps) => {
             </Link>
 
             <div className="mt-6">
-              <h2 className="text-xl md:text-2xl font-black text-[#333]">
+              <h2 className="text-xl md:text-2xl font-bold text-[#333]">
                 Your <span className="text-[#c9060a]">1st Month</span> is on Us.
               </h2>
 
