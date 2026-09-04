@@ -172,7 +172,7 @@ export default function SubscriptionPage() {
           </p>
 
           <div className="mt-6">
-            <h1 className="text-xl lg:text-2xl  font-black text-[#333] leading-tight">
+            <h1 className="text-xl lg:text-2xl  font-bold text-[#333] leading-tight">
               Your <span className="text-[#c9060a]">1st Month</span> is on Us.
             </h1>
 
