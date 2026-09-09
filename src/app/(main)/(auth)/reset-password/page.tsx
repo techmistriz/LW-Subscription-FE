@@ -8,8 +8,8 @@ import {
   resetPassword,
   clearPasswordResetState,
 } from "@/store/slices/authSlice";
-import Banner from "@/components/common/Banner";
 import { Eye, EyeOff } from "lucide-react";
+import Banner from "@/components/common/Banner";
 
 export default function ResetPasswordPage() {
   const dispatch = useAppDispatch();
