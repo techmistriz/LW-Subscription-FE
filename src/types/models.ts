@@ -221,64 +221,43 @@ export interface SubscriptionPlan {
   id?: number;
   name?: string;
   title?: string;
-
   price?: number | string;
   amount?: number | string;
-
   duration_value?: number;
   duration_unit?: string;
-
   duration?: number | string;
   duration_type?: string;
-
-  feature?: string[];
-  features?: string[];
-
+  feature?: string;
+  features?: string;
   is_trial?: boolean | number | string;
-
   tag?: string;
-
   created_at?: string;
   updated_at?: string;
-
   [key: string]: unknown;
 }
 
 export interface Subscription {
   id: number;
-
   plan_id?: number;
   membership_plan_id?: number;
-
   name?: string;
-
   amount?: number;
   total_amount?: number;
   subtotal_amount?: number;
   tax_amount?: number;
   tax_percent?: number;
-
   status?: string;
-
   start_date?: string;
   end_date?: string;
-
   duration_value?: number;
   duration_unit?: string;
-
   purchase_type?: string;
-
-  features?: string[];
-
+  features?: string;
   is_trial?: string;
-
   tag?: string;
-
   next_subscription_id?: number | null;
   previous_subscription_id?: number | null;
-
   created_at?: string | number | Date;
   updated_at?: string | number | Date;
-
   plan?: SubscriptionPlan;
 }

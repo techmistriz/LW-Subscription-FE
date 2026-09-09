@@ -464,10 +464,11 @@ export default function Dashboard() {
                   <p className="text-[10px] text-red-200 uppercase tracking-wider font-semibold mb-1.5">
                     INCLUDED FEATURES
                   </p>
+
                   <div
                     className="text-sm text-red-100 space-y-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-0.5"
                     dangerouslySetInnerHTML={{
-                      __html: subscription.features?.join(", ") ?? "",
+                      __html: subscription.features,
                     }}
                   />
                 </div>
@@ -683,12 +684,18 @@ export default function Dashboard() {
                                   <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-4">
                                     Plan Benefits
                                   </p>
+
                                   <div
-                                    className="text-sm text-gray-600 grid grid-cols-1 gap-2 
-                [&_ul]:list-none [&_li]:flex [&_li]:items-center [&_li]:before:content-['✓'] [&_li]:before:mr-3 [&_li]:before:text-green-500 [&_li]:before:font-bold"
+                                    className="text-sm text-gray-600 grid grid-cols-1 gap-2
+                                              [&_ul]:list-none
+                                              [&_li]:flex
+                                              [&_li]:items-center
+                                              [&_li]:before:content-['✓']
+                                              [&_li]:before:mr-3
+                                              [&_li]:before:text-green-500
+                                              [&_li]:before:font-bold"
                                     dangerouslySetInnerHTML={{
-                                      __html:
-                                        pendingPlan.features?.join(", ") ?? "",
+                                      __html: pendingPlan.features,
                                     }}
                                   />
                                 </div>
