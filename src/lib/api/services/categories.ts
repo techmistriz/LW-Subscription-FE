@@ -1,28 +1,31 @@
 import { request } from "@/lib/api/request";
-import { Category } from "@/types";
+import type { Category } from "@/types";
+
+interface CategoriesData {
+  data?: Category[];
+}
 
 export async function getCategories(): Promise<Category[]> {
-  const response = await request<any>("GET", "/categories?is_show_in_menu=1");
+  const response = await request<CategoriesData>(
+    "GET",
+    "/categories?is_show_in_menu=1",
+  );
 
-  // console.log("CATEGORIES RESPONSE:", response);
-
-  if (response?.data?.status === false) {
+  if (!response.status) {
     console.error("❌ Categories API Error");
-    console.error("Message:", response.data.message);
-    console.error("Developer Message:", response.data.developer_message);
-    console.error("Code:", response.data.code);
-    console.error("Full Response:", response.data);
+    console.error("Message:", response.message);
+    console.error("Full Response:", response);
 
-    throw new Error(response.data.message);
+    throw new Error(response.message || "Failed to fetch categories");
   }
 
   return response.data?.data ?? [];
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  const response = await request<any>("GET", "/categories");
+  const response = await request<CategoriesData>("GET", "/categories");
 
-  if (!response?.status) return [];
+  if (!response.status) return [];
 
   return response.data?.data ?? [];
 }

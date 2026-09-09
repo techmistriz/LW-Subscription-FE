@@ -1,5 +1,4 @@
 import api from "@/lib/api/axios";
-import type { Post } from "@/types"; // Magazine import removed, duplicate hata diya
 
 interface GetPostsParams {
   search?: string;

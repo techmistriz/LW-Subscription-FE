@@ -48,10 +48,7 @@ export function formatArticleHTML(html: string): string {
     .replace(/&#x26;/gi, "&");
 
   // 3. Remove inline styles
-  formattedHTML = formattedHTML.replace(
-    /\sstyle\s*=\s*(["']).*?\1/gi,
-    "",
-  );
+  formattedHTML = formattedHTML.replace(/\sstyle\s*=\s*(["']).*?\1/gi, "");
 
   // 4. Remove dangerous event attributes
   formattedHTML = formattedHTML
@@ -61,10 +58,7 @@ export function formatArticleHTML(html: string): string {
     .replace(/vbscript\s*:/gi, "");
 
   // 5. Normalize line breaks
-  formattedHTML = formattedHTML.replace(
-    /\r?\n\s*\r?\n/g,
-    "<br/><br/>",
-  );
+  formattedHTML = formattedHTML.replace(/\r?\n\s*\r?\n/g, "<br/><br/>");
 
   // 6. Sanitize
   if (typeof window !== "undefined") {
@@ -127,7 +121,5 @@ export function stripHTML(html: string): string {
   const div = document.createElement("div");
   div.innerHTML = html;
 
-  return (div.textContent || div.innerText || "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return (div.textContent || div.innerText || "").replace(/\s+/g, " ").trim();
 }

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getEditorial } from "../services/editorial.service";
 import Link from "next/link";
 import SafeImage from "../../../components/media/SafeImage";

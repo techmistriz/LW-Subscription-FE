@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
 import {
   FaLinkedinIn,
@@ -13,8 +12,6 @@ import {
 import { motion } from "framer-motion";
 
 const Footer = () => {
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-
   const date = new Date();
   const year = date.getFullYear();
   return (

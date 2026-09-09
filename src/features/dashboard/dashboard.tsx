@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -8,7 +8,6 @@ import {
   Calendar,
   Sparkles,
   CreditCard,
-  Calendar as CalendarIcon,
   FileText,
   RefreshCw,
   CalendarCheck,
@@ -24,23 +23,18 @@ import {
   verifyRenewPayment,
 } from "@/lib/api/subscription/subscription";
 import { getActivationLabel } from "./helper";
-
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
+import type { RazorpayPaymentResponse, Subscription } from "@/types";
 
 const getPendingActivationDate = (
-  pendingSubscriptions: any[],
-  activeSubscription: any,
+  pendingSubscriptions: Subscription[],
+  activeSubscription: Subscription | null,
   index: number,
-) => {
+): string | Date => {
   if (index === 0) {
-    return activeSubscription?.end_date;
+    return activeSubscription?.end_date ?? new Date();
   }
 
-  return pendingSubscriptions[index - 1]?.end_date;
+  return pendingSubscriptions[index - 1]?.end_date ?? new Date();
 };
 
 export default function Dashboard() {
@@ -61,8 +55,7 @@ export default function Dashboard() {
     (state) => state.subscription.isLoaded,
   );
 
-  const [plans, setPlans] = useState<any[]>([]);
-  const [dataLoaded, setDataLoaded] = useState(false);
+  // const [dataLoaded, setDataLoaded] = useState(false);
   const [renewSuccess, setRenewSuccess] = useState(false);
   const [renewLoading, setRenewLoading] = useState(false);
   const [expandedUpgrades, setExpandedUpgrades] = useState<{
@@ -80,11 +73,11 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, dispatch]);
 
-  useEffect(() => {
-    if (isInitialized) {
-      setDataLoaded(true);
-    }
-  }, [user, activeSubscription, pendingSubscription, isInitialized]);
+  // useEffect(() => {
+  //   if (isInitialized) {
+  //     setDataLoaded(true);
+  //   }
+  // }, [user, activeSubscription, pendingSubscription, isInitialized]);
 
   const subscription = activeSubscription;
 
@@ -112,34 +105,34 @@ export default function Dashboard() {
     }
   }, [user, loading, isAuthenticated, router]);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    contact: "",
-    address: "",
-  });
+  // const [formData, setFormData] = useState({
+  //   firstName: "",
+  //   lastName: "",
+  //   email: "",
+  //   contact: "",
+  //   address: "",
+  // });
 
-  useEffect(() => {
-    if (!user) return;
-    setFormData({
-      firstName: user.first_name || "",
-      lastName: user.last_name || "",
-      email: user.email || "",
-      contact: user.contact || "",
-      address: user.address || "",
-    });
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) return;
+  //   setFormData({
+  //     firstName: user.first_name || "",
+  //     lastName: user.last_name || "",
+  //     email: user.email || "",
+  //     contact: user.contact || "",
+  //     address: user.address || "",
+  //   });
+  // }, [user]);
 
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const data = await getMembershipPlans();
-        setPlans(data || []);
+        await getMembershipPlans();
       } catch {
-        setPlans([]);
+        // Ignore plan fetch errors on dashboard
       }
     };
+
     fetchPlans();
   }, []);
 
@@ -159,6 +152,8 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, dispatch]);
 
+  if (!user) return null;
+
   const status = subscription?.status?.toUpperCase();
 
   const now = new Date();
@@ -175,17 +170,20 @@ export default function Dashboard() {
   const formatAmount = (amount?: number) =>
     !amount ? "0.00" : `₹${amount.toLocaleString("en-IN")}`;
 
-  const formatDate = (date?: string) =>
+  const formatDate = (date?: string | Date) =>
     date ? new Date(date).toDateString() : "—";
 
   const endDate = subscription?.end_date;
-  const remainingDays = useMemo(() => {
-    if (!endDate) return null;
-    const end = new Date(endDate);
-    const now = new Date();
-    const diff = end.getTime() - now.getTime();
-    return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
-  }, [endDate]);
+
+  const remainingDays = endDate
+    ? Math.max(
+        0,
+        Math.ceil(
+          (new Date(endDate).getTime() - new Date().getTime()) /
+            (1000 * 60 * 60 * 24),
+        ),
+      )
+    : null;
 
   const handleRenewPlan = async () => {
     try {
@@ -209,7 +207,7 @@ export default function Dashboard() {
         currency: payment.currency || "INR",
         order_id: payment.order_id,
         name: "Lex Witness",
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayPaymentResponse) {
           setRenewLoading(true);
 
           try {
@@ -252,20 +250,20 @@ export default function Dashboard() {
 
       const razor = new window.Razorpay(options);
       razor.open();
-    } catch (error: any) {
-      alert(error?.response?.data?.message || "Renew failed");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Renew failed";
+
+      alert(message);
     }
   };
 
-  if (loading || !dataLoaded || !isInitialized || !isSubscriptionLoaded) {
+  if (loading || !isInitialized || !isSubscriptionLoaded) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <PageLoader />
       </div>
     );
   }
-
-  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -275,7 +273,7 @@ export default function Dashboard() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl md:text-2xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                Welcome back, {formData.firstName || "User"}!
+                Welcome back, {user.first_name || "User"}!
               </h1>
               <p className="text-gray-500 text-sm  mt-1">
                 Manage your subscription and account settings
@@ -405,24 +403,24 @@ export default function Dashboard() {
             <div className="p-4 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Name</span>
-                <span className="text-sm font-medium text-gray-800">{`${formData.firstName} ${formData.lastName}`}</span>
+                <span className="text-sm font-medium text-gray-800">{`${user.first_name || ""} ${user.last_name || ""}`}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Email</span>
                 <span className="text-sm font-medium text-gray-800 truncate ml-2">
-                  {formData.email}
+                  {user.email}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Contact</span>
                 <span className="text-sm font-medium text-gray-800">
-                  {formData.contact || "—"}
+                  {user.contact || "—"}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Address</span>
                 <span className="text-sm font-medium text-gray-800 truncate ml-2">
-                  {formData.address || "—"}
+                  {user.address || "—"}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -468,7 +466,9 @@ export default function Dashboard() {
                   </p>
                   <div
                     className="text-sm text-red-100 space-y-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-0.5"
-                    dangerouslySetInnerHTML={{ __html: subscription.features }}
+                    dangerouslySetInnerHTML={{
+                      __html: subscription.features?.join(", ") ?? "",
+                    }}
                   />
                 </div>
               )}
@@ -687,7 +687,8 @@ export default function Dashboard() {
                                     className="text-sm text-gray-600 grid grid-cols-1 gap-2 
                 [&_ul]:list-none [&_li]:flex [&_li]:items-center [&_li]:before:content-['✓'] [&_li]:before:mr-3 [&_li]:before:text-green-500 [&_li]:before:font-bold"
                                     dangerouslySetInnerHTML={{
-                                      __html: pendingPlan.features,
+                                      __html:
+                                        pendingPlan.features?.join(", ") ?? "",
                                     }}
                                   />
                                 </div>
@@ -789,8 +790,24 @@ export default function Dashboard() {
   );
 }
 
+interface StatCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  subtitle?: string;
+  status?: boolean;
+  alert?: boolean;
+}
+
 // Enhanced Components
-function StatCard({ icon, title, value, subtitle, status, alert }: any) {
+function StatCard({
+  icon,
+  title,
+  value,
+  subtitle,
+  status,
+  alert,
+}: StatCardProps) {
   return (
     <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
       <div className="flex items-start justify-between">

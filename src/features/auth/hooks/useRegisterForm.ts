@@ -131,8 +131,10 @@ export function useRegisterForm() {
       setIsOtpSent(true);
       setOtpTimer(60);
       toast.success("OTP sent successfully");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to send OTP");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to send OTP";
+
+      toast.error(message);
     } finally {
       setIsSendingOtp(false);
     }
@@ -176,10 +178,10 @@ export function useRegisterForm() {
       let res;
       try {
         res = await registerUser(payload);
-      } catch (error: any) {
+      } catch (error: unknown) {
         const isPendingPaymentError =
-          error.message === "Pending payment already exists" ||
-          error.response?.data?.message === "Pending payment already exists";
+          error instanceof Error &&
+          error.message === "Pending payment already exists";
 
         if (!isPendingPaymentError) throw error;
 
@@ -262,8 +264,10 @@ export function useRegisterForm() {
         toast.success("Registration Successful");
         router.replace("/thankyou");
       }
-    } catch (err: any) {
-      toast.error(err.message || "Registration failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to send OTP";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }

@@ -312,7 +312,6 @@
 
 import { FaLinkedinIn, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { useState } from "react";
 
 interface Props {
   title?: string;

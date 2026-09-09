@@ -31,7 +31,6 @@ export default function ForgotPasswordForm() {
   useEffect(() => {
     if (success) {
       toast.success(success);
-      setEmail("");
 
       const timer = setTimeout(() => {
         dispatch(clearPasswordResetState());

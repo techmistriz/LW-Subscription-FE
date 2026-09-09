@@ -15,10 +15,10 @@ const PrivacyPage = () => {
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed space-y-2">
               <p>
-                LexWitness.com ("we," "us," "our") respects your privacy. This
-                Privacy Policy explains how we collect, use, disclose, and
-                safeguard your information when you visit our website, use our
-                services, or interact with us.
+                LexWitness.com (&quot;we,&quot; &quot;us,&quot; &quot;our&quot;)
+                respects your privacy. This Privacy Policy explains how we
+                collect, use, disclose, and safeguard your information when you
+                visit our website, use our services, or interact with us.
               </p>
               <p>
                 By using LexWitness.com, you consent to the practices described
@@ -137,7 +137,7 @@ const PrivacyPage = () => {
           {/*----------------- Section 8 -----------------*/}
           <section className="space-y-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 border-b border-gray-300 pb-1">
-              8. Children's Privacy
+              8. Children&apos;s Privacy
             </h2>
             <div className="text-xs sm:text-sm text-gray-700 leading-relaxed">
               <p>

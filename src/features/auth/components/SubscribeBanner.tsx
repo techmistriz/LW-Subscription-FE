@@ -114,6 +114,7 @@ export default function SubscribeBanner() {
   /*----------------- submit handler -----------------*/
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!validate()) return;
 
     setLoading(true);
@@ -126,9 +127,16 @@ export default function SubscribeBanner() {
         message: res?.message || "Subscribed successfully!",
       });
 
-      setForm({ name: "", email: "", contact: "" });
-    } catch (err: any) {
-      toast.error(err.message);
+      setForm({
+        name: "",
+        email: "",
+        contact: "",
+      });
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Subscription failed";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }

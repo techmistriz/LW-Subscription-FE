@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import SafeImage from "../../../components/media/SafeImage";
+import type { Post } from "@/types";
 
 const postImageBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
 interface Props {
-  articles: any[];
+  articles: Post[];
 }
 
 export default function RelatedMagazineArticles({ articles }: Props) {
@@ -19,9 +20,8 @@ export default function RelatedMagazineArticles({ articles }: Props) {
       {articles.slice(0, 3).map((article) => (
         <div
           key={article.id}
-          className="flex flex-col  md:flex-row gap-4 border-b border-dashed border-gray-300 pb-5 last:border-b-0"
+          className="flex flex-col md:flex-row gap-4 border-b border-dashed border-gray-300 pb-5 last:border-b-0"
         >
-          {/* Article thumbnail */}
           <Link
             href={`/${article.slug}`}
             className="relative w-full h-50 md:w-30 md:h-25 shrink-0 block"
@@ -35,29 +35,27 @@ export default function RelatedMagazineArticles({ articles }: Props) {
               alt={article.title || "Article thumbnail"}
               fill
               sizes="(max-width: 768px) 100vw, 180px"
-              className="object-cover "
+              className="object-cover"
             />
           </Link>
 
-          {/* Article content */}
           <div className="flex-1">
-            {/* Title */}
             <Link
               href={`/${article.slug}`}
-              className="font-semibold text-[16px] leading-snug block  transition-colors"
+              className="font-semibold text-[16px] leading-snug block transition-colors"
             >
               {article.title}
             </Link>
+
             <hr className="text-gray-200" />
-            {/* Description */}
+
             <p className="text-[14px] text-gray-600 mt-2 line-clamp-2">
               {article.short_description || "No description available"}
             </p>
 
-            {/* Read More */}
             <Link
               href={`/${article.slug}`}
-              className="text-[#c9060a] text-sm mt-3 inline-block "
+              className="text-[#c9060a] text-sm mt-3 inline-block"
             >
               Read More
             </Link>

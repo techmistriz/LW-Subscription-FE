@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import SafeImage from "@/components/media/SafeImage";
 import type { Post } from "@/types";

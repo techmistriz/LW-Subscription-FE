@@ -2,20 +2,31 @@
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
 import { setSubscription } from "@/store/slices/subscriptionSlice";
-import { RegisterFormData } from "@/types/register.types";
+import type { RegisterFormData } from "@/types/register.types";
 import type { Plan } from "@/features/auth/services/plans.service";
 import { verifyPayment } from "@/features/auth/services/payment.service";
 
+interface PaymentData {
+  razorpay_key: string;
+  amount: number;
+  currency: string;
+  order_id: string;
+}
+
 const loadRazorpay = () =>
   new Promise<boolean>((resolve) => {
-    if ((window as any).Razorpay) return resolve(true);
+    if (window.Razorpay) return resolve(true);
+
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
     script.onload = () => resolve(true);
     script.onerror = () => resolve(false);
+
     document.body.appendChild(script);
   });
 
@@ -24,7 +35,7 @@ export function usePayment() {
   const dispatch = useAppDispatch();
 
   const handleRazorpayPayment = async (
-    payment: any,
+    payment: PaymentData,
     selectedPlan: Plan,
     registrationToken: string | null,
     form: RegisterFormData,
@@ -32,9 +43,12 @@ export function usePayment() {
     membershipPlanId?: number,
   ) => {
     const isLoaded = await loadRazorpay();
-    if (!isLoaded) throw new Error("Razorpay SDK failed to load");
 
-    const rzp = new (window as any).Razorpay({
+    if (!isLoaded) {
+      throw new Error("Razorpay SDK failed to load");
+    }
+
+    const rzp = new window.Razorpay({
       key: payment.razorpay_key,
       amount: payment.amount,
       currency: payment.currency,
@@ -42,7 +56,7 @@ export function usePayment() {
       name: "Lexwitness",
       description: selectedPlan.name,
 
-      handler: async (response: any) => {
+      handler: async (response) => {
         setProcessingPayment(true);
 
         try {
@@ -81,7 +95,12 @@ export function usePayment() {
               : null,
           };
 
-          dispatch(setUser({ user: userWithSubscription, token }));
+          dispatch(
+            setUser({
+              user: userWithSubscription,
+              token,
+            }),
+          );
 
           if (subscriptionData) {
             dispatch(
@@ -105,9 +124,13 @@ export function usePayment() {
           }
 
           toast.success("Payment successful! Registration completed.");
+
           router.replace("/thankyou");
-        } catch (err: any) {
-          toast.error(err.message || "Payment verification failed");
+        } catch (err: unknown) {
+          const message =
+            err instanceof Error ? err.message : "Payment verification failed";
+
+          toast.error(message);
           setProcessingPayment(false);
         }
       },
@@ -118,7 +141,9 @@ export function usePayment() {
         contact: form.contact,
       },
 
-      theme: { color: "#c9060a" },
+      theme: {
+        color: "#c9060a",
+      },
 
       modal: {
         ondismiss: () => {

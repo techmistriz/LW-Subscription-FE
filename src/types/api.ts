@@ -24,7 +24,14 @@ export interface PaginationMeta {
 
 export interface PaginatedResponse<T> {
   message: string;
-  status: any;
+  status: boolean;
   data: T[];
   meta: PaginationMeta;
+}
+
+export interface PaymentData {
+  razorpay_key: string;
+  amount: number;
+  currency: string;
+  order_id: string;
 }

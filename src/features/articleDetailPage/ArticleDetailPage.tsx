@@ -33,7 +33,6 @@ export default function ArticleDetailPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [authorImage, setAuthorImage] = useState("/avatar.jpg");
 
   const { user } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.active);
@@ -126,15 +125,6 @@ export default function ArticleDetailPage() {
     return () => {
       active = false;
     };
-  }, [article]);
-
-  /* ---------------- AUTHOR IMAGE ---------------- */
-  useEffect(() => {
-    if (article?.authors?.[0]?.image) {
-      setAuthorImage(`${authorImg}${article.authors[0].image}`);
-    } else {
-      setAuthorImage("/avatar.jpg");
-    }
   }, [article]);
 
   /* ---------------- BACKGROUND USER REFRESH ---------------- */
@@ -310,7 +300,7 @@ export default function ArticleDetailPage() {
             <div className="my-12 space-y-8">
               {article.reader_feedbacks
                 .filter((item) => item.reader_feedback)
-                .map((item: any) => (
+                .map((item) => (
                   <TestimonialCard
                     key={item.id}
                     data={{
@@ -330,7 +320,7 @@ export default function ArticleDetailPage() {
           {(article.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap items-center gap-1">
               <p className="font-normal text-[#333]">Tags:</p>
-              {article?.tags?.map((tag: any, index: number) => (
+              {article.tags?.map((tag, index) => (
                 <span key={tag.id} className="flex items-center">
                   <Link
                     href={`/tag/${tag.id}/${tag.slug}`}

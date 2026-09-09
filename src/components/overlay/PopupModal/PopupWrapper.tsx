@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import PopupModal from "./Popup";
 
@@ -11,23 +11,25 @@ const PopupWrapper = () => {
   const pathname = usePathname();
   const { user, loading } = useAppSelector((state) => state.auth);
 
-  const [showModal, setShowModal] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
+
+  const seen =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("register_seen")
+      : null;
+
+  const shouldShow =
+    !loading && !user && !seen && pathname !== "/sign-in" && !isClosed;
 
   useEffect(() => {
-    if (loading) return; // wait for auth to load
-
-    const seen = sessionStorage.getItem("register_seen");
-
-    /*----------------- ONLY SHOW IF NOT LOGGED IN -----------------*/
-    if (!user && !seen && pathname !== "/sign-in") {
-      setShowModal(true);
+    if (!loading && !user && pathname !== "/sign-in" && !seen) {
       sessionStorage.setItem("register_seen", "true");
     }
-  }, [pathname, user, loading]);
+  }, [loading, user, pathname, seen]);
 
-  if (!showModal) return null;
+  if (!shouldShow) return null;
 
-  return <PopupModal onClose={() => setShowModal(false)} />;
+  return <PopupModal onClose={() => setIsClosed(true)} />;
 };
 
 export default PopupWrapper;

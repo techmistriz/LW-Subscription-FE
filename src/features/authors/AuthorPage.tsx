@@ -37,7 +37,6 @@ export default function AuthorPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [authorId, setAuthorId] = useState<number | null>(null);
-  const [authorData, setAuthorData] = useState<any>(null);
 
   /*----------------- Load Author -----------------*/
   const loadAuthor = useCallback(async () => {
@@ -49,14 +48,10 @@ export default function AuthorPage() {
       const matched = authors.find((a) => a.slug === authorSlug);
 
       setAuthorId(matched?.id ?? null);
-
-      setAuthorData(matched ?? null);
     } catch (error) {
       console.error("Failed to load author:", error);
 
       setAuthorId(null);
-
-      setAuthorData(null);
     }
   }, [authorSlug]);
 

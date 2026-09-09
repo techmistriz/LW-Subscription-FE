@@ -18,10 +18,22 @@ import { fetchProfile } from "@/store/slices/authSlice";
 import { storage } from "@/lib/storage";
 import PricingSkeleton from "@/components/feedback/Skeletons/PricingSkeleton";
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
+import type {
+  PaymentData,
+  RazorpayPaymentResponse,
+  RazorpayPaymentFailedResponse,
+} from "@/types";
+
+interface PaymentResponse {
+  status?: boolean;
+  message?: string;
+  data?: {
+    payment?: PaymentData;
+    razorpay_key?: string;
+    amount?: number;
+    currency?: string;
+    order_id?: string;
+  };
 }
 
 export default function PricingCard() {
@@ -128,7 +140,7 @@ export default function PricingCard() {
       const hasSubscription = !!subscriptionId;
 
       let purchaseType: "NEW" | "RENEW" | "UPGRADE";
-      let apiResponse: any;
+      let apiResponse: PaymentResponse;
 
       if (!hasSubscription || (isFreePlan && isExpired)) {
         purchaseType = "NEW";
@@ -150,9 +162,9 @@ export default function PricingCard() {
 
       const options = {
         key: paymentData?.razorpay_key || process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-        amount: paymentData?.amount,
+        amount: paymentData?.amount ?? 0,
         currency: paymentData?.currency || "INR",
-        order_id: paymentData?.order_id,
+        order_id: paymentData?.order_id ?? "",
         name: "Lex Witness",
         prefill: {
           name: `${user?.first_name || ""} ${user?.last_name || ""}`,
@@ -160,7 +172,7 @@ export default function PricingCard() {
           contact: user?.contact,
         },
         theme: { color: "#c9060a" },
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayPaymentResponse) {
           setRedirectLoading(true);
           try {
             const verifyRes = await verifySubscriptionPayment({
@@ -179,12 +191,13 @@ export default function PricingCard() {
             } else {
               toast.error(verifyRes?.message || "Payment verification failed");
             }
-          } catch (err: any) {
-            toast.error(
-              err?.response?.data?.message ||
-                err?.message ||
-                "Payment verification failed",
-            );
+          } catch (err: unknown) {
+            const message =
+              err instanceof Error
+                ? err.message
+                : "Payment verification failed";
+
+            toast.error(message);
           } finally {
             setRedirectLoading(false);
           }
@@ -192,12 +205,18 @@ export default function PricingCard() {
       };
 
       const razorpay = new window.Razorpay(options);
-      razorpay.on("payment.failed", (response: any) => {
-        toast.error(response?.error?.description || "Payment failed");
-      });
+      razorpay.on(
+        "payment.failed",
+        (response: RazorpayPaymentFailedResponse) => {
+          toast.error(response.error?.description || "Payment failed");
+        },
+      );
       razorpay.open();
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }

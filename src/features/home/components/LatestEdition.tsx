@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Magazine } from "@/types";
 import SafeImage from "@/components/media/SafeImage";
 

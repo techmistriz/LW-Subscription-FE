@@ -11,9 +11,19 @@ import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
 
 import type { Magazine } from "@/types";
 
+interface AuthorData {
+  name: string;
+  image: string;
+  designation: string;
+  company_name: string;
+  place: string;
+  description: string;
+  linkedin?: string;
+}
+
 interface RightSidebarProps {
   showAuthor?: boolean;
-  authorData?: any;
+  authorData?: AuthorData;
 }
 
 function RightSidebar({ showAuthor = false, authorData }: RightSidebarProps) {
@@ -22,7 +32,6 @@ function RightSidebar({ showAuthor = false, authorData }: RightSidebarProps) {
   useEffect(() => {
     const loadLatest = async () => {
       const latest = await getLatestSingleMagazines();
-
       setMagazine(latest);
     };
 
@@ -31,10 +40,8 @@ function RightSidebar({ showAuthor = false, authorData }: RightSidebarProps) {
 
   return (
     <aside className="space-y-8">
-      {/* Author Card */}
       {showAuthor && authorData && <Author data={authorData} />}
 
-      {/* Magazine */}
       {magazine && (
         <LatestEditionSingle
           magazine={magazine}

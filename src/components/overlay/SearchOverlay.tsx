@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthorListItem, Year } from "@/types";
+import type { AuthorListItem, Category, Year } from "@/types";
 import { X, Search, ChevronDown } from "lucide-react"; // Added ChevronDown
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
@@ -23,9 +23,9 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
   const [authorId, setAuthorId] = useState<number | undefined>();
 
   /*----------------- Data state -----------------*/
-  const [years, setYears] = useState<any[]>([]);
+  const [years, setYears] = useState<Year[]>([]);
   const [authors, setAuthors] = useState<AuthorListItem[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   /*----------------- UI state for rotation -----------------*/
   const [loading, setLoading] = useState(false);
@@ -132,7 +132,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
               <option className="text-black" value="">
                 Select Year
               </option>
-              {years.map((y: any) => (
+              {years.map((y) => (
                 <option key={y} value={y} className="text-white bg-black">
                   {y}
                 </option>

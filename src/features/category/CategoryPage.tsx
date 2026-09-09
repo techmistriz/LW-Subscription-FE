@@ -7,7 +7,7 @@ import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
 import { getCategoryBySlug } from "@/lib/api/services/categories";
 import Pagination from "@/components/common/Pagination";
-import { Year } from "@/types";
+import type { Post, Year } from "@/types";
 import PostList from "@/components/common/PostList";
 import YearFilter from "@/components/common/YearFilter";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ export default function CategoryPage() {
 
   const [currentPage, setCurrentPage] = useState(pageParam);
   const [years, setYears] = useState<Year[]>([]);
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [lastPage, setLastPage] = useState(1);
   const [categoryId, setCategoryId] = useState<number | null>(null);
 

@@ -1,6 +1,7 @@
 import { PaginatedResponse } from "@/types/api";
 import api from "../axios";
 import { Magazine, Post } from "@/types";
+import axios from "axios";
 
 /*-----------------for magazine grid -----------------*/
 export async function getMagazines(
@@ -41,17 +42,23 @@ export async function getSingleMagazine(slugOrId: string): Promise<Magazine> {
   try {
     const response = await api.get(`/magazines/${slugOrId}`);
     return response.data?.data?.data ?? response.data?.data ?? response.data;
-  } catch (error: any) {
-    if (error.response?.status !== 404) throw error;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      const listRes = await api.get("/magazines");
+      const magazines: Magazine[] = listRes.data?.data ?? [];
 
-    const listRes = await api.get("/magazines");
-    const magazines: Magazine[] = listRes.data?.data ?? [];
-    const magazine = magazines.find(
-      (mag) => mag.slug === slugOrId || mag.id === parseInt(slugOrId, 10),
-    );
+      const magazine = magazines.find(
+        (mag) => mag.slug === slugOrId || mag.id === parseInt(slugOrId, 10),
+      );
 
-    if (!magazine) throw new Error(`Magazine "${slugOrId}" not found`);
-    return magazine;
+      if (!magazine) {
+        throw new Error(`Magazine "${slugOrId}" not found`);
+      }
+
+      return magazine;
+    }
+
+    throw error;
   }
 }
 

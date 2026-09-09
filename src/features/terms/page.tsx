@@ -13,11 +13,12 @@ const TermsPage = () => {
             1. Introduction
           </h2>
           <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-            Welcome to LexWitness.com (the "Site"), operated by LexWitness
-            ("Company", "we", "us"). These Terms govern your access to and use
-            of the Site, including all content, services, and functionality
-            offered. By using the Site, you agree to these Terms. If you do not
-            agree, please do not use the Site.
+            Welcome to LexWitness.com (the &quot;Site&quot;), operated by
+            LexWitness (&quot;Company&quot;, &quot;we&quot;, &quot;us&quot;).
+            These Terms govern your access to and use of the Site, including all
+            content, services, and functionality offered. By using the Site, you
+            agree to these Terms. If you do not agree, please do not use the
+            Site.
           </p>
         </section>
 
@@ -82,9 +83,9 @@ const TermsPage = () => {
             5. Limitation of Liability
           </h2>
           <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-            The Site is provided "as is" without warranties of any kind. We are
-            not liable for any damages arising from your use of the Site,
-            including indirect, incidental, or consequential damages.
+            The Site is provided &quot;as is&quot; without warranties of any
+            kind. We are not liable for any damages arising from your use of the
+            Site, including indirect, incidental, or consequential damages.
           </p>
         </section>
 

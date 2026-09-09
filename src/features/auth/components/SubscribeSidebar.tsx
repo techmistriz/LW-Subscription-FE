@@ -34,16 +34,18 @@ function SubscribeSidebar() {
 
     try {
       await subscribeUser(form);
-      // setMessage("Subscribed successfully!");
 
       setTimeout(() => {
         setMessage(null);
       }, 3000);
+
       toast.success("Subscribed successfully!");
       setForm({ name: "", email: "", contact: "" });
-    } catch (err: any) {
-      // setError(err.message);
-      toast.error(err.message);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Subscription failed";
+
+      toast.error(message);
 
       setTimeout(() => {
         setError(null);

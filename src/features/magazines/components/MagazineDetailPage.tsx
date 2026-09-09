@@ -3,7 +3,6 @@ import {
   getSingleMagazine,
 } from "@/lib/api/services/magazines";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import RelatedPosts from "./RelatedPosts";
 import { stripInlineStyles } from "@/utils/toTitleCase";

@@ -1,31 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import { useState, useEffect } from "react";
+import Image, { type ImageProps } from "next/image";
+import { useState } from "react";
 
-const fallback = "/placeholder.png";
+const FALLBACK_IMAGE = "/placeholder.png";
 
-export default function SafeImage({
-  src,
-  alt,
-  ...props
-}: {
+type SafeImageProps = Omit<ImageProps, "src"> & {
   src?: string;
-  alt: string;
-  [key: string]: any;
-}) {
-  const [imgSrc, setImgSrc] = useState<string>(src || fallback);
+};
 
-  useEffect(() => {
-    setImgSrc(src || fallback);
-  }, [src]);
+export default function SafeImage({ src, alt, ...props }: SafeImageProps) {
+  const [imgSrc, setImgSrc] = useState(src || FALLBACK_IMAGE);
 
-  return (
-    <Image
-      {...props}
-      src={imgSrc}
-      alt={alt}
-      onErrorCapture={() => setImgSrc(fallback)}
-    />
-  );
+  const handleError = () => {
+    setImgSrc(FALLBACK_IMAGE);
+  };
+
+  return <Image {...props} src={imgSrc} alt={alt} onError={handleError} />;
 }

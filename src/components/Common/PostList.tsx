@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
-import { Post, Author } from "@/types";
+import { Post } from "@/types";
 
 interface PostListProps {
   posts: Post[];
@@ -15,7 +15,6 @@ interface PostListProps {
 
 export default function PostList({
   posts,
-  fallbackAuthorName,
   postBaseUrl = "",
   loading = false,
   emptyMessage = "No posts available.",

@@ -30,13 +30,13 @@ export default function Page() {
     fetchInvoices();
   }, []);
 
- if (loading) {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <PageLoader />
-    </div>
-  );
-}
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <PageLoader />
+      </div>
+    );
+  }
 
   return <InvoicePage invoices={invoices} />;
 }

@@ -1,97 +1,73 @@
-export interface User {
-  id: number;
+import type { PaymentDetails, Subscription, User } from "./models";
 
-  first_name?: string;
-  last_name?: string;
-  name?: string;
+/* ==================== AUTH USER ==================== */
 
-  email?: string;
-  contact?: string;
-  phone?: string;
+export type AuthUser = User;
 
-  address?: string;
-  gst_number?: string;
-
-  dob?: string;
-  gender?: string;
-  age_group?: string;
-
-  country_id?: number;
-  state_id?: number;
-  city_id?: number;
-  custom_city?: string;
-
-  interest?: string | string[];
-  interests?: string[];
-
-  hearabout?: string;
-  subscribe?: boolean;
-
-  visited?: boolean;
-  visited_year?: string | string[];
-
-  role_id?: number;
-  membership_plan_id?: number;
-
-  active_subscription?: boolean;
-
-  created_at?: string;
-  updated_at?: string;
-}
+/* ==================== REGISTER FORM ==================== */
 
 export interface RegisterForm {
   first_name: string;
   last_name: string;
   email: string;
   contact: string;
+
   password: string;
   password_confirmation: string;
+
   address: string;
   gst_number: string;
-  plan: string; // UI only
-  auto_renew: boolean; // UI only
+
+  plan: string;
+  auto_renew: boolean;
 }
+
+/* ==================== REGISTER PAYLOAD ==================== */
 
 export interface RegisterPayload {
   first_name: string;
   last_name: string;
   email: string;
   contact: string;
+
   password: string;
+  password_confirmation: string;
+
   otp: string;
   dob: string;
-  password_confirmation: string;
+
   address: string;
   gst_number: string;
+
   membership_plan_id: number;
+}
+
+/* ==================== REGISTER RESPONSE ==================== */
+
+export interface RegisterResponseData {
+  membership_plan_id: number;
+
+  user: User;
+
+  token?: string;
+
+  payment?: PaymentDetails;
+
+  subscription?: Subscription;
 }
 
 export interface RegisterResponse {
   status: boolean;
   message: string;
 
-  data: {
-    membership_plan_id: number;
-    user: any;
-    token?: string;
-
-    payment?: {
-      amount: number;
-      currency: string;
-      order_id: string;
-      razorpay_key: string;
-    };
-
-    subscription?: {
-      //  ADD THIS
-      id: number;
-      status: string;
-      start_date: string;
-      end_date: string;
-      purchase_type: string;
-      plan?: any;
-    };
-  };
+  data: RegisterResponseData;
 
   errors?: Record<string, string[]>;
+}
+
+export interface ResetPasswordPayload {
+  email: string;
+  token: string;
+  password: string;
+  password_confirmation: string;
 }

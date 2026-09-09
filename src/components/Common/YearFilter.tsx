@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 //   id: number;
 //   name: number | string;
 // }
-import { Year } from "@/types";
 
 interface YearFilterProps {
   years: number[];

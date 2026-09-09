@@ -30,7 +30,6 @@ export default function SignInForm() {
     setLoading(true);
 
     try {
-      // Login -> Save token
       await dispatch(
         loginRedux({
           email,
@@ -38,15 +37,16 @@ export default function SignInForm() {
         }),
       ).unwrap();
 
-      // Fetch fresh profile data
       await dispatch(fetchProfile()).unwrap();
 
       toast.success("Login successful!");
 
       router.replace("/dashboard");
-    } catch (error: any) {
-      setError(error || "Login failed");
-      toast.error(error || "Login failed");
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Login failed";
+
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

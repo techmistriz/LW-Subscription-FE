@@ -1,12 +1,14 @@
 import { request } from "@/lib/api/request";
-import { Author } from "@/types";
+import type { Author } from "@/types";
 
-/*----------------- GET ALL AUTHORS -----------------*/
+interface AuthorsResponse {
+  data?: Author[];
+}
+
 export async function getAuthors(): Promise<Author[]> {
-  const response = await request<any>("GET", "/authors");
+  const response = await request<AuthorsResponse>("GET", "/authors");
 
   if (!response?.status) return [];
 
-  const authors = response.data?.data ?? [];
-  return authors;
+  return response.data?.data ?? [];
 }

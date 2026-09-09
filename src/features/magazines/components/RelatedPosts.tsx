@@ -3,7 +3,6 @@
 import { Article } from "@/types";
 import SafeImage from "@/components/media/SafeImage";
 import Link from "next/link";
-import { toSentenceCase } from "@/utils/string";
 
 const postsImgBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 
@@ -55,7 +54,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
 
             <div className="px-4 py-2 flex flex-col flex-1 border border-gray-200">
               <h3 className="text-[15px] font-semibold text-[#222] leading-snug mb-2 line-clamp-2">
-                {toSentenceCase(article.title)}
+                {article.title}
               </h3>
 
               <span className="mt-auto text-sm text-[#c9060a] font-medium">

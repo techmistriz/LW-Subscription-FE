@@ -1,8 +1,9 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { getMagazines } from "@/lib/api/services/magazines";
 import { getYears } from "@/lib/api/services/years";
 import Pagination from "@/components/common/Pagination";
@@ -10,18 +11,12 @@ import { Magazine, Year } from "@/types";
 import Banner from "@/components/common/Banner";
 import YearFilter from "@/components/common/YearFilter";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
-import { useRouter, useSearchParams } from "next/navigation";
 import SafeImage from "@/components/media/SafeImage";
 
 const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
 
 /*----------------- MagazinesPage component displays all magazine editions with year filtering and pagination support -----------------*/
-export default function MagazinesPage({
-  currentPage,
-}: {
-  currentPage: number;
-}) {
-  // State management
+export default function MagazinesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -34,14 +29,9 @@ export default function MagazinesPage({
   const [selectedYearId, setSelectedYearId] = useState<number | null>(
     yearParam ? Number(yearParam) : null,
   );
-  const [yearOpen, setYearOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const [error, setError] = useState("");
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  // const searchParams = useSearchParams();
-  // const currentPage = Number(searchParams.get("page")) || 1;
 
   /*----------------- Fetch magazines with optional year filter and pagination -----------------*/
   const fetchMagazines = useCallback(
@@ -52,19 +42,20 @@ export default function MagazinesPage({
         const result = await getMagazines(year, pageNumber);
 
         if (result?.status === false) {
-          throw new Error(result?.message || "Failed to load magazines");
+          throw new Error(result.message || "Failed to load magazines");
         }
 
         setError("");
         setMagazines(result.data ?? []);
-
         setLastPage(result.meta?.paging?.last_page ?? 1);
         setPage(result.meta?.paging?.current_page ?? 1);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to load magazines:", err);
 
-        setError(err.message || "Something went wrong");
+        const message =
+          err instanceof Error ? err.message : "Something went wrong";
 
+        setError(message);
         setMagazines([]);
         setLastPage(1);
         setPage(1);
@@ -78,9 +69,8 @@ export default function MagazinesPage({
   /*----------------- Load magazines on component mount -----------------*/
   useEffect(() => {
     const year = yearParam ? Number(yearParam) : undefined;
-    const page = pageParam;
 
-    fetchMagazines(year, page);
+    fetchMagazines(year, pageParam);
   }, [fetchMagazines, yearParam, pageParam]);
 
   /*----------------- Load available years for filtering -----------------*/
@@ -94,21 +84,8 @@ export default function MagazinesPage({
         setYears([]);
       }
     }
-    loadYears();
-  }, []);
 
-  /*----------------- Close dropdown when clicking outside -----------------*/
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setYearOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    loadYears();
   }, []);
 
   const handleApplyFilter = () => {
@@ -123,22 +100,19 @@ export default function MagazinesPage({
     router.push(`/magazines?${params.toString()}`);
   };
 
-  const selectedYearLabel = selectedYearId
-    ? years.find((y) => y === selectedYearId)
-    : null;
-
   return (
     <section className="pb-8">
       {/*----------------- Hero banner -----------------*/}
       <Banner title="Magazines" />
 
       {/*----------------- Main content -----------------*/}
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="mx-auto max-w-6xl px-4">
         {/*----------------- Page header -----------------*/}
         <h2 className="mt-6 text-2xl font-semibold text-[#333]">
           ALL EDITIONS MAGAZINE
         </h2>
-        <div className="w-14 h-1.5 bg-[#c9060a] mt-1"></div>
+
+        <div className="mt-1 h-1.5 w-14 bg-[#c9060a]" />
 
         {/*----------------- Filter controls -----------------*/}
         <YearFilter
@@ -146,30 +120,29 @@ export default function MagazinesPage({
           selectedYear={selectedYearId}
           onSelect={setSelectedYearId}
           onApply={handleApplyFilter}
-          // disabled={loading || !authorId}
         />
-        <hr className="border-gray-200 mb-6" />
+
+        <hr className="mb-6 border-gray-200" />
 
         {/*----------------- Magazines grid -----------------*/}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-5">
           {loading ? (
             <div className="col-span-full flex justify-center py-16">
               <PageLoader />
             </div>
           ) : error ? (
-            <div className="col-span-full text-center py-12 text-red-600">
+            <div className="col-span-full py-12 text-center text-red-600">
               {error}
             </div>
           ) : (
-            /*----------------- Magazines list -----------------*/
             magazines.map((magazine) => (
               <Link
                 key={magazine.id}
                 href={`/magazines/${magazine.slug}`}
-                className="hover:shadow-lg transition"
+                className="transition hover:shadow-lg"
               >
                 {/*----------------- Magazine cover -----------------*/}
-                <div className="relative w-full aspect-3/4">
+                <div className="relative aspect-3/4 w-full">
                   <SafeImage
                     src={
                       magazine.image
@@ -182,10 +155,11 @@ export default function MagazinesPage({
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
                 </div>
+
                 {/*----------------- Magazine details -----------------*/}
                 <div className="p-3 text-center">
                   <p className="text-sm text-[#333333]">{magazine.title}</p>
-                  <p className="text-[#c9060a] font-medium">Read more</p>
+                  <p className="font-medium text-[#c9060a]">Read more</p>
                 </div>
               </Link>
             ))
