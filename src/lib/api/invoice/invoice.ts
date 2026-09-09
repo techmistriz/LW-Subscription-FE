@@ -69,65 +69,22 @@ export const getUserInvoices = async () => {
 export const downloadInvoicePdf = async (subscriptionId: number) => {
   const response = await api.get(
     `/subscription/plan-invoice/${subscriptionId}`,
-    {
-      responseType: "blob",
-      headers: {
-        Accept: "application/pdf",
-      },
-    },
+    { responseType: "blob", headers: { Accept: "application/pdf" } },
   );
 
-  // console.log("===== INVOICE RESPONSE =====");
-  // console.log("Status:", response.status);
-  // console.log("Status Text:", response.statusText);
-  // console.log("Headers:", response.headers);
-  // console.log("Content-Type:", response.headers["content-type"]);
-  // console.log("Blob Size:", response.data.size);
-  // console.log("Request Headers:", {
-  //   Accept: "application/pdf",
-  // });
-
-  // Read response if backend returned JSON
   if (response.headers["content-type"]?.includes("application/json")) {
     const text = await response.data.text();
-
-    console.log("JSON Response:", text);
-
-    try {
-      console.log("Parsed JSON:", JSON.parse(text));
-    } catch (e) {
-      console.log("Failed to parse JSON");
-    }
-
-    return;
+    throw new Error(JSON.parse(text)?.message || "Invoice not available");
   }
 
-  const blob = new Blob([response.data], {
-    type: "application/pdf",
-  });
-
-  console.log("Request Headers:", {
-    Accept: "application/pdf",
-  });
-  console.log("PDF Blob:", blob);
-
+  const blob = new Blob([response.data], { type: "application/pdf" });
   const url = window.URL.createObjectURL(blob);
-
-  console.log("Blob URL:", url);
 
   const link = document.createElement("a");
   link.href = url;
   link.download = `invoice-${subscriptionId}.pdf`;
-
   document.body.appendChild(link);
-
-  console.log("Starting download...");
-
   link.click();
-
   document.body.removeChild(link);
-
   window.URL.revokeObjectURL(url);
-
-  console.log("Download complete");
 };

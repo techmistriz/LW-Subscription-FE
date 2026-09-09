@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 /*==================== POST ====================*/
+
 export interface Post {
   id: number;
   title: string;
@@ -17,8 +18,9 @@ export interface Post {
   short_description?: string;
   excerpt?: string;
 
-  author?: Author | string;
+  category?: Category;
 
+  author?: Author | string;
   authors?: Author[];
 
   tags?: Tag[];
@@ -46,7 +48,7 @@ export interface Article {
 
   image?: string;
 
-  category?: ArticleCategoryType;
+  category?: Category;
   category_id?: number;
 
   author?: Author | string;
@@ -71,13 +73,13 @@ export interface Tag {
 }
 
 /*==================== CATEGORY ====================*/
-export interface ArticleCategory {
-  id: number;
-  name: string;
-  slug?: string;
-}
+// export interface ArticleCategory {
+//   id: number;
+//   name: string;
+//   slug?: string;
+// }
 
-export type ArticleCategoryType = ArticleCategory | string;
+// export type ArticleCategoryType = ArticleCategory | string;
 
 /*==================== AUTHOR ====================*/
 export interface Author {
@@ -160,9 +162,7 @@ export interface Magazine {
 /*==================== CATEGORY ====================*/
 export interface Category {
   id: number;
-
   name: string;
-
   slug?: string;
 }
 

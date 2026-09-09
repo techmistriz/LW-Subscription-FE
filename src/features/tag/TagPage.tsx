@@ -12,10 +12,10 @@ import { useState, useEffect, useCallback } from "react";
 import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
 
-import PageLoader from "@/components/Loader/PageLoader";
-import YearFilter from "@/components/Common/YearFilter";
-import PostList from "@/components/Common/PostList";
-import Pagination from "@/components/Pagination/Pagination";
+import PageLoader from "@/components/feedback/Loader/PageLoader";
+import YearFilter from "@/components/common/YearFilter";
+import PostList from "@/components/common/PostList";
+import Pagination from "@/components/common/Pagination";
 
 import { Post } from "@/types/models";
 

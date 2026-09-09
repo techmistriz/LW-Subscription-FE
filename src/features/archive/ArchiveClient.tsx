@@ -6,10 +6,10 @@ import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
 import { getAuthors } from "@/lib/api/services/author";
 import { getCategories } from "@/lib/api/services/categories";
-import Pagination from "@/components/Pagination/Pagination";
+import Pagination from "@/components/common/Pagination";
 import { Year, Article, Author, Category, Post } from "@/types";
 import { PaginationMeta } from "@/types/api";
-import PostList from "@/components/Common/PostList";
+import PostList from "@/components/common/PostList";
 import { Search } from "lucide-react";
 
 export default function ArchivePage() {

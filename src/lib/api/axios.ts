@@ -1,4 +1,6 @@
+// src/lib/api/axios.ts
 import axios, { AxiosHeaders } from "axios";
+import { storage } from "@/lib/storage";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -7,48 +9,35 @@ const api = axios.create({
   },
 });
 
-/*  ----------------------- REQUEST INTERCEPTOR ----------------------- */
+/* ----------------------- REQUEST INTERCEPTOR ----------------------- */
 api.interceptors.request.use((config) => {
-  // run only in browser
-  if (typeof window !== "undefined") {
-    const token = sessionStorage.getItem("token");
+  const token = storage.get("token");
 
-    if (token) {
-      //  Ensure headers exists and is AxiosHeaders
-      if (!config.headers) {
-        config.headers = new AxiosHeaders();
-      }
-
-      config.headers.set("Authorization", `Bearer ${token}`);
+  if (token) {
+    if (!config.headers) {
+      config.headers = new AxiosHeaders();
     }
+    config.headers.set("Authorization", `Bearer ${token}`);
   }
 
   return config;
 });
 
-/* ----------------------- RESPONSE INTERCEPTOR -----------------------*/
+/* ----------------------- RESPONSE INTERCEPTOR ----------------------- */
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
     const url = error.config?.url || "";
-
-    // normalize url
     const normalizedUrl = url.toLowerCase();
 
-    // skip auth endpoints
     const isAuthRequest =
       normalizedUrl.includes("/sign-in") ||
       normalizedUrl.includes("/auth/login");
 
     if (status === 401 && !isAuthRequest) {
       if (typeof window !== "undefined") {
-        // clear auth data
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("subscription");
-        sessionStorage.removeItem("user");
-
-        // hard redirect
+        storage.clearAuthData(); // token, subscription, user — sab ek call mein
         window.location.href = "/sign-in";
       }
     }

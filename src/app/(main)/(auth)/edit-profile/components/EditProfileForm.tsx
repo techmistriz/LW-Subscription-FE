@@ -4,14 +4,9 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
-import {
-  sendUpdateOtp,
-  updateProfile,
-} from "@/lib/api/Update-Profile/update";
-import {
-  fetchProfile,
-} from "@/redux/store/slices/authSlice";
-import { useAppDispatch } from "@/redux/store/hooks";
+import { sendUpdateOtp, updateProfile } from "@/lib/api/Update-Profile/update";
+import { fetchProfile } from "@/store/slices/authSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 import type {
   EditableProfileUser,
@@ -29,9 +24,7 @@ type EditProfileFormProps = {
   user: EditableProfileUser;
 };
 
-export default function EditProfileForm({
-  user,
-}: EditProfileFormProps) {
+export default function EditProfileForm({ user }: EditProfileFormProps) {
   const dispatch = useAppDispatch();
 
   const [otpSent, setOtpSent] = useState(false);
@@ -39,25 +32,22 @@ export default function EditProfileForm({
   const [countdown, setCountdown] = useState(0);
 
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const initialData = createFormData(user);
 
   const [formData, setFormData] = useState<FormData>(initialData);
   const [initialFormData] = useState<FormData>(initialData);
 
-  const [passwordForm, setPasswordForm] =
-    useState<PasswordForm>({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+  const [passwordForm, setPasswordForm] = useState<PasswordForm>({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const originalContact = user.contact ?? "";
 
-  const isContactChanged =
-    formData.contact !== originalContact;
+  const isContactChanged = formData.contact !== originalContact;
 
   const hasFormChanged =
     JSON.stringify({
@@ -73,8 +63,7 @@ export default function EditProfileForm({
     passwordForm.newPassword.trim() !== "" ||
     passwordForm.confirmPassword.trim() !== "";
 
-  const canUpdate =
-    hasFormChanged || hasPasswordChanged;
+  const canUpdate = hasFormChanged || hasPasswordChanged;
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -92,9 +81,7 @@ export default function EditProfileForm({
     }
   };
 
-  const handleContactChange = (
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleContactChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
 
     setFormData((previous) => ({
@@ -123,9 +110,7 @@ export default function EditProfileForm({
       setOtpSent(true);
       setCountdown(60);
 
-      toast.success(
-        response.message || "OTP sent successfully",
-      );
+      toast.success(response.message || "OTP sent successfully");
     } catch (error: unknown) {
       toast.error(getErrorMessage(error));
     } finally {
@@ -145,9 +130,7 @@ export default function EditProfileForm({
     return () => window.clearInterval(timer);
   }, [countdown]);
 
-  const handlePasswordChange = (
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setPasswordForm((previous) => ({
@@ -160,27 +143,17 @@ export default function EditProfileForm({
     e.preventDefault();
 
     if (isContactChanged && !formData.otp.trim()) {
-      toast.error(
-        "Please enter the OTP sent to your mobile number.",
-      );
+      toast.error("Please enter the OTP sent to your mobile number.");
       return;
     }
 
-    if (
-      passwordForm.newPassword ||
-      passwordForm.confirmPassword
-    ) {
+    if (passwordForm.newPassword || passwordForm.confirmPassword) {
       if (passwordForm.newPassword.length < 8) {
-        toast.error(
-          "Password must be at least 8 characters.",
-        );
+        toast.error("Password must be at least 8 characters.");
         return;
       }
 
-      if (
-        passwordForm.newPassword !==
-        passwordForm.confirmPassword
-      ) {
+      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
         toast.error("Passwords do not match.");
         return;
       }
@@ -210,10 +183,7 @@ export default function EditProfileForm({
         confirmPassword: "",
       });
 
-      toast.success(
-        response.message ||
-          "Profile updated successfully",
-      );
+      toast.success(response.message || "Profile updated successfully");
     } catch (error: unknown) {
       toast.error(getErrorMessage(error));
     }
@@ -222,16 +192,13 @@ export default function EditProfileForm({
   const inputClass =
     "h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-[#333] placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-[#C9060A] focus:ring-2 focus:ring-[#C9060A]/20";
 
-  const labelClass =
-    "mb-1.5 block text-sm font-medium text-[#333]";
+  const labelClass = "mb-1.5 block text-sm font-medium text-[#333]";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 px-4 py-10">
       <div className="mx-auto max-w-4xl overflow-hidden border border-gray-200 bg-white shadow-xl">
         <div className="border-b border-[#c9060a] px-6 py-5">
-          <h1 className="text-2xl font-semibold text-[#333]">
-            Edit Profile
-          </h1>
+          <h1 className="text-2xl font-semibold text-[#333]">Edit Profile</h1>
 
           <p className="mt-1 text-sm text-gray-500">
             Update your personal information.
@@ -244,8 +211,7 @@ export default function EditProfileForm({
         >
           <div>
             <label className={labelClass}>
-              First Name{" "}
-              <span className="text-[#C9060A]">*</span>
+              First Name <span className="text-[#C9060A]">*</span>
             </label>
 
             <input
@@ -258,8 +224,7 @@ export default function EditProfileForm({
 
           <div>
             <label className={labelClass}>
-              Last Name{" "}
-              <span className="text-[#C9060A]">*</span>
+              Last Name <span className="text-[#C9060A]">*</span>
             </label>
 
             <input
@@ -272,8 +237,7 @@ export default function EditProfileForm({
 
           <div>
             <label className={labelClass}>
-              Email{" "}
-              <span className="text-[#C9060A]">*</span>
+              Email <span className="text-[#C9060A]">*</span>
             </label>
 
             <input
@@ -289,13 +253,11 @@ export default function EditProfileForm({
             <label className={labelClass}>
               {otpSent ? (
                 <>
-                  OTP{" "}
-                  <span className="text-[#C9060A]">*</span>
+                  OTP <span className="text-[#C9060A]">*</span>
                 </>
               ) : (
                 <>
-                  Contact No{" "}
-                  <span className="text-[#C9060A]">*</span>
+                  Contact No <span className="text-[#C9060A]">*</span>
                 </>
               )}
             </label>
@@ -315,9 +277,7 @@ export default function EditProfileForm({
                   <button
                     type="button"
                     onClick={handleSendOtp}
-                    disabled={
-                      sendingOtp || countdown > 0
-                    }
+                    disabled={sendingOtp || countdown > 0}
                     className="cursor-pointer rounded-md bg-[#C9060A] px-4 text-white disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {sendingOtp
@@ -351,14 +311,10 @@ export default function EditProfileForm({
                   <button
                     type="button"
                     onClick={handleSendOtp}
-                    disabled={
-                      sendingOtp || countdown > 0
-                    }
+                    disabled={sendingOtp || countdown > 0}
                     className="text-sm font-medium text-[#C9060A] disabled:text-gray-400"
                   >
-                    {countdown > 0
-                      ? `Resend in ${countdown}s`
-                      : "Resend OTP"}
+                    {countdown > 0 ? `Resend in ${countdown}s` : "Resend OTP"}
                   </button>
                 </div>
               </>
@@ -367,8 +323,7 @@ export default function EditProfileForm({
 
           <div>
             <label className={labelClass}>
-              Date of Birth{" "}
-              <span className="text-[#C9060A]">*</span>
+              Date of Birth <span className="text-[#C9060A]">*</span>
             </label>
 
             <input
@@ -381,9 +336,7 @@ export default function EditProfileForm({
           </div>
 
           <div>
-            <label className={labelClass}>
-              Organisation Name
-            </label>
+            <label className={labelClass}>Organisation Name</label>
 
             <input
               name="organisation"
@@ -394,16 +347,12 @@ export default function EditProfileForm({
           </div>
 
           <div>
-            <label className={labelClass}>
-              New Password
-            </label>
+            <label className={labelClass}>New Password</label>
 
             <div className="relative">
               <input
                 name="newPassword"
-                type={
-                  showNewPassword ? "text" : "password"
-                }
+                type={showNewPassword ? "text" : "password"}
                 value={passwordForm.newPassword}
                 onChange={handlePasswordChange}
                 className={`${inputClass} pr-10`}
@@ -411,35 +360,21 @@ export default function EditProfileForm({
 
               <button
                 type="button"
-                onClick={() =>
-                  setShowNewPassword(
-                    (previous) => !previous,
-                  )
-                }
+                onClick={() => setShowNewPassword((previous) => !previous)}
                 className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-gray-500 hover:text-[#C9060A]"
               >
-                {showNewPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
+                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
           <div>
-            <label className={labelClass}>
-              Confirm Password
-            </label>
+            <label className={labelClass}>Confirm Password</label>
 
             <div className="relative">
               <input
                 name="confirmPassword"
-                type={
-                  showConfirmPassword
-                    ? "text"
-                    : "password"
-                }
+                type={showConfirmPassword ? "text" : "password"}
                 value={passwordForm.confirmPassword}
                 onChange={handlePasswordChange}
                 className={`${inputClass} pr-10`}
@@ -447,26 +382,16 @@ export default function EditProfileForm({
 
               <button
                 type="button"
-                onClick={() =>
-                  setShowConfirmPassword(
-                    (previous) => !previous,
-                  )
-                }
+                onClick={() => setShowConfirmPassword((previous) => !previous)}
                 className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-gray-500 hover:text-[#C9060A]"
               >
-                {showConfirmPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
           <div>
-            <label className={labelClass}>
-              GST Number
-            </label>
+            <label className={labelClass}>GST Number</label>
 
             <input
               name="gstNumber"
@@ -474,8 +399,7 @@ export default function EditProfileForm({
               onChange={(e) =>
                 setFormData((previous) => ({
                   ...previous,
-                  gstNumber:
-                    e.target.value.toUpperCase(),
+                  gstNumber: e.target.value.toUpperCase(),
                 }))
               }
               className={inputClass}
@@ -485,8 +409,7 @@ export default function EditProfileForm({
 
           <div>
             <label className={labelClass}>
-              Country{" "}
-              <span className="text-[#C9060A]">*</span>
+              Country <span className="text-[#C9060A]">*</span>
             </label>
 
             <input
@@ -501,8 +424,7 @@ export default function EditProfileForm({
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               <div>
                 <label className={labelClass}>
-                  State{" "}
-                  <span className="text-[#C9060A]">*</span>
+                  State <span className="text-[#C9060A]">*</span>
                 </label>
 
                 <input
@@ -515,8 +437,7 @@ export default function EditProfileForm({
 
               <div>
                 <label className={labelClass}>
-                  City{" "}
-                  <span className="text-[#C9060A]">*</span>
+                  City <span className="text-[#C9060A]">*</span>
                 </label>
 
                 <input
@@ -529,8 +450,7 @@ export default function EditProfileForm({
 
               <div>
                 <label className={labelClass}>
-                  Pincode{" "}
-                  <span className="text-[#C9060A]">*</span>
+                  Pincode <span className="text-[#C9060A]">*</span>
                 </label>
 
                 <input
@@ -545,8 +465,7 @@ export default function EditProfileForm({
 
           <div className="md:col-span-2">
             <label className={labelClass}>
-              Address{" "}
-              <span className="text-[#C9060A]">*</span>
+              Address <span className="text-[#C9060A]">*</span>
             </label>
 
             <textarea

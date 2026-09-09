@@ -1,4 +1,5 @@
 import api from "../axios";
+import { extractErrorMessage } from "../errorMessage";
 
 export interface UpdateProfilePayload {
   first_name: string;
@@ -21,30 +22,17 @@ export interface UpdateProfilePayload {
 export async function updateProfile(payload: UpdateProfilePayload) {
   try {
     const res = await api.post("/update-profile", payload);
-
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Failed to update profile";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Failed to update profile"));
   }
 }
 
-/*----------------- SEND UPDATE OTP -----------------*/
 export async function sendUpdateOtp(data: { email: string; contact: string }) {
   try {
     const res = await api.post("/send-update-otp", data);
-    console.log("Update OTP", res);
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Failed to send OTP";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Failed to send OTP"));
   }
 }

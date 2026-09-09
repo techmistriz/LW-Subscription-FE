@@ -6,53 +6,52 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
-import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
-import { formatArticleHTML } from "@/lib/utils/helper/formatArticle";
+import { getProfile } from "@/lib/api/auth/auth";
+import { toTitleCase } from "@/utils/toTitleCase";
 
-import TestimonialCard from "@/components/Testimonial/Testimonial";
-import SocialShare from "@/components/SocialShare/SocialShare";
+import TestimonialCard from "@/components/common/Testimonial";
+import SocialShare from "@/components/common/SocialShare";
+import SafeImage from "@/components/media/SafeImage";
 
 import { Article, Author } from "@/types";
+import { storage } from "@/lib/storage";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setUser } from "@/store/slices/authSlice";
+import { setSubscription } from "@/store/slices/subscriptionSlice";
 
 import "./style.css";
-import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
-import { setUser } from "@/redux/store/slices/authSlice";
-import { setSubscription } from "@/redux/store/slices/subscriptionSlice";
-import SafeImage from "@/components/SafeImage/SafeImage";
+import { formatArticleHTML } from "@/utils/formatArticleHTML";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
 const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
 
 export default function ArticleDetailPage() {
-  const { category, slug } = useParams<{ category: string; slug: string }>();
+  const { slug } = useParams<{ category: string; slug: string }>();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [authorImage, setAuthorImage] = useState("/avatar.jpg");
 
-  /*----------------- Only subscribes User Read full article content -----------------*/
-
   const { user } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.active);
 
   const isSubscribed = Boolean(
-    user && // MUST HAVE
+    user &&
     subscription &&
     subscription.status === "ACTIVE" &&
     subscription.end_date &&
     new Date(subscription.end_date) >= new Date(),
   );
 
-  const router = useRouter();
-
   const handleSubscribe = () => {
-    sessionStorage.setItem("scrollToPricing", "true");
+    storage.set("scrollToPricing", "true");
     router.push("/subscription");
   };
 
   /* ---------------- FETCH ARTICLE ---------------- */
-
   useEffect(() => {
     let active = true;
 
@@ -65,22 +64,17 @@ export default function ArticleDetailPage() {
 
       try {
         const articleData = await getArticleBySlug(slug);
-
-        // console.log("Slug:", slug);
-        // console.log("Article:", articleData);
-
         if (!active) return;
 
-        /*----------------- API error or not found -----------------*/
-        if (!articleData || articleData.status === false) {
+        if (!articleData) {
           setArticle(null);
           return;
         }
 
         setArticle(articleData);
         document.title = `${articleData.title} | Lex Witness`;
-      } catch (error) {
-        console.error("Failed to fetch article:", error);
+      } catch {
+        // getArticleBySlug throws on 404 / API failure — treat as "not found"
         if (active) setArticle(null);
       } finally {
         if (active) setLoading(false);
@@ -94,7 +88,6 @@ export default function ArticleDetailPage() {
   }, [slug]);
 
   /* ---------------- FETCH RELATED POSTS ---------------- */
-
   useEffect(() => {
     let active = true;
 
@@ -106,15 +99,12 @@ export default function ArticleDetailPage() {
 
         if (article.category_id)
           requests.push(getRelatedPosts({ category_id: article.category_id }));
-
         if (article.author_id)
           requests.push(getRelatedPosts({ author_id: article.author_id }));
-
         if (article.magazine_id)
           requests.push(getRelatedPosts({ magazine_id: article.magazine_id }));
 
         const results = await Promise.all(requests);
-
         if (!active) return;
 
         const uniquePosts = Array.from(
@@ -127,8 +117,7 @@ export default function ArticleDetailPage() {
         ).slice(0, 3);
 
         setRelatedPosts(uniquePosts);
-      } catch (error) {
-        console.error("Failed to fetch related posts:", error);
+      } catch {
         if (active) setRelatedPosts([]);
       }
     }
@@ -140,7 +129,6 @@ export default function ArticleDetailPage() {
   }, [article]);
 
   /* ---------------- AUTHOR IMAGE ---------------- */
-
   useEffect(() => {
     if (article?.authors?.[0]?.image) {
       setAuthorImage(`${authorImg}${article.authors[0].image}`);
@@ -149,36 +137,24 @@ export default function ArticleDetailPage() {
     }
   }, [article]);
 
-  /* ---------------- USER REFRESH ---------------- */
-  const dispatch = useAppDispatch();
-
+  /* ---------------- BACKGROUND USER REFRESH ---------------- */
   useEffect(() => {
-    if (!user || user.active_subscription) return; //  prevents unnecessary re-fetch
+    if (!user || user.active_subscription) return;
 
     let isMounted = true;
 
     const refreshUser = async () => {
       try {
-        const res = await fetch("/api/user", {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        });
-
-        const updatedUser = await res.json();
-
+        const res = await getProfile();
         if (!isMounted) return;
 
-        dispatch(
-          setUser({
-            user: updatedUser,
-            token: sessionStorage.getItem("token") || "",
-          }),
-        );
+        const updatedUser = res.data.user;
+        const token = storage.get<string>("token");
+
+        dispatch(setUser({ user: updatedUser, token: token || "" }));
 
         if (updatedUser?.active_subscription) {
           const sub = updatedUser.active_subscription;
-
           dispatch(
             setSubscription({
               id: sub.id,
@@ -195,20 +171,18 @@ export default function ArticleDetailPage() {
             }),
           );
         }
-      } catch (err) {
-        console.error(err);
+      } catch {
+        // silent — background refresh, not user-facing
       }
     };
 
     refreshUser();
-
     return () => {
       isMounted = false;
     };
   }, [user, dispatch]);
 
   /* ---------------- LOADING UI ---------------- */
-
   if (loading) {
     return (
       <section className="bg-white min-h-screen">
@@ -224,12 +198,9 @@ export default function ArticleDetailPage() {
     );
   }
 
-  /* ---------------- ARTICLE NOT FOUND ---------------- */
   if (!article) {
     notFound();
   }
-
-  /* ---------------- CATEGORY TITLE ---------------- */
 
   const rawCategory =
     typeof article.category === "string"
@@ -237,48 +208,39 @@ export default function ArticleDetailPage() {
       : (article.category?.slug ?? "");
 
   const categoryTitle = toTitleCase(rawCategory);
-
   const fullHTML = formatArticleHTML(article.description || "");
-
   const previewHTML = fullHTML
-    ?.replace(/<[^>]+>/g, "") // remove HTML tags
+    ?.replace(/<[^>]+>/g, "")
     .split(" ")
     .slice(0, 60)
     .join(" ");
 
-  // console.log("Article", article);
   return (
     <section className="bg-white">
       <article className="lg:col-span-9">
-        {/*----------------- CATEGORY -----------------*/}
         <Link href={`/category/${rawCategory}`}>
           <p className="text-[#c9060a] font-semibold text-lg uppercase cursor-pointer mb-2">
             {categoryTitle}
           </p>
         </Link>
 
-        {/*----------------- TITLE -----------------*/}
         <h1 className="text-2xl lg:text-[22px] font-semibold leading-snug">
           {article.title}
         </h1>
 
         <div className="w-10 h-1 bg-[#c9060a] mb-1" />
 
-        {/*----------------- AUTHOR + SOCIAL -----------------*/}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 text-sm text-[#333333]">
             {(article.authors?.length ?? 0) > 0 ? (
               article?.authors?.map((author, index) => (
                 <div key={author.id} className="flex items-center gap-2">
-                  {/* AUTHOR NAME */}
                   <Link
                     href={`/author/${author.slug}`}
                     className="text-[#c9060a] font-medium hover:underline"
                   >
                     {author.name}
                   </Link>
-
-                  {/* COMMA */}
                   {index < (article.authors?.length ?? 0) - 1 && (
                     <span className="text-gray-500 -ml-2">,</span>
                   )}
@@ -289,20 +251,15 @@ export default function ArticleDetailPage() {
                 Lex Witness Bureau
               </span>
             )}
-
-            {/* MAGAZINE */}
             <span className="text-gray-500">|</span>
-
             <span>
               {article.magazine?.month?.name} {article.magazine?.year}
             </span>
           </div>
 
-          {/* ARTICLE SHARE */}
           <SocialShare title={article.title} />
         </div>
 
-        {/*----------------- FEATURE IMAGE -----------------*/}
         {article.image && (
           <div className="relative w-full mt-3 mb-6 aspect-video">
             <Image
@@ -319,8 +276,6 @@ export default function ArticleDetailPage() {
           </div>
         )}
 
-        {/*----------------- ARTICLE CONTENT -----------------*/}
-
         <div className="my-6">
           {isSubscribed ? (
             <div
@@ -329,21 +284,16 @@ export default function ArticleDetailPage() {
             />
           ) : (
             <div className="text-center">
-              {/* Preview Text */}
               <p className="text-[17px] leading-7 text-gray-800 text-justify">
                 {previewHTML}...
               </p>
-
-              {/* CTA */}
               <div className="mt-6 p-6 border-2 border-gray-100">
                 <h2 className="text-xl font-semibold text-gray-800 mb-3">
                   Continue Reading
                 </h2>
-
                 <p className="text-gray-600 mb-4 text-sm">
                   Subscribe to unlock full access to this article.
                 </p>
-
                 <button
                   onClick={handleSubscribe}
                   className="bg-[#c9060a] text-white px-6 py-3 hover:bg-[#333] transition cursor-pointer"
@@ -355,12 +305,11 @@ export default function ArticleDetailPage() {
           )}
         </div>
 
-        {/*----------------- TESTIMONIALS -----------------*/}
         {Array.isArray(article.reader_feedbacks) &&
           article.reader_feedbacks.some((item) => item.reader_feedback) && (
             <div className="my-12 space-y-8">
               {article.reader_feedbacks
-                .filter((item) => item.reader_feedback) // remove empty feedback
+                .filter((item) => item.reader_feedback)
                 .map((item: any) => (
                   <TestimonialCard
                     key={item.id}
@@ -378,11 +327,9 @@ export default function ArticleDetailPage() {
           )}
 
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          {/*----------------- TAGS -----------------*/}
           {(article.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap items-center gap-1">
               <p className="font-normal text-[#333]">Tags:</p>
-
               {article?.tags?.map((tag: any, index: number) => (
                 <span key={tag.id} className="flex items-center">
                   <Link
@@ -391,16 +338,14 @@ export default function ArticleDetailPage() {
                   >
                     {tag.name}
                   </Link>
-
                   {index < (article.tags?.length ?? 0) - 1 && (
-                    <span className=" text-gray-500">,</span>
+                    <span className="text-gray-500">,</span>
                   )}
                 </span>
               ))}
             </div>
           )}
 
-          {/*----------------- SOCIAL SHARE -----------------*/}
           {article.description && (
             <div className="sm:ml-auto flex justify-end">
               <SocialShare title={article.title} />
@@ -408,7 +353,6 @@ export default function ArticleDetailPage() {
           )}
         </div>
 
-        {/*----------------- AUTHOR SECTION -----------------*/}
         {(article.authors?.length ?? 0) > 0 && (
           <>
             <h3 className="font-bold text-xl mt-10">ABOUT AUTHORS</h3>
@@ -420,7 +364,6 @@ export default function ArticleDetailPage() {
                   key={author.id}
                   className="border border-gray-300 p-4 flex gap-4 hover:shadow-gray-300 hover:shadow-md"
                 >
-                  {/* AUTHOR IMAGE */}
                   <div className="relative w-24 h-24 shrink-0">
                     <Image
                       src={
@@ -434,21 +377,15 @@ export default function ArticleDetailPage() {
                     />
                   </div>
 
-                  {/* AUTHOR DETAILS */}
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col items-start gap-0">
-                      {/* AUTHOR NAME */}
                       <h4 className="font-semibold text-base leading-6">
                         {author.name.toUpperCase()}
                       </h4>
-
-                      {/* AUTHOR BIO */}
                       <p className="text-xs text-[#333333] leading-6">
                         {author.description ||
                           `${author.name} is a contributor at Lex Witness.`}
                       </p>
-
-                      {/* LINKEDIN ICON */}
                       {author.linkedin && (
                         <a
                           href={author.linkedin}
@@ -463,7 +400,6 @@ export default function ArticleDetailPage() {
                           >
                             <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0V8zm7.5 0h4.78v2.22h.07c.66-1.25 2.27-2.57 4.68-2.57 5 0 5.92 3.28 5.92 7.55V24h-5v-7.92c0-1.89-.03-4.33-2.63-4.33-2.63 0-3.03 2.05-3.03 4.17V24h-5V8z" />
                           </svg>
-
                           <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
                         </a>
                       )}
@@ -475,7 +411,6 @@ export default function ArticleDetailPage() {
           </>
         )}
 
-        {/*----------------- RELATED POSTS -----------------*/}
         {relatedPosts.length > 0 && (
           <div className="my-8">
             <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
@@ -507,7 +442,6 @@ export default function ArticleDetailPage() {
                     <h4 className="text-base font-medium line-clamp-2 text-gray-800">
                       {post.title}
                     </h4>
-
                     <p className="text-[#c9060a] text-sm mt-2">
                       {typeof post.author === "string"
                         ? post.author

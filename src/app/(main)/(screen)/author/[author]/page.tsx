@@ -1,4 +1,4 @@
-import AuthorPage from "@/features/author/AuthorPage";
+import AuthorPage from "@/features/authors/AuthorPage";
 import React from "react";
 
 function page() {

@@ -1,0 +1,65 @@
+import Link from "next/link";
+import Image from "next/image";
+import { Magazine } from "@/types";
+import SafeImage from "@/components/media/SafeImage";
+
+const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+
+type Props = {
+  magazines: Magazine[];
+};
+
+export default function LatestEdition({ magazines }: Props) {
+  if (!magazines?.length) return null;
+
+  return (
+    <section className="max-w-6xl mx-auto px-4 my-10 lg:mt-8">
+      {/* Section header */}
+      <div className="text-center mb-8">
+        <h2 className="text-[20px] text-[#333333] font-bold tracking-wide">
+          LATEST EDITIONS
+        </h2>
+        <div className="w-14 h-1.5 bg-[#c9060a] mx-auto mt-1"></div>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {magazines.map((magazine) => (
+          <Link
+            key={magazine.id}
+            href={`/magazines/${magazine.slug}`}
+            className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center  hover:shadow-gray-400 hover:shadow-md cursor-pointer"
+          >
+            <div className="relative w-full aspect-3/4">
+              <SafeImage
+                src={
+                  magazine.image
+                    ? `${magazineBaseUrl}/${magazine.image}`
+                    : "/placeholder.jpg"
+                }
+                alt={magazine.title ?? "Magazine cover"}
+                fill
+                className="object-cover"
+                sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 20vw"
+              />
+            </div>
+
+            <div className="px-3 py-3 text-center">
+              <h3 className="text-sm font-normal leading-snug">
+                {magazine.title}
+              </h3>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="flex justify-center items-center mt-8">
+        <Link
+          href="/magazines"
+          className="bg-[#c9060a] border border-white text-white text-[16px] font-normal px-7 py-2.5 transition-colors hover:bg-[#333]"
+        >
+          VIEW ALL EDITIONS
+        </Link>
+      </div>
+    </section>
+  );
+}

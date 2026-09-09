@@ -1,4 +1,4 @@
-import SignInForm from "@/features/auth/SignInForm";
+import SignInForm from "@/features/auth/components/SignInForm";
 import React from "react";
 
 function page() {

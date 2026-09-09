@@ -4,14 +4,14 @@ import Script from "next/script";
 
 import "./globals.css";
 
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
-import ScrollToTop from "@/components/ScrollToTop";
+import Header from "@/components/layout/Header/Header";
+import Footer from "@/components/layout/Footer/Footer";
+import ScrollToTop from "@/components/navigation/ScrollToTop";
 import ScrollProvider from "./providers";
 // import { getCategories } from "@/lib/api/services/categories";
 import AuthGate from "@/components/AuthGate";
-import { ReduxProvider } from "@/redux/provides";
-import InitAuth from "@/redux/store/initAuth";
+import { ReduxProvider } from "@/store/provides";
+import InitAuth from "@/store/initAuth";
 import { Toaster } from "sonner";
 
 const poppins = Poppins({
@@ -38,7 +38,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={poppins.variable}>
-      <body className="antialiased min-h-screen flex flex-col overflow-x-hidden">
+      <body
+        className="antialiased min-h-screen flex flex-col overflow-x-hidden"
+        suppressHydrationWarning
+      >
         {/* Razorpay Script */}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"

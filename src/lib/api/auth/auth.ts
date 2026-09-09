@@ -1,96 +1,55 @@
-import axiosInstance from "../axios";
+// src/lib/api/auth/auth.ts
+import api from "../axios";
+import { extractErrorMessage } from "../errorMessage";
 import { RegisterPayload, RegisterResponse } from "@/types/auth";
 
-/*----------------- LOGIN -----------------*/
 export async function loginUser(email: string, password: string) {
   try {
-    const res = await axiosInstance.post("/auth/login", {
-      email,
-      password,
-    });
+    const res = await api.post("/auth/login", { email, password });
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Login failed";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Login failed"));
   }
 }
 
-/*-----------------IUSER PROFILE -----------------*/
 export async function getProfile() {
   try {
-    const res = await axiosInstance.get("/profile");
-
-    // console.log("Profile Data", res.data);
-
+    const res = await api.get("/profile");
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Failed to fetch profile";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Failed to fetch profile"));
   }
 }
 
-/*----------------- REGISTER -----------------*/
 export async function registerUser(
   payload: RegisterPayload,
 ): Promise<RegisterResponse> {
   try {
-    const res = await axiosInstance.post("/auth/register", payload);
+    const res = await api.post("/auth/register", payload);
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Registration failed";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Registration failed"));
   }
 }
 
-/*----------------- SEND OTP -----------------*/
 export async function sendOtp(data: { contact: string; email: string }) {
   try {
-    const res = await axiosInstance.post("/auth/send-otp", data);
-
-    console.log(res);
-    console.log(res.data.data.otp);
-    console.log(res.data.data);
+    const res = await api.post("/auth/send-otp", data);
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Failed to send OTP";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Failed to send OTP"));
   }
 }
 
-/*----------------- FORGOT PASSWORD -----------------*/
 export async function forgotPassword(email: string) {
   try {
-    const res = await axiosInstance.post("/forgot-password", {
-      email,
-    });
+    const res = await api.post("/forgot-password", { email });
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Failed to send reset link";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Failed to send reset link"));
   }
 }
 
-/*----------------- RESET PASSWORD -----------------*/
 export async function resetPassword(data: {
   email: string;
   token: string;
@@ -98,25 +57,18 @@ export async function resetPassword(data: {
   password_confirmation: string;
 }) {
   try {
-    const res = await axiosInstance.post("/reset-password", data);
+    const res = await api.post("/reset-password", data);
     return res.data;
-  } catch (error: any) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Reset password failed";
-
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Reset password failed"));
   }
 }
 
-/*----------------- LOGOUT -----------------*/
 export async function logoutApi() {
   try {
-    await axiosInstance.post("/auth/logout");
+    await api.post("/auth/logout");
     return { success: true };
   } catch (error) {
-    console.error("Logout API error:", error);
     return { success: false, error };
   }
 }

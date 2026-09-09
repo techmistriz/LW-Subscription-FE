@@ -1,3 +1,5 @@
+export type { Plan } from "@/features/auth/services/plans.service";
+
 export interface RegisterFormData {
   first_name: string;
   last_name: string;
@@ -16,17 +18,6 @@ export interface RegisterFormData {
   password_confirmation: string;
   plan: string;
   auto_renew: boolean;
-}
-
-export interface Plan {
-  id: number;
-  name: string;
-  price: string | number;
-  duration_value: number;
-  duration_unit: string;
-  feature: string;
-  is_trial: number;
-  tag: string;
 }
 
 export interface PaymentData {

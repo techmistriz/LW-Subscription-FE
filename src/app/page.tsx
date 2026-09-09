@@ -1,15 +1,15 @@
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
-import HomeHeroSkeleton from "@/components/Home/HomeHeroSkeleton";
-import SubscribeBanner from "@/features/auth/SubscribeBanner";
-import LatestEdition from "@/components/LatestEdition/LatestEdition";
-import LatestEditionWithArticles from "@/components/LatestEdition/LatestEditionWithArticles";
-import BigFeature from "@/components/Home/BigFeature";
-import { MiddleCards } from "@/components/Home/MiddleCards";
-import AsidePosts from "@/components/Home/AsidePosts";
+import HomeHeroSkeleton from "@/features/home/components/HomeHeroSkeleton";
+import SubscribeBanner from "@/features/auth/components/SubscribeBanner";
+import LatestEdition from "@/features/home/components/LatestEdition";
+import LatestEditionWithArticles from "@/features/home/components/LatestEditionWithArticles";
+import BigFeature from "@/features/home/components/BigFeature";
+import { MiddleCards } from "@/features/home/components/MiddleCards";
+import AsidePosts from "@/features/home/components/AsidePosts";
 
-import { getHeroPost } from "@/components/Home/service";
+import { getHeroPost } from "@/features/home/services/home.service";
 import {
   getLatestMagazines,
   latestEdition,
@@ -19,11 +19,11 @@ export const revalidate = 300;
 
 /*----------------- Lazy load non-critical components -----------------*/
 const EditorPicks = dynamic(
-  () => import("@/components/EditorPick's/EditorPicks"),
+  () => import("@/features/editor-picks/components/EditorPicks"),
 );
 
 const Advertisement = dynamic(
-  () => import("@/components/HomeAdvertisment/advertisement"),
+  () => import("@/features/home/components/Advertisement"),
 );
 
 export default async function HomePage() {

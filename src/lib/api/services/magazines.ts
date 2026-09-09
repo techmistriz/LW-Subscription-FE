@@ -39,39 +39,19 @@ export async function getMagazines(
 
 export async function getSingleMagazine(slugOrId: string): Promise<Magazine> {
   try {
-    /*----------------- Try direct endpoint first -----------------*/
     const response = await api.get(`/magazines/${slugOrId}`);
-
-    const result = response.data;
-
-    /*----------------- handle all possible response shapes -----------------*/
-    const magazine = result?.data?.data ?? result?.data ?? result;
-
-    return magazine;
+    return response.data?.data?.data ?? response.data?.data ?? response.data;
   } catch (error: any) {
-    /*----------------- If 404 → fallback to slug search-----------------*/
-    if (error.response?.status === 404) {
-      try {
-        const listRes = await api.get("/magazines");
-        const magazines: Magazine[] = listRes.data?.data ?? [];
+    if (error.response?.status !== 404) throw error;
 
-        const magazine = magazines.find(
-          (mag) => mag.slug === slugOrId || mag.id === parseInt(slugOrId, 10),
-        );
+    const listRes = await api.get("/magazines");
+    const magazines: Magazine[] = listRes.data?.data ?? [];
+    const magazine = magazines.find(
+      (mag) => mag.slug === slugOrId || mag.id === parseInt(slugOrId, 10),
+    );
 
-        if (!magazine) {
-          throw new Error(`Magazine "${slugOrId}" not found`);
-        }
-
-        return magazine;
-      } catch (err) {
-        console.error("Slug lookup failed:", err);
-        throw err;
-      }
-    }
-
-    console.error("Error:", error.message);
-    throw error;
+    if (!magazine) throw new Error(`Magazine "${slugOrId}" not found`);
+    return magazine;
   }
 }
 

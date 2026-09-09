@@ -1,5 +1,5 @@
 import React from "react";
-import RightSidebar from "@/components/RightSidebar/RightSidebar";
+import RightSidebar from "@/components/common/RightSidebar";
 
 interface ArticlesLayoutProps {
   children: React.ReactNode; // dynamic content (page.tsx)

@@ -1,5 +1,5 @@
-import Banner from "@/components/Common/Banner";
-import { getEditorial } from "@/components/Editorial/service";
+import Banner from "@/components/common/Banner";
+import { getEditorial } from "@/features/editorial/services/editorial.service";
 import Image from "next/image";
 const imgUrl = process.env.NEXT_PUBLIC_EDITORIAL_IMAGE_URL || "";
 

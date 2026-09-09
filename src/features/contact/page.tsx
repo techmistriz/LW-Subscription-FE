@@ -1,4 +1,4 @@
-import Banner from "@/components/Common/Banner";
+import Banner from "@/components/common/Banner";
 
 export default function ContactPage() {
   return (

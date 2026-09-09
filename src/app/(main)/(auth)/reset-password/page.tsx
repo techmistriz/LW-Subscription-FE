@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/redux/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
-import { resetPasswordAction } from "@/redux/thunks/authThunk";
-import Banner from "@/components/Common/Banner";
+import {
+  resetPassword,
+  clearPasswordResetState,
+} from "@/store/slices/authSlice";
+import Banner from "@/components/common/Banner";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function ResetPasswordPage() {
@@ -13,7 +16,9 @@ export default function ResetPasswordPage() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const { loading, error, success } = useAppSelector((state) => state.reset);
+  const { loading, error, success } = useAppSelector(
+    (state) => state.auth.passwordReset,
+  );
 
   const email = params.get("email") || "";
   const token = params.get("token") || "";
@@ -28,8 +33,13 @@ export default function ResetPasswordPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (form.password !== form.password_confirmation) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     dispatch(
-      resetPasswordAction({
+      resetPassword({
         email,
         token,
         password: form.password,
@@ -41,13 +51,16 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     if (success) {
       toast.success(success);
-      router.push("/sign-in"); // redirect after success
+      dispatch(clearPasswordResetState());
+      router.push("/sign-in");
+      return;
     }
 
     if (error) {
       toast.error(error);
+      dispatch(clearPasswordResetState());
     }
-  }, [success, error]);
+  }, [success, error, dispatch, router]);
 
   return (
     <main>

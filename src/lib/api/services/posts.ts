@@ -1,6 +1,6 @@
 import api from "@/lib/api/axios";
+import type { Post } from "@/types"; // Magazine import removed, duplicate hata diya
 
-/*----------------- Unified Posts API -----------------*/
 interface GetPostsParams {
   search?: string;
   category_id?: number;
@@ -9,95 +9,42 @@ interface GetPostsParams {
   magazine_id?: number;
   tag_id?: number;
   page?: number;
-  limit?: number;
   per_page?: number;
-  latest?: number;
 }
 
-/*----------------- Main posts fetch -----------------*/
 export async function getPosts({
-  search,
-  category_id,
-  year,
-  author_id,
-  magazine_id,
-  tag_id,
   page = 1,
   per_page = 10,
+  ...filters
 }: GetPostsParams = {}) {
-  const params: any = {
-    page,
-    per_page,
-    ...(magazine_id && { magazine_id }),
-    ...(search && { search }),
-    ...(category_id && { category_id }),
-    ...(year && { year }),
-    ...(author_id && { author_id }),
-    ...(tag_id && { tag_id }),
-  };
-
+  const params = { page, per_page, ...filters };
   const response = await api.get("/posts", { params });
   return response.data;
 }
 
-/*----------------- Single article by slug -----------------*/
 export async function getArticleBySlug(slug: string) {
-  try {
-    const response = await api.get(`/posts/${slug}`);
-
-    const data = response.data;
-
-    if (data?.data) return data.data;
-    if (data?.post) return data.post;
-
-    return data;
-  } catch (error) {
-    console.error("getArticleBySlug error:", error);
-    return null;
-  }
+  const response = await api.get(`/posts/${slug}`);
+  const data = response.data;
+  return data?.data ?? data?.post ?? data;
 }
 
-/*----------------- Related posts -----------------*/
 export async function getRelatedPosts(params: {
   category_id?: number;
   author_id?: number;
   magazine_id?: number;
 }) {
   const response = await api.get("/posts", {
-    params: {
-      ...params,
-      limit: 10,
-    },
+    params: { ...params, limit: 10 },
   });
-
   return response.data?.data || [];
 }
 
-/*----------------- Editor picks -----------------*/
 export async function getEditorPicksPosts(params?: {
   category_id?: number;
   limit?: number;
 }) {
   const response = await api.get("/posts", {
-    params: {
-      category_id: 5,
-      limit: params?.limit ?? 5,
-      latest: 1,
-    },
+    params: { category_id: 5, limit: params?.limit ?? 5, latest: 1 },
   });
-
   return response.data?.data || [];
-}
-
-/*----------------- Types -----------------*/
-export interface Magazine {
-  image: string;
-  id: number;
-  title: string;
-  slug: string;
-  featured_image: string;
-  created_at: string;
-  category?: {
-    name: string;
-  };
 }

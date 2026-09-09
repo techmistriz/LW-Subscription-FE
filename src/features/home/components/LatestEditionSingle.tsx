@@ -1,0 +1,57 @@
+import Link from "next/link";
+
+import type { Magazine } from "@/types";
+import SafeImage from "../../../components/media/SafeImage";
+
+const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+
+type Props = {
+  magazine: Magazine;
+  showTitle?: boolean;
+  showUnderline?: boolean;
+};
+
+export default function LatestIssue({
+  magazine,
+  showTitle = true,
+  showUnderline = true,
+}: Props) {
+  if (!magazine) return null;
+
+  return (
+    <div>
+      <h3 className="text-[20px] text-[#333333] font-semibold tracking-wide mt-2">
+        LATEST EDITION
+      </h3>
+
+      <div className="w-14 h-1 bg-[#c9060a] mt-1 mb-4"></div>
+
+      <Link
+        href={`/magazines/${magazine.slug}`}
+        className="block relative w-full aspect-3/4"
+      >
+        <SafeImage
+          src={
+            magazine.image?.trim() && magazineBaseUrl
+              ? `${magazineBaseUrl.replace(/\/$/, "")}/${magazine.image}`
+              : undefined
+          }
+          alt={magazine.title || "Latest magazine edition"}
+          fill
+          className="object-cover hover:shadow-md transition-shadow"
+          sizes="300px"
+        />
+      </Link>
+
+      {showTitle && (
+        <p className="text-center text-[18px] font-semibold my-2">
+          {magazine.title}
+        </p>
+      )}
+
+      {showUnderline && (
+        <div className="w-full h-[0.5px] bg-gray-200 mt-1 mb-2"></div>
+      )}
+    </div>
+  );
+}

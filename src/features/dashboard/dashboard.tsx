@@ -14,14 +14,11 @@ import {
   CalendarCheck,
 } from "lucide-react";
 
-import { getPlans } from "@/features/auth/services/plans";
-import { useAppSelector, useAppDispatch } from "@/redux/store/hooks";
-import { loadSubscriptionFromStorage } from "@/redux/store/slices/subscriptionSlice";
-import {
-  fetchProfile,
-  loadUserFromStorage,
-} from "@/redux/store/slices/authSlice";
-import PageLoader from "@/components/Loader/PageLoader";
+import { getMembershipPlans } from "@/features/auth/services/plans.service";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { loadSubscriptionFromStorage } from "@/store/slices/subscriptionSlice";
+import { fetchProfile, loadUserFromStorage } from "@/store/slices/authSlice";
+import PageLoader from "@/components/feedback/Loader/PageLoader";
 import {
   renewPlan,
   verifyRenewPayment,
@@ -137,7 +134,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const data = await getPlans();
+        const data = await getMembershipPlans();
         setPlans(data || []);
       } catch {
         setPlans([]);

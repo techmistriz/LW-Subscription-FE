@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { usePathname } from "next/navigation";
 
-import RegisterModal from "../features/PopupModal/Popup";
+import RegisterModal from "./overlay/PopupModal/Popup";
 
-import { useAppSelector } from "@/redux/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 
 const AuthGate = () => {
   const pathname = usePathname();
@@ -35,7 +35,7 @@ const AuthGate = () => {
 
   return (
     <>
-      <div className="fixed inset-0 z-9998 bg-black/40 backdrop-blur-sm" />
+      <div className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm" />
 
       <RegisterModal onClose={() => setShowModal(false)} />
     </>

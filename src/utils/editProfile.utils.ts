@@ -20,9 +20,7 @@ export const EMPTY_FORM_DATA: FormData = {
   country: "",
 };
 
-export const createFormData = (
-  user: EditableProfileUser,
-): FormData => ({
+export const createFormData = (user: EditableProfileUser): FormData => ({
   firstName: user.first_name ?? "",
   lastName: user.last_name ?? "",
   email: user.email ?? "",
@@ -71,11 +69,7 @@ export const getErrorMessage = (
     return error.message;
   }
 
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "message" in error
-  ) {
+  if (typeof error === "object" && error !== null && "message" in error) {
     const message = (error as { message?: unknown }).message;
 
     if (typeof message === "string") {

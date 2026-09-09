@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 
 const RegisterForm = dynamic(
-  () => import("@/features/auth/register/component/RegisterForm"),
+  () => import("@/features/auth/components/register/RegisterForm"),
   {
     ssr: false,
     loading: () => (

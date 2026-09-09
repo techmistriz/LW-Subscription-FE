@@ -1,6 +1,6 @@
 "use client";
 
-import Banner from "@/components/Common/Banner";
+import Banner from "@/components/common/Banner";
 
 export default function AboutUsPage() {
   return (

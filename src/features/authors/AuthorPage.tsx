@@ -1,0 +1,197 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
+import { toTitleCase } from "@/utils/toTitleCase";
+import { getPosts } from "@/lib/api/services/posts";
+import { getAuthors } from "@/lib/api/services/author";
+import { getYears } from "@/lib/api/services/years";
+
+import PageLoader from "@/components/feedback/Loader/PageLoader";
+import YearFilter from "@/components/common/YearFilter";
+import PostList from "@/components/common/PostList";
+import Pagination from "@/components/common/Pagination";
+import { Post } from "@/types/models";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+
+const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+
+export default function AuthorPage() {
+  const params = useParams();
+  const authorSlug = params?.author as string;
+  const authorName = authorSlug?.replace(/-/g, " ") || "";
+  const authorTitle = toTitleCase(authorName);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const yearParam = searchParams.get("year");
+
+  const [loading, setLoading] = useState(false);
+
+  const [selectedYear, setSelectedYear] = useState<number | null>(
+    yearParam ? Number(yearParam) : null,
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [years, setYears] = useState<number[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [lastPage, setLastPage] = useState(1);
+  const [authorId, setAuthorId] = useState<number | null>(null);
+  const [authorData, setAuthorData] = useState<any>(null);
+
+  /*----------------- Load Author -----------------*/
+  const loadAuthor = useCallback(async () => {
+    if (!authorSlug) return;
+
+    try {
+      const authors = await getAuthors();
+
+      const matched = authors.find((a) => a.slug === authorSlug);
+
+      setAuthorId(matched?.id ?? null);
+
+      setAuthorData(matched ?? null);
+    } catch (error) {
+      console.error("Failed to load author:", error);
+
+      setAuthorId(null);
+
+      setAuthorData(null);
+    }
+  }, [authorSlug]);
+
+  /*----------------- Fetch Posts -----------------*/
+  const fetchPosts = useCallback(
+    async (page: number = 1, year: number | null = null) => {
+      if (!authorId) return;
+
+      setLoading(true);
+
+      try {
+        const response = await getPosts({
+          author_id: authorId,
+          page,
+          ...(year ? { year } : {}),
+        });
+
+        // console.log("Author Id", response);
+        /*----------------- Normalize posts so each author has a linkedin -----------------*/
+        const normalizedPosts = (response.data ?? []).map((post: Post) => ({
+          ...post,
+          author:
+            post.author && typeof post.author !== "string"
+              ? { ...post.author, linkedin: post.author.linkedin || "" }
+              : post.author,
+        }));
+
+        setPosts(normalizedPosts);
+        setLastPage(response.meta?.paging?.last_page ?? 1);
+        setCurrentPage(page);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+        setPosts([]);
+        setLastPage(1);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [authorId],
+  );
+
+  // console.log("Author Page", posts);
+
+  /*----------------- Load Years -----------------*/
+  const loadYears = useCallback(async () => {
+    try {
+      const data = await getYears();
+      setYears(data ?? []);
+    } catch (error) {
+      console.error("Failed to load years:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadAuthor();
+    loadYears();
+  }, [loadAuthor, loadYears]);
+
+  const pageParam = Number(searchParams.get("page")) || 1;
+
+  useEffect(() => {
+    if (authorId) {
+      const year = yearParam ? Number(yearParam) : null;
+      fetchPosts(pageParam, year);
+    }
+  }, [authorId, pageParam, yearParam, fetchPosts]);
+
+  /*----------------- Apply Year Filter -----------------*/
+  const handleApplyFilter = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (selectedYear) {
+      params.set("year", selectedYear.toString());
+    } else {
+      params.delete("year");
+    }
+
+    params.set("page", "1");
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const postsWithContent: Post[] = posts.map((p) => ({
+    ...p,
+    content: p.content ? <>{p.content}</> : <></>,
+  }));
+
+  return (
+    <section className="bg-white">
+      <div className="lg:col-span-9">
+        <YearFilter
+          years={years}
+          selectedYear={selectedYear}
+          onSelect={setSelectedYear}
+          onApply={handleApplyFilter}
+        />
+
+        {loading ? (
+          <PageLoader />
+        ) : !authorId ? (
+          <div className="py-10 text-center text-gray-200">loading..</div>
+        ) : (
+          <>
+            <PostList
+              posts={postsWithContent} //  mapped with content
+              fallbackAuthorName={authorTitle}
+              postBaseUrl={postBaseUrl}
+              loading={loading}
+              emptyMessage={
+                selectedYear
+                  ? `${authorTitle} has not published any posts in ${selectedYear}`
+                  : `${authorTitle} has not published any posts yet`
+              }
+            />
+
+            {lastPage > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                lastPage={lastPage}
+                loading={loading}
+                onPageChange={(page) => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set("page", page.toString());
+
+                  if (selectedYear) {
+                    params.set("year", selectedYear.toString());
+                  }
+
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}

@@ -1,3 +1,44 @@
+export interface User {
+  id: number;
+
+  first_name?: string;
+  last_name?: string;
+  name?: string;
+
+  email?: string;
+  contact?: string;
+  phone?: string;
+
+  address?: string;
+  gst_number?: string;
+
+  dob?: string;
+  gender?: string;
+  age_group?: string;
+
+  country_id?: number;
+  state_id?: number;
+  city_id?: number;
+  custom_city?: string;
+
+  interest?: string | string[];
+  interests?: string[];
+
+  hearabout?: string;
+  subscribe?: boolean;
+
+  visited?: boolean;
+  visited_year?: string | string[];
+
+  role_id?: number;
+  membership_plan_id?: number;
+
+  active_subscription?: boolean;
+
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface RegisterForm {
   first_name: string;
   last_name: string;

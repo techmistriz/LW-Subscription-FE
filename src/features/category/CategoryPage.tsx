@@ -2,14 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
+import { toTitleCase } from "@/utils/toTitleCase";
 import { getPosts } from "@/lib/api/services/posts";
 import { getYears } from "@/lib/api/services/years";
 import { getCategoryBySlug } from "@/lib/api/services/categories";
-import Pagination from "@/components/Pagination/Pagination";
+import Pagination from "@/components/common/Pagination";
 import { Year } from "@/types";
-import PostList from "@/components/Common/PostList";
-import YearFilter from "@/components/Common/YearFilter";
+import PostList from "@/components/common/PostList";
+import YearFilter from "@/components/common/YearFilter";
 import { useSearchParams, useRouter } from "next/navigation";
 
 const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";

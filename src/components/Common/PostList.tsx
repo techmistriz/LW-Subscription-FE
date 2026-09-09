@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import PageLoader from "@/components/Loader/PageLoader";
+import PageLoader from "@/components/feedback/Loader/PageLoader";
 import { Post, Author } from "@/types";
 
 interface PostListProps {

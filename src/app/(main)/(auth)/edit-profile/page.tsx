@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppSelector } from "@/redux/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import EditProfileForm from "./components/EditProfileForm";
 
 export default function EditProfilePage() {
@@ -9,9 +9,7 @@ export default function EditProfilePage() {
   if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-gray-500">
-          Loading profile...
-        </p>
+        <p className="text-sm text-gray-500">Loading profile...</p>
       </div>
     );
   }

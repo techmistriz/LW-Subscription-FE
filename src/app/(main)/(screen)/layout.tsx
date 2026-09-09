@@ -4,10 +4,10 @@ import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import { toTitleCase } from "@/lib/utils/helper/toTitleCase";
+import { toTitleCase } from "@/utils/toTitleCase";
 
-import Banner from "@/components/Common/Banner";
-import RightSidebar from "@/components/RightSidebar/RightSidebar";
+import Banner from "@/components/common/Banner";
+import RightSidebar from "@/components/common/RightSidebar";
 
 import { getAuthors } from "@/lib/api/services/author";
 

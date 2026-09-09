@@ -1,16 +1,38 @@
 "use client";
 
-import { useAppSelector } from "@/redux/store/hooks";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/hooks";
+import PageLoader from "@/components/feedback/Loader/PageLoader";
 
 export default function ThankYou() {
   const router = useRouter();
 
-  const { user } = useAppSelector((state) => state.auth);
-
+  const { user, isInitialized } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.active);
+  const isSubscriptionLoaded = useAppSelector(
+    (state) => state.subscription.isLoaded,
+  );
 
-  const email = user?.email || "Not available";
+  /* ---------------- GUARD: no user after storage restore ---------------- */
+  useEffect(() => {
+    if (isInitialized && !user) {
+      router.replace("/");
+    }
+  }, [isInitialized, user, router]);
+
+  /* ---------------- LOADING STATE ---------------- */
+  if (!isInitialized || !isSubscriptionLoaded) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center">
+        <PageLoader />
+      </div>
+    );
+  }
+
+  if (!user) return null; // redirect in flight
+
+  const email = user.email || "Not available";
   const planName = subscription?.name || "Your Plan";
 
   return (
