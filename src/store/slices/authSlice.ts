@@ -170,6 +170,7 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
+      state.isInitialized = true;
 
       storage.set("user", action.payload.user);
       storage.set("token", action.payload.token);

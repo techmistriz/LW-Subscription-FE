@@ -53,4 +53,3 @@ export async function getEditorPicksPosts(params?: {
   });
   return response.data?.data || [];
 }
-

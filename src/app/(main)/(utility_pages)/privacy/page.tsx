@@ -1,4 +1,4 @@
-import PrivacyPage from "@/features/privacy/page";
+import PrivacyPage from "@/features/static-pages/privacy";
 
 const Privacy = () => {
   return <PrivacyPage />;

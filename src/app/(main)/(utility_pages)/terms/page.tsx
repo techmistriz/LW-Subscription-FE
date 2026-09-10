@@ -1,4 +1,4 @@
-import TermsPage from "@/features/terms/page";
+import TermsPage from "@/features/static-pages/terms";
 
 const Terms = () => {
   return <TermsPage />;

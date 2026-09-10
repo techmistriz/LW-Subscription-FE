@@ -10,7 +10,7 @@ import ScrollToTop from "@/components/navigation/ScrollToTop";
 import ScrollProvider from "./providers";
 // import { getCategories } from "@/lib/api/services/categories";
 import AuthGate from "@/components/AuthGate";
-import { ReduxProvider } from "@/store/provides";
+import { ReduxProvider } from "@/store/providers";
 import InitAuth from "@/store/initAuth";
 import { Toaster } from "sonner";
 
