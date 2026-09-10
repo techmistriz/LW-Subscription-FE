@@ -1,5 +1,5 @@
-import api from "@/lib/api/axios";
-import { extractErrorMessage } from "@/lib/api/errorMessage";
+import api from "@/network/axios";
+import { extractErrorMessage } from "@/network/errorMessage";
 import type { UpdateProfilePayload } from "@/types/editProfile.types";
 
 export async function updateProfile(payload: UpdateProfilePayload) {

@@ -1,5 +1,5 @@
 import { CONTENT, PAGINATION } from "@/config/constants";
-import api from "@/lib/api/axios";
+import api from "@/network/axios";
 import { cache } from "react";
 
 interface GetPostsParams {

@@ -25,7 +25,8 @@ export const storage = {
   set(key: string, value: unknown): void {
     if (!isBrowser()) return;
 
-    const raw = typeof value === "string" ? value : JSON.stringify(value);
+    const raw =
+      typeof value === "string" ? value : JSON.stringify(value);
 
     sessionStorage.setItem(key, raw);
   },
@@ -37,8 +38,10 @@ export const storage = {
   },
 
   clearAuthData(): void {
-    [STORAGE_KEYS.USER, STORAGE_KEYS.AUTH_TOKEN, "subscription"].forEach(
-      (key) => this.remove(key),
-    );
+    [
+      STORAGE_KEYS.USER,
+      STORAGE_KEYS.AUTH_TOKEN,
+      STORAGE_KEYS.SUBSCRIPTION,
+    ].forEach((key) => this.remove(key));
   },
 };

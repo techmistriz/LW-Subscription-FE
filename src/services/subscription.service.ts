@@ -1,4 +1,4 @@
-import api from "@/lib/api/axios";
+import api from "@/network/axios";
 import type { PaymentResponse } from "@/types/api";
 
 export const buyNewPlan = async (

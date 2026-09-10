@@ -1,5 +1,5 @@
-import api from "@/lib/api/axios";
-import { request } from "@/lib/api/request";
+import api from "@/network/axios";
+import { request } from "@/network/request";
 import type { Invoice } from "@/types/invoice";
 
 export interface InvoiceResponse {

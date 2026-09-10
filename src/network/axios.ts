@@ -1,7 +1,8 @@
-// src/lib/api/axios.ts
 import axios, { AxiosHeaders } from "axios";
-import { storage } from "@/lib/storage";
+
+import { STORAGE_KEYS } from "@/config/constants";
 import { siteConfig } from "@/config/site";
+import { storage } from "@/lib/storage";
 
 const api = axios.create({
   baseURL: siteConfig.apiBaseUrl,
@@ -11,13 +12,15 @@ const api = axios.create({
 });
 
 /* ----------------------- REQUEST INTERCEPTOR ----------------------- */
+
 api.interceptors.request.use((config) => {
-  const token = storage.get("token");
+  const token = storage.get(STORAGE_KEYS.AUTH_TOKEN);
 
   if (token) {
     if (!config.headers) {
       config.headers = new AxiosHeaders();
     }
+
     config.headers.set("Authorization", `Bearer ${token}`);
   }
 
@@ -25,8 +28,10 @@ api.interceptors.request.use((config) => {
 });
 
 /* ----------------------- RESPONSE INTERCEPTOR ----------------------- */
+
 api.interceptors.response.use(
   (response) => response,
+
   (error) => {
     const status = error.response?.status;
     const url = error.config?.url || "";
@@ -38,7 +43,7 @@ api.interceptors.response.use(
 
     if (status === 401 && !isAuthRequest) {
       if (typeof window !== "undefined") {
-        storage.clearAuthData(); // token, subscription, user — sab ek call mein
+        storage.clearAuthData();
         window.location.href = "/sign-in";
       }
     }

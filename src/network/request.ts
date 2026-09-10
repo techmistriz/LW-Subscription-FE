@@ -1,4 +1,5 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+
 import api from "./axios";
 import type { ApiResponse } from "@/types/api";
 
@@ -11,7 +12,9 @@ export const request = async <T>(
     const response = await api.request<T>({
       method,
       url,
-      ...(method === "GET" ? { params: payload } : { data: payload }),
+      ...(method === "GET"
+        ? { params: payload }
+        : { data: payload }),
     });
 
     return {
@@ -20,26 +23,25 @@ export const request = async <T>(
       data: response.data,
     };
   } catch (error) {
-    let message = "Something went wrong";
-    let errors: Record<string, string[]> | undefined;
-
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<{
-        message?: string;
-        errors?: Record<string, string[]>;
-      }>;
-
-      message =
-        axiosError.response?.data?.message || axiosError.message || message;
-
-      errors = axiosError.response?.data?.errors;
+      return {
+        status: false,
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
+        data: null,
+        errors: error.response?.data?.errors,
+      };
     }
 
     return {
       status: false,
-      message,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
       data: null,
-      errors,
     };
   }
 };

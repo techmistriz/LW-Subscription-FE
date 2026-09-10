@@ -8,7 +8,7 @@ import { setUser } from "@/store/slices/authSlice";
 import { setSubscription } from "@/store/slices/subscriptionSlice";
 import { registerUser, sendOtp } from "@/services/auth.service";
 import { getMembershipPlans } from "../services/plan.service";
-import api from "@/lib/api/axios";
+import api from "@/network/axios";
 import { storage } from "@/lib/storage";
 import { usePayment } from "./usePayment";
 import { RegisterFormData } from "@/types/register.types";

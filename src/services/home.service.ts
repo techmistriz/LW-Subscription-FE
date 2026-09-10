@@ -1,4 +1,4 @@
-import api from "@/lib/api/axios";
+import api from "@/network/axios";
 import type { Post } from "@/types/models";
 
 export const getHeroPost = async (): Promise<Post[]> => {

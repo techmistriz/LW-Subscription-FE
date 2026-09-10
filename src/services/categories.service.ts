@@ -1,4 +1,4 @@
-import { request } from "@/lib/api/request";
+import { request } from "@/network/request";
 import type { Category } from "@/types/models";
 
 interface CategoriesData {

@@ -1,7 +1,7 @@
 import { PaginatedResponse } from "@/types/api";
 import { Magazine, Post } from "@/types/models";
 import axios from "axios";
-import api from "@/lib/api/axios";
+import api from "@/network/axios";
 import { PAGINATION } from "@/config/constants";
 
 /*-----------------for magazine grid -----------------*/

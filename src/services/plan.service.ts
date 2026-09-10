@@ -1,5 +1,5 @@
-import api from "@/lib/api/axios";
-import { extractErrorMessage } from "@/lib/api/errorMessage";
+import api from "@/network/axios";
+import { extractErrorMessage } from "@/network/errorMessage";
 import type { SubscriptionPlan } from "@/types/models";
 
 export async function getMembershipPlans(
