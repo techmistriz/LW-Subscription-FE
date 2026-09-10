@@ -21,6 +21,9 @@ export default function ThankYou() {
     }
   }, [isInitialized, user, router]);
 
+  console.log(isInitialized)
+  console.log(isSubscriptionLoaded)
+
   /* ---------------- LOADING STATE ---------------- */
   if (!isInitialized || !isSubscriptionLoaded) {
     return (

@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState, FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import Banner from "@/components/common/Banner";
 import { useRouter } from "next/navigation";
 
-/*----------------- REDUX -----------------*/
+/* ----------------- REDUX ----------------- */
 import { useAppDispatch } from "@/store/hooks";
 import {
   loginUser as loginRedux,
@@ -14,25 +14,86 @@ import {
 
 import { toast } from "sonner";
 
+type FormErrors = {
+  email?: string;
+  password?: string;
+};
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  /* ----------------- VALIDATION ----------------- */
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    const trimmedEmail = email.trim();
+
+    if (!trimmedEmail) {
+      newErrors.email = "Please enter your email address.";
+    } else if (!EMAIL_REGEX.test(trimmedEmail)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!password) {
+      newErrors.password = "Please enter your password.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  /* ----------------- INPUT HANDLERS ----------------- */
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+
+    if (errors.email) {
+      setErrors((prev) => ({
+        ...prev,
+        email: undefined,
+      }));
+    }
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+
+    if (errors.password) {
+      setErrors((prev) => ({
+        ...prev,
+        password: undefined,
+      }));
+    }
+  };
+
+  /* ----------------- SUBMIT ----------------- */
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setError("");
+    setErrors({});
+
+    // Stop API call if frontend validation fails
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
 
     try {
       await dispatch(
         loginRedux({
-          email,
+          email: email.trim(),
           password,
         }),
       ).unwrap();
@@ -43,10 +104,15 @@ export default function SignInForm() {
 
       router.replace("/dashboard");
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Login failed";
+      const message =
+        error instanceof Error ? error.message : "Invalid email or password.";
 
-      setError(message);
       toast.error(message);
+
+      // Show API error inside form as well
+      setErrors({
+        email: message,
+      });
     } finally {
       setLoading(false);
     }
@@ -54,56 +120,108 @@ export default function SignInForm() {
 
   return (
     <main className="bg-white">
-      <Banner title={"sign In"} />
+      <Banner title="Sign In" />
 
       <section className="py-10">
-        <div className="max-w-3xl mx-auto text-center px-4">
+        <div className="mx-auto max-w-3xl px-4 text-center">
           <h2 className="text-2xl font-bold tracking-wide">SIGN IN YOURSELF</h2>
 
-          <p className="text-[#333333] text-sm mt-2 max-w-xl mx-auto">
+          <p className="mx-auto mt-2 max-w-xl text-sm text-[#333333]">
             Welcome back. Sign in to access your account and continue.
           </p>
 
-          <div className="w-12 h-1 bg-[#c9060a] mx-auto mt-4"></div>
+          <div className="mx-auto mt-4 h-1 w-12 bg-[#c9060a]" />
 
-          <div className="mt-6 bg-white shadow-[0_8px_20px_rgba(0,0,0,0.25)] border border-gray-200 p-8 max-w-md mx-auto text-left">
-            {error && <p className="text-[#c9060a] text-sm mb-3">{error}</p>}
+          <div className="mx-auto mt-6 max-w-md border border-gray-200 bg-white p-8 text-left shadow-[0_8px_20px_rgba(0,0,0,0.25)]">
+            <form onSubmit={handleSubmit} noValidate>
+              {/* EMAIL */}
 
-            <form onSubmit={handleSubmit}>
-              <label className="block text-sm font-medium mb-2">
-                Email Address
-              </label>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Email Address
+                </label>
 
-              <input
-                required
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                className="w-full border px-4 py-2 mb-4"
-              />
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  disabled={loading}
+                  autoComplete="email"
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                  className={`w-full border px-4 py-2 outline-none transition ${
+                    errors.email
+                      ? "border-[#c9060a]"
+                      : "border-gray-300 focus:border-gray-500"
+                  }`}
+                />
 
-              <label className="block text-sm font-medium mb-2">Password</label>
+                {errors.email && (
+                  <p
+                    id="email-error"
+                    className="mt-1 text-sm text-[#c9060a]"
+                    role="alert"
+                  >
+                    {errors.email}
+                  </p>
+                )}
+              </div>
 
-              <input
-                required
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-                className="w-full border px-4 py-2 mb-4"
-              />
+              {/* PASSWORD */}
+
+              <div className="mb-4">
+                <label
+                  htmlFor="password"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Password
+                </label>
+
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  disabled={loading}
+                  autoComplete="current-password"
+                  aria-invalid={Boolean(errors.password)}
+                  aria-describedby={
+                    errors.password ? "password-error" : undefined
+                  }
+                  className={`w-full border px-4 py-2 outline-none transition ${
+                    errors.password
+                      ? "border-[#c9060a]"
+                      : "border-gray-300 focus:border-gray-500"
+                  }`}
+                />
+
+                {errors.password && (
+                  <p
+                    id="password-error"
+                    className="mt-1 text-sm text-[#c9060a]"
+                    role="alert"
+                  >
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              {/* SUBMIT */}
 
               <button
                 disabled={loading}
                 type="submit"
-                className="bg-[#c9060a] text-white px-6 py-2 text-sm w-full cursor-pointer"
+                className="w-full cursor-pointer bg-[#c9060a] px-6 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging in..." : "Log In"}
               </button>
             </form>
 
-            <p className="text-sm text-[#c9060a] mt-4 cursor-pointer">
+            <p className="mt-4 text-sm text-[#c9060a]">
               <Link href="/register" className="hover:underline">
                 Register
               </Link>{" "}

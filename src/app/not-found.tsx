@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="absolute inset-0 bg-[linear-gradient(#e5e7eb_1px,transparent_1px),linear-gradient(90deg,#e5e7eb_1px,transparent_1px)] bg-size-[50px_50px] opacity-40"></div>
 
       {/* Content */}
-      <div className="relative text-center max-w-xl w-full">
+      <div className="relative text-center max-w-xl w-full -mt-16 sm:-mt-20 md:-mt-24">
         {/* Title */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#333] mb-6">
           ERROR

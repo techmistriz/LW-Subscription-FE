@@ -376,7 +376,7 @@ export default function ArticleDetailPage() {
                         {author.description ||
                           `${author.name} is a contributor at Lex Witness.`}
                       </p>
-                      {author.linkedin && (
+                      {/* {author.linkedin && (
                         <a
                           href={author.linkedin}
                           target="_blank"
@@ -392,7 +392,7 @@ export default function ArticleDetailPage() {
                           </svg>
                           <span className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></span>
                         </a>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>

@@ -5,6 +5,7 @@ import PersonalDetailsForm from "./PersonalDetailsForm";
 import SubscriptionSummary from "./SubscriptionSummary";
 import SubscriptionSummarySkeleton from "@/components/feedback/Skeletons/SubscriptionSummary";
 import Banner from "@/components/common/Banner";
+import Image from "next/image";
 
 export default function RegisterForm() {
   const {
@@ -27,12 +28,46 @@ export default function RegisterForm() {
   //  Show loading state during payment processing
   if (processingPayment) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <div className="w-10 h-10 border-4 border-[#c9060a] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-sm font-medium text-gray-600 tracking-widest uppercase">
-            Processing Payment...
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+        <div className="w-[360px] max-w-full rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-2xl">
+          {/* Loader */}
+          <div className="relative mb-6 flex justify-center">
+            <div className="absolute h-16 w-16 animate-ping rounded-full bg-red-100" />
+
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+              <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c9060a]" />
+            </div>
+          </div>
+
+          {/* Title */}
+          <h2 className="text-lg font-semibold text-gray-900">
+            Verifying Payment
+          </h2>
+
+          {/* Description */}
+          <p className="mt-2 text-sm leading-5 text-gray-500">
+            Please wait while we confirm your transaction.
           </p>
+
+          {/* Progress */}
+          <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-gray-100">
+            <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c9060a]" />
+          </div>
+
+          {/* Razorpay */}
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <span className="text-xs text-gray-400">Secured by</span>
+
+            <div className="flex h-6 items-center rounded-md px-">
+              <Image
+                src="/razorpay-logo.webp"
+                alt="Razorpay"
+                width={72}
+                height={24}
+                className="h-18 w-auto object-contain"
+              />
+            </div>
+          </div>
         </div>
       </div>
     );

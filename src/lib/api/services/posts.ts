@@ -1,4 +1,5 @@
 import api from "@/lib/api/axios";
+import { cache } from "react";
 
 interface GetPostsParams {
   search?: string;
@@ -21,11 +22,16 @@ export async function getPosts({
   return response.data;
 }
 
-export async function getArticleBySlug(slug: string) {
+export const getArticleBySlug = cache(async (slug: string) => {
   const response = await api.get(`/posts/${slug}`);
   const data = response.data;
-  return data?.data ?? data?.post ?? data;
-}
+
+  if (!data?.status || !data?.data) {
+    return null;
+  }
+
+  return data.data;
+});
 
 export async function getRelatedPosts(params: {
   category_id?: number;
@@ -47,3 +53,4 @@ export async function getEditorPicksPosts(params?: {
   });
   return response.data?.data || [];
 }
+

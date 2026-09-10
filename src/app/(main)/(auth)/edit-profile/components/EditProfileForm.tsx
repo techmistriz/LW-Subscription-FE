@@ -29,6 +29,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
   const [otpSent, setOtpSent] = useState(false);
   const [sendingOtp, setSendingOtp] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -165,6 +166,8 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
       isContactChanged ? formData.otp : "",
     );
 
+    setUpdating(true);
+
     try {
       const response = await updateProfile(payload);
 
@@ -186,6 +189,8 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
       toast.success(response.message || "Profile updated successfully");
     } catch (error: unknown) {
       toast.error(getErrorMessage(error));
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -480,14 +485,21 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
           <div className="mt-2 flex justify-end gap-3 border-t border-[#c9060a] pt-5 md:col-span-2">
             <button
               type="submit"
-              disabled={!canUpdate}
-              className={`px-6 py-2.5 text-sm font-medium text-white transition ${
-                canUpdate
+              disabled={!canUpdate || updating}
+              className={`flex min-w-[150px] items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-white transition ${
+                canUpdate && !updating
                   ? "cursor-pointer bg-[#C9060A] hover:bg-[#a30508]"
                   : "cursor-not-allowed bg-gray-300"
               }`}
             >
-              Update Profile
+              {updating ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  Updating...
+                </>
+              ) : (
+                "Update Profile"
+              )}
             </button>
           </div>
         </form>

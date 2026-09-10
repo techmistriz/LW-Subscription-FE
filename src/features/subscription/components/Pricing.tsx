@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -426,24 +427,46 @@ export default function PricingCard() {
       </div>
 
       {redirectLoading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-[360px] rounded-3xl bg-white p-8 text-center shadow-2xl border border-gray-100">
-            <div className="relative flex justify-center mb-6">
-              <div className="absolute w-16 h-16 rounded-full bg-red-100 animate-ping" />
-              <div className="relative w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
-                <div className="w-8 h-8 border-[3px] border-red-200 border-t-[#c9060a] rounded-full animate-spin" />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-[360px] max-w-full rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-2xl">
+            {/* Loader */}
+            <div className="relative mb-6 flex justify-center">
+              <div className="absolute h-16 w-16 animate-ping rounded-full bg-red-100" />
+
+              <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+                <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c9060a]" />
               </div>
             </div>
+
+            {/* Title */}
             <h2 className="text-lg font-semibold text-gray-900">
               Verifying Payment
             </h2>
-            <p className="text-sm text-gray-500 mt-2">
+
+            {/* Description */}
+            <p className="mt-2 text-sm leading-5 text-gray-500">
               Please wait while we confirm your transaction.
             </p>
-            <div className="mt-5 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full w-1/3 bg-[#c9060a] animate-[slide_1.2s_linear_infinite]" />
+
+            {/* Progress */}
+            <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-gray-100">
+              <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c9060a]" />
             </div>
-            <p className="text-xs text-gray-400 mt-5">Secured by Razorpay</p>
+
+            {/* Razorpay */}
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <span className="text-xs text-gray-400">Secured by</span>
+
+              <div className="flex h-6 items-center rounded-md px-">
+                <Image
+                  src="/razorpay-logo.webp"
+                  alt="Razorpay"
+                  width={72}
+                  height={24}
+                  className="h-18 w-auto object-contain"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
