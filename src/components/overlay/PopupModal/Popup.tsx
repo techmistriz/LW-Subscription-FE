@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,7 +19,6 @@ const Popup = ({ onClose }: PopupProps) => {
   const router = useRouter();
 
   const [singleMagazine, setSingleMagazine] = useState<Magazine | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -29,8 +29,6 @@ const Popup = ({ onClose }: PopupProps) => {
     const fetchData = async () => {
       try {
         const res = await getLatestSingleMagazines();
-
-        // console.log("Single Magazine:", res);
 
         if (mounted && res) {
           setSingleMagazine(res);
@@ -50,7 +48,9 @@ const Popup = ({ onClose }: PopupProps) => {
   }, [router]);
 
   /* ---------------- DATA MAPPING ---------------- */
-  const magazineName = singleMagazine?.magazine_name || "Lex Witness Magazine";
+
+  const magazineName =
+    singleMagazine?.magazine_name || "Lex Witness Magazine";
 
   const magazineSlug = singleMagazine?.slug || "latest";
 
@@ -61,7 +61,7 @@ const Popup = ({ onClose }: PopupProps) => {
       }`;
 
   /* ---------------- REDIRECT ---------------- */
-  /* ---------------- REDIRECT ---------------- */
+
   const handleRedirect = () => {
     setLoading(true);
 
@@ -73,8 +73,30 @@ const Popup = ({ onClose }: PopupProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
-      <div className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-white border border-gray-100 shadow-2xl rounded-lg md:rounded-none">
+    <motion.div
+      className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{
+        duration: 0.25,
+        ease: "easeOut",
+      }}
+    >
+      <motion.div
+        className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-white border border-gray-100 shadow-2xl rounded-lg md:rounded-none"
+        initial={{
+          opacity: 0,
+          y: -100,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.5,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+      >
         {/* CLOSE BUTTON */}
         <button
           onClick={onClose}
@@ -87,7 +109,7 @@ const Popup = ({ onClose }: PopupProps) => {
         {/* TOP SECTION */}
         <div className="flex flex-col md:flex-row">
           {/* LEFT IMAGE */}
-          <div className="flex items-center justify-center w-full p-4 border-b border-gray-100 md:w-5/12 md:p-12 md:border-b-0 ">
+          <div className="flex items-center justify-center w-full p-4 border-b border-gray-100 md:w-5/12 md:p-12 md:border-b-0">
             <Link
               href={`/magazines/${magazineSlug}`}
               onClick={onClose}
@@ -126,7 +148,8 @@ const Popup = ({ onClose }: PopupProps) => {
 
             <div className="mt-6">
               <h2 className="text-xl md:text-2xl font-bold text-[#333]">
-                Your <span className="text-[#c9060a]">1st Month</span> is on Us.
+                Your <span className="text-[#c9060a]">1st Month</span> is on
+                Us.
               </h2>
 
               <div className="mt-4 space-y-3">
@@ -168,9 +191,6 @@ const Popup = ({ onClose }: PopupProps) => {
         {/* BOTTOM CONTACT BAR */}
         <div className="border-t border-gray-200 mx-4 md:mx-10 px-4 md:px-6 py-5">
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-10">
-            {/* <p className="text-center text-xs font-bold text-black uppercase tracking-wider ">
-            Questions?
-          </p> */}
             <a
               href="tel:7982771770"
               className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c9060a] transition"
@@ -198,8 +218,8 @@ const Popup = ({ onClose }: PopupProps) => {
             </a>
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
