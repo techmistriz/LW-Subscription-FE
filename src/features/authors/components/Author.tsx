@@ -47,8 +47,8 @@ function Author({ data }: AuthorProps) {
             <p className="text-sm text-[#333] mt-1">{data.designation}</p>
 
             <p className="text-sm text-[#c9060a] mt-1 font-medium">
-                {data.company_name}
-              </p>
+              {data.company_name}
+            </p>
 
             <p className="text-sm text-gray-400 mt-1 font-medium">
               {data.place}

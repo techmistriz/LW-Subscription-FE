@@ -12,9 +12,7 @@ export const request = async <T>(
     const response = await api.request<T>({
       method,
       url,
-      ...(method === "GET"
-        ? { params: payload }
-        : { data: payload }),
+      ...(method === "GET" ? { params: payload } : { data: payload }),
     });
 
     return {
@@ -37,10 +35,7 @@ export const request = async <T>(
 
     return {
       status: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Something went wrong",
+      message: error instanceof Error ? error.message : "Something went wrong",
       data: null,
     };
   }

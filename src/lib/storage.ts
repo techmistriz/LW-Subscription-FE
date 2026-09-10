@@ -25,8 +25,7 @@ export const storage = {
   set(key: string, value: unknown): void {
     if (!isBrowser()) return;
 
-    const raw =
-      typeof value === "string" ? value : JSON.stringify(value);
+    const raw = typeof value === "string" ? value : JSON.stringify(value);
 
     sessionStorage.setItem(key, raw);
   },

@@ -20,7 +20,6 @@ import {
   getErrorMessage,
 } from "@/utils/editprofile.utils";
 
-
 type EditProfileFormProps = {
   user: EditableProfileUser;
 };
