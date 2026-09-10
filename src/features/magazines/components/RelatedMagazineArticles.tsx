@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import SafeImage from "../../../components/media/SafeImage";
-import type { Post } from "@/types";
+import type { Post } from "@/types/models";
+import { siteConfig } from "@/config/site";
 
-const postImageBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postImageBaseUrl = siteConfig.postsImageBaseUrl || "";
 
 interface Props {
   articles: Post[];

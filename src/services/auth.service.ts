@@ -1,6 +1,5 @@
-// src/lib/api/auth/auth.ts
-import api from "../axios";
-import { extractErrorMessage } from "../errorMessage";
+import api from "@/lib/api/axios";
+import { extractErrorMessage } from "@/lib/api/errorMessage";
 import { RegisterPayload, RegisterResponse } from "@/types/auth";
 
 export async function loginUser(email: string, password: string) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRegisterForm } from "@/features/auth/hooks/useRegisterForm";
+import { useRegisterForm } from "@/hooks/useRegisterForm";
 import PersonalDetailsForm from "./PersonalDetailsForm";
 import SubscriptionSummary from "./SubscriptionSummary";
 import SubscriptionSummarySkeleton from "@/components/feedback/Skeletons/SubscriptionSummary";

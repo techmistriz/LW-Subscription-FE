@@ -1,19 +1,10 @@
 import api from "@/lib/api/axios";
 import { extractErrorMessage } from "@/lib/api/errorMessage";
+import type { SubscriptionPlan } from "@/types/models";
 
-export interface Plan {
-  id: number;
-  name: string;
-  price: string | number;
-  actual_price?: string | number;
-  duration_unit: string;
-  duration_value: number;
-  feature?: string; // HTML string, parsed client-side
-  tag?: string; // "Most Popular" / "Best Value" badge
-  is_trial?: boolean | number;
-}
-
-export async function getMembershipPlans(is_trial?: number): Promise<Plan[]> {
+export async function getMembershipPlans(
+  is_trial?: number,
+): Promise<SubscriptionPlan[]> {
   try {
     const res = await api.get("/membership-plan", {
       params: is_trial !== undefined ? { is_trial } : undefined,

@@ -4,28 +4,18 @@ import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { toTitleCase } from "@/utils/toTitleCase";
-
+import type { AuthorSidebarData } from "@/types/author";
 import Banner from "@/components/common/Banner";
 import RightSidebar from "@/components/common/RightSidebar";
 
-import { getAuthors } from "@/lib/api/services/author";
+import { getAuthors } from "@/services/author.service";
 
 interface ScreenLayoutProps {
   children: React.ReactNode;
 }
 
-interface AuthorData {
-  name: string;
-  image: string;
-  designation: string;
-  company_name: string;
-  place: string;
-  description: string;
-  linkedin?: string;
-}
-
 export default function ScreenLayout({ children }: ScreenLayoutProps) {
-  const [authorData, setAuthorData] = useState<AuthorData | undefined>(
+  const [authorData, setAuthorData] = useState<AuthorSidebarData | undefined>(
     undefined,
   );
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
-import { Post } from "@/types";
+import { Post } from "@/types/models";
 
 interface PostListProps {
   posts: Post[];

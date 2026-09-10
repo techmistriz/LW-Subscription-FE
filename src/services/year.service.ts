@@ -1,5 +1,5 @@
-import { Year } from "@/types";
-import { request } from "../request";
+import { Year } from "@/types/models";
+import { request } from "../lib/api/request";
 
 export const getYears = async (): Promise<Year[]> => {
   const response = await request<{ data: Year[] }>("GET", "/years");

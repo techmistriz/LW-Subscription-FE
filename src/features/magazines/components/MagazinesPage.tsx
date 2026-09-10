@@ -4,16 +4,18 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { getMagazines } from "@/lib/api/services/magazines";
-import { getYears } from "@/lib/api/services/years";
+import { getMagazines } from "@/services/magazine.service";
+import { getYears } from "@/services/year.service";
 import Pagination from "@/components/common/Pagination";
-import { Magazine, Year } from "@/types";
+import { Magazine, Year } from "@/types/models";
 import Banner from "@/components/common/Banner";
 import YearFilter from "@/components/common/YearFilter";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
 import SafeImage from "@/components/media/SafeImage";
+import { siteConfig } from "@/config/site";
+import { PAGINATION } from "@/config/constants";
 
-const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+const magazineBaseUrl = siteConfig.magazinesImageBaseUrl || "";
 
 /*----------------- MagazinesPage component displays all magazine editions with year filtering and pagination support -----------------*/
 export default function MagazinesPage() {
@@ -29,7 +31,7 @@ export default function MagazinesPage() {
   const [selectedYearId, setSelectedYearId] = useState<number | null>(
     yearParam ? Number(yearParam) : null,
   );
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(PAGINATION.DEFAULT_PAGE);
   const [lastPage, setLastPage] = useState(1);
   const [error, setError] = useState("");
 

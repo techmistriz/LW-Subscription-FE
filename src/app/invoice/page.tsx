@@ -2,8 +2,8 @@
 
 import PageLoader from "@/components/feedback/Loader/PageLoader";
 import InvoicePage from "@/features/invoice/components/Invoice";
-import { getUserInvoices, Invoice } from "@/lib/api/invoice/invoice";
-
+import { getUserInvoices } from "@/services/invoice.service";
+import type { Invoice } from "@/types/invoice";
 import { useEffect, useState } from "react";
 
 export default function Page() {

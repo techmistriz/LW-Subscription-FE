@@ -1,5 +1,5 @@
 import { request } from "@/lib/api/request";
-import type { Author } from "@/types";
+import type { Author } from "@/types/models";
 
 interface AuthorsResponse {
   data?: Author[];

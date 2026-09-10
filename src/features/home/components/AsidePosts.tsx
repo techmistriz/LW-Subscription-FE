@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Post } from "@/types";
+import type { Post } from "@/types/models";
 
 export default function AsidePosts({ posts }: { posts: Post[] }) {
   if (!posts?.length) return null;

@@ -218,10 +218,11 @@ export interface PaymentDetails {
 /* ==================== SUBSCRIPTION ==================== */
 
 export interface SubscriptionPlan {
-  id?: number;
-  name?: string;
+  id: number;
+  name: string;
   title?: string;
   price?: number | string;
+  actual_price?: string | number;
   amount?: number | string;
   duration_value?: number;
   duration_unit?: string;

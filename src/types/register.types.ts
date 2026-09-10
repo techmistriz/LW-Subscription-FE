@@ -1,4 +1,4 @@
-export type { Plan } from "@/features/auth/services/plans.service";
+export type { SubscriptionPlan } from "@/types/models";
 
 export interface RegisterFormData {
   first_name: string;
@@ -18,11 +18,4 @@ export interface RegisterFormData {
   password_confirmation: string;
   plan: string;
   auto_renew: boolean;
-}
-
-export interface PaymentData {
-  razorpay_key: string;
-  amount: number;
-  currency: string;
-  order_id: string;
 }

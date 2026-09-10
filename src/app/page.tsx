@@ -9,11 +9,9 @@ import BigFeature from "@/features/home/components/BigFeature";
 import { MiddleCards } from "@/features/home/components/MiddleCards";
 import AsidePosts from "@/features/home/components/AsidePosts";
 
-import { getHeroPost } from "@/features/home/services/home.service";
-import {
-  getLatestMagazines,
-  latestEdition,
-} from "@/lib/api/services/magazines";
+import { getHeroPost } from "@/services/home.service";
+import { getLatestMagazines, latestEdition } from "@/services/magazine.service";
+import { PAGINATION } from "@/config/constants";
 
 export const revalidate = 300;
 
@@ -37,7 +35,7 @@ export default async function HomePage() {
   const latestFive = latestEditionData
     ? await getLatestMagazines({
         skipId: latestEditionData.magazine.id,
-        limit: 5,
+        limit: PAGINATION.LATEST_MAGAZINES_LIMIT,
       })
     : [];
 

@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getEditorPicksPosts } from "@/lib/api/services/posts";
+import { getEditorPicksPosts } from "@/services/post.service";
 import EditorPickCard from "./EditorPickCard";
 import Link from "next/link";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
-import type { Post } from "@/types";
+import type { Post } from "@/types/models";
+import { siteConfig } from "@/config/site";
+import { PAGINATION } from "@/config/constants";
 
-const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
 export default function EditorPicks() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -17,7 +19,9 @@ export default function EditorPicks() {
     const fetchPosts = async () => {
       setLoading(true); // Set loading to true
       try {
-        const data = await getEditorPicksPosts({ limit: 5 });
+        const data = await getEditorPicksPosts({
+          limit: PAGINATION.EDITOR_PICKS_LIMIT,
+        });
         setPosts(data || []);
       } catch (error) {
         console.error("Editor Picks Error:", error);

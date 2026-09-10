@@ -5,11 +5,11 @@ import {
   logoutApi,
   forgotPassword as forgotPasswordApi,
   resetPassword as resetPasswordApi,
-} from "@/lib/api/auth/auth";
+} from "@/services/auth.service";
 import { storage } from "@/lib/storage";
 import { setSubscription } from "./subscriptionSlice";
 import { mapSubscription } from "@/types/mapSubscription";
-import type { User } from "@/types";
+import type { User } from "@/types/models";
 import { ResetPasswordPayload } from "@/types/auth";
 
 interface AuthState {

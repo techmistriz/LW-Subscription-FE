@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import api from "./axios";
-import { ApiResponse } from "@/types";
+import type { ApiResponse } from "@/types/api";
 
 export const request = async <T>(
   method: "GET" | "POST" | "PUT" | "DELETE",

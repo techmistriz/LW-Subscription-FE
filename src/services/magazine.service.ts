@@ -1,14 +1,15 @@
 import { PaginatedResponse } from "@/types/api";
-import api from "../axios";
-import { Magazine, Post } from "@/types";
+import { Magazine, Post } from "@/types/models";
 import axios from "axios";
+import api from "@/lib/api/axios";
+import { PAGINATION } from "@/config/constants";
 
 /*-----------------for magazine grid -----------------*/
 export async function getMagazines(
   year?: number,
-  page: number = 1,
-  limit: number = 10,
-  per_page: number = 10,
+  page: number = PAGINATION.DEFAULT_PAGE,
+  limit: number = PAGINATION.DEFAULT_LIMIT,
+  per_page: number = PAGINATION.DEFAULT_LIMIT,
 ): Promise<PaginatedResponse<Magazine>> {
   try {
     const params: Record<string, number> = { page, limit, per_page };
@@ -70,8 +71,8 @@ export async function getLatestMagazines(options?: {
   try {
     const response = await api.get("/magazines", {
       params: {
-        page: 1,
-        limit: options?.limit ?? 5,
+        page: PAGINATION.DEFAULT_PAGE,
+        limit: options?.limit ?? PAGINATION.LATEST_MAGAZINES_LIMIT,
         latest: 1,
         skip_id: options?.skipId,
       },
@@ -92,7 +93,7 @@ export async function getLatestSingleMagazines(): Promise<Magazine | null> {
   try {
     const response = await api.get("/magazines", {
       params: {
-        page: 1,
+        page: PAGINATION.DEFAULT_PAGE,
         limit: 1,
         latest: 1,
       },

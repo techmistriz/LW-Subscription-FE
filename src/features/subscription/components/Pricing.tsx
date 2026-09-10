@@ -6,36 +6,21 @@ import { toast } from "sonner";
 import Image from "next/image";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  getMembershipPlans,
-  Plan,
-} from "@/features/auth/services/plans.service";
+import { getMembershipPlans } from "@/services/plan.service";
+import type { SubscriptionPlan } from "@/types/models";
 import {
   upgradePlan,
   verifySubscriptionPayment,
   renewPlan,
-} from "@/lib/api/subscription/subscription";
+} from "@/services/subscription.service";
 import { fetchProfile } from "@/store/slices/authSlice";
 import { storage } from "@/lib/storage";
 import PricingSkeleton from "@/components/feedback/Skeletons/PricingSkeleton";
-
-import type {
-  PaymentData,
-  RazorpayPaymentResponse,
+import {
   RazorpayPaymentFailedResponse,
-} from "@/types";
-
-interface PaymentResponse {
-  status?: boolean;
-  message?: string;
-  data?: {
-    payment?: PaymentData;
-    razorpay_key?: string;
-    amount?: number;
-    currency?: string;
-    order_id?: string;
-  };
-}
+  RazorpayPaymentResponse,
+} from "@/types/razorpay";
+import { routes } from "@/config/routes";
 
 export default function PricingCard() {
   const router = useRouter();
@@ -44,7 +29,7 @@ export default function PricingCard() {
   const [selectedPlanId, setSelectedPlanId] = useState<number>(2);
   const [loading, setLoading] = useState(false);
   const [redirectLoading, setRedirectLoading] = useState(false);
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const user = useAppSelector((state) => state.auth.user);
@@ -141,7 +126,7 @@ export default function PricingCard() {
       const hasSubscription = !!subscriptionId;
 
       let purchaseType: "NEW" | "RENEW" | "UPGRADE";
-      let apiResponse: PaymentResponse;
+      let apiResponse;
 
       if (!hasSubscription || (isFreePlan && isExpired)) {
         purchaseType = "NEW";
@@ -188,7 +173,7 @@ export default function PricingCard() {
               storage.set("just_paid", "true");
               await dispatch(fetchProfile()).unwrap();
               toast.success("Payment successful! 🎉");
-              router.push("/dashboard");
+              router.push(routes.dashboard);
             } else {
               toast.error(verifyRes?.message || "Payment verification failed");
             }

@@ -2,15 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { getPosts } from "@/lib/api/services/posts";
-import { getYears } from "@/lib/api/services/years";
-import { getAuthors } from "@/lib/api/services/author";
-import { getCategories } from "@/lib/api/services/categories";
+import { getPosts } from "@/services/post.service";
+import { getYears } from "@/services/year.service";
+import { getAuthors } from "@/services/author.service";
+import { getCategories } from "@/services/categories.service";
 import Pagination from "@/components/common/Pagination";
-import { Year, Article, Author, Category, Post } from "@/types";
+import { Year, Article, Author, Category, Post } from "@/types/models";
 import { PaginationMeta } from "@/types/api";
 import PostList from "@/components/common/PostList";
 import { Search } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function ArchivePage() {
   const router = useRouter();
@@ -264,7 +265,7 @@ export default function ArchivePage() {
       <PostList
         posts={posts}
         loading={loading}
-        postBaseUrl={process.env.NEXT_PUBLIC_POSTS_BASE_URL || ""}
+        postBaseUrl={siteConfig.postsImageBaseUrl || ""}
         emptyMessage={
           searchTerm ? `No results for "${searchTerm}"` : "No posts found."
         }

@@ -13,17 +13,15 @@ import {
   CalendarCheck,
 } from "lucide-react";
 
-import { getMembershipPlans } from "@/features/auth/services/plans.service";
+import { getMembershipPlans } from "@/services/plan.service";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { loadSubscriptionFromStorage } from "@/store/slices/subscriptionSlice";
 import { fetchProfile, loadUserFromStorage } from "@/store/slices/authSlice";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
-import {
-  renewPlan,
-  verifyRenewPayment,
-} from "@/lib/api/subscription/subscription";
-import { getActivationLabel } from "./helper";
-import type { RazorpayPaymentResponse, Subscription } from "@/types";
+import { renewPlan, verifyRenewPayment } from "@/services/subscription.service";
+import { getActivationLabel } from "../../utils/dashboard";
+import type { Subscription } from "@/types/models";
+import type { RazorpayPaymentResponse } from "@/types/razorpay";
 
 const getPendingActivationDate = (
   pendingSubscriptions: Subscription[],
@@ -73,12 +71,6 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, dispatch]);
 
-  // useEffect(() => {
-  //   if (isInitialized) {
-  //     setDataLoaded(true);
-  //   }
-  // }, [user, activeSubscription, pendingSubscription, isInitialized]);
-
   const subscription = activeSubscription;
 
   // console.log("Current Plan End:", subscription?.end_date);
@@ -104,25 +96,6 @@ export default function Dashboard() {
       router.replace("/sign-in");
     }
   }, [user, loading, isAuthenticated, router]);
-
-  // const [formData, setFormData] = useState({
-  //   firstName: "",
-  //   lastName: "",
-  //   email: "",
-  //   contact: "",
-  //   address: "",
-  // });
-
-  // useEffect(() => {
-  //   if (!user) return;
-  //   setFormData({
-  //     firstName: user.first_name || "",
-  //     lastName: user.last_name || "",
-  //     email: user.email || "",
-  //     contact: user.contact || "",
-  //     address: user.address || "",
-  //   });
-  // }, [user]);
 
   useEffect(() => {
     const fetchPlans = async () => {

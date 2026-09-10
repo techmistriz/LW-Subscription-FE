@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { siteConfig } from "@/config/site";
 
-const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
+const authorImg = siteConfig.authorImageBaseUrl || "";
 
 interface AuthorProps {
   data: {

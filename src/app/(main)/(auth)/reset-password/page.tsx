@@ -10,6 +10,7 @@ import {
 } from "@/store/slices/authSlice";
 import { Eye, EyeOff } from "lucide-react";
 import Banner from "@/components/common/Banner";
+import { routes } from "@/config/routes";
 
 export default function ResetPasswordPage() {
   const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ export default function ResetPasswordPage() {
     if (success) {
       toast.success(success);
       dispatch(clearPasswordResetState());
-      router.push("/sign-in");
+      router.push(routes.signIn);
       return;
     }
 

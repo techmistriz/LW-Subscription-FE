@@ -1,23 +1,6 @@
-import api from "../axios";
-import { extractErrorMessage } from "../errorMessage";
-
-export interface UpdateProfilePayload {
-  first_name: string;
-  last_name: string;
-  email: string;
-  contact: string;
-  password: string;
-  password_confirmation: string;
-  address: string;
-  dob: string;
-  city: string;
-  state: string;
-  country: string;
-  pincode: string;
-  organisation: string;
-  gst_number: string;
-  otp: string;
-}
+import api from "@/lib/api/axios";
+import { extractErrorMessage } from "@/lib/api/errorMessage";
+import type { UpdateProfilePayload } from "@/types/editProfile.types";
 
 export async function updateProfile(payload: UpdateProfilePayload) {
   try {

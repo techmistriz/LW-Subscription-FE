@@ -1,5 +1,6 @@
 "use client";
 
+import { siteConfig } from "@/config/site";
 import Link from "next/link";
 
 interface BannerProps {
@@ -15,7 +16,7 @@ export default function Banner({ title, backgroundImage }: BannerProps) {
       rgb(70 70 70 / 60%),
       rgb(70 70 70 / 60%)
     ),
-    url(${backgroundImage || process.env.NEXT_PUBLIC_BANNER_BASE_URL})
+    url(${backgroundImage || siteConfig.bannerBaseUrl})
   `,
     backgroundSize: "cover",
     backgroundPosition: "center",

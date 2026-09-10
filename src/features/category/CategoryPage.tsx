@@ -3,16 +3,17 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { toTitleCase } from "@/utils/toTitleCase";
-import { getPosts } from "@/lib/api/services/posts";
-import { getYears } from "@/lib/api/services/years";
-import { getCategoryBySlug } from "@/lib/api/services/categories";
+import { getPosts } from "@/services/post.service";
+import { getYears } from "@/services/year.service";
+import { getCategoryBySlug } from "@/services/categories.service";
 import Pagination from "@/components/common/Pagination";
-import type { Post, Year } from "@/types";
+import type { Post, Year } from "@/types/models";
 import PostList from "@/components/common/PostList";
 import YearFilter from "@/components/common/YearFilter";
 import { useSearchParams, useRouter } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
-const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
 export default function CategoryPage() {
   const { category } = useParams();

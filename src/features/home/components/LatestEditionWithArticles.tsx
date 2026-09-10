@@ -2,7 +2,7 @@ import LatestIssue from "./LatestEditionSingle";
 import RelatedMagazineArticles from "@/features/magazines/components/RelatedMagazineArticles";
 import NirmalaSitaraman from "@/features/editorial/components/Editorial";
 import Link from "next/link";
-import type { Magazine, Post } from "@/types";
+import type { Magazine, Post } from "@/types/models";
 
 type Props = {
   latestEdition: Magazine;

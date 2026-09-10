@@ -1,8 +1,9 @@
-import { getEditorial } from "../services/editorial.service";
 import Link from "next/link";
-import SafeImage from "../../../components/media/SafeImage";
+import { getEditorial } from "@/services/editorial.service";
+import SafeImage from "@/components/media/SafeImage";
+import { siteConfig } from "@/config/site";
 
-const imgUrl = process.env.NEXT_PUBLIC_EDITORIAL_IMAGE_URL || "";
+const imgUrl = siteConfig.editorialImageBaseUrl || "";
 
 async function NirmalaSitaraman() {
   const data = await getEditorial();

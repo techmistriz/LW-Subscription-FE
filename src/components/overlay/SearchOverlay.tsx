@@ -1,12 +1,12 @@
 "use client";
 
-import type { AuthorListItem, Category, Year } from "@/types";
+import type { AuthorListItem, Category, Year } from "@/types/models";
 import { X, Search, ChevronDown } from "lucide-react"; // Added ChevronDown
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
-import { getYears } from "@/lib/api/services/years";
-import { getAuthors } from "@/lib/api/services/author";
-import { getCategories } from "@/lib/api/services/categories";
+import { getYears } from "@/services/year.service";
+import { getAuthors } from "@/services/author.service";
+import { getCategories } from "@/services/categories.service";
 
 interface SearchOverlayProps {
   open: boolean;

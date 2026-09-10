@@ -6,13 +6,13 @@ import { toast } from "sonner";
 
 import { setUser } from "@/store/slices/authSlice";
 import { setSubscription } from "@/store/slices/subscriptionSlice";
-import { registerUser, sendOtp } from "@/lib/api/auth/auth";
-import { getMembershipPlans } from "../services/plans.service";
+import { registerUser, sendOtp } from "@/services/auth.service";
+import { getMembershipPlans } from "../services/plan.service";
 import api from "@/lib/api/axios";
 import { storage } from "@/lib/storage";
 import { usePayment } from "./usePayment";
 import { RegisterFormData } from "@/types/register.types";
-import type { Plan } from "../services/plans.service";
+import type { SubscriptionPlan } from "@/types/models";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const initialForm: RegisterFormData = {
@@ -43,7 +43,7 @@ export function useRegisterForm() {
   const subscriptionData = useAppSelector((state) => state.subscription.active);
 
   const [form, setForm] = useState<RegisterFormData>(initialForm);
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(false);
   const [plansLoading, setPlansLoading] = useState(true);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>(

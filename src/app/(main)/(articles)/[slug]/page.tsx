@@ -1,5 +1,6 @@
+import { siteConfig } from "@/config/site";
 import ArticleDetailPage from "@/features/articleDetailPage/ArticleDetailPage";
-import { getArticleBySlug } from "@/lib/api/services/posts";
+import { getArticleBySlug } from "@/services/post.service";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -21,7 +22,7 @@ export async function generateMetadata({
 
   if (article.image) {
     const postsBaseUrl =
-      process.env.NEXT_PUBLIC_POSTS_BASE_URL ||
+      siteConfig.postsImageBaseUrl ||
       "https://admin.lexwitness.com/uploads/posts/";
     imageUrl = `${postsBaseUrl}${article.image}`;
   }

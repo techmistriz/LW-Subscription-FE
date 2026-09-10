@@ -1,14 +1,9 @@
 "use client";
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { subscribeUser } from "@/lib/api/auth/subscribe";
+import { subscribeUser } from "@/services/subscribe.service";
+import type { SubscribePayload } from "@/services/subscribe.service";
 import { toast } from "sonner";
-
-interface FormData {
-  name: string;
-  email: string;
-  contact: string;
-}
 
 interface FormErrors {
   name?: string;
@@ -52,7 +47,7 @@ const InputField = ({
 );
 
 export default function SubscribeBanner() {
-  const [form, setForm] = useState<FormData>({
+  const [form, setForm] = useState<SubscribePayload>({
     name: "",
     email: "",
     contact: "",

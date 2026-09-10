@@ -2,47 +2,8 @@
 
 import React, { useState } from "react";
 import { CalendarDays, Download, Receipt } from "lucide-react";
-
-import { downloadInvoicePdf } from "@/lib/api/invoice/invoice";
-
-type Plan = {
-  id: number;
-  name: string;
-  price: string;
-  duration_unit: string;
-  duration_value: number;
-  print_editions: number;
-};
-
-type Transaction = {
-  id: number;
-  subscription_id: number;
-  order_number: string;
-  transaction_id: string;
-  payment_amount: string;
-  payment_status: string;
-  transaction_date: string;
-} | null;
-
-type Invoice = {
-  id: number;
-  user_id: number;
-  membership_plan_id: number;
-  start_date: string;
-  end_date: string;
-  total_amount: string;
-  subtotal_amount: string;
-  tax_amount: string;
-  tax_percent: number;
-  status: string;
-  purchase_type: string;
-  previous_subscription_id: number | null;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-  plan: Plan;
-  transaction: Transaction;
-};
+import { downloadInvoicePdf } from "@/services/invoice.service";
+import type { Invoice } from "@/types/invoice";
 
 interface Props {
   invoices: Invoice[];

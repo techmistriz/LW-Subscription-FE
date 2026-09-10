@@ -1,18 +1,25 @@
-import api from "../axios";
+import api from "@/lib/api/axios";
+import type { PaymentResponse } from "@/types/api";
 
-export const buyNewPlan = async (membership_plan_id: number) => {
+export const buyNewPlan = async (
+  membership_plan_id: number,
+): Promise<PaymentResponse> => {
   const res = await api.post("/subscription/buy-new-plan", {
     membership_plan_id,
   });
   return res.data;
 };
 
-export const renewPlan = async (subscription_id: number) => {
+export const renewPlan = async (
+  subscription_id: number,
+): Promise<PaymentResponse> => {
   const res = await api.post("/subscription/renew-plan", { subscription_id });
   return res.data;
 };
 
-export const upgradePlan = async (membership_plan_id: number) => {
+export const upgradePlan = async (
+  membership_plan_id: number,
+): Promise<PaymentResponse> => {
   const res = await api.post("/subscription/upgrade-plan", {
     membership_plan_id,
   });

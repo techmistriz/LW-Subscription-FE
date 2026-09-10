@@ -1,3 +1,4 @@
+import { CONTENT, PAGINATION } from "@/config/constants";
 import api from "@/lib/api/axios";
 import { cache } from "react";
 
@@ -13,8 +14,8 @@ interface GetPostsParams {
 }
 
 export async function getPosts({
-  page = 1,
-  per_page = 10,
+  page = PAGINATION.DEFAULT_PAGE,
+  per_page = PAGINATION.DEFAULT_LIMIT,
   ...filters
 }: GetPostsParams = {}) {
   const params = { page, per_page, ...filters };
@@ -39,7 +40,7 @@ export async function getRelatedPosts(params: {
   magazine_id?: number;
 }) {
   const response = await api.get("/posts", {
-    params: { ...params, limit: 10 },
+    params: { ...params, limit: PAGINATION.DEFAULT_LIMIT },
   });
   return response.data?.data || [];
 }
@@ -49,7 +50,11 @@ export async function getEditorPicksPosts(params?: {
   limit?: number;
 }) {
   const response = await api.get("/posts", {
-    params: { category_id: 5, limit: params?.limit ?? 5, latest: 1 },
+    params: {
+      category_id: CONTENT.EDITOR_PICKS_CATEGORY_ID,
+      limit: params?.limit ?? PAGINATION.EDITOR_PICKS_LIMIT,
+      latest: 1,
+    },
   });
   return response.data?.data || [];
 }

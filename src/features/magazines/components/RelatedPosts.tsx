@@ -1,10 +1,11 @@
 "use client";
 
-import { Article } from "@/types";
 import SafeImage from "@/components/media/SafeImage";
+import { siteConfig } from "@/config/site";
+import { Article } from "@/types/models";
 import Link from "next/link";
 
-const postsImgBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postsImgBaseUrl = siteConfig.postsImageBaseUrl || "";
 
 function PostImage({ article }: { article: Article }) {
   const src = article.image?.trim()

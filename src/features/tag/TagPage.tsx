@@ -9,8 +9,8 @@ import {
 
 import { useState, useEffect, useCallback } from "react";
 
-import { getPosts } from "@/lib/api/services/posts";
-import { getYears } from "@/lib/api/services/years";
+import { getPosts } from "@/services/post.service";
+import { getYears } from "@/services/year.service";
 
 import PageLoader from "@/components/feedback/Loader/PageLoader";
 import YearFilter from "@/components/common/YearFilter";
@@ -18,8 +18,9 @@ import PostList from "@/components/common/PostList";
 import Pagination from "@/components/common/Pagination";
 
 import { Post } from "@/types/models";
+import { siteConfig } from "@/config/site";
 
-const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
 export default function TagPage() {
   const params = useParams();

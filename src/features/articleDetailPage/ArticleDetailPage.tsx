@@ -5,15 +5,15 @@ import { notFound, useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getArticleBySlug, getRelatedPosts } from "@/lib/api/services/posts";
-import { getProfile } from "@/lib/api/auth/auth";
+import { getArticleBySlug, getRelatedPosts } from "@/services/post.service";
+import { getProfile } from "@/services/auth.service";
 import { toTitleCase } from "@/utils/toTitleCase";
 
 import TestimonialCard from "@/components/common/Testimonial";
 import SocialShare from "@/components/common/SocialShare";
 import SafeImage from "@/components/media/SafeImage";
 
-import { Article, Author } from "@/types";
+import { Article, Author } from "@/types/models";
 import { storage } from "@/lib/storage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
@@ -21,9 +21,11 @@ import { setSubscription } from "@/store/slices/subscriptionSlice";
 
 import "./style.css";
 import { formatArticleHTML } from "@/utils/formatArticleHTML";
+import { siteConfig } from "@/config/site";
+import { routes } from "@/config/routes";
 
-const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
-const authorImg = process.env.NEXT_PUBLIC_ADMIN_IMAGE_URL || "";
+const postBaseUrl = siteConfig.postsImageBaseUrl || "";
+const authorImg = siteConfig.authorImageBaseUrl || "";
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ category: string; slug: string }>();
@@ -47,7 +49,7 @@ export default function ArticleDetailPage() {
 
   const handleSubscribe = () => {
     storage.set("scrollToPricing", "true");
-    router.push("/subscription");
+    router.push(routes.subscription);
   };
 
   /* ---------------- FETCH ARTICLE ---------------- */

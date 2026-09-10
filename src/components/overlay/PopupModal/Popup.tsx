@@ -6,8 +6,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaWhatsapp, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
-import { Magazine } from "@/types";
-import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
+import { Magazine } from "@/types/models";
+import { getLatestSingleMagazines } from "@/services/magazine.service";
+import { siteConfig } from "@/config/site";
 
 interface PopupProps {
   onClose: () => void;
@@ -55,7 +56,7 @@ const Popup = ({ onClose }: PopupProps) => {
 
   const imageSrc = singleMagazine?.image?.startsWith("http")
     ? singleMagazine.image
-    : `${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${
+    : `${siteConfig.magazinesImageBaseUrl}/${
         singleMagazine?.image || "fallback.jpg"
       }`;
 

@@ -1,9 +1,10 @@
 // src/lib/api/axios.ts
 import axios, { AxiosHeaders } from "axios";
 import { storage } from "@/lib/storage";
+import { siteConfig } from "@/config/site";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: siteConfig.apiBaseUrl,
   headers: {
     Accept: "application/json",
   },

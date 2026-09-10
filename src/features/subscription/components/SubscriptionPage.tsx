@@ -6,8 +6,8 @@ import {
   getLatestMagazines,
   getLatestSingleMagazines,
   latestEdition,
-} from "@/lib/api/services/magazines";
-import { Magazine } from "@/types";
+} from "@/services/magazine.service";
+import { Magazine } from "@/types/models";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { Globe, BookOpen, Star, Newspaper, Clock, Layers } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
+import { siteConfig } from "@/config/site";
+import { PAGINATION } from "@/config/constants";
 
 const benefits = [
   {
@@ -88,7 +90,7 @@ export default function SubscriptionPage() {
         if (latestEditionData?.magazine?.id) {
           const mags = await getLatestMagazines({
             skipId: latestEditionData.magazine.id,
-            limit: 5,
+            limit: PAGINATION.LATEST_MAGAZINES_LIMIT,
           });
 
           setLatestFive(mags || []);
@@ -141,7 +143,7 @@ export default function SubscriptionPage() {
             {singleMagazine?.image && (
               <Link href={`/magazines/${singleMagazine.slug}`}>
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL}/${singleMagazine.image}`}
+                  src={`${siteConfig.magazinesImageBaseUrl}/${singleMagazine.image}`}
                   alt={singleMagazine.title || "Latest Magazine"}
                   fill
                   priority

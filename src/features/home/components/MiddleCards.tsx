@@ -1,8 +1,9 @@
 import Link from "next/link";
 import SafeImage from "@/components/media/SafeImage";
-import type { Post } from "@/types";
+import type { Post } from "@/types/models";
+import { siteConfig } from "@/config/site";
 
-const baseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL;
+const baseUrl = siteConfig.postsImageBaseUrl;
 
 export function MiddleCards({ posts }: { posts: Post[] }) {
   if (!posts?.length) return null;

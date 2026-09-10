@@ -4,7 +4,6 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
-import { sendUpdateOtp, updateProfile } from "@/lib/api/Update-Profile/update";
 import { fetchProfile } from "@/store/slices/authSlice";
 import { useAppDispatch } from "@/store/hooks";
 
@@ -18,7 +17,8 @@ import {
   createFormData,
   createUpdatePayload,
   getErrorMessage,
-} from "@/utils/editProfile.utils";
+} from "@/utils/editprofile.utils";
+import { sendUpdateOtp, updateProfile } from "@/services/update.service";
 
 type EditProfileFormProps = {
   user: EditableProfileUser;

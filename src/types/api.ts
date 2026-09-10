@@ -1,3 +1,5 @@
+import { PaymentDetails } from "./models";
+
 export type ApiResponse<T = unknown> =
   | {
       status: true;
@@ -29,9 +31,14 @@ export interface PaginatedResponse<T> {
   meta: PaginationMeta;
 }
 
-export interface PaymentData {
-  razorpay_key: string;
-  amount: number;
-  currency: string;
-  order_id: string;
+export interface PaymentResponse {
+  status?: boolean;
+  message?: string;
+  data?: {
+    payment?: PaymentDetails;
+    razorpay_key?: string;
+    amount?: number;
+    currency?: string;
+    order_id?: string;
+  };
 }

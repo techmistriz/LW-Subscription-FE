@@ -16,12 +16,12 @@ import {
 import { Menu as HeadlessMenu, Transition } from "@headlessui/react";
 
 import SearchOverlay from "../../overlay/SearchOverlay";
-import { Category } from "@/types";
+import { Category } from "@/types/models";
 
 import { logoutUser } from "@/store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
-import { getCategories } from "@/lib/api/services/categories";
+import { getCategories } from "@/services/categories.service";
 
 export default function Header() {
   const pathname = usePathname();

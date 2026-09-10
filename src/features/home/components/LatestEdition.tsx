@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Magazine } from "@/types";
+import { Magazine } from "@/types/models";
 import SafeImage from "@/components/media/SafeImage";
+import { siteConfig } from "@/config/site";
 
-const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+const magazineBaseUrl = siteConfig.magazinesImageBaseUrl || "";
 
 type Props = {
   magazines: Magazine[];

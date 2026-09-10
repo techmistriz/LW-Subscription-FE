@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { Plan } from "@/types/register.types";
+import type { SubscriptionPlan } from "@/types/models";
 
 interface SubscriptionSummaryProps {
-  selectedPlan: Plan | undefined;
-  otherPlans: Plan[];
+  selectedPlan: SubscriptionPlan | undefined;
+  otherPlans: SubscriptionPlan[];
   formPlan: string;
   loading: boolean;
   onPlanSelect: (planId: string) => void;

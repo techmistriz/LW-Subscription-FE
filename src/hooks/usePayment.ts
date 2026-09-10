@@ -7,15 +7,8 @@ import { useAppDispatch } from "@/store/hooks";
 import { setUser } from "@/store/slices/authSlice";
 import { setSubscription } from "@/store/slices/subscriptionSlice";
 import type { RegisterFormData } from "@/types/register.types";
-import type { Plan } from "@/features/auth/services/plans.service";
-import { verifyPayment } from "@/features/auth/services/payment.service";
-
-interface PaymentData {
-  razorpay_key: string;
-  amount: number;
-  currency: string;
-  order_id: string;
-}
+import type { PaymentDetails, SubscriptionPlan } from "@/types/models";
+import { verifyPayment } from "@/services/payment.service";
 
 const loadRazorpay = () =>
   new Promise<boolean>((resolve) => {
@@ -35,8 +28,8 @@ export function usePayment() {
   const dispatch = useAppDispatch();
 
   const handleRazorpayPayment = async (
-    payment: PaymentData,
-    selectedPlan: Plan,
+    payment: PaymentDetails,
+    selectedPlan: SubscriptionPlan,
     registrationToken: string | null,
     form: RegisterFormData,
     setProcessingPayment: (value: boolean) => void,

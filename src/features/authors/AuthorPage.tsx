@@ -3,9 +3,9 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { toTitleCase } from "@/utils/toTitleCase";
-import { getPosts } from "@/lib/api/services/posts";
-import { getAuthors } from "@/lib/api/services/author";
-import { getYears } from "@/lib/api/services/years";
+import { getPosts } from "@/services/post.service";
+import { getAuthors } from "@/services/author.service";
+import { getYears } from "@/services/year.service";
 
 import PageLoader from "@/components/feedback/Loader/PageLoader";
 import YearFilter from "@/components/common/YearFilter";
@@ -13,8 +13,9 @@ import PostList from "@/components/common/PostList";
 import Pagination from "@/components/common/Pagination";
 import { Post } from "@/types/models";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
-const postBaseUrl = process.env.NEXT_PUBLIC_POSTS_BASE_URL || "";
+const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
 export default function AuthorPage() {
   const params = useParams();

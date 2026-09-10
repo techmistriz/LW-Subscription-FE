@@ -1,5 +1,5 @@
 import api from "@/lib/api/axios";
-import type { Post } from "@/types";
+import type { Post } from "@/types/models";
 
 export const getHeroPost = async (): Promise<Post[]> => {
   const response = await api.get("/posts", {

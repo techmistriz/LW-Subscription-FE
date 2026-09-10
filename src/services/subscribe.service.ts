@@ -1,5 +1,5 @@
-import api from "../axios";
-import { extractFieldError } from "../errorMessage";
+import api from "@/lib/api/axios";
+import { extractFieldError } from "@/lib/api/errorMessage";
 
 export interface SubscribePayload {
   name: string;

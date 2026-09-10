@@ -1,5 +1,5 @@
 import { request } from "@/lib/api/request";
-import type { Category } from "@/types";
+import type { Category } from "@/types/models";
 
 interface CategoriesData {
   data?: Category[];

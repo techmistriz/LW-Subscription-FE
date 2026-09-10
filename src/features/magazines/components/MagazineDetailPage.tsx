@@ -1,15 +1,16 @@
 import {
   getLatestMagazines,
   getSingleMagazine,
-} from "@/lib/api/services/magazines";
+} from "@/services/magazine.service";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import RelatedPosts from "./RelatedPosts";
 import { stripInlineStyles } from "@/utils/toTitleCase";
 import LatestEdition from "@/features/home/components/LatestEdition";
 import SafeImage from "@/components/media/SafeImage";
+import { siteConfig } from "@/config/site";
 
-const magazineBaseUrl = process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "";
+const magazineBaseUrl = siteConfig.magazinesImageBaseUrl || "";
 
 /*----------------- Magazine detail page displaying single magazine edition with related posts -----------------*/
 type Props = {

@@ -6,24 +6,14 @@ import SubscribeSidebar from "@/features/auth/components/SubscribeSidebar";
 import SidebarAdvertisement from "../advertisement/SidebarAdvertisement";
 import LatestEditionSingle from "../../features/home/components/LatestEditionSingle";
 import Author from "@/features/authors/components/Author";
+import type { AuthorSidebarData } from "@/types/author";
+import { getLatestSingleMagazines } from "@/services/magazine.service";
 
-import { getLatestSingleMagazines } from "@/lib/api/services/magazines";
-
-import type { Magazine } from "@/types";
-
-interface AuthorData {
-  name: string;
-  image: string;
-  designation: string;
-  company_name: string;
-  place: string;
-  description: string;
-  linkedin?: string;
-}
+import type { Magazine } from "@/types/models";
 
 interface RightSidebarProps {
   showAuthor?: boolean;
-  authorData?: AuthorData;
+  authorData?: AuthorSidebarData;
 }
 
 function RightSidebar({ showAuthor = false, authorData }: RightSidebarProps) {
