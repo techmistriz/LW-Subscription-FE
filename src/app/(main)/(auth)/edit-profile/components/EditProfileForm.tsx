@@ -13,11 +13,6 @@ import type {
   PasswordForm,
 } from "@/types/editProfile.types";
 
-// import {
-//   createFormData,
-//   createUpdatePayload,
-//   getErrorMessage,
-// } from "@/utils/editprofile.utils";
 import { sendUpdateOtp, updateProfile } from "@/services/update.service";
 import {
   createFormData,
