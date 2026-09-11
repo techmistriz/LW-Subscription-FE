@@ -137,6 +137,7 @@ export default function Dashboard() {
   const isActive = status === "ACTIVE" && !hasExpiredByDate;
 
   const isExpired = hasExpiredByDate || status === "EXPIRED";
+
   const isFreePlan = !subscription || Number(subscription?.amount || 0) === 0;
   const isPaidPlan = !isFreePlan;
 
@@ -157,6 +158,17 @@ export default function Dashboard() {
         ),
       )
     : null;
+
+  const canRenew =
+    isPaidPlan &&
+    !hasPendingUpgrades &&
+    // Active and expiring within 30 days
+    ((isActive &&
+      remainingDays !== null &&
+      remainingDays <= 30 &&
+      remainingDays > 0) ||
+      // Paid subscription has expired
+      isExpired);
 
   const handleRenewPlan = async () => {
     try {
@@ -267,19 +279,17 @@ export default function Dashboard() {
                 <Sparkles className="w-4 h-4" />
                 {isFreePlan ? "Upgrade Plan" : "Change Plan"}
               </Link>
-              {isPaidPlan &&
-                isActive &&
-                remainingDays !== null &&
-                remainingDays <= 30 &&
-                remainingDays > 0 && (
-                  <button
-                    onClick={handleRenewPlan}
-                    className="inline-flex items-center cursor-pointer gap-2 px-5 py-2  text-sm font-medium bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg shadow-red-100"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                    Renew ({remainingDays} days left)
-                  </button>
-                )}
+              {canRenew && (
+                <button
+                  onClick={handleRenewPlan}
+                  className="inline-flex items-center cursor-pointer gap-2 px-5 py-2 text-sm font-medium bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg shadow-red-100"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  {isExpired
+                    ? "Renew Plan"
+                    : `Renew (${remainingDays} days left)`}
+                </button>
+              )}
             </div>
           </div>
         </div>
