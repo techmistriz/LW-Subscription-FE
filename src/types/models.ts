@@ -130,6 +130,7 @@ export interface MagazineMonth {
 }
 
 export interface Magazine {
+  short_description: string | undefined;
   id: number;
 
   slug: string;

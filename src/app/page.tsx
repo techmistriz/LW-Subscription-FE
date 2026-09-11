@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -12,6 +13,44 @@ import AsidePosts from "@/features/home/components/AsidePosts";
 import { getHeroPost } from "@/services/home.service";
 import { getLatestMagazines, latestEdition } from "@/services/magazine.service";
 import { PAGINATION } from "@/config/constants";
+import { siteConfig } from "@/config/site";
+
+export const metadata: Metadata = {
+  title: "India's 1st Magazine on Legal & Corporate Affairs",
+  description:
+    "Lex Witness brings you the latest legal news, corporate affairs, legal insights, analysis, magazines and industry updates.",
+
+  alternates: {
+    canonical: siteConfig.url.replace(/\/$/, ""),
+  },
+
+  openGraph: {
+    title: "Lex Witness | India's 1st Magazine on Legal & Corporate Affairs",
+    description:
+      "Latest legal news, corporate affairs, legal insights, analysis, magazines and industry updates.",
+    url: siteConfig.url.replace(/\/$/, ""),
+    siteName: siteConfig.name,
+    type: "website",
+    images: [
+      {
+        url: `${siteConfig.url.replace(/\/$/, "")}${siteConfig.defaultOgImage}`,
+        width: 1200,
+        height: 630,
+        alt: "Lex Witness",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Lex Witness | India's 1st Magazine on Legal & Corporate Affairs",
+    description:
+      "Latest legal news, corporate affairs, legal insights, analysis, magazines and industry updates.",
+    images: [
+      `${siteConfig.url.replace(/\/$/, "")}${siteConfig.defaultOgImage}`,
+    ],
+  },
+};
 
 export const revalidate = 300;
 

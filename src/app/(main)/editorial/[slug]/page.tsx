@@ -1,46 +1,71 @@
-import Banner from "@/components/common/Banner";
+import type { Metadata } from "next";
+
 import { siteConfig } from "@/config/site";
 import { getEditorial } from "@/services/editorial.service";
-import Image from "next/image";
-const imgUrl = siteConfig.editorialImageBaseUrl || "";
+import EditorialPage from "@/features/editorial/components/EditorialPage";
 
-export default async function EditorialPage() {
-  const data = await getEditorial();
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-  return (
-    <section>
-      <Banner title={"Editorial"} />
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
 
-      <div className="max-w-6xl mx-auto px-6 py-8 ">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Editor Image */}
-          <div className="relative w-[80%] aspect-4/5 mx-auto overflow-hidden shadow-lg ">
-            <Image
-              src={`${imgUrl}${data.image}`}
-              alt={data.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 40vw"
-              className="object-cover"
-              priority
-            />
-          </div>
+  try {
+    const data = await getEditorial();
 
-          {/* Right Side - Editor Description */}
-          <div className="-mt-10">
-            <h1 className="text-3xl text-[#c9060a] font-semibold mb-1">
-              {data.name}
-            </h1>
-            <h3 className="text-lg font-medium text-[#333]">
-              {data.designation}
-            </h3>
-            <h3 className="text-[#c9060a]">{data.company_name}</h3>
-            <h3 className="text-gray-400 mb-5">{data.place}</h3>
-            <p className="text-gray-600 text-[15px] font-normal leading-relaxed mb-6">
-              {data.description}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+    const title = data.name ? `${data.name} | Editorial` : "Editorial";
+
+    const description =
+      data.description ||
+      `Read the latest editorial insights from ${siteConfig.name}.`;
+
+    const baseUrl = siteConfig.url.replace(/\/$/, "");
+    const canonicalUrl = `${baseUrl}/editorial/${slug}`;
+
+    const imageUrl = data.image
+      ? `${siteConfig.editorialImageBaseUrl}${data.image}`
+      : `${baseUrl}${siteConfig.defaultOgImage}`;
+
+    return {
+      title,
+      description,
+
+      alternates: {
+        canonical: canonicalUrl,
+      },
+
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        siteName: siteConfig.name,
+        type: "website",
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: data.name || "Editorial",
+          },
+        ],
+      },
+
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl],
+      },
+    };
+  } catch {
+    return {
+      title: "Editorial",
+      description: `Editorial insights from ${siteConfig.name}.`,
+    };
+  }
+}
+
+export default function Page() {
+  return <EditorialPage />;
 }

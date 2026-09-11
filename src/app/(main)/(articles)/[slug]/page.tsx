@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
+
 import { siteConfig } from "@/config/site";
 import ArticleDetailPage from "@/features/articleDetailPage/ArticleDetailPage";
 import { getArticleBySlug } from "@/services/post.service";
-import { Metadata } from "next";
 
 export async function generateMetadata({
   params,
@@ -13,37 +14,56 @@ export async function generateMetadata({
 
   if (!article || article.status === false) {
     return {
-      title: `Article Not Found: ${slug} | Lex Witness`,
+      title: `Article Not Found | ${siteConfig.name}`,
+      description: "The requested article could not be found.",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  // PERFECT - Use your exact image base URL
-  let imageUrl = "https://lwsubscription.vercel.app/default-og-image.jpg";
+  const title = article.title;
 
-  if (article.image) {
-    const postsBaseUrl =
-      siteConfig.postsImageBaseUrl ||
-      "https://admin.lexwitness.com/uploads/posts/";
-    imageUrl = `${postsBaseUrl}${article.image}`;
-  }
+  const description =
+    article.excerpt ||
+    article.short_description ||
+    `Read the latest legal news, insights and analysis from ${siteConfig.name}.`;
+
+  const imageUrl = article.image
+    ? `${siteConfig.postsImageBaseUrl}${article.image}`
+    : `${siteConfig.url}${siteConfig.defaultOgImage}`;
+
+  const canonicalUrl = `${siteConfig.url}/${slug}`;
 
   return {
-    title: article.title,
+    title: `${title} | ${siteConfig.name}`,
+    description,
+
+    alternates: {
+      canonical: canonicalUrl,
+    },
+
     openGraph: {
-      title: article.title,
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: siteConfig.name,
+      type: "article",
       images: [
         {
           url: imageUrl,
-          width: 1200, //  LinkedIn requires
-          height: 630, //  Exact aspect ratio
-          type: "image/jpeg", // Forces JPG detection
+          width: 1200,
+          height: 630,
+          alt: title,
         },
       ],
     },
 
     twitter: {
       card: "summary_large_image",
-      title: article.title,
+      title,
+      description,
       images: [imageUrl],
     },
   };
