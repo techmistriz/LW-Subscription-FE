@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import EventsPage from "@/features/static-pages/events/event";
+import EventsPage from "./EventPages";
 
 export const metadata: Metadata = {
   title: "Events",

@@ -1,4 +1,4 @@
-import Dashboard from "@/features/dashboard/dashboard";
+import Dashboard from "@/features/dashboard/DashboardPage";
 import React from "react";
 
 function page() {

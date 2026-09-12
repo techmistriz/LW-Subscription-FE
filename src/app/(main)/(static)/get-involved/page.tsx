@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import GetInvolvedPage from "@/features/GetInvolvedPage";
+import GetInvolvedPage from "./GetInvolvedPage";
 
 export const metadata: Metadata = {
   title: "Get Involved",

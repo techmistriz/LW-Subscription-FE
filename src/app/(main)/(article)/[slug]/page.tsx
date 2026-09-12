@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import ArticleDetailPage from "@/features/articleDetailPage/ArticleDetailPage";
+import ArticleDetailPage from "@/features/article-detail/ArticleDetailPage";
 import { getArticleBySlug } from "@/services/post.service";
 
 export async function generateMetadata({

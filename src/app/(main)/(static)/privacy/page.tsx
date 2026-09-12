@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import PrivacyPage from "@/features/static-pages/privacy";
+import PrivacyPage from "./PrivacyPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",

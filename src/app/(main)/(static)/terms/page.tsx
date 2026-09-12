@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import TermsPage from "@/features/static-pages/terms";
+import TermsPage from "./TermsPage";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",

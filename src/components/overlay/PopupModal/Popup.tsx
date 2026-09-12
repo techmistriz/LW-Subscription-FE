@@ -101,7 +101,7 @@ const Popup = ({ onClose }: PopupProps) => {
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute z-20 flex items-center justify-center w-8 h-8 md:w-10 md:h-10 text-[#333] bg-gray-100 rounded-full top-3 right-3 md:top-4 md:right-4 hover:bg-gray-200 cursor-pointer"
+          className="absolute z-20 flex items-center justify-center w-8 h-8 md:w-10 md:h-10 text-[#333] hover:text-[#c6090a] bg-gray-100 rounded-full top-3 right-3 md:top-4 md:right-4 hover:bg-gray-200 cursor-pointer"
         >
           <span className="text-2xl leading-none">&times;</span>
         </button>

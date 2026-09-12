@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
-import AboutUsPage from "@/features/static-pages/about";
+import AboutUsPage from "./AboutPage";
 
 export const metadata: Metadata = {
   title: "About Us",
