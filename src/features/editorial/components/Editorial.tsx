@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 
 const imgUrl = siteConfig.editorialImageBaseUrl || "";
 
-async function NirmalaSitaraman() {
+async function Editorial() {
   const data = await getEditorial();
 
   const generateSlug = (text: string) => {
@@ -54,9 +54,9 @@ async function NirmalaSitaraman() {
               {data.company_name}
             </p>
 
-            <p className="mt-1 text-sm font-medium text-gray-400">
+            {/* <p className="mt-1 text-sm font-medium text-gray-400">
               {data.place}
-            </p>
+            </p> */}
           </div>
         </div>
 
@@ -77,4 +77,4 @@ async function NirmalaSitaraman() {
   );
 }
 
-export default NirmalaSitaraman;
+export default Editorial;

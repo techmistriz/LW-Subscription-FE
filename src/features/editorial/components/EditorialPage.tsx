@@ -41,7 +41,7 @@ export default async function EditorialPage() {
 
             <h3 className="text-[#c9060a]">{data.company_name}</h3>
 
-            <h3 className="mb-5 text-gray-400">{data.place}</h3>
+            {/* <h3 className="mb-5 text-gray-400">{data.place}</h3>   */}
 
             <div className="text-[15px] font-normal leading-relaxed text-gray-600">
               {data.description
