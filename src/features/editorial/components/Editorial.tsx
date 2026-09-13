@@ -19,42 +19,56 @@ async function NirmalaSitaraman() {
 
   const slug = generateSlug(data.name);
 
+  const firstParagraph = data.description
+    .split(/\r?\n\r?\n/)
+    .filter(Boolean)[0];
+
   return (
-    <div className="col-span-12 lg:col-span-3 ml-4  w-">
+    <div className="col-span-12 ml-4 lg:col-span-3">
       {/* Heading */}
       <h2 className="text-xl font-semibold uppercase text-[#333]">Editorial</h2>
-      <div className="w-12 h-1 bg-[#c9060a] mt-1 mb-4"></div>
+
+      <div className="mt-1 mb-4 h-1 w-12 bg-[#c9060a]" />
 
       {/* Card */}
-      <div className="border border-gray-200 bg-[#ffffff] p-4  h-122.5 flex flex-col hover:shadow ">
-        {/* Top Section (Text Left + Image Right) */}
+      <div className="flex h-122.5 flex-col border border-gray-200 bg-[#ffffff] p-4 hover:shadow">
+        {/* Top Section */}
         <div className="flex gap-4">
-          {/* Right Image */}
-          <div className="w-24 h-24 relative shrink-0 overflow-hidden">
-            <SafeImage src={imgUrl} alt="..." fill className="object-cover" />
+          {/* Image */}
+          <div className="relative h-24 w-24 shrink-0 overflow-hidden">
+            <SafeImage
+              src={`${imgUrl}${data.image}`}
+              alt={data.name}
+              fill
+              className="object-cover"
+            />
           </div>
 
-          {/* Left Content */}
+          {/* Content */}
           <div className="flex-1">
-            <p className="font-semibold text-md text-[#333]">{data.name}</p>
+            <p className="text-md font-semibold text-[#333]">{data.name}</p>
 
-            <p className="text-sm text-[#333] mt-1">{data.designation}</p>
+            <p className="mt-1 text-sm text-[#333]">{data.designation}</p>
 
-            <p className="text-sm text-[#c9060a] mt-1 font-medium">
+            <p className="mt-1 text-sm font-medium text-[#c9060a]">
               {data.company_name}
             </p>
-            <p className="text-sm text-gray-400 mt-1 font-medium">
+
+            <p className="mt-1 text-sm font-medium text-gray-400">
               {data.place}
             </p>
           </div>
         </div>
-        {/* Description Below (Full Width) */}
-        <p className="text-[14px] font-normal text-gray-600 mt-3 line-clamp-15 ">
-          {data.description}
+
+        {/* First Paragraph Only */}
+        <p className="mt-3 line-clamp-5 text-[14px] font-normal text-gray-600">
+          {firstParagraph}
         </p>
+
+        {/* Read More */}
         <Link
           href={`/editorial/${slug}`}
-          className="text-sm text-[#c9060a] font-normal mt-3 inline-block "
+          className="mt-3 inline-block text-sm font-normal text-[#c9060a]"
         >
           Read More
         </Link>

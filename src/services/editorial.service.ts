@@ -7,5 +7,6 @@ interface EditorialResponse {
 
 export async function getEditorial(): Promise<Editorial> {
   const response = await api.get<EditorialResponse>("/editorial-settings");
+  console.log(response.data.data);
   return response.data.data;
 }
