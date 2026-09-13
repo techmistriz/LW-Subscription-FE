@@ -105,18 +105,18 @@ export default async function RootLayout({
         className="antialiased min-h-screen flex flex-col overflow-x-hidden"
         suppressHydrationWarning
       >
-        {isMaintenanceMode ? (
-          children
-        ) : (
-          <>
-            {/* Razorpay Script */}
-            <Script
-              src="https://checkout.razorpay.com/v1/checkout.js"
-              strategy="lazyOnload"
-            />
+        <ReduxProvider>
+          {isMaintenanceMode ? (
+            children
+          ) : (
+            <>
+              {/* Razorpay Script */}
+              <Script
+                src="https://checkout.razorpay.com/v1/checkout.js"
+                strategy="lazyOnload"
+              />
 
-            <ScrollProvider>
-              <ReduxProvider>
+              <ScrollProvider>
                 <InitAuth>
                   {/* <Header categories={categories} /> */}
                   <Header />
@@ -131,10 +131,10 @@ export default async function RootLayout({
                   <Footer />
                   <ScrollToTop />
                 </InitAuth>
-              </ReduxProvider>
-            </ScrollProvider>
-          </>
-        )}
+              </ScrollProvider>
+            </>
+          )}
+        </ReduxProvider>
       </body>
     </html>
   );

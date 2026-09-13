@@ -29,7 +29,12 @@ export const downloadInvoicePdf = async (subscriptionId: number) => {
     },
   );
 
-  if (response.headers["content-type"]?.includes("application/json")) {
+  const contentType = response.headers["content-type"];
+
+  if (
+    typeof contentType === "string" &&
+    contentType.includes("application/json")
+  ) {
     const text = await response.data.text();
     throw new Error(JSON.parse(text)?.message || "Invoice not available");
   }
