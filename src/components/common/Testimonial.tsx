@@ -1,3 +1,4 @@
+import { images } from "@/config/images";
 import Image from "next/image";
 
 type TextAlignment = "left" | "right" | "center";
@@ -27,7 +28,7 @@ export default function TestimonialCard({ data }: TestimonialProps) {
       {/* Left Quote */}
       <div className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-6 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8">
         <Image
-          src="/quote-left.png"
+          src={images.quoteLeft}
           alt="Quote"
           fill
           className="object-contain"
@@ -37,7 +38,7 @@ export default function TestimonialCard({ data }: TestimonialProps) {
       {/* Right Quote */}
       <div className="absolute top-4 sm:top-6 md:top-10 right-4 sm:right-6 md:right-6 rotate-180 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8">
         <Image
-          src="/quote-right.png"
+          src={images.quoteRight}
           alt="Quote"
           fill
           className="object-contain"

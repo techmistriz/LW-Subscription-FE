@@ -23,6 +23,7 @@ import "./style.css";
 import { formatArticleHTML } from "@/utils/formatArticleHTML";
 import { siteConfig } from "@/config/site";
 import { routes } from "@/config/routes";
+import { images } from "@/config/images";
 
 const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 const authorImg = siteConfig.authorImageBaseUrl || "";
@@ -361,7 +362,7 @@ export default function ArticleDetailPage() {
                       src={
                         author.image
                           ? `${authorImg}${author.image}`
-                          : "/avatar.jpg"
+                          : images.avatar
                       }
                       alt={author.name}
                       fill

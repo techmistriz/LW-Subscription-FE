@@ -1,8 +1,10 @@
+import { images } from "@/config/images";
+
 export const getImageUrl = (
   image?: string | null,
   baseUrl?: string,
 ): string => {
-  if (!image) return "/placeholder.jpg";
+  if (!image) return images.placeholder";
 
   /*----------------- If already full URL -----------------*/
   if (image.startsWith("http")) {
@@ -11,7 +13,7 @@ export const getImageUrl = (
 
   if (!baseUrl) {
     console.warn("Base URL is missing for image:", image);
-    return "/placeholder.jpg";
+    return images.placeholder;
   }
 
   return `${baseUrl.replace(/\/$/, "")}/${image.replace(/^\//, "")}`;

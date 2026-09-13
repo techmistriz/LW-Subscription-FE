@@ -22,6 +22,7 @@ import { logoutUser } from "@/store/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
 import { getCategories } from "@/services/categories.service";
+import { images } from "@/config/images";
 
 export default function Header() {
   const pathname = usePathname();
@@ -123,7 +124,7 @@ export default function Header() {
             <Link href="/" scroll={false} prefetch={true}>
               <div className="relative block w-[190px] h-[80px]">
                 <Image
-                  src="/main-logo.png"
+                  src= {images.logo}
                   alt="Lex Witness Logo"
                   fill
                   sizes="190px"

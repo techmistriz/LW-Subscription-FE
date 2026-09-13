@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
 import { Post } from "@/types/models";
+import { images } from "@/config/images";
 
 interface PostListProps {
   posts: Post[];
@@ -20,7 +21,7 @@ export default function PostList({
   emptyMessage = "No posts available.",
 }: PostListProps) {
   const getImageUrl = (image?: string) => {
-    if (!image) return "/placeholder.jpg";
+    if (!image) return images.placeholder;
     return image.startsWith("http") ? image : `${postBaseUrl}/${image}`;
   };
 

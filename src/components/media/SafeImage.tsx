@@ -1,9 +1,10 @@
 "use client";
 
+import { images } from "@/config/images";
 import Image, { type ImageProps } from "next/image";
 import { useState } from "react";
 
-const FALLBACK_IMAGE = "/placeholder.png";
+const FALLBACK_IMAGE = images.placeholder;
 
 type SafeImageProps = Omit<ImageProps, "src"> & {
   src?: string;
