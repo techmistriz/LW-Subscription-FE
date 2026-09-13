@@ -5,7 +5,6 @@ export interface RegisterFormData {
   last_name: string;
   email: string;
   contact: string;
-  otp: string;
   dob: string;
   organisation: string;
   gst_number: string;

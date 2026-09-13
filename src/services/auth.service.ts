@@ -31,15 +31,6 @@ export async function registerUser(
   }
 }
 
-export async function sendOtp(data: { contact: string; email: string }) {
-  try {
-    const res = await api.post("/auth/send-otp", data);
-    return res.data;
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, "Failed to send OTP"));
-  }
-}
-
 export async function forgotPassword(email: string) {
   try {
     const res = await api.post("/forgot-password", { email });
@@ -69,5 +60,27 @@ export async function logoutApi() {
     return { success: true };
   } catch (error) {
     return { success: false, error };
+  }
+}
+
+//  Verify email
+export async function verifyEmailApi(data: { email: string; token: string }) {
+  try {
+    const res = await api.post("/auth/email/verify", data);
+    return res.data;
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, "Email verification failed"));
+  }
+}
+
+// Resend verification email
+export async function resendVerificationEmailApi(email: string) {
+  try {
+    const res = await api.post("/auth/email/resend", { email });
+    return res.data;
+  } catch (error) {
+    throw new Error(
+      extractErrorMessage(error, "Failed to resend verification email"),
+    );
   }
 }

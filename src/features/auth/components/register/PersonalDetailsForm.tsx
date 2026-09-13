@@ -2,27 +2,18 @@
 
 import { ChangeEvent } from "react";
 import FormInput from "./FormInput";
-import OTPInput from "./OTPInput";
 import { RegisterFormData } from "@/types/register.types";
 
 interface PersonalDetailsFormProps {
   form: RegisterFormData;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   getError: (name: string) => string | undefined;
-  isOtpSent: boolean;
-  otpTimer: number;
-  isSendingOtp: boolean; // ADD
-  onSendOtp: () => void;
 }
 
 export default function PersonalDetailsForm({
   form,
   onChange,
   getError,
-  isOtpSent,
-  otpTimer,
-  isSendingOtp, // ADD
-  onSendOtp,
 }: PersonalDetailsFormProps) {
   return (
     <div className="bg-white p-8 border border-gray-200 shadow-sm rounded-xl">
@@ -49,16 +40,18 @@ export default function PersonalDetailsForm({
           required
         />
 
-        <OTPInput
-          isOtpSent={isOtpSent}
-          email={form.email}
-          otp={form.otp}
-          otpTimer={otpTimer}
-          isSendingOtp={isSendingOtp} // ADD
-          onChange={onChange}
-          onSendOtp={onSendOtp}
-          error={getError("otp")}
-        />
+        <FormInput
+  label="Email *"
+  type="email"
+  name="email"
+  value={form.email}
+  onChange={onChange}
+  error={getError("email")}
+  required
+  autoComplete="email"
+  placeholder="Enter email"
+/>
+
 
         <FormInput
           label="Contact Number *"

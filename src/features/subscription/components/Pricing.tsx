@@ -21,6 +21,7 @@ import {
   RazorpayPaymentResponse,
 } from "@/types/razorpay";
 import { routes } from "@/config/routes";
+import { images } from "@/config/images";
 
 export default function PricingCard() {
   const router = useRouter();
@@ -444,7 +445,7 @@ export default function PricingCard() {
 
               <div className="flex h-6 items-center rounded-md px-">
                 <Image
-                  src="/razorpay-logo.webp"
+                  src={images.razorpayLogo}
                   alt="Razorpay"
                   width={72}
                   height={24}

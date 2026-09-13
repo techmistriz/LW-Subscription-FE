@@ -33,7 +33,6 @@ export interface RegisterPayload {
   password: string;
   password_confirmation: string;
 
-  otp: string;
   dob: string;
 
   address: string;
@@ -45,6 +44,7 @@ export interface RegisterPayload {
 /* ==================== REGISTER RESPONSE ==================== */
 
 export interface RegisterResponseData {
+  response: any;
   membership_plan_id: number;
 
   user: User;
@@ -57,6 +57,7 @@ export interface RegisterResponseData {
 }
 
 export interface RegisterResponse {
+  response: any;
   status: boolean;
   message: string;
 

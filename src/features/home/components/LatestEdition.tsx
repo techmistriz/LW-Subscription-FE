@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Magazine } from "@/types/models";
 import SafeImage from "@/components/media/SafeImage";
 import { siteConfig } from "@/config/site";
+import { images } from "@/config/images";
 
 const magazineBaseUrl = siteConfig.magazinesImageBaseUrl || "";
 
@@ -34,7 +35,7 @@ export default function LatestEdition({ magazines }: Props) {
                 src={
                   magazine.image
                     ? `${magazineBaseUrl}/${magazine.image}`
-                    : "/placeholder.jpg"
+                    : images.placeholder
                 }
                 alt={magazine.title ?? "Magazine cover"}
                 fill

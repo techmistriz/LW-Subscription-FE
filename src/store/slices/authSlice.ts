@@ -5,6 +5,8 @@ import {
   logoutApi,
   forgotPassword as forgotPasswordApi,
   resetPassword as resetPasswordApi,
+  verifyEmailApi,
+  resendVerificationEmailApi,
 } from "@/services/auth.service";
 import { storage } from "@/lib/storage";
 import { setSubscription } from "./subscriptionSlice";
@@ -24,6 +26,18 @@ interface AuthState {
     success: string | null;
     error: string | null;
   };
+  // Email verification state
+  emailVerification: {
+    loading: boolean;
+    success: string | null;
+    error: string | null;
+  };
+  // Resend verification state
+  resendVerification: {
+    loading: boolean;
+    success: string | null;
+    error: string | null;
+  };
 }
 
 const initialState: AuthState = {
@@ -34,6 +48,8 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   passwordReset: { loading: false, success: null, error: null },
+  emailVerification: { loading: false, success: null, error: null },
+  resendVerification: { loading: false, success: null, error: null },
 };
 
 /* ---------------- THUNKS ---------------- */
@@ -130,6 +146,49 @@ export const resetPassword = createAsyncThunk(
   },
 );
 
+// Verify email thunk
+export const verifyEmail = createAsyncThunk(
+  "auth/verifyEmail",
+  async (
+    { email, token }: { email: string; token: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await verifyEmailApi({ email, token });
+
+      if (!res?.status) {
+        return rejectWithValue(res?.message || "Verification failed");
+      }
+
+      return res.message as string;
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Verification failed";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+// Resend verification email thunk
+export const resendVerificationEmail = createAsyncThunk(
+  "auth/resendVerificationEmail",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const res = await resendVerificationEmailApi(email);
+
+      if (!res?.status) {
+        return rejectWithValue(res?.message || "Failed to resend email");
+      }
+
+      return res.message as string;
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to resend email";
+      return rejectWithValue(message);
+    }
+  },
+);
+
 /* ---------------- SLICE ---------------- */
 
 const authSlice = createSlice({
@@ -178,6 +237,24 @@ const authSlice = createSlice({
 
     clearPasswordResetState: (state) => {
       state.passwordReset = {
+        loading: false,
+        success: null,
+        error: null,
+      };
+    },
+
+    // Clear email verification state
+    clearEmailVerificationState: (state) => {
+      state.emailVerification = {
+        loading: false,
+        success: null,
+        error: null,
+      };
+    },
+
+    // Clear resend verification state
+    clearResendVerificationState: (state) => {
+      state.resendVerification = {
         loading: false,
         success: null,
         error: null,
@@ -273,11 +350,72 @@ const authSlice = createSlice({
               ? action.payload
               : action.error.message || "Reset failed",
         };
+      })
+
+      // Verify email reducers
+      .addCase(verifyEmail.pending, (state) => {
+        state.emailVerification = {
+          loading: true,
+          success: null,
+          error: null,
+        };
+      })
+
+      .addCase(verifyEmail.fulfilled, (state, action) => {
+        state.emailVerification = {
+          loading: false,
+          success: action.payload,
+          error: null,
+        };
+      })
+
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.emailVerification = {
+          loading: false,
+          success: null,
+          error:
+            typeof action.payload === "string"
+              ? action.payload
+              : action.error.message || "Verification failed",
+        };
+      })
+
+      // Resend verification reducers
+      .addCase(resendVerificationEmail.pending, (state) => {
+        state.resendVerification = {
+          loading: true,
+          success: null,
+          error: null,
+        };
+      })
+
+      .addCase(resendVerificationEmail.fulfilled, (state, action) => {
+        state.resendVerification = {
+          loading: false,
+          success: action.payload,
+          error: null,
+        };
+      })
+
+      .addCase(resendVerificationEmail.rejected, (state, action) => {
+        state.resendVerification = {
+          loading: false,
+          success: null,
+          error:
+            typeof action.payload === "string"
+              ? action.payload
+              : action.error.message || "Failed to resend email",
+        };
       });
   },
 });
 
-export const { loadUserFromStorage, setUser, clearPasswordResetState } =
-  authSlice.actions;
+export const {
+  loadUserFromStorage,
+  setUser,
+  clearPasswordResetState,
+  clearEmailVerificationState,
+  clearResendVerificationState,
+} = authSlice.actions;
 
 export default authSlice.reducer;

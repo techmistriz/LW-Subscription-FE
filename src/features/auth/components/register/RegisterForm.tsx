@@ -13,13 +13,10 @@ export default function RegisterForm() {
     loading,
     plansLoading,
     processingPayment, //  ADD THIS - it was missing!
+    registrationSuccess,
     selectedPlan,
     otherPlans,
-    isOtpSent,
-    isSendingOtp, // ADD
-    otpTimer,
     handleChange,
-    handleSendOtp,
     handleSubmit,
     getError,
     setForm,
@@ -104,32 +101,57 @@ export default function RegisterForm() {
       <Banner title={"Subscribe"} />
 
       <section className="py-16 px-4 max-w-6xl m-auto">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-7">
-            <PersonalDetailsForm
-              form={form}
-              onChange={handleChange}
-              getError={getError}
-              isOtpSent={isOtpSent}
-              otpTimer={otpTimer}
-              isSendingOtp={isSendingOtp} // ADD
-              onSendOtp={handleSendOtp}
-            />
-          </div>
+        {registrationSuccess ? (
+          <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 bg-white px-6 py-16 text-center shadow-sm">
+            {/* Success Icon */}
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <svg
+                className="h-8 w-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
 
-          <div className="lg:col-span-5">
-            <SubscriptionSummary
-              selectedPlan={selectedPlan}
-              otherPlans={otherPlans}
-              formPlan={form.plan}
-              loading={loading}
-              onPlanSelect={(planId) =>
-                setForm((prev) => ({ ...prev, plan: planId }))
-              }
-              onSubmit={handleSubmit}
-            />
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Registration Successful
+            </h2>
+
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-gray-600">
+              Please check your email to verify your account.
+            </p>
           </div>
-        </div>
+        ) : (
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <div className="lg:col-span-7">
+              <PersonalDetailsForm
+                form={form}
+                onChange={handleChange}
+                getError={getError}
+              />
+            </div>
+
+            <div className="lg:col-span-5">
+              <SubscriptionSummary
+                selectedPlan={selectedPlan}
+                otherPlans={otherPlans}
+                formPlan={form.plan}
+                loading={loading}
+                onPlanSelect={(planId) =>
+                  setForm((prev) => ({ ...prev, plan: planId }))
+                }
+                onSubmit={handleSubmit}
+              />
+            </div>
+          </div>
+        )}
       </section>
     </main>
   );

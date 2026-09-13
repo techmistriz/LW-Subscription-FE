@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import { setUser } from "@/store/slices/authSlice";
 import { setSubscription } from "@/store/slices/subscriptionSlice";
-import { registerUser, sendOtp } from "@/services/auth.service";
+import { registerUser } from "@/services/auth.service";
 import { getMembershipPlans } from "../services/plan.service";
 import api from "@/network/axios";
 import { storage } from "@/lib/storage";
@@ -20,7 +20,6 @@ const initialForm: RegisterFormData = {
   last_name: "",
   email: "",
   contact: "",
-  otp: "",
   dob: "",
   organisation: "",
   gst_number: "",
@@ -46,18 +45,20 @@ export function useRegisterForm() {
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(false);
   const [plansLoading, setPlansLoading] = useState(true);
-  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string[] }>(
-    {},
-  );
-  const [isOtpSent, setIsOtpSent] = useState(false);
-  const [otpTimer, setOtpTimer] = useState(0);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
+  const [fieldErrors, setFieldErrors] = useState<{
+    [key: string]: string[];
+  }>({});
+
   const [processingPayment, setProcessingPayment] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
 
   /* ---------------- FETCH PLANS ---------------- */
+
   useEffect(() => {
     const fetchPlans = async () => {
       setPlansLoading(true);
+
       try {
         const data = await getMembershipPlans();
         setPlans(data);
@@ -67,30 +68,35 @@ export function useRegisterForm() {
         setPlansLoading(false);
       }
     };
+
     fetchPlans();
   }, []);
 
   /* ---------------- PRESELECT PLAN ---------------- */
+
   useEffect(() => {
     if (!plans.length) return;
 
     if (subscriptionData?.plan_id) {
-      setForm((prev) => ({ ...prev, plan: String(subscriptionData.plan_id) }));
+      setForm((prev) => ({
+        ...prev,
+        plan: String(subscriptionData.plan_id),
+      }));
+
       return;
     }
 
     const stored = storage.get<{ plan_id?: number }>("subscription", true);
+
     if (stored?.plan_id) {
-      setForm((prev) => ({ ...prev, plan: String(stored.plan_id) }));
+      setForm((prev) => ({
+        ...prev,
+        plan: String(stored.plan_id),
+      }));
     }
   }, [subscriptionData, plans]);
 
-  /* ---------------- OTP TIMER ---------------- */
-  useEffect(() => {
-    if (otpTimer <= 0) return;
-    const interval = setInterval(() => setOtpTimer((prev) => prev - 1), 1000);
-    return () => clearInterval(interval);
-  }, [otpTimer]);
+  /* ---------------- HANDLE CHANGE ---------------- */
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -99,7 +105,13 @@ export function useRegisterForm() {
 
     if (name === "contact") {
       const digits = value.replace(/\D/g, "").slice(0, 10);
-      return setForm((prev) => ({ ...prev, contact: digits }));
+
+      setForm((prev) => ({
+        ...prev,
+        contact: digits,
+      }));
+
+      return;
     }
 
     setForm((prev) => ({
@@ -109,36 +121,14 @@ export function useRegisterForm() {
     }));
 
     if (fieldErrors[name]) {
-      setFieldErrors((prev) => ({ ...prev, [name]: [] }));
+      setFieldErrors((prev) => ({
+        ...prev,
+        [name]: [],
+      }));
     }
   };
 
-  const handleSendOtp = async () => {
-    if (!form.email || !form.contact) {
-      return toast.error("Please enter email and mobile number");
-    }
-    if (form.contact.length !== 10) {
-      return toast.error("Enter valid number");
-    }
-    if (isSendingOtp) return;
-
-    setIsSendingOtp(true);
-    try {
-      const res = await sendOtp({ contact: form.contact, email: form.email });
-      if (!res?.status) {
-        throw new Error(res?.message || "Failed to send OTP");
-      }
-      setIsOtpSent(true);
-      setOtpTimer(60);
-      toast.success("OTP sent successfully");
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to send OTP";
-
-      toast.error(message);
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
+  /* ---------------- CANCEL PENDING PAYMENT ---------------- */
 
   const cancelPendingPayment = async () => {
     try {
@@ -146,36 +136,50 @@ export function useRegisterForm() {
         email: form.email,
         contact: form.contact,
       });
+
       return response.data;
     } catch {
       return null;
     }
   };
 
+  /* ---------------- FORMAT DOB ---------------- */
+
   const formatDateForAPI = (date: string): string => {
     if (!date) return "";
+
     const [year, month, day] = date.split("-");
+
     return `${day}-${month}-${year}`;
   };
 
+  /* ---------------- SUBMIT ---------------- */
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
     setFieldErrors({});
 
     try {
       const selectedPlan = plans.find((p) => String(p.id) === form.plan);
-      if (!selectedPlan) throw new Error("Please select a plan");
+
+      if (!selectedPlan) {
+        throw new Error("Please select a plan");
+      }
 
       const formattedDob = formatDateForAPI(form.dob);
+
       const payload = {
         ...form,
-        otp: form.otp,
         dob: formattedDob,
         membership_plan_id: selectedPlan.id,
       };
 
+      /* ---------------- REGISTER USER ---------------- */
+
       let res;
+
       try {
         res = await registerUser(payload);
       } catch (error: unknown) {
@@ -183,89 +187,116 @@ export function useRegisterForm() {
           error instanceof Error &&
           error.message === "Pending payment already exists";
 
-        if (!isPendingPaymentError) throw error;
+        if (!isPendingPaymentError) {
+          throw error;
+        }
 
         toast.info("Cleaning up previous payment session...");
+
         await cancelPendingPayment();
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
+
         res = await registerUser(payload);
       }
 
-      if (!res?.status) {
-        if (res?.errors) setFieldErrors(res.errors);
-        throw new Error(res?.message || "Registration failed");
-      }
+      console.log("[Register] API response:", res);
 
-      const responseData = res.data;
+      /* ---------------- API ERROR ---------------- */
 
-      /* ---- Payment-required response (no user/token yet) ---- */
-      if (responseData?.payment && !responseData?.user) {
-        const { payment, membership_plan_id: membershipPlanId } = responseData;
+      const apiResponse = res?.response?.original;
 
-        if (payment && payment.amount > 0) {
-          await handleRazorpayPayment(
-            payment,
-            selectedPlan,
-            null,
-            form,
-            setProcessingPayment,
-            membershipPlanId,
-          );
-          return;
-        }
-      }
+      console.log("[Register] API status:", apiResponse?.status);
+      console.log("[Register] API message:", apiResponse?.message);
 
-      /* ---- Free plan response (user + subscription + token) ---- */
-      const {
-        token,
-        user: userData,
-        subscription: newSubscription,
-      } = responseData;
-
-      if (token && userData) {
-        const userWithSubscription = {
-          ...userData,
-          active_subscription: newSubscription
-            ? {
-                id: newSubscription.id,
-                plan_id: newSubscription.plan?.id,
-                status: newSubscription.status,
-                start_date: newSubscription.start_date,
-                end_date: newSubscription.end_date,
-                purchase_type: newSubscription.purchase_type,
-                plan: newSubscription.plan,
-              }
-            : null,
-        };
-
-        dispatch(setUser({ user: userWithSubscription, token }));
-
-        if (newSubscription) {
-          dispatch(
-            setSubscription({
-              id: newSubscription.id,
-              plan_id: newSubscription.plan?.id,
-              name: newSubscription.plan?.name,
-              amount: Number(newSubscription.plan?.price || 0),
-              status: newSubscription.status,
-              start_date: newSubscription.start_date,
-              end_date: newSubscription.end_date,
-              duration_value: newSubscription.plan?.duration_value,
-              duration_unit: newSubscription.plan?.duration_unit,
-              purchase_type: newSubscription.purchase_type,
-              features: newSubscription.plan?.feature,
-              is_trial: String(newSubscription.plan?.is_trial ?? ""),
-              tag: newSubscription.plan?.tag,
-              created_at: newSubscription.plan?.created_at,
-            }),
-          );
+      if (apiResponse?.status === false) {
+        if (apiResponse?.errors) {
+          setFieldErrors(apiResponse.errors);
         }
 
-        toast.success("Registration Successful");
-        router.replace("/thankyou");
+        throw new Error(apiResponse?.message || "Registration failed");
       }
+
+      /* ---------------- PAYMENT DATA ---------------- */
+
+      const responseData = apiResponse?.data;
+
+      console.log("[Register] responseData:", responseData);
+
+      const paymentData = responseData;
+
+      console.log("[Register] paymentData:", paymentData);
+
+      /* ---------------- PAID PLAN ---------------- */
+
+      if (paymentData?.payment) {
+        const payment = paymentData.payment;
+
+        const membershipPlanId =
+          paymentData.membership_plan_id ?? selectedPlan.id;
+
+        console.log("[Register] Payment flow triggered:", {
+          payment,
+          membershipPlanId,
+        });
+
+        if (!payment.razorpay_key) {
+          throw new Error("Razorpay key missing");
+        }
+
+        if (!payment.order_id) {
+          throw new Error("Razorpay order ID missing");
+        }
+
+        if (!payment.amount) {
+          throw new Error("Razorpay amount missing");
+        }
+
+        console.log("[Register] Opening Razorpay with:", {
+          key: payment.razorpay_key,
+          amount: payment.amount,
+          currency: payment.currency,
+          order_id: payment.order_id,
+        });
+
+        await handleRazorpayPayment(
+          payment,
+          selectedPlan,
+          null,
+          form,
+          setProcessingPayment,
+          membershipPlanId,
+        );
+
+        return;
+      }
+
+      /* ---------------- FREE PLAN ---------------- */
+
+     /* ---------------- FREE PLAN ---------------- */
+
+const userData = responseData?.user;
+const newSubscription = responseData?.subscription;
+
+if (userData && newSubscription) {
+  console.log("[Register] Free registration successful:", {
+    user: userData,
+    subscription: newSubscription,
+  });
+
+  toast.success(
+    "Registration successful. Please check your email to verify your account.",
+  );
+
+  setRegistrationSuccess(true);
+
+  return;
+}
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to send OTP";
+      const message =
+        err instanceof Error ? err.message : "Registration failed";
+
+      console.error("[Register] Error:", err);
 
       toast.error(message);
     } finally {
@@ -274,21 +305,22 @@ export function useRegisterForm() {
   };
 
   return {
-    form,
-    plans,
-    loading,
-    plansLoading,
-    fieldErrors,
-    isSendingOtp,
-    isOtpSent,
-    otpTimer,
-    processingPayment,
-    selectedPlan: plans.find((p) => String(p.id) === form.plan),
-    otherPlans: plans.filter((p) => String(p.id) !== form.plan),
-    handleChange,
-    handleSendOtp,
-    handleSubmit,
-    setForm,
-    getError: (name: string) => fieldErrors[name]?.[0],
-  };
+  form,
+  plans,
+  loading,
+  plansLoading,
+  fieldErrors,
+  processingPayment,
+  registrationSuccess,
+
+  selectedPlan: plans.find((p) => String(p.id) === form.plan),
+
+  otherPlans: plans.filter((p) => String(p.id) !== form.plan),
+
+  handleChange,
+  handleSubmit,
+  setForm,
+
+  getError: (name: string) => fieldErrors[name]?.[0],
+};
 }

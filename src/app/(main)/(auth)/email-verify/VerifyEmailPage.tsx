@@ -98,7 +98,7 @@ useEffect(() => {
   --------------------------------------- */
 
   const handleLogin = () => {
-    router.push(routes.login);
+    router.push(routes.signIn);
   };
 
   /* ---------------------------------------

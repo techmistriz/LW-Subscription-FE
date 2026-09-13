@@ -37,9 +37,19 @@ export function usePayment() {
   ) => {
     const isLoaded = await loadRazorpay();
 
+    console.log("Razorpay SDK loaded:", isLoaded);
+    console.log("window.Razorpay:", window.Razorpay);
+
     if (!isLoaded) {
       throw new Error("Razorpay SDK failed to load");
     }
+
+    console.log("Razorpay options:", {
+      key: payment.razorpay_key,
+      amount: payment.amount,
+      currency: payment.currency,
+      order_id: payment.order_id,
+    });
 
     const rzp = new window.Razorpay({
       key: payment.razorpay_key,
