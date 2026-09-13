@@ -1,29 +1,25 @@
-// ThankYouContent.tsx
-
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/store/hooks";
 import PageLoader from "@/components/feedback/Loader/PageLoader";
 import { routes } from "@/config/routes";
+
+interface RegistrationSuccess {
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  planName?: string;
+}
 
 export default function ThankYouContent() {
   const router = useRouter();
 
-  const { user, isInitialized } = useAppSelector((state) => state.auth);
-
-  const subscription = useAppSelector((state) => state.subscription.active);
-
-  const isSubscriptionLoaded = useAppSelector(
-    (state) => state.subscription.isLoaded,
+  const [registration, setRegistration] = useState<RegistrationSuccess | null>(
+    null,
   );
 
-  useEffect(() => {
-    if (isInitialized && !user) {
-      router.replace("/");
-    }
-  }, [isInitialized, user, router]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     window.scrollTo({
@@ -31,9 +27,23 @@ export default function ThankYouContent() {
       left: 0,
       behavior: "instant",
     });
+
+    try {
+      const storedData = sessionStorage.getItem("registration_success");
+
+      if (storedData) {
+        const parsedData = JSON.parse(storedData) as RegistrationSuccess;
+
+        setRegistration(parsedData);
+      }
+    } catch (error) {
+      console.error("[ThankYou] Failed to read registration data:", error);
+    } finally {
+      setIsLoaded(true);
+    }
   }, []);
 
-  if (!isInitialized || !isSubscriptionLoaded) {
+  if (!isLoaded) {
     return (
       <div className="min-h-[85vh] flex items-center justify-center">
         <PageLoader />
@@ -41,35 +51,70 @@ export default function ThankYouContent() {
     );
   }
 
-  if (!user) return null;
+  if (!registration) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="mb-4 text-2xl font-bold text-[#333]">
+            Registration details not found
+          </h1>
 
-  const email = user.email || "Not available";
-  const planName = subscription?.name || "Your Plan";
+          <p className="mb-6 text-gray-600">
+            Please return to the registration page and try again.
+          </p>
+
+          <button
+            onClick={() => router.push(routes.home)}
+            className="cursor-pointer bg-[#c6090a] px-8 py-3 text-lg font-medium text-white transition hover:bg-[#333]"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const email = registration.email || "your registered email";
+  const planName = registration.planName || "Your Plan";
 
   return (
-    <div className="min-h-[85vh] bg-white flex items-center justify-center px-4 pb-24">
-      <div className="w-full max-w-2xl border border-gray-200 shadow-sm rounded-2xl px-8 py-14 text-center bg-white">
-        <div className="text-green-500 text-6xl mb-6">✔</div>
+    <div className="min-h-[85vh] bg-white flex items-center justify-center px-4 pb-24 mt-5 md:mt-5">
+      <div className="w-full max-w-2xl rounded-2xl border border-gray-200 bg-white px-8 py-14 text-center shadow-sm">
+        {/* Success Icon */}
+        <div className="mb-6 text-6xl text-green-500">✔</div>
 
-        <h1 className="text-3xl sm:text-4xl font-bold text-[#333] mb-4">
+        {/* Title */}
+        <h1 className="mb-4 text-3xl font-bold text-[#333] sm:text-4xl">
           Thank You
         </h1>
 
-        <p className="text-lg text-gray-700 mb-3 leading-relaxed">
+        {/* Subscription Success */}
+        <p className="mb-3 text-lg leading-relaxed text-gray-700">
           Your <span className="font-semibold">{planName}</span> has been
           activated successfully.
         </p>
 
-        <p className="text-gray-600 mb-8 leading-relaxed">
-          Your login credentials have been shared with your email id{" "}
-          <span className="font-medium text-[#c9060a]">{email}</span>.
+        {/* Email Verification Message */}
+        <div className="mx-auto mb-8 mt-6 rounded-lg border border-red-100 bg-red-50 px-5 py-4">
+          <p className="text-sm leading-6 text-gray-700">
+            Please check your email address{" "}
+            <span className="font-semibold text-[#c9060a]">{email}</span> and
+            click the verification link to verify your account.
+          </p>
+        </div>
+
+        {/* Additional Information */}
+        <p className="mb-8 text-sm leading-6 text-gray-500">
+          You will need to verify your email before you can log in and access
+          your subscription.
         </p>
 
+        {/* Home Button */}
         <button
           onClick={() => router.push(routes.home)}
-          className="bg-[#c6090a] cursor-pointer hover:bg-[#333] text-white px-8 py-3 text-lg font-medium transition"
+          className="cursor-pointer bg-[#c6090a] px-8 py-3 text-lg font-medium text-white transition hover:bg-[#333]"
         >
-          Start Your Access Now
+          Back to Home
         </button>
       </div>
     </div>

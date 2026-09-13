@@ -41,17 +41,16 @@ export default function PersonalDetailsForm({
         />
 
         <FormInput
-  label="Email *"
-  type="email"
-  name="email"
-  value={form.email}
-  onChange={onChange}
-  error={getError("email")}
-  required
-  autoComplete="email"
-  placeholder="Enter email"
-/>
-
+          label="Email *"
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={onChange}
+          error={getError("email")}
+          required
+          autoComplete="email"
+          placeholder="Enter email"
+        />
 
         <FormInput
           label="Contact Number *"

@@ -124,7 +124,7 @@ export default function Header() {
             <Link href="/" scroll={false} prefetch={true}>
               <div className="relative block w-[190px] h-[80px]">
                 <Image
-                  src= {images.logo}
+                  src={images.logo}
                   alt="Lex Witness Logo"
                   fill
                   sizes="190px"

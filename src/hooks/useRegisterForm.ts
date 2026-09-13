@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import { setUser } from "@/store/slices/authSlice";
-import { setSubscription } from "@/store/slices/subscriptionSlice";
+// import { setUser } from "@/store/slices/authSlice";
+// import { setSubscription } from "@/store/slices/subscriptionSlice";
 import { registerUser } from "@/services/auth.service";
 import { getMembershipPlans } from "../services/plan.service";
 import api from "@/network/axios";
@@ -13,7 +13,7 @@ import { storage } from "@/lib/storage";
 import { usePayment } from "./usePayment";
 import { RegisterFormData } from "@/types/register.types";
 import type { SubscriptionPlan } from "@/types/models";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 
 const initialForm: RegisterFormData = {
   first_name: "",
@@ -36,7 +36,7 @@ const initialForm: RegisterFormData = {
 
 export function useRegisterForm() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const { handleRazorpayPayment } = usePayment();
 
   const subscriptionData = useAppSelector((state) => state.subscription.active);
@@ -45,7 +45,7 @@ export function useRegisterForm() {
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(false);
   const [plansLoading, setPlansLoading] = useState(true);
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registrationSuccess] = useState(false);
 
   const [fieldErrors, setFieldErrors] = useState<{
     [key: string]: string[];
@@ -272,26 +272,27 @@ export function useRegisterForm() {
       }
 
       /* ---------------- FREE PLAN ---------------- */
+      const userData = responseData?.user;
+      const newSubscription = responseData?.subscription;
 
-     /* ---------------- FREE PLAN ---------------- */
+      if (userData && newSubscription) {
+        sessionStorage.setItem(
+          "registration_success",
+          JSON.stringify({
+            email: userData.email,
+            first_name: userData.first_name,
+            last_name: userData.last_name,
+            planName: newSubscription.plan?.name || selectedPlan.name,
+          }),
+        );
 
-const userData = responseData?.user;
-const newSubscription = responseData?.subscription;
+        toast.success(
+          "Registration successful. Please check your email to verify your account.",
+        );
 
-if (userData && newSubscription) {
-  console.log("[Register] Free registration successful:", {
-    user: userData,
-    subscription: newSubscription,
-  });
-
-  toast.success(
-    "Registration successful. Please check your email to verify your account.",
-  );
-
-  setRegistrationSuccess(true);
-
-  return;
-}
+        router.replace("/thankyou");
+        return;
+      }
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Registration failed";
@@ -305,22 +306,22 @@ if (userData && newSubscription) {
   };
 
   return {
-  form,
-  plans,
-  loading,
-  plansLoading,
-  fieldErrors,
-  processingPayment,
-  registrationSuccess,
+    form,
+    plans,
+    loading,
+    plansLoading,
+    fieldErrors,
+    processingPayment,
+    registrationSuccess,
 
-  selectedPlan: plans.find((p) => String(p.id) === form.plan),
+    selectedPlan: plans.find((p) => String(p.id) === form.plan),
 
-  otherPlans: plans.filter((p) => String(p.id) !== form.plan),
+    otherPlans: plans.filter((p) => String(p.id) !== form.plan),
 
-  handleChange,
-  handleSubmit,
-  setForm,
+    handleChange,
+    handleSubmit,
+    setForm,
 
-  getError: (name: string) => fieldErrors[name]?.[0],
-};
+    getError: (name: string) => fieldErrors[name]?.[0],
+  };
 }

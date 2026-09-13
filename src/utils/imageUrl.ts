@@ -4,7 +4,7 @@ export const getImageUrl = (
   image?: string | null,
   baseUrl?: string,
 ): string => {
-  if (!image) return images.placeholder";
+  if (!image) return images.placeholder;
 
   /*----------------- If already full URL -----------------*/
   if (image.startsWith("http")) {
