@@ -13,6 +13,7 @@ import { ReduxProvider } from "@/store/providers";
 import InitAuth from "@/store/initAuth";
 import { Toaster } from "sonner";
 import { siteConfig } from "@/config/site";
+import { isMaintenanceModeEnabled } from "@/config/maintenance";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -94,6 +95,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const isMaintenanceMode = isMaintenanceModeEnabled();
+
   // const categories = await getCategories();
 
   return (
@@ -102,30 +105,36 @@ export default async function RootLayout({
         className="antialiased min-h-screen flex flex-col overflow-x-hidden"
         suppressHydrationWarning
       >
-        {/* Razorpay Script */}
-        <Script
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="lazyOnload"
-        />
+        {isMaintenanceMode ? (
+          children
+        ) : (
+          <>
+            {/* Razorpay Script */}
+            <Script
+              src="https://checkout.razorpay.com/v1/checkout.js"
+              strategy="lazyOnload"
+            />
 
-        <ScrollProvider>
-          <ReduxProvider>
-            <InitAuth>
-              {/* <Header categories={categories} /> */}
-              <Header />
+            <ScrollProvider>
+              <ReduxProvider>
+                <InitAuth>
+                  {/* <Header categories={categories} /> */}
+                  <Header />
 
-              {/* <LoaderOverlay/> */}
+                  {/* <LoaderOverlay/> */}
 
-              <AuthGate />
+                  <AuthGate />
 
-              <main className="flex-1 min-h-[90vh] w-full">{children}</main>
-              <Toaster richColors position="bottom-right" />
+                  <main className="flex-1 min-h-[90vh] w-full">{children}</main>
+                  <Toaster richColors position="bottom-right" />
 
-              <Footer />
-              <ScrollToTop />
-            </InitAuth>
-          </ReduxProvider>
-        </ScrollProvider>
+                  <Footer />
+                  <ScrollToTop />
+                </InitAuth>
+              </ReduxProvider>
+            </ScrollProvider>
+          </>
+        )}
       </body>
     </html>
   );
