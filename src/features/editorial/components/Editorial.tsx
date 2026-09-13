@@ -61,7 +61,7 @@ async function NirmalaSitaraman() {
         </div>
 
         {/* First Paragraph Only */}
-        <p className="mt-3 line-clamp-5 text-[14px] font-normal text-gray-600">
+        <p className="mt-3 line-clamp-13 text-[14px] font-normal text-gray-600">
           {firstParagraph}
         </p>
 
