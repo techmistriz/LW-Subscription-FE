@@ -91,7 +91,8 @@ export default function ThankYouContent() {
 
         {/* Subscription Success */}
         <p className="mb-3 text-lg leading-relaxed text-gray-700">
-          Your <span className="font-semibold">{planName}</span> is confirmed.
+          Your <span className="font-semibold">{planName}</span>Plan is
+          confirmed.
           {registration.status === "PENDING"
             ? " Your next term is scheduled."
             : " Your subscription is active."}

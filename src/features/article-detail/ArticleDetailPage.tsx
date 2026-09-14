@@ -278,7 +278,7 @@ export default function ArticleDetailPage() {
           ) : (
             <div className="text-center">
               <p className="text-[17px] leading-7 text-gray-800 text-justify">
-                {previewHTML}...
+                {previewHTML && `${previewHTML}...`}
               </p>
               <div className="mt-6 p-6 border-2 border-gray-100">
                 <h2 className="text-xl font-semibold text-gray-800 mb-3">
@@ -298,7 +298,8 @@ export default function ArticleDetailPage() {
           )}
         </div>
 
-        {Array.isArray(article.reader_feedbacks) &&
+        {isSubscribed &&
+          Array.isArray(article.reader_feedbacks) &&
           article.reader_feedbacks.some((item) => item.reader_feedback) && (
             <div className="my-12 space-y-8">
               {article.reader_feedbacks

@@ -156,7 +156,7 @@ export default function InvoicePage({ invoices, onRefresh }: Props) {
                       </h3>
                     </div>
 
-                    {isPaid(invoice) ? (
+                    {isPaid(invoice) && Number(invoice.total_amount) !== 0 ? (
                       <button
                         onClick={() => downloadInvoice(invoice)}
                         disabled={downloadingId === invoice.id}
