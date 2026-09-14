@@ -21,18 +21,20 @@ import PageLoader from "@/components/feedback/Loader/PageLoader";
 import { renewPlan, verifyRenewPayment } from "@/services/subscription.service";
 import { getActivationLabel } from "../../utils/dashboard";
 import type { Subscription } from "@/types/models";
-import type { RazorpayPaymentResponse } from "@/types/razorpay";
+import { completeCheckout } from "@/lib/paymentCheckout";
+import { extractErrorMessage } from "@/network/errorMessage";
+import { toast } from "sonner";
 
 const getPendingActivationDate = (
   pendingSubscriptions: Subscription[],
   activeSubscription: Subscription | null,
   index: number,
 ): string | Date => {
-  if (index === 0) {
-    return activeSubscription?.end_date ?? new Date();
-  }
-
-  return pendingSubscriptions[index - 1]?.end_date ?? new Date();
+  return (
+    pendingSubscriptions[index]?.start_date ??
+    activeSubscription?.end_date ??
+    new Date()
+  );
 };
 
 export default function Dashboard() {
@@ -131,7 +133,7 @@ export default function Dashboard() {
 
   const now = new Date();
   const hasExpiredByDate = subscription?.end_date
-    ? new Date(subscription.end_date) < now
+    ? new Date(`${subscription.end_date}T23:59:59`) < now
     : false;
 
   const isActive = status === "ACTIVE" && !hasExpiredByDate;
@@ -171,74 +173,26 @@ export default function Dashboard() {
       isExpired);
 
   const handleRenewPlan = async () => {
+    if (!subscription?.id || renewLoading) return;
+    setRenewLoading(true);
     try {
-      if (!subscription?.id) return;
-      if (isFreePlan) {
-        alert("Free plan cannot be renewed. Please upgrade to a paid plan.");
-        return;
-      }
-
       const res = await renewPlan(subscription.id);
-      const payment = res?.data?.payment;
-
-      if (!payment) {
-        alert("Payment data not received");
-        return;
+      if (!res.status) throw new Error(res.message);
+      const confirmed = await completeCheckout(res.data, user, (response) =>
+        verifyRenewPayment({
+          ...response,
+          subscription_id: res.data.subscription.id,
+        }),
+      );
+      if (confirmed) {
+        sessionStorage.setItem("just_paid", "true");
+        await dispatch(fetchProfile()).unwrap();
+        setRenewSuccess(true);
       }
-
-      const options = {
-        key: payment.razorpay_key,
-        amount: payment.amount,
-        currency: payment.currency || "INR",
-        order_id: payment.order_id,
-        name: "Lex Witness",
-        handler: async function (response: RazorpayPaymentResponse) {
-          setRenewLoading(true);
-
-          try {
-            const verifyRes = await verifyRenewPayment({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              membership_plan_id: subscription.plan_id,
-              purchase_type: "RENEW",
-            });
-
-            if (verifyRes?.status) {
-              sessionStorage.setItem("just_paid", "true");
-              await dispatch(fetchProfile()).unwrap();
-
-              setRenewLoading(false);
-              setRenewSuccess(true);
-            } else {
-              setRenewLoading(false);
-            }
-          } catch (error) {
-            setRenewLoading(false);
-            console.error("Verify failed:", error);
-          }
-        },
-        prefill: {
-          name: `${user?.first_name || ""} ${user?.last_name || ""}`,
-          email: user?.email,
-          contact: user?.contact,
-        },
-        theme: { color: "#c8050b" },
-        retry: { enabled: true },
-        modal: { ondismiss: function () {} },
-      };
-
-      if (!window.Razorpay) {
-        alert("Razorpay SDK failed to load");
-        return;
-      }
-
-      const razor = new window.Razorpay(options);
-      razor.open();
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Renew failed";
-
-      alert(message);
+      toast.error(extractErrorMessage(error, "Could not complete renewal."));
+    } finally {
+      setRenewLoading(false);
     }
   };
 
@@ -282,6 +236,7 @@ export default function Dashboard() {
               {canRenew && (
                 <button
                   onClick={handleRenewPlan}
+                  disabled={renewLoading}
                   className="inline-flex items-center cursor-pointer gap-2 px-5 py-2 text-sm font-medium bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg shadow-red-100"
                 >
                   <RefreshCw className="w-4 h-4" />

@@ -1,10 +1,10 @@
 import api from "@/network/axios";
-import type { PaymentResponse } from "@/types/api";
+import type { PaymentResponse, PaymentVerificationResponse } from "@/types/api";
 
 export const buyNewPlan = async (
   membership_plan_id: number,
 ): Promise<PaymentResponse> => {
-  const res = await api.post("/subscription/buy-new-plan", {
+  const res = await api.post("/subscription/new-plan", {
     membership_plan_id,
   });
   return res.data;
@@ -27,14 +27,22 @@ export const upgradePlan = async (
 };
 
 export const verifySubscriptionPayment = async (payload: {
+  subscription_id: number;
   razorpay_payment_id: string;
   razorpay_order_id: string;
   razorpay_signature: string;
-  purchase_type?: "NEW" | "RENEW" | "UPGRADE";
-  membership_plan_id?: number;
-}) => {
+}): Promise<PaymentVerificationResponse> => {
   const res = await api.post("/subscription/payment-verify", payload);
   return res.data;
 };
 
 export const verifyRenewPayment = verifySubscriptionPayment;
+
+export const retrySubscriptionPayment = async (
+  subscription_id: number,
+): Promise<PaymentResponse> => {
+  const res = await api.post("/subscription/retry-payment", {
+    subscription_id,
+  });
+  return res.data;
+};
