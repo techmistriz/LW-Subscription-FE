@@ -14,19 +14,19 @@ export default function NotFound() {
         </h1>
 
         {/* 404 */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6 text-[80px] sm:text-[120px] md:text-[160px] font-bold text-[#c9060a] leading-none">
+        <div className="flex items-center justify-center gap-3 sm:gap-6 text-[80px] sm:text-[120px] md:text-[160px] font-bold text-[#c8050b] leading-none">
           <span>4</span>
 
           {/* Face */}
-          <div className="w-22.5 h-17.5 sm:w-35 sm:h-27.5 md:w-45 md:h-35 rounded-xl sm:rounded-2xl border-[6px] sm:border-8 md:border-10 border-[#c9060a] flex flex-col items-center justify-center">
+          <div className="w-22.5 h-17.5 sm:w-35 sm:h-27.5 md:w-45 md:h-35 rounded-xl sm:rounded-2xl border-[6px] sm:border-8 md:border-10 border-[#c8050b] flex flex-col items-center justify-center">
             {/* Eyes */}
             <div className="flex gap-3 sm:gap-6 mb-2 sm:mb-4">
-              <span className="w-2.5 h-2.5 sm:w-4 sm:h-4 bg-[#c9060a] rounded"></span>
-              <span className="w-2.5 h-2.5 sm:w-4 sm:h-4 bg-[#c9060a] rounded"></span>
+              <span className="w-2.5 h-2.5 sm:w-4 sm:h-4 bg-[#c8050b] rounded"></span>
+              <span className="w-2.5 h-2.5 sm:w-4 sm:h-4 bg-[#c8050b] rounded"></span>
             </div>
 
             {/* Sad mouth */}
-            <div className="w-6 sm:w-10 md:w-12 h-3 sm:h-5 border-b-4 sm:border-b-[5px] md:border-b-[6px] border-[#c9060a] rounded-b-full"></div>
+            <div className="w-6 sm:w-10 md:w-12 h-3 sm:h-5 border-b-4 sm:border-b-[5px] md:border-b-[6px] border-[#c8050b] rounded-b-full"></div>
           </div>
 
           <span>4</span>

@@ -29,7 +29,7 @@ export default function RegisterForm() {
             <div className="absolute h-16 w-16 animate-ping rounded-full bg-red-100" />
 
             <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-              <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c9060a]" />
+              <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c8050b]" />
             </div>
           </div>
 
@@ -42,7 +42,7 @@ export default function RegisterForm() {
           </p>
 
           <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-gray-100">
-            <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c9060a]" />
+            <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c8050b]" />
           </div>
 
           <div className="mt-6 flex items-center justify-center gap-2">

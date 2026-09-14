@@ -195,14 +195,14 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
   };
 
   const inputClass =
-    "h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-[#333] placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-[#C9060A] focus:ring-2 focus:ring-[#C9060A]/20";
+    "h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-[#333] placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-[#c8050b] focus:ring-2 focus:ring-[#c8050b]/20";
 
   const labelClass = "mb-1.5 block text-sm font-medium text-[#333]";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 px-4 py-10">
       <div className="mx-auto max-w-4xl overflow-hidden border border-gray-200 bg-white shadow-xl">
-        <div className="border-b border-[#c9060a] px-6 py-5">
+        <div className="border-b border-[#c8050b] px-6 py-5">
           <h1 className="text-2xl font-semibold text-[#333]">Edit Profile</h1>
 
           <p className="mt-1 text-sm text-gray-500">
@@ -216,7 +216,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
         >
           <div>
             <label className={labelClass}>
-              First Name <span className="text-[#C9060A]">*</span>
+              First Name <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
@@ -229,7 +229,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
           <div>
             <label className={labelClass}>
-              Last Name <span className="text-[#C9060A]">*</span>
+              Last Name <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
@@ -242,7 +242,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
           <div>
             <label className={labelClass}>
-              Email <span className="text-[#C9060A]">*</span>
+              Email <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
@@ -258,11 +258,11 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             <label className={labelClass}>
               {otpSent ? (
                 <>
-                  OTP <span className="text-[#C9060A]">*</span>
+                  OTP <span className="text-[#c8050b]">*</span>
                 </>
               ) : (
                 <>
-                  Contact No <span className="text-[#C9060A]">*</span>
+                  Contact No <span className="text-[#c8050b]">*</span>
                 </>
               )}
             </label>
@@ -283,7 +283,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
                     type="button"
                     onClick={handleSendOtp}
                     disabled={sendingOtp || countdown > 0}
-                    className="cursor-pointer rounded-md bg-[#C9060A] px-4 text-white disabled:cursor-not-allowed disabled:opacity-60"
+                    className="cursor-pointer rounded-md bg-[#c8050b] px-4 text-white disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {sendingOtp
                       ? "Sending..."
@@ -317,7 +317,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
                     type="button"
                     onClick={handleSendOtp}
                     disabled={sendingOtp || countdown > 0}
-                    className="text-sm font-medium text-[#C9060A] disabled:text-gray-400"
+                    className="text-sm font-medium text-[#c8050b] disabled:text-gray-400"
                   >
                     {countdown > 0 ? `Resend in ${countdown}s` : "Resend OTP"}
                   </button>
@@ -328,7 +328,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
           <div>
             <label className={labelClass}>
-              Date of Birth <span className="text-[#C9060A]">*</span>
+              Date of Birth <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
@@ -366,7 +366,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               <button
                 type="button"
                 onClick={() => setShowNewPassword((previous) => !previous)}
-                className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-gray-500 hover:text-[#C9060A]"
+                className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-gray-500 hover:text-[#c8050b]"
               >
                 {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -388,7 +388,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((previous) => !previous)}
-                className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-gray-500 hover:text-[#C9060A]"
+                className="absolute inset-y-0 right-3 flex cursor-pointer items-center text-gray-500 hover:text-[#c8050b]"
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -414,7 +414,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
           <div>
             <label className={labelClass}>
-              Country <span className="text-[#C9060A]">*</span>
+              Country <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
@@ -429,7 +429,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               <div>
                 <label className={labelClass}>
-                  State <span className="text-[#C9060A]">*</span>
+                  State <span className="text-[#c8050b]">*</span>
                 </label>
 
                 <input
@@ -442,7 +442,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
               <div>
                 <label className={labelClass}>
-                  City <span className="text-[#C9060A]">*</span>
+                  City <span className="text-[#c8050b]">*</span>
                 </label>
 
                 <input
@@ -455,7 +455,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
               <div>
                 <label className={labelClass}>
-                  Pincode <span className="text-[#C9060A]">*</span>
+                  Pincode <span className="text-[#c8050b]">*</span>
                 </label>
 
                 <input
@@ -470,7 +470,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
           <div className="md:col-span-2">
             <label className={labelClass}>
-              Address <span className="text-[#C9060A]">*</span>
+              Address <span className="text-[#c8050b]">*</span>
             </label>
 
             <textarea
@@ -478,17 +478,17 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-[#333] placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-[#C9060A] focus:ring-2 focus:ring-[#C9060A]/20"
+              className="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-[#333] placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-[#c8050b] focus:ring-2 focus:ring-[#c8050b]/20"
             />
           </div>
 
-          <div className="mt-2 flex justify-end gap-3 border-t border-[#c9060a] pt-5 md:col-span-2">
+          <div className="mt-2 flex justify-end gap-3 border-t border-[#c8050b] pt-5 md:col-span-2">
             <button
               type="submit"
               disabled={!canUpdate || updating}
               className={`flex min-w-[150px] items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-white transition ${
                 canUpdate && !updating
-                  ? "cursor-pointer bg-[#C9060A] hover:bg-[#a30508]"
+                  ? "cursor-pointer bg-[#c8050b] hover:bg-[#a30508]"
                   : "cursor-not-allowed bg-gray-300"
               }`}
             >

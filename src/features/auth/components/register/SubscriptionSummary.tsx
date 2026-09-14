@@ -45,7 +45,7 @@ export default function SubscriptionSummary({
   const total = isFree ? 0 : price + gst;
 
   return (
-    <div className="bg-white p-6 border border-gray-200 shadow-sm rounded-xl sticky top-10 h-167.5 flex flex-col">
+    <div className="bg-white p-6 border border-gray-200 shadow-sm rounded-xl sticky top-10 h-165.5 flex flex-col">
       <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
         Subscription Summary
       </h2>
@@ -55,17 +55,17 @@ export default function SubscriptionSummary({
         <div className="min-h-22.5 mt-2">
           {selectedPlan ? (
             <div>
-              <h3 className="text-[11px] font-bold uppercase text-[#c9060a] mb-2 tracking-wider">
+              <h3 className="text-[11px] font-bold uppercase text-[#c8050b] mb-2 tracking-wider">
                 Selected Plan
               </h3>
 
-              <div className="p-4 rounded-xl border-2 border-[#c9060a] bg-red-50 shadow-md">
+              <div className="p-4 rounded-xl border-2 border-[#c8050b] bg-red-50 shadow-md">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-sm uppercase">
                     {selectedPlan.name}
                   </span>
 
-                  <span className="text-sm font-bold text-[#c9060a]">
+                  <span className="text-sm font-bold text-[#c8050b]">
                     {Number(selectedPlan.price) === 0
                       ? "0.00"
                       : `₹${selectedPlan.price}`}
@@ -133,7 +133,7 @@ export default function SubscriptionSummary({
               Total Payable
             </span>
 
-            <span className="text-xl font-bold text-[#c9060a]">
+            <span className="text-xl font-bold text-[#c8050b]">
               {isFree ? "₹0.00" : `₹${total.toFixed(2)}`}
             </span>
           </div>
@@ -147,11 +147,11 @@ export default function SubscriptionSummary({
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="pt-2">
+      <form onSubmit={onSubmit} className="pt-6">
         <button
           type="submit"
           disabled={loading || !selectedPlan}
-          className="w-full bg-[#c9060a] text-white py-3 cursor-pointer font-bold uppercase tracking-widest hover:bg-[#333] transition-all disabled:opacity-50 shadow-lg shadow-red-100"
+          className="w-full bg-[#c8050b] text-white py-3 cursor-pointer font-bold uppercase tracking-widest hover:bg-[#333] transition-all disabled:opacity-50 shadow-lg shadow-red-100"
         >
           {loading
             ? "Processing..."
@@ -160,9 +160,9 @@ export default function SubscriptionSummary({
               : "Pay Now"}
         </button>
 
-        <p className="text-center text-[10px] text-gray-400 mt-3 italic font-bold uppercase tracking-tighter">
+        {/* <p className="text-center text-[10px] text-gray-400 mt-3 italic font-bold uppercase tracking-tighter">
           Please verify your contact number to proceed
-        </p>
+        </p> */}
       </form>
     </div>
   );

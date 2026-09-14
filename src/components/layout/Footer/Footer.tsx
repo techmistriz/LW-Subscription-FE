@@ -21,7 +21,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           {/* LEFT */}
           <div className="lg:col-span-4">
-            <h1 className="text-[#c9060a] font-semibold text-[18px] mb-4">
+            <h1 className="text-[#c8050b] font-semibold text-[18px] mb-4">
               CONTACT
             </h1>
             <div className="space-y-6 text-sm text-[#E2E2E2] mb-6">
@@ -31,14 +31,14 @@ const Footer = () => {
 
                 <a
                   href="mailto:bhupinder@witnesslive.in"
-                  className="block hover:text-[#c9060a] transition"
+                  className="block hover:text-[#c8050b] transition"
                 >
                   bhupinder@witnesslive.in
                 </a>
 
                 <a
                   href="tel:+919654155065"
-                  className="hover:text-[#c9060a] transition"
+                  className="hover:text-[#c8050b] transition"
                 >
                   +91-9654155065
                 </a>
@@ -50,14 +50,14 @@ const Footer = () => {
 
                 <a
                   href="mailto:neelima.maheshwari@witnesslive.in"
-                  className="block hover:text-[#c9060a] transition"
+                  className="block hover:text-[#c8050b] transition"
                 >
                   neelima.maheshwari@witnesslive.in
                 </a>
 
                 <a
                   href="tel:+918800841600"
-                  className="hover:text-[#c9060a] transition"
+                  className="hover:text-[#c8050b] transition"
                 >
                   +91-8800841600
                 </a>
@@ -185,7 +185,7 @@ const Footer = () => {
 
           {/* MIDDLE */}
           <div className="lg:col-span-4">
-            <h3 className="text-[#c9060a] font-semibold text-[18px] mb-4">
+            <h3 className="text-[#c8050b] font-semibold text-[18px] mb-4">
               THE LEX WITNESS SUMMITS LEGACY - 10 YEARS & COUNTING!
             </h3>
 
@@ -225,7 +225,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className="block"
                   >
-                    <p className="text-gray-200 font-semibold hover:text-[#c9060a] transition-colors">
+                    <p className="text-gray-200 font-semibold hover:text-[#c8050b] transition-colors">
                       {title}
                     </p>
                   </a>
@@ -237,7 +237,7 @@ const Footer = () => {
 
           {/* RIGHT */}
           <div className="lg:col-span-4">
-            <h3 className="text-[#c9060a] font-semibold text-[18px] mb-4">
+            <h3 className="text-[#c8050b] font-semibold text-[18px] mb-4">
               EXPLORE FURTHER!
             </h3>
 
@@ -255,41 +255,41 @@ const Footer = () => {
             <div className="grid grid-cols-2 gap-4 mt-6">
               {/* <Link
                 href="/brand-deck"
-                className="border border-[#c9060a] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c8050b] rounded-lg px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c8050b] transition"
               >
                 OUR BRAND DECK
               </Link> */}
 
               <Link
                 href="/about"
-                className="border border-[#c9060a]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c8050b]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c8050b] transition"
               >
                 ABOUT LEX WITNESS
               </Link>
 
               <Link
                 href="/events"
-                className="border border-[#c9060a]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c8050b]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c8050b] transition"
               >
                 EVENTS
               </Link>
               <Link
                 href="/privacy"
-                className="border border-[#c9060a]  px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c8050b]  px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c8050b] transition"
               >
                 PRIVACY POLICY
               </Link>
 
               <Link
                 href="/terms"
-                className="border border-[#c9060a]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c8050b]   px-3 py-5 text-center text-xs font-medium whitespace-nowrap text-white hover:bg-[#c8050b] transition"
               >
                 TERMS & CONDITIONS
               </Link>
 
               <Link
                 href="/get-involved"
-                className="border border-[#c9060a] leading-5   px-3 py-5 text-center text-xs font-medium  whitespace-nowrap text-white hover:bg-[#c9060a] transition"
+                className="border border-[#c8050b] leading-5   px-3 py-5 text-center text-xs font-medium  whitespace-nowrap text-white hover:bg-[#c8050b] transition"
               >
                 GET-INVOLVED
               </Link>

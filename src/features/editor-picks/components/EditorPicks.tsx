@@ -40,7 +40,7 @@ export default function EditorPicks() {
         <h2 className="text-2xl text-[#333333] font-semibold tracking-wide">
           EDITOR PICKS
         </h2>
-        <div className="w-10 h-1 bg-[#c9060a] mx-auto mt-2"></div>
+        <div className="w-10 h-1 bg-[#c8050b] mx-auto mt-2"></div>
       </div>
 
       {/* Show spinner if loading OR posts.length === 0 */}

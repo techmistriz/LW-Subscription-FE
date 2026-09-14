@@ -27,7 +27,7 @@ function Author({ data }: AuthorProps) {
         About Author
       </h2>
 
-      <div className="w-12 h-1 bg-[#c9060a] mb-3"></div>
+      <div className="w-12 h-1 bg-[#c8050b] mb-3"></div>
 
       <div className="border border-gray-200 bg-white p-4 flex flex-col hover:shadow">
         <div className="flex gap-4">
@@ -42,11 +42,11 @@ function Author({ data }: AuthorProps) {
           </div>
 
           <div className="flex-1">
-            <p className="font-semibold text-md text-[#c9060a]">{data.name}</p>
+            <p className="font-semibold text-md text-[#c8050b]">{data.name}</p>
 
             <p className="text-sm text-[#333] mt-1">{data.designation}</p>
 
-            <p className="text-sm text-[#c9060a] mt-1 font-medium">
+            <p className="text-sm text-[#c8050b] mt-1 font-medium">
               {data.company_name}
             </p>
 
@@ -86,7 +86,7 @@ function Author({ data }: AuthorProps) {
           {data.description?.length > 300 && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="mt-2 text-[#c9060a] font-medium text-sm hover:underline cursor-pointer"
+              className="mt-2 text-[#c8050b] font-medium text-sm hover:underline cursor-pointer"
             >
               {expanded ? "Read Less" : "Read More"}
             </button>

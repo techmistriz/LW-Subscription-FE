@@ -76,7 +76,7 @@ export default async function MagazineDetailPage({ params }: Props) {
             <p className=" border-gray-300 text-lg">{magazine.title}</p>
             <hr className="h-0.5 bg-gray-300 border-0" />
 
-            <p className="text-[#c9060a]">Magazine Details</p>
+            <p className="text-[#c8050b]">Magazine Details</p>
 
             {/*----------------- Magazine description -----------------*/}
             <div
@@ -89,14 +89,14 @@ export default async function MagazineDetailPage({ params }: Props) {
               Check out our previous issues{" "}
               <Link
                 href="/magazines"
-                className="text-[#c9060a] underline hover:no-underline"
+                className="text-[#c8050b] underline hover:no-underline"
               >
                 here
               </Link>
             </p>
 
             {/*----------------- Subscribe button -----------------*/}
-            <button className="bg-[#c9060a] hover:bg-[#333333] text-white px-6 py-2 cursor-pointer transition-colors">
+            <button className="bg-[#c8050b] hover:bg-[#333333] text-white px-6 py-2 cursor-pointer transition-colors">
               <Link href="/subscription">Subscribe now</Link>
             </button>
           </div>

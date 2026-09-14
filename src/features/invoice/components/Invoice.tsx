@@ -61,8 +61,8 @@ export default function InvoicePage({ invoices }: Props) {
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
                   {/* Left */}
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#c9060a]/10 flex items-center justify-center shrink-0">
-                      <Receipt className="w-6 h-6 text-[#c9060a]" />
+                    <div className="w-12 h-12 rounded-xl bg-[#c8050b]/10 flex items-center justify-center shrink-0">
+                      <Receipt className="w-6 h-6 text-[#c8050b]" />
                     </div>
 
                     <div>
@@ -107,7 +107,7 @@ export default function InvoicePage({ invoices }: Props) {
                         Total Paid
                       </p>
 
-                      <h3 className="text-2xl font-bold text-[#c9060a]">
+                      <h3 className="text-2xl font-bold text-[#c8050b]">
                         ₹{invoice.total_amount}
                       </h3>
                     </div>
@@ -115,7 +115,7 @@ export default function InvoicePage({ invoices }: Props) {
                     <button
                       onClick={() => downloadInvoice(invoice)}
                       disabled={downloadingId === invoice.id}
-                      className="inline-flex items-center justify-center gap-2 bg-[#c9060a] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5  text-sm font-medium transition-all duration-200 cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 bg-[#c8050b] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5  text-sm font-medium transition-all duration-200 cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
 

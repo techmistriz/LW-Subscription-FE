@@ -56,7 +56,7 @@ export default function RelatedMagazineArticles({ articles }: Props) {
 
             <Link
               href={`/${article.slug}`}
-              className="text-[#c9060a] text-sm mt-3 inline-block"
+              className="text-[#c8050b] text-sm mt-3 inline-block"
             >
               Read More
             </Link>

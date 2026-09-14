@@ -38,7 +38,7 @@ export default function EditorPickCard({ img, title, author }: Props) {
         <h3 className="text-sm font-semibold text-[#333333] leading-snug line-clamp-2">
           {title}
         </h3>
-        <p className="text-[#c9060a] text-sm mt-1">{author}</p>
+        <p className="text-[#c8050b] text-sm mt-1">{author}</p>
       </div>
     </div>
   );

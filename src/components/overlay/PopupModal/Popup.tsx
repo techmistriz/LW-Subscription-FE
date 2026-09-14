@@ -139,41 +139,41 @@ const Popup = ({ onClose }: PopupProps) => {
 
               {/* RIGHT CONTENT */}
               <div className="flex flex-col justify-center w-full p-5 md:w-7/12 md:p-14">
-                <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
+                <span className="text-[#c8050b] text-xs font-bold tracking-[0.2em] uppercase">
                   Latest Issue
                 </span>
 
                 <Link
                   href={`/magazines/${magazineSlug}`}
                   onClick={onClose}
-                  className="mt-2 max-w-[370px] text-lg md:text-2xl font-bold text-[#333] hover:text-[#c9060a] transition"
+                  className="mt-2 max-w-[370px] text-lg md:text-2xl font-bold text-[#333] hover:text-[#c8050b] transition"
                 >
                   {magazineName}
                 </Link>
 
                 <div className="mt-6">
                   <h2 className="text-xl md:text-2xl font-bold text-[#333]">
-                    Your <span className="text-[#c9060a]">1st Month</span> is on
+                    Your <span className="text-[#c8050b]">1st Month</span> is on
                     Us.
                   </h2>
 
                   <div className="mt-4 space-y-3">
                     <p className="flex items-center gap-2 text-sm text-[#333]/70">
-                      <span className="w-4 h-4 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                      <span className="w-4 h-4 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                         ✓
                       </span>
                       Full access to Lex Witness portal
                     </p>
 
                     <p className="flex items-center gap-2 text-sm text-[#333]/70">
-                      <span className="w-4 h-4 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                      <span className="w-4 h-4 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                         ✓
                       </span>
                       No card details required
                     </p>
 
                     <p className="flex items-center gap-2 text-sm text-[#333]/70">
-                      <span className="w-4 h-4 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                      <span className="w-4 h-4 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                         ✓
                       </span>
                       Upgrade or Cancel anytime
@@ -185,7 +185,7 @@ const Popup = ({ onClose }: PopupProps) => {
                   <button
                     onClick={handleRedirect}
                     disabled={loading}
-                    className="w-full sm:w-full md:w-fit px-5 py-3 bg-[#c9060a] hover:bg-[#333] text-white font-semibold text-sm transition disabled:opacity-70 cursor-pointer"
+                    className="w-full sm:w-full md:w-fit px-5 py-3 bg-[#c8050b] hover:bg-[#333] text-white font-semibold text-sm transition disabled:opacity-70 cursor-pointer"
                   >
                     {loading ? "Redirecting..." : "Subscribe Now"}
                   </button>
@@ -198,17 +198,17 @@ const Popup = ({ onClose }: PopupProps) => {
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-10">
                 <a
                   href="tel:7982771770"
-                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c9060a] transition"
+                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c8050b] transition"
                 >
-                  <FaPhoneAlt className="text-[#c9060a]" />
+                  <FaPhoneAlt className="text-[#c8050b]" />
                   <span>+91 7982771770</span>
                 </a>
 
                 <a
                   href="mailto:info@witnesslive.in"
-                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c9060a] transition"
+                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c8050b] transition"
                 >
-                  <FaEnvelope className="text-[#c9060a]" />
+                  <FaEnvelope className="text-[#c8050b]" />
                   <span>info@witnesslive.in</span>
                 </a>
 

@@ -39,7 +39,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
         <h2 className="text-2xl text-[#333333] font-semibold tracking-wide">
           ARTICLES
         </h2>
-        <div className="w-10 h-1.5 bg-[#c9060a] mx-auto mt-2"></div>
+        <div className="w-10 h-1.5 bg-[#c8050b] mx-auto mt-2"></div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -58,7 +58,7 @@ export default function RelatedPosts({ posts }: { posts: Article[] }) {
                 {article.title}
               </h3>
 
-              <span className="mt-auto text-sm text-[#c9060a] font-medium">
+              <span className="mt-auto text-sm text-[#c8050b] font-medium">
                 {typeof article.category === "string"
                   ? article.category
                   : article.category?.name || "Uncategorized"}

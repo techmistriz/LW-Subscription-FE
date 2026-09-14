@@ -54,7 +54,7 @@ body {
 /*----------------- Hover effect -----------------*/
 /*----------------- .swiper-button-next:hover,
 .swiper-button-prev:hover {
-  background: #c9060a;
+  background: #c8050b;
   color: white;
 } -----------------*/
 
@@ -91,7 +91,7 @@ select::-ms-expand {
 }
 
 .input {
-  @apply w-full border px-3 py-2 mt-1 rounded bg-gray-50 focus:ring-2 focus:ring-[#c9060a] outline-none;
+  @apply w-full border px-3 py-2 mt-1 rounded bg-gray-50 focus:ring-2 focus:ring-[#c8050b] outline-none;
 }
 
 .plan-features ul {

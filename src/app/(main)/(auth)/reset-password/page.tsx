@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
 
             <button
               disabled={loading}
-              className="w-full bg-[#c9060a] cursor-pointer text-white py-2 rounded"
+              className="w-full bg-[#c8050b] cursor-pointer text-white py-2 rounded"
             >
               {loading ? "Updating..." : "Reset Password"}
             </button>

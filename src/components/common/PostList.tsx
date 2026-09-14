@@ -94,7 +94,7 @@ export default function PostList({
                 <span key={author.id}>
                   <Link
                     href={`/author/${author.slug}`}
-                    className="text-[#c9060a] hover:underline"
+                    className="text-[#c8050b] hover:underline"
                   >
                     {author.name}
                   </Link>
@@ -112,7 +112,7 @@ export default function PostList({
 
             <Link
               href={`/${article.slug}`}
-              className="text-[#c9060a] text-sm font-normal inline-flex items-center gap-1"
+              className="text-[#c8050b] text-sm font-normal inline-flex items-center gap-1"
             >
               Read More
             </Link>

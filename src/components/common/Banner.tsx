@@ -35,7 +35,7 @@ export default function Banner({ title, backgroundImage }: BannerProps) {
         </h1>
 
         <p className="text-[14px] font-medium text-gray-200">
-          <Link href="/" className="text-[#c9060a]">
+          <Link href="/" className="text-[#c8050b]">
             Home
           </Link>{" "}
           | {capitalizeFirst(title)}

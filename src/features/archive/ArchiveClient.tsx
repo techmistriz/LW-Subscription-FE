@@ -252,7 +252,7 @@ export default function ArchivePage() {
           <button
             onClick={handleApplyFilters}
             /*----------------- Changed w-[262px] to w-full and added lg:w-[262px] to keep original size on desktop -----------------*/
-            className="w-full lg:w-[262px] bg-[#c9060a] text-white px-6 py-2 font-semibold cursor-pointer disabled:opacity-50"
+            className="w-full lg:w-[262px] bg-[#c8050b] text-white px-6 py-2 font-semibold cursor-pointer disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Searching..." : "Search"}

@@ -31,7 +31,7 @@ export default async function EditorialPage() {
 
           {/* Right Side - Editor Description */}
           <div>
-            <h1 className="mb-1 text-3xl font-semibold text-[#c9060a]">
+            <h1 className="mb-1 text-3xl font-semibold text-[#c8050b]">
               {data.name}
             </h1>
 
@@ -39,7 +39,7 @@ export default async function EditorialPage() {
               {data.designation}
             </h3>
 
-            <h3 className="text-[#c9060a]">{data.company_name}</h3>
+            <h3 className="text-[#c8050b]">{data.company_name}</h3>
 
             {/* <h3 className="mb-5 text-gray-400">{data.place}</h3>   */}
 

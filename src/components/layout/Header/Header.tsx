@@ -112,8 +112,8 @@ export default function Header() {
               onClick={() => setOpen(true)}
               className="flex items-center gap-2 text-[#333]"
             >
-              <Menu size={20} className="hover:text-[#c9060a] cursor-pointer" />
-              <span className="hidden lg:inline hover:text-[#c9060a] cursor-pointer">
+              <Menu size={20} className="hover:text-[#c8050b] cursor-pointer" />
+              <span className="hidden lg:inline hover:text-[#c8050b] cursor-pointer">
                 Explore
               </span>
             </button>
@@ -143,9 +143,9 @@ export default function Header() {
             >
               <Search
                 size={20}
-                className="hover:text-[#c9060a] cursor-pointer"
+                className="hover:text-[#c8050b] cursor-pointer"
               />
-              <span className="hidden lg:inline hover:text-[#c9060a] cursor-pointer">
+              <span className="hidden lg:inline hover:text-[#c8050b] cursor-pointer">
                 Search
               </span>
             </button>
@@ -158,8 +158,8 @@ export default function Header() {
                   as="div"
                   className="relative inline-block text-left"
                 >
-                  <HeadlessMenu.Button className="flex items-center gap-1 hover:text-[#c9060a] cursor-pointer">
-                    <span className="hidden lg:inline hover:text-[#c9060a] cursor-pointer">
+                  <HeadlessMenu.Button className="flex items-center gap-1 hover:text-[#c8050b] cursor-pointer">
+                    <span className="hidden lg:inline hover:text-[#c8050b] cursor-pointer">
                       Hi {username}
                     </span>
                     <ChevronDown size={16} />
@@ -224,14 +224,14 @@ export default function Header() {
               ) : (
                 <>
                   <Link href={authPlanLink} className="flex items-center gap-1">
-                    <NewspaperIcon className="hover:text-[#c9060a]" size={18} />
-                    <span className="hidden lg:inline text-md hover:text-[#c9060a] text-[#333]">
+                    <NewspaperIcon className="hover:text-[#c8050b]" size={18} />
+                    <span className="hidden lg:inline text-md hover:text-[#c8050b] text-[#333]">
                       Subscribe
                     </span>
                   </Link>
                   <Link href="/sign-in" className="flex items-center gap-1">
-                    <User className="hover:text-[#c9060a]" size={20} />
-                    <span className="hidden lg:inline text-md hover:text-[#c9060a] text-[#333]">
+                    <User className="hover:text-[#c8050b]" size={20} />
+                    <span className="hidden lg:inline text-md hover:text-[#c8050b] text-[#333]">
                       Sign In
                     </span>
                   </Link>
@@ -258,9 +258,9 @@ export default function Header() {
                 <li key={`${item.slug}-${index}`} className="shrink-0">
                   <Link
                     href={`/category/${item.slug}`}
-                    className={`hover:text-[#c9060a] transition-colors ${
+                    className={`hover:text-[#c8050b] transition-colors ${
                       item.slug && isActive(item.slug)
-                        ? "text-[#c9060a] border-[#c9060a] pb-1"
+                        ? "text-[#c8050b] border-[#c8050b] pb-1"
                         : "text-[#333]"
                     }`}
                   >
@@ -343,7 +343,7 @@ export default function Header() {
                     onClick={() => setOpen(false)}
                     className={`block py-4 px-1 transition  ${
                       active
-                        ? "text-[#c9060a] bg-[#3a3a3a]"
+                        ? "text-[#c8050b] bg-[#3a3a3a]"
                         : "text-white hover:bg-[#3a3a3a]"
                     }`}
                   >

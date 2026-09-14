@@ -212,7 +212,7 @@ export default function ArticleDetailPage() {
     <section className="bg-white">
       <article className="lg:col-span-9">
         <Link href={`/category/${rawCategory}`}>
-          <p className="text-[#c9060a] font-semibold text-lg uppercase cursor-pointer mb-2">
+          <p className="text-[#c8050b] font-semibold text-lg uppercase cursor-pointer mb-2">
             {categoryTitle}
           </p>
         </Link>
@@ -221,7 +221,7 @@ export default function ArticleDetailPage() {
           {article.title}
         </h1>
 
-        <div className="w-10 h-1 bg-[#c9060a] mb-1" />
+        <div className="w-10 h-1 bg-[#c8050b] mb-1" />
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 text-sm text-[#333333]">
@@ -230,7 +230,7 @@ export default function ArticleDetailPage() {
                 <div key={author.id} className="flex items-center gap-2">
                   <Link
                     href={`/author/${author.slug}`}
-                    className="text-[#c9060a] font-medium hover:underline"
+                    className="text-[#c8050b] font-medium hover:underline"
                   >
                     {author.name}
                   </Link>
@@ -240,7 +240,7 @@ export default function ArticleDetailPage() {
                 </div>
               ))
             ) : (
-              <span className="text-[#c9060a] font-medium">
+              <span className="text-[#c8050b] font-medium">
                 Lex Witness Bureau
               </span>
             )}
@@ -289,7 +289,7 @@ export default function ArticleDetailPage() {
                 </p>
                 <button
                   onClick={handleSubscribe}
-                  className="bg-[#c9060a] text-white px-6 py-3 hover:bg-[#333] transition cursor-pointer"
+                  className="bg-[#c8050b] text-white px-6 py-3 hover:bg-[#333] transition cursor-pointer"
                 >
                   SUBSCRIBE NOW
                 </button>
@@ -327,7 +327,7 @@ export default function ArticleDetailPage() {
                 <span key={tag.id} className="flex items-center">
                   <Link
                     href={`/tag/${tag.id}/${tag.slug}`}
-                    className="text-[#c9060a] text-sm mt-1 hover:underline"
+                    className="text-[#c8050b] text-sm mt-1 hover:underline"
                   >
                     {tag.name}
                   </Link>
@@ -349,7 +349,7 @@ export default function ArticleDetailPage() {
         {(article.authors?.length ?? 0) > 0 && (
           <>
             <h3 className="font-bold text-xl mt-10">ABOUT AUTHORS</h3>
-            <div className="w-10 h-1 bg-[#c9060a]" />
+            <div className="w-10 h-1 bg-[#c8050b]" />
 
             <div className="space-y-4 mt-2">
               {article.authors?.map((author: Author) => (
@@ -407,7 +407,7 @@ export default function ArticleDetailPage() {
         {relatedPosts.length > 0 && (
           <div className="my-8">
             <h3 className="font-bold text-xl">RELATED ARTICLES</h3>
-            <div className="w-10 h-1 bg-[#c9060a] mb-4" />
+            <div className="w-10 h-1 bg-[#c8050b] mb-4" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {relatedPosts.map((post) => (
@@ -435,7 +435,7 @@ export default function ArticleDetailPage() {
                     <h4 className="text-base font-medium line-clamp-2 text-gray-800">
                       {post.title}
                     </h4>
-                    <p className="text-[#c9060a] text-sm mt-2">
+                    <p className="text-[#c8050b] text-sm mt-2">
                       {typeof post.author === "string"
                         ? post.author
                         : post.author?.name || "Lex Witness Bureau"}

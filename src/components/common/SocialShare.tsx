@@ -185,7 +185,7 @@
 
 //   // Combined your brand red, gray #333 border, and a smooth hover transition to the platform colors
 //   const socialClass =
-//     "relative group w-9 h-6 flex items-center justify-center border border-[#333] bg-[#c9060a] transition-all duration-300 ease-in-out hover:opacity-90";
+//     "relative group w-9 h-6 flex items-center justify-center border border-[#333] bg-[#c8050b] transition-all duration-300 ease-in-out hover:opacity-90";
 
 //   return (
 //     <div className="flex items-center gap-2">
@@ -296,7 +296,7 @@
 //           target="_blank"
 //           rel="noopener noreferrer"
 //           aria-label={`Share on ${label}`}
-//           className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9060a] text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-[#333]"
+//           className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c8050b] text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-[#333]"
 //         >
 //           <Icon size={18} />
 //         </a>
@@ -374,7 +374,7 @@ export default function SocialShare({ title = "" }: Props) {
             shadow-[0_4px_10px_rgba(0,0,0,0.08)]
             transition-all duration-300
             hover:-translate-y-1
-            hover:border-[#c9060a]
+            hover:border-[#c8050b]
             hover:shadow-[0_0_0_3px_rgba(201,6,10,0.15),0_8px_20px_rgba(201,6,10,0.12)]
           "
           onMouseEnter={(e) => {

@@ -223,7 +223,7 @@ export default function Dashboard() {
           email: user?.email,
           contact: user?.contact,
         },
-        theme: { color: "#c9060a" },
+        theme: { color: "#c8050b" },
         retry: { enabled: true },
         modal: { ondismiss: function () {} },
       };
@@ -274,7 +274,7 @@ export default function Dashboard() {
               </Link>
               <Link
                 href="/subscription"
-                className="inline-flex items-center gap-2 px-5 py-2  text-sm font-medium bg-gradient-to-r from-red-800 to-[#c9060a] text-white hover:from-gray-900 hover:to-[#333] transition-all duration-200 shadow-lg shadow-gray-200"
+                className="inline-flex items-center gap-2 px-5 py-2  text-sm font-medium bg-gradient-to-r from-red-800 to-[#c8050b] text-white hover:from-gray-900 hover:to-[#333] transition-all duration-200 shadow-lg shadow-gray-200"
               >
                 <Sparkles className="w-4 h-4" />
                 {isFreePlan ? "Upgrade Plan" : "Change Plan"}
@@ -296,11 +296,11 @@ export default function Dashboard() {
 
         {/* Pending Upgrades Banner */}
         {hasPendingUpgrades && (
-          <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-[#c9060a] rounded-xl p-4 shadow-sm">
+          <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-[#c8050b] rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-[#c9060a]" />
+                  <Calendar className="w-5 h-5 text-[#c8050b]" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">
@@ -434,8 +434,8 @@ export default function Dashboard() {
           </div>
 
           {/* Current Plan Card - Compact like reference */}
-          <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-xl shadow-lg overflow-hidden">
-            <div className="px-4 py-2.5 bg-white/10">
+          <div className="bg-[#c8050b] rounded-xl shadow-lg overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-white/20">
               <h2 className="font-semibold text-white text-sm">
                 YOUR CURRENT PLAN
               </h2>
@@ -494,11 +494,11 @@ export default function Dashboard() {
         {hasPendingUpgrades && (
           <div className="mt-10">
             <div className="flex items-center gap-2 mb-5">
-              <div className="w-1 h-6 bg-[#c9060a] rounded-full"></div>
+              <div className="w-1 h-6 bg-[#c8050b] rounded-full"></div>
               <h2 className="text-xl font-bold text-gray-800">
                 Upcoming Plans
               </h2>
-              <span className="px-2.5 py-0.5 bg-blue-100 text-[#c9060a] text-sm font-medium rounded-full">
+              <span className="px-2.5 py-0.5 bg-blue-100 text-[#c8050b] text-sm font-medium rounded-full">
                 {pendingSubscriptions.length}
               </span>
             </div>
@@ -541,7 +541,7 @@ export default function Dashboard() {
                       {/* LEFT SIDE */}
                       <div className="flex items-center gap-4">
                         <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center group-hover:scale-105 transition">
-                          <Calendar className="w-5 h-5 text-[#c9060a]" />
+                          <Calendar className="w-5 h-5 text-[#c8050b]" />
                         </div>
 
                         <div>
@@ -604,7 +604,7 @@ export default function Dashboard() {
                                     Total Payable
                                   </p>
                                   <div className="flex items-baseline gap-1">
-                                    <span className="text-2xl font-bold text-[#C9060a]">
+                                    <span className="text-2xl font-bold text-[#c8050b]">
                                       {pendingPlan.total_amount
                                         ? `₹${pendingPlan.total_amount}`
                                         : formatAmount(pendingPlan.amount)}
@@ -719,7 +719,7 @@ export default function Dashboard() {
               <div className="absolute w-16 h-16 rounded-full bg-red-100 animate-ping" />
 
               <div className="relative w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
-                <div className="w-8 h-8 border-[3px] border-red-200 border-t-[#c9060a] rounded-full animate-spin" />
+                <div className="w-8 h-8 border-[3px] border-red-200 border-t-[#c8050b] rounded-full animate-spin" />
               </div>
             </div>
 
@@ -732,7 +732,7 @@ export default function Dashboard() {
             </p>
 
             <div className="mt-5 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full w-1/3 bg-[#c9060a] animate-[slide_1.2s_linear_infinite]" />
+              <div className="h-full w-1/3 bg-[#c8050b] animate-[slide_1.2s_linear_infinite]" />
             </div>
 
             <p className="text-xs text-gray-400 mt-5">Secured by Razorpay</p>
@@ -769,7 +769,7 @@ export default function Dashboard() {
 
             <button
               onClick={() => setRenewSuccess(false)}
-              className="mt-6 w-full rounded-lg bg-[#c9060a] px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 transition cursor-pointer"
+              className="mt-6 w-full rounded-lg bg-[#c8050b] px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 transition cursor-pointer"
             >
               Continue
             </button>
@@ -804,7 +804,7 @@ function StatCard({
         <div>
           <p className="text-sm text-gray-500 font-medium mb-1">{title}</p>
           <p
-            className={`text-2xl font-semibold ${alert ? "text-[#c9060a]" : status ? "text-green-600" : "text-gray-800"}`}
+            className={`text-2xl font-semibold ${alert ? "text-[#c8050b]" : status ? "text-green-600" : "text-gray-800"}`}
           >
             {value}
           </p>

@@ -130,7 +130,7 @@ export default function SignInForm() {
             Welcome back. Sign in to access your account and continue.
           </p>
 
-          <div className="mx-auto mt-4 h-1 w-12 bg-[#c9060a]" />
+          <div className="mx-auto mt-4 h-1 w-12 bg-[#c8050b]" />
 
           <div className="mx-auto mt-6 max-w-md border border-gray-200 bg-white p-8 text-left shadow-[0_8px_20px_rgba(0,0,0,0.25)]">
             <form onSubmit={handleSubmit} noValidate>
@@ -155,7 +155,7 @@ export default function SignInForm() {
                   aria-describedby={errors.email ? "email-error" : undefined}
                   className={`w-full border px-4 py-2 outline-none transition ${
                     errors.email
-                      ? "border-[#c9060a]"
+                      ? "border-[#c8050b]"
                       : "border-gray-300 focus:border-gray-500"
                   }`}
                 />
@@ -163,7 +163,7 @@ export default function SignInForm() {
                 {errors.email && (
                   <p
                     id="email-error"
-                    className="mt-1 text-sm text-[#c9060a]"
+                    className="mt-1 text-sm text-[#c8050b]"
                     role="alert"
                   >
                     {errors.email}
@@ -194,7 +194,7 @@ export default function SignInForm() {
                   }
                   className={`w-full border px-4 py-2 outline-none transition ${
                     errors.password
-                      ? "border-[#c9060a]"
+                      ? "border-[#c8050b]"
                       : "border-gray-300 focus:border-gray-500"
                   }`}
                 />
@@ -202,7 +202,7 @@ export default function SignInForm() {
                 {errors.password && (
                   <p
                     id="password-error"
-                    className="mt-1 text-sm text-[#c9060a]"
+                    className="mt-1 text-sm text-[#c8050b]"
                     role="alert"
                   >
                     {errors.password}
@@ -215,13 +215,13 @@ export default function SignInForm() {
               <button
                 disabled={loading}
                 type="submit"
-                className="w-full cursor-pointer bg-[#c9060a] px-6 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full cursor-pointer bg-[#c8050b] px-6 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging in..." : "Log In"}
               </button>
             </form>
 
-            <p className="mt-4 text-sm text-[#c9060a]">
+            <p className="mt-4 text-sm text-[#c8050b]">
               <Link href="/register" className="hover:underline">
                 Register
               </Link>{" "}

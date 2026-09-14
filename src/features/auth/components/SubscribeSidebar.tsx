@@ -53,7 +53,7 @@ function SubscribeSidebar() {
   return (
     <div>
       <h2 className="font-bold text-2xl">SUBSCRIBE US</h2>
-      <div className="w-15 h-1 bg-[#c9060a] mb-3"></div>
+      <div className="w-15 h-1 bg-[#c8050b] mb-3"></div>
 
       <div className="w-full bg-[#2f2f2f] p-4 h-80">
         <div className="min-h-6  ">
@@ -98,7 +98,7 @@ function SubscribeSidebar() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#c9060a] w-1/2 border flex justify-center cursor-pointer text-white  py-3 mx-auto text-sm hover:bg-[#444] disabled:opacity-50"
+            className="bg-[#c8050b] w-1/2 border flex justify-center cursor-pointer text-white  py-3 mx-auto text-sm hover:bg-[#444] disabled:opacity-50"
           >
             {loading ? "SUBMITTING..." : "SUBMIT"}
           </button>

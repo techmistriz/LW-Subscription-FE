@@ -169,7 +169,7 @@ export function usePayment() {
       },
 
       theme: {
-        color: "#c9060a",
+        color: "#c8050b",
       },
 
       modal: {

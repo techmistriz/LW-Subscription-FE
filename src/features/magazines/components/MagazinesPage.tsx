@@ -114,7 +114,7 @@ export default function MagazinesPage() {
           ALL EDITIONS MAGAZINE
         </h2>
 
-        <div className="mt-1 h-1.5 w-14 bg-[#c9060a]" />
+        <div className="mt-1 h-1.5 w-14 bg-[#c8050b]" />
 
         {/*----------------- Filter controls -----------------*/}
         <YearFilter
@@ -161,7 +161,7 @@ export default function MagazinesPage() {
                 {/*----------------- Magazine details -----------------*/}
                 <div className="p-3 text-center">
                   <p className="text-sm text-[#333333]">{magazine.title}</p>
-                  <p className="font-medium text-[#c9060a]">Read more</p>
+                  <p className="font-medium text-[#c8050b]">Read more</p>
                 </div>
               </Link>
             ))

@@ -40,7 +40,7 @@
 //             placeholder="Enter email"
 //             className={`min-w-0 flex-1 border ${
 //               error ? "border-red-500" : "border-gray-200"
-//             } bg-gray-50 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-[#c9060a] outline-none transition-all`}
+//             } bg-gray-50 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-[#c8050b] outline-none transition-all`}
 //           />
 
 //           <button
@@ -50,7 +50,7 @@
 //             className={`shrink-0 px-3 py-2 rounded-md text-[9px] font-bold uppercase whitespace-nowrap transition-all ${
 //               otpTimer > 0 || !email || isSendingOtp
 //                 ? "bg-gray-300 cursor-not-allowed text-gray-600"
-//                 : "bg-[#c9060a] text-white cursor-pointer"
+//                 : "bg-[#c8050b] text-white cursor-pointer"
 //             }`}
 //           >
 //             {isSendingOtp ? (
@@ -80,7 +80,7 @@
 //               inputMode="numeric"
 //               className={`min-w-0 flex-1 border ${
 //                 error ? "border-red-500" : "border-gray-200"
-//               } bg-gray-50 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-[#c9060a] outline-none`}
+//               } bg-gray-50 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-[#c8050b] outline-none`}
 //             />
 
 //             <button
@@ -90,7 +90,7 @@
 //               className={`shrink-0 px-3 py-2 rounded-md text-[9px] font-bold uppercase whitespace-nowrap transition-all ${
 //                 otpTimer > 0
 //                   ? "bg-gray-300 cursor-not-allowed text-gray-600"
-//                   : "bg-[#c9060a] text-white cursor-pointer"
+//                   : "bg-[#c8050b] text-white cursor-pointer"
 //               }`}
 //             >
 //               {otpTimer > 0 ? `Resend ${otpTimer}s` : "Resend OTP"}
@@ -99,7 +99,7 @@
 
 //           <p className="text-[10px] text-gray-500 font-medium">
 //             OTP sent to{" "}
-//             <span className="text-[#c9060a] font-bold">{email}</span>
+//             <span className="text-[#c8050b] font-bold">{email}</span>
 //           </p>
 //         </>
 //       )}

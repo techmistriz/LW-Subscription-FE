@@ -98,7 +98,7 @@ export default function ThankYouContent() {
         <div className="mx-auto mb-8 mt-6 rounded-lg border border-red-100 bg-red-50 px-5 py-4">
           <p className="text-sm leading-6 text-gray-700">
             Please check your email address{" "}
-            <span className="font-semibold text-[#c9060a]">{email}</span> and
+            <span className="font-semibold text-[#c8050b]">{email}</span> and
             click the verification link to verify your account.
           </p>
         </div>

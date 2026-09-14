@@ -136,7 +136,7 @@ export default function SubscriptionPage() {
           <div className="relative w-56 sm:w-64 md:w-72 lg:w-80 aspect-[3/4] shadow-2xl overflow-hidden">
             {(imageLoading || !singleMagazine?.image) && (
               <div className="absolute inset-0 z-20 flex items-center justify-center bg-gray-100">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#c9060a]" />
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-[#c8050b]" />
               </div>
             )}
 
@@ -157,13 +157,13 @@ export default function SubscriptionPage() {
 
         {/* RIGHT CONTENT */}
         <div className="text-center lg:text-left flex flex-col justify-center h-full">
-          <span className="text-[#c9060a] text-xs font-bold tracking-[0.2em] uppercase">
+          <span className="text-[#c8050b] text-xs font-bold tracking-[0.2em] uppercase">
             Latest Issue
           </span>
 
           <Link
             href={`/magazines/${singleMagazine?.slug}`}
-            className="mt-2 text-xl lg:text-2xl font-bold text-[#333] hover:text-[#c9060a] transition leading-snug max-w-[500px]"
+            className="mt-2 text-xl lg:text-2xl font-bold text-[#333] hover:text-[#c8050b] transition leading-snug max-w-[500px]"
           >
             {singleMagazine?.magazine_name}
           </Link>
@@ -175,26 +175,26 @@ export default function SubscriptionPage() {
 
           <div className="mt-6">
             <h1 className="text-xl lg:text-2xl  font-bold text-[#333] leading-snug">
-              Your <span className="text-[#c9060a]">1st Month</span> is on Us.
+              Your <span className="text-[#c8050b]">1st Month</span> is on Us.
             </h1>
 
             <div className="mt-6 space-y-4">
               <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
-                <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                <span className="w-5 h-5 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                   ✓
                 </span>
                 Full access to Lex Witness portal
               </p>
 
               <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
-                <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                <span className="w-5 h-5 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                   ✓
                 </span>
                 No card details required
               </p>
 
               <p className="flex items-center justify-center lg:justify-start gap-3 text-gray-700">
-                <span className="w-5 h-5 bg-[#c9060a]/10 text-[#c9060a] rounded-full flex items-center justify-center text-xs">
+                <span className="w-5 h-5 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                   ✓
                 </span>
                 Upgrade or Cancel anytime
@@ -209,7 +209,7 @@ export default function SubscriptionPage() {
               className={`text-sm px-6 py-3 font-semibold transition cursor-pointer ${
                 isAuthenticated
                   ? "bg-gray-500 text-white cursor-not-allowed opacity-60"
-                  : "bg-[#c9060a] text-white hover:bg-[#333]"
+                  : "bg-[#c8050b] text-white hover:bg-[#333]"
               }`}
             >
               Start First Month with Us
@@ -245,8 +245,8 @@ export default function SubscriptionPage() {
             const Icon = item.icon;
             return (
               <div key={i} className="flex flex-col items-center">
-                <div className="w-12 h-12 flex items-center justify-center bg-[#c9060a]/10 rounded-full mb-4">
-                  <Icon className="w-6 h-6 text-[#c9060a]" />
+                <div className="w-12 h-12 flex items-center justify-center bg-[#c8050b]/10 rounded-full mb-4">
+                  <Icon className="w-6 h-6 text-[#c8050b]" />
                 </div>
 
                 <h3 className="font-semibold text-lg">{item.title}</h3>

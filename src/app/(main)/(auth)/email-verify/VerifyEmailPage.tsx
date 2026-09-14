@@ -170,7 +170,7 @@ export default function VerifyEmail() {
                     <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50 ring-8 ring-red-50/60">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-9 w-9 text-[#c9060a]"
+                        className="h-9 w-9 text-[#c8050b]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -184,7 +184,7 @@ export default function VerifyEmail() {
                       </svg>
                     </div>
 
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c9060a]">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c8050b]">
                       Email Verification
                     </p>
 
@@ -200,7 +200,7 @@ export default function VerifyEmail() {
                     <button
                       type="button"
                       onClick={handleLogin}
-                      className="w-full cursor-pointer  bg-[#c9060a] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#a80508] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#c9060a]/30"
+                      className="w-full cursor-pointer  bg-[#c8050b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#a80508] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#c8050b]/30"
                     >
                       Go to Login
                     </button>
@@ -211,10 +211,10 @@ export default function VerifyEmail() {
                 {isVerifying && (
                   <div>
                     <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50 ring-8 ring-red-50/60">
-                      <div className="h-9 w-9 animate-spin rounded-full border-[2px] border-gray-200 border-t-[#c9060a]" />
+                      <div className="h-9 w-9 animate-spin rounded-full border-[2px] border-gray-200 border-t-[#c8050b]" />
                     </div>
 
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c9060a]">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c8050b]">
                       Please Wait
                     </p>
 
@@ -228,7 +228,7 @@ export default function VerifyEmail() {
                       This will only take a moment.
                     </p>
 
-                    <div className="mx-auto mt-6 h-px w-12 bg-[#c9060a]/20" />
+                    <div className="mx-auto mt-6 h-px w-12 bg-[#c8050b]/20" />
 
                     <p className="mt-4 text-xs text-gray-400">
                       Please don&apos;t close this page.
@@ -273,7 +273,7 @@ export default function VerifyEmail() {
                     <button
                       type="button"
                       onClick={handleLogin}
-                      className="w-full cursor-pointer   bg-[#c9060a] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#a80508] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#c9060a]/30"
+                      className="w-full cursor-pointer   bg-[#c8050b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#a80508] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#c8050b]/30"
                     >
                       Continue to Login
                     </button>
@@ -286,7 +286,7 @@ export default function VerifyEmail() {
                     <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50 ring-8 ring-red-50/60">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-9 w-9 text-[#c9060a]"
+                        className="h-9 w-9 text-[#c8050b]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -300,7 +300,7 @@ export default function VerifyEmail() {
                       </svg>
                     </div>
 
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c9060a]">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#c8050b]">
                       Verification Error
                     </p>
 
@@ -333,10 +333,10 @@ export default function VerifyEmail() {
                       type="button"
                       onClick={handleResend}
                       disabled={resendLoading}
-                      className="mb-3 flex w-full cursor-pointer items-center justify-center gap-2 border border-[#c9060a] px-5 py-3 text-sm font-semibold text-[#c9060a] transition-all duration-200 hover:bg-[#c9060a] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#c9060a]/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mb-3 flex w-full cursor-pointer items-center justify-center gap-2 border border-[#c8050b] px-5 py-3 text-sm font-semibold text-[#c8050b] transition-all duration-200 hover:bg-[#c8050b] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#c8050b]/20 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {resendLoading && (
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#c9060a]/30 border-t-[#c9060a]" />
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#c8050b]/30 border-t-[#c8050b]" />
                       )}
 
                       {resendLoading
@@ -347,7 +347,7 @@ export default function VerifyEmail() {
                     <button
                       type="button"
                       onClick={handleLogin}
-                      className="w-full cursor-pointer  bg-[#c9060a] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#a80508] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#c9060a]/30"
+                      className="w-full cursor-pointer  bg-[#c8050b] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#a80508] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#c8050b]/30"
                     >
                       Go to Login
                     </button>
@@ -356,7 +356,7 @@ export default function VerifyEmail() {
               </div>
             </div>
 
-            <div className="h-1 bg-[#c9060a]" />
+            <div className="h-1 bg-[#c8050b]" />
           </div>
         </div>
       </section>

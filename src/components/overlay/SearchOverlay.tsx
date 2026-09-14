@@ -228,7 +228,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           {/* Search Button */}
           <button
             onClick={handleFilterSearch}
-            className="bg-[#c9060a] text-white text-xl px-6 py-2 h-[48px] hover:bg-[#333] transition-colors cursor-pointer font-medium"
+            className="bg-[#c8050b] text-white text-xl px-6 py-2 h-[48px] hover:bg-[#333] transition-colors cursor-pointer font-medium"
           >
             FILTER
           </button>

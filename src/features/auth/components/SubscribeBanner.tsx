@@ -42,7 +42,7 @@ const InputField = ({
       maxLength={maxLength}
       disabled={disabled}
     />
-    {error && <span className="text-[#c9060a] text-sm mt-1">{error}</span>}
+    {error && <span className="text-[#c8050b] text-sm mt-1">{error}</span>}
   </div>
 );
 
@@ -143,7 +143,7 @@ export default function SubscribeBanner() {
         <h2 className="font-semibold text-white text-2xl uppercase tracking-wide">
           Signup for Lex Witness Newsletter
         </h2>
-        <div className="w-15 h-1 bg-[#c9060a] mx-auto mt-1"></div>
+        <div className="w-15 h-1 bg-[#c8050b] mx-auto mt-1"></div>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="mt-6 flex flex-col gap-4 lg:flex-row justify-center">
@@ -181,7 +181,7 @@ export default function SubscribeBanner() {
 
           <div className="flex justify-center mt-6">
             <button
-              className="bg-[#c9060a] text-white px-15 py-2.5 hover:bg-[#333] cursor-pointer disabled:opacity-50 border border-white"
+              className="bg-[#c8050b] text-white px-15 py-2.5 hover:bg-[#333] cursor-pointer disabled:opacity-50 border border-white"
               type="submit"
               disabled={loading}
             >

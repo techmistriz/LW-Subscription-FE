@@ -25,7 +25,7 @@ export default function LatestIssue({
         LATEST EDITION
       </h3>
 
-      <div className="w-14 h-1 bg-[#c9060a] mt-1 mb-4"></div>
+      <div className="w-14 h-1 bg-[#c8050b] mt-1 mb-4"></div>
 
       <Link
         href={`/magazines/${magazine.slug}`}

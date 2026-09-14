@@ -16,7 +16,7 @@ export default function AsidePosts({ posts }: { posts: Post[] }) {
             {category?.slug && (
               <Link
                 href={`/category/${category.slug}`}
-                className="text-[#c9060a] text-[14px] font-medium"
+                className="text-[#c8050b] text-[14px] font-medium"
               >
                 {category.name}
               </Link>

@@ -20,7 +20,7 @@ export default function LatestEdition({ magazines }: Props) {
         <h2 className="text-[20px] text-[#333333] font-bold tracking-wide">
           LATEST EDITIONS
         </h2>
-        <div className="w-14 h-1.5 bg-[#c9060a] mx-auto mt-1"></div>
+        <div className="w-14 h-1.5 bg-[#c8050b] mx-auto mt-1"></div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -56,7 +56,7 @@ export default function LatestEdition({ magazines }: Props) {
       <div className="flex justify-center items-center mt-8">
         <Link
           href="/magazines"
-          className="bg-[#c9060a] border border-white text-white text-[16px] font-normal px-7 py-2.5 transition-colors hover:bg-[#333]"
+          className="bg-[#c8050b] border border-white text-white text-[16px] font-normal px-7 py-2.5 transition-colors hover:bg-[#333]"
         >
           VIEW ALL EDITIONS
         </Link>

@@ -85,7 +85,7 @@ export default function Pagination({
             disabled={loading}
             className={`w-8 h-8 border text-sm cursor-pointer ${
               currentPage === page
-                ? "bg-[#c9060a] text-white border-[#c9060a]"
+                ? "bg-[#c8050b] text-white border-[#c8050b]"
                 : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
             }`}
           >

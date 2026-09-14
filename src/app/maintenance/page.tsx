@@ -17,7 +17,7 @@ export default function MaintenancePage() {
         className="w-full max-w-xl rounded-2xl border border-gray-200 bg-white px-6 py-12 shadow-sm sm:px-12"
         aria-labelledby="maintenance-title"
       >
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#c9060a]">
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#c8050b]">
           Lex Witness
         </p>
         <h1

@@ -158,7 +158,7 @@ export default function PricingCard() {
           email: user?.email,
           contact: user?.contact,
         },
-        theme: { color: "#c9060a" },
+        theme: { color: "#c8050b" },
         handler: async function (response: RazorpayPaymentResponse) {
           setRedirectLoading(true);
           try {
@@ -247,7 +247,7 @@ export default function PricingCard() {
           <p className="text-gray-500 mt-2 text-sm">
             More the Merrier. We Value Your Readership.
           </p>
-          <div className="w-20 h-1 bg-[#c9060a] mx-auto mt-5 rounded-full" />
+          <div className="w-20 h-1 bg-[#c8050b] mx-auto mt-5 rounded-full" />
         </div>
 
         <div
@@ -273,7 +273,7 @@ export default function PricingCard() {
                     <span
                       className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md ${
                         plan.tag === "Most Popular" || plan.tag === "Best Value"
-                          ? "bg-[#c9060a] text-white"
+                          ? "bg-[#c8050b] text-white"
                           : "bg-gray-300 text-[#333]"
                       }`}
                     >
@@ -311,18 +311,18 @@ export default function PricingCard() {
                     disableFreePlan
                       ? "opacity-60 cursor-not-allowed border-gray-200 bg-gray-50"
                       : "hover:shadow-xl hover:-translate-y-1"
-                  } ${isSelected && !disableFreePlan ? "border-[#c9060a] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
+                  } ${isSelected && !disableFreePlan ? "border-[#c8050b] shadow-2xl scale-[1.03]" : "border-gray-300"}`}
                 >
                   <div className="flex justify-center mb-5">
                     <div
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         isSelected && !disableFreePlan
-                          ? "border-[#c9060a]"
+                          ? "border-[#c8050b]"
                           : "border-gray-300"
                       }`}
                     >
                       {isSelected && !disableFreePlan && (
-                        <div className="w-2.5 h-2.5 bg-[#c9060a] rounded-full" />
+                        <div className="w-2.5 h-2.5 bg-[#c8050b] rounded-full" />
                       )}
                     </div>
                   </div>
@@ -339,7 +339,7 @@ export default function PricingCard() {
                       )}
                   </h3>
 
-                  <ul className="text-start space-y-1 min-h-[60px] list-disc marker:text-[#c9060a] list-inside">
+                  <ul className="text-start space-y-1 min-h-[60px] list-disc marker:text-[#c8050b] list-inside">
                     {features.slice(0, 3).map((f, i) => (
                       <li
                         key={i}
@@ -368,7 +368,7 @@ export default function PricingCard() {
                         <p className="text-lg font-medium text-gray-400 line-through">
                           ₹{plan.actual_price}
                         </p>
-                        <p className="text-xs font-semibold text-[#c9060a] uppercase tracking-wider mt-3">
+                        <p className="text-xs font-semibold text-[#c8050b] uppercase tracking-wider mt-3">
                           Offer Price
                         </p>
                         <p className="text-3xl font-black text-gray-900">
@@ -401,7 +401,7 @@ export default function PricingCard() {
           <button
             onClick={handleSubscribe}
             disabled={loading}
-            className="w-full sm:w-auto bg-[#c9060a] text-white px-6 md:px-18 py-3 font-bold text-sm md:text-lg uppercase tracking-widest hover:bg-[#333] transition-all duration-300 active:scale-95 shadow-xl shadow-red-500/20 disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto bg-[#c8050b] text-white px-6 md:px-18 py-3 font-bold text-sm md:text-lg uppercase tracking-widest hover:bg-[#333] transition-all duration-300 active:scale-95 shadow-xl shadow-red-500/20 disabled:opacity-50 cursor-pointer"
           >
             {loading
               ? "Processing..."
@@ -420,7 +420,7 @@ export default function PricingCard() {
               <div className="absolute h-16 w-16 animate-ping rounded-full bg-red-100" />
 
               <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-                <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c9060a]" />
+                <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c8050b]" />
               </div>
             </div>
 
@@ -436,7 +436,7 @@ export default function PricingCard() {
 
             {/* Progress */}
             <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-gray-100">
-              <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c9060a]" />
+              <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c8050b]" />
             </div>
 
             {/* Razorpay */}

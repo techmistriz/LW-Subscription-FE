@@ -64,7 +64,7 @@ export default function ForgotPasswordForm() {
             Enter your email and we’ll send you a link to reset your password.
           </p>
 
-          <div className="w-12 h-[2px] bg-[#c9060a] mx-auto mt-4"></div>
+          <div className="w-12 h-[2px] bg-[#c8050b] mx-auto mt-4"></div>
 
           <div className="mt-12 bg-white border shadow-md p-8 max-w-md mx-auto text-left">
             <form onSubmit={handleSubmit}>
@@ -79,12 +79,12 @@ export default function ForgotPasswordForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
                 placeholder="Enter your email"
-                className="w-full border bg-gray-50 px-3 py-2 mb-6 outline-none focus:ring-1 focus:ring-[#c9060a]"
+                className="w-full border bg-gray-50 px-3 py-2 mb-6 outline-none focus:ring-1 focus:ring-[#c8050b]"
               />
 
               <button
                 disabled={loading}
-                className="bg-[#c9060a] text-white px-6 py-2 text-sm w-full disabled:opacity-50"
+                className="bg-[#c8050b] text-white px-6 py-2 text-sm w-full disabled:opacity-50"
               >
                 {loading ? "Sending..." : "Send Reset Link"}
               </button>

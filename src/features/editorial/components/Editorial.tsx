@@ -28,7 +28,7 @@ async function Editorial() {
       {/* Heading */}
       <h2 className="text-xl font-semibold uppercase text-[#333]">Editorial</h2>
 
-      <div className="mt-1 mb-4 h-1 w-12 bg-[#c9060a]" />
+      <div className="mt-1 mb-4 h-1 w-12 bg-[#c8050b]" />
 
       {/* Card */}
       <div className="flex h-122.5 flex-col border border-gray-200 bg-[#ffffff] p-4 hover:shadow">
@@ -50,7 +50,7 @@ async function Editorial() {
 
             <p className="mt-1 text-sm text-[#333]">{data.designation}</p>
 
-            <p className="mt-1 text-sm font-medium text-[#c9060a]">
+            <p className="mt-1 text-sm font-medium text-[#c8050b]">
               {data.company_name}
             </p>
 
@@ -68,7 +68,7 @@ async function Editorial() {
         {/* Read More */}
         <Link
           href={`/editorial/${slug}`}
-          className="mt-3 inline-block text-sm font-normal text-[#c9060a]"
+          className="mt-3 inline-block text-sm font-normal text-[#c8050b]"
         >
           Read More
         </Link>

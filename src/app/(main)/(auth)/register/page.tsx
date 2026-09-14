@@ -8,7 +8,7 @@ const RegisterForm = dynamic(
     ssr: false,
     loading: () => (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#c9060a] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-[#c8050b] border-t-transparent rounded-full animate-spin"></div>
       </div>
     ),
   },

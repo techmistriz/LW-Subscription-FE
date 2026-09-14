@@ -92,25 +92,25 @@ export default function AboutUsPage() {
             <div className="space-y-3 text-sm sm:text-base text-gray-800">
               <p>
                 John Doe | CEO |{" "}
-                <span className="text-[#c9060a] break-all">
+                <span className="text-[#c8050b] break-all">
                   john@example.com
                 </span>
               </p>
               <p>
                 Jane Smith | CTO |{" "}
-                <span className="text-[#c9060a] break-all">
+                <span className="text-[#c8050b] break-all">
                   jane@example.com
                 </span>
               </p>
               <p>
                 Alex Johnson | COO |{" "}
-                <span className="text-[#c9060a] break-all">
+                <span className="text-[#c8050b] break-all">
                   alex@example.com
                 </span>
               </p>
               <p>
                 Priya Sharma | Editor-in-Chief |{" "}
-                <span className="text-[#c9060a] break-all">
+                <span className="text-[#c8050b] break-all">
                   priya@example.com
                 </span>
               </p>

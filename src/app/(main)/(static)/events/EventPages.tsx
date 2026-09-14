@@ -8,11 +8,11 @@ export default function EventsPage() {
   return (
     <section className="py-8 bg-white min-h-screen">
       <div className="text-center max-w-4xl mx-auto mb-6 px-4">
-        <span className="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-[#c9060a] border border-red-100">
+        <span className="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-[#c8050b] border border-red-100">
           LEXWITNESS EVENTS
         </span>
 
-        <div className="w-16 h-0.5 bg-[#c9060a] mx-auto mt-4"></div>
+        <div className="w-16 h-0.5 bg-[#c8050b] mx-auto mt-4"></div>
 
         <p className="mt-2 text-base text-gray-600 leading-relaxed max-w-2xl mx-auto">
           Industry-leading legal summits connecting professionals, policymakers,
@@ -26,7 +26,7 @@ export default function EventsPage() {
             key={event.id}
             className="group bg-white border border-gray-300 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
           >
-            <div className="h-[3px] bg-[#c9060a]" />
+            <div className="h-[3px] bg-[#c8050b]" />
 
             <div className="p-5">
               <div className="h-24 flex items-center justify-center mb-5">
@@ -52,7 +52,7 @@ export default function EventsPage() {
                   href={event.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#c9060a] hover:gap-3 transition-all"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#c8050b] hover:gap-3 transition-all"
                 >
                   Visit Event
                   <svg

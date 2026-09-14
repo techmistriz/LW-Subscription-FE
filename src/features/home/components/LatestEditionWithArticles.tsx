@@ -26,7 +26,7 @@ export default function LatestEditionWithArticles({
         </p>
         <Link
           href="/subscription#pricing"
-          className="bg-[#c9060a] text-white w-full py-2.5 border-2 border-white hover:bg-[#222] block text-center"
+          className="bg-[#c8050b] text-white w-full py-2.5 border-2 border-white hover:bg-[#222] block text-center"
         >
           SUBSCRIBE NOW
         </Link>

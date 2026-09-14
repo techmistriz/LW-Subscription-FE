@@ -31,11 +31,11 @@ export default function ScrollToTop() {
       onClick={scrollToTop}
       className={`
         fixed bottom-0 right-6 z-50
-        bg-[#c9060a] text-white
+        bg-[#c8050b] text-white
         w-11 h-11 
         flex items-center justify-center
         shadow-lg transition
-        hover:bg-[#c9060a] cursor-pointer
+        hover:bg-[#c8050b] cursor-pointer
         ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}
       `}
       aria-label="Scroll to top"
