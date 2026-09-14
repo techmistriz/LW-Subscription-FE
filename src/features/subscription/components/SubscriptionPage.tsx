@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
 import { siteConfig } from "@/config/site";
 import { PAGINATION } from "@/config/constants";
+import { logger } from "@/lib/logger";
 
 const benefits = [
   {
@@ -67,7 +68,7 @@ export default function SubscriptionPage() {
         const single = await getLatestSingleMagazines();
         setSingleMagazine(single);
       } catch (error) {
-        console.error(error);
+        logger.error(error);
       } finally {
       }
     };
@@ -96,7 +97,7 @@ export default function SubscriptionPage() {
           setLatestFive(mags || []);
         }
       } catch (err) {
-        console.error("Error fetching latest magazines:", err);
+        logger.error("Error fetching latest magazines:", err);
       }
     };
 

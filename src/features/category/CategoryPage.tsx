@@ -12,6 +12,7 @@ import PostList from "@/components/common/PostList";
 import YearFilter from "@/components/common/YearFilter";
 import { useSearchParams, useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import { logger } from "@/lib/logger";
 
 const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
@@ -57,7 +58,7 @@ export default function CategoryPage() {
         setLastPage(response.meta?.paging?.last_page ?? 1);
         setCurrentPage(page);
       } catch (error) {
-        console.error("Failed to fetch posts:", error);
+        logger.error("Failed to fetch posts:", error);
         setPosts([]);
       } finally {
         setLoading(false);
@@ -85,7 +86,7 @@ export default function CategoryPage() {
 
         setCategoryId(Number(category.id));
       } catch (error) {
-        console.error("Failed to load category:", error);
+        logger.error("Failed to load category:", error);
         setPosts([]);
         setLoading(false);
       }
@@ -108,7 +109,7 @@ export default function CategoryPage() {
         const yearsData = await getYears();
         setYears(yearsData || []);
       } catch (error) {
-        console.error("Failed to load years:", error);
+        logger.error("Failed to load years:", error);
         setYears([]);
       }
     }

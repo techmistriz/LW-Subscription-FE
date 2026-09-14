@@ -12,6 +12,7 @@ import { PaginationMeta } from "@/types/api";
 import PostList from "@/components/common/PostList";
 import { Search } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { logger } from "@/lib/logger";
 
 export default function ArchivePage() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function ArchivePage() {
       setAuthors(authorsRes || []);
       setCategories(categoriesRes || []);
     } catch (error) {
-      console.error("Failed to load filter data:", error);
+      logger.error("Failed to load filter data:", error);
     }
   }, []);
 

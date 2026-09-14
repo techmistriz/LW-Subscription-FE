@@ -1,5 +1,6 @@
 import api from "@/network/axios";
 import type { Editorial } from "@/types/editorial";
+import { logger } from "@/lib/logger";
 
 interface EditorialResponse {
   data: Editorial;
@@ -7,6 +8,6 @@ interface EditorialResponse {
 
 export async function getEditorial(): Promise<Editorial> {
   const response = await api.get<EditorialResponse>("/editorial-settings");
-  console.log(response.data.data);
+  logger.log(response.data.data);
   return response.data.data;
 }

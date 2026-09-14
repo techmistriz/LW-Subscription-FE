@@ -9,6 +9,7 @@ import Banner from "@/components/common/Banner";
 import RightSidebar from "@/components/common/RightSidebar";
 
 import { getAuthors } from "@/services/author.service";
+import { logger } from "@/lib/logger";
 
 interface ScreenLayoutProps {
   children: React.ReactNode;
@@ -55,7 +56,7 @@ export default function ScreenLayout({ children }: ScreenLayoutProps) {
           linkedin: matched.linkedin,
         });
       } catch (error) {
-        console.error("Failed to load author:", error);
+        logger.error("Failed to load author:", error);
         setAuthorData(undefined);
       }
     };

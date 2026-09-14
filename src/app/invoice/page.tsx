@@ -5,6 +5,7 @@ import InvoicePage from "@/features/invoice/components/Invoice";
 import { getUserInvoices } from "@/services/invoice.service";
 import type { Invoice } from "@/types/invoice";
 import { useCallback, useEffect, useState } from "react";
+import { logger } from "@/lib/logger";
 
 async function fetchInvoices() {
   const res = await getUserInvoices();
@@ -26,7 +27,7 @@ export default function Page() {
       .then((data) => {
         if (active) setInvoices(data);
       })
-      .catch(console.error)
+      .catch(logger.error)
       .finally(() => {
         if (active) setLoading(false);
       });

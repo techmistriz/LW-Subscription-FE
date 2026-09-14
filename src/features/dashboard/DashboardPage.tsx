@@ -75,13 +75,9 @@ export default function Dashboard() {
 
   const subscription = activeSubscription;
 
-  // console.log("Current Plan End:", subscription?.end_date);
-
   const pendingSubscriptions = pendingSubscription.filter(
     (sub) => sub.status?.toUpperCase() === "PENDING",
   );
-
-  // console.log("pendingSubscriptions",pendingSubscriptions)
 
   const hasPendingUpgrades = pendingSubscriptions.length > 0;
 
@@ -469,10 +465,6 @@ export default function Dashboard() {
                 const isExpanded = pendingPlan.id
                   ? expandedUpgrades[pendingPlan.id] || false
                   : false;
-
-                // console.log(pendingPlan);
-
-                // console.log("Pending Plan Start:", pendingPlan.start_date);
 
                 const activationDate = getPendingActivationDate(
                   pendingSubscriptions,

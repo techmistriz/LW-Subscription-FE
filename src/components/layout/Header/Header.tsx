@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
 import { getCategories } from "@/services/categories.service";
 import { images } from "@/config/images";
+import { logger } from "@/lib/logger";
 
 export default function Header() {
   const pathname = usePathname();
@@ -78,7 +79,7 @@ export default function Header() {
         const data = await getCategories();
         setCategories(data || []);
       } catch (error) {
-        console.error("Category fetch failed:", error);
+        logger.error("Category fetch failed:", error);
       } finally {
         setCategoriesLoading(false);
       }

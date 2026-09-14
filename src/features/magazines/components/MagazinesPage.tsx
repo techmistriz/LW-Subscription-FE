@@ -14,6 +14,7 @@ import PageLoader from "@/components/feedback/Loader/PageLoader";
 import SafeImage from "@/components/media/SafeImage";
 import { siteConfig } from "@/config/site";
 import { PAGINATION } from "@/config/constants";
+import { logger } from "@/lib/logger";
 
 const magazineBaseUrl = siteConfig.magazinesImageBaseUrl || "";
 
@@ -52,7 +53,7 @@ export default function MagazinesPage() {
         setLastPage(result.meta?.paging?.last_page ?? 1);
         setPage(result.meta?.paging?.current_page ?? 1);
       } catch (err: unknown) {
-        console.error("Failed to load magazines:", err);
+        logger.error("Failed to load magazines:", err);
 
         const message =
           err instanceof Error ? err.message : "Something went wrong";
@@ -82,7 +83,7 @@ export default function MagazinesPage() {
         const yearsData = await getYears();
         setYears(yearsData || []);
       } catch (error) {
-        console.error("Failed to load years:", error);
+        logger.error("Failed to load years:", error);
         setYears([]);
       }
     }

@@ -14,6 +14,7 @@ import Pagination from "@/components/common/Pagination";
 import { Post } from "@/types/models";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import { logger } from "@/lib/logger";
 
 const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
@@ -50,7 +51,7 @@ export default function AuthorPage() {
 
       setAuthorId(matched?.id ?? null);
     } catch (error) {
-      console.error("Failed to load author:", error);
+      logger.error("Failed to load author:", error);
 
       setAuthorId(null);
     }
@@ -70,7 +71,6 @@ export default function AuthorPage() {
           ...(year ? { year } : {}),
         });
 
-        // console.log("Author Id", response);
         /*----------------- Normalize posts so each author has a linkedin -----------------*/
         const normalizedPosts = (response.data ?? []).map((post: Post) => ({
           ...post,
@@ -84,7 +84,7 @@ export default function AuthorPage() {
         setLastPage(response.meta?.paging?.last_page ?? 1);
         setCurrentPage(page);
       } catch (error) {
-        console.error("Failed to fetch posts:", error);
+        logger.error("Failed to fetch posts:", error);
         setPosts([]);
         setLastPage(1);
       } finally {
@@ -94,15 +94,13 @@ export default function AuthorPage() {
     [authorId],
   );
 
-  // console.log("Author Page", posts);
-
   /*----------------- Load Years -----------------*/
   const loadYears = useCallback(async () => {
     try {
       const data = await getYears();
       setYears(data ?? []);
     } catch (error) {
-      console.error("Failed to load years:", error);
+      logger.error("Failed to load years:", error);
     }
   }, []);
 

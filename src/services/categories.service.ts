@@ -1,5 +1,6 @@
 import { request } from "@/network/request";
 import type { Category } from "@/types/models";
+import { logger } from "@/lib/logger";
 
 interface CategoriesData {
   data?: Category[];
@@ -12,9 +13,9 @@ export async function getCategories(): Promise<Category[]> {
   );
 
   if (!response.status) {
-    console.error("❌ Categories API Error");
-    console.error("Message:", response.message);
-    console.error("Full Response:", response);
+    logger.error("❌ Categories API Error");
+    logger.error("Message:", response.message);
+    logger.error("Full Response:", response);
 
     throw new Error(response.message || "Failed to fetch categories");
   }
