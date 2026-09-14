@@ -42,3 +42,4 @@ package-lock.json
 *.tsbuildinfo
 next-env.d.ts
 __dev__
+yarn.lock
