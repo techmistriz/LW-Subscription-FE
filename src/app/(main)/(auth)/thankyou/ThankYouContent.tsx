@@ -1,46 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import PageLoader from "@/components/feedback/Loader/PageLoader";
 import { routes } from "@/config/routes";
+import PageLoader from "@/components/feedback/Loader/PageLoader";
 
 interface RegistrationSuccess {
   email: string;
   first_name?: string;
   last_name?: string;
   planName?: string;
+  status?: string;
 }
+
+const subscribe = () => () => {};
+const serverSnapshot = () => undefined;
+const registrationSnapshot = () => {
+  try {
+    return sessionStorage.getItem("registration_success");
+  } catch {
+    return null;
+  }
+};
 
 export default function ThankYouContent() {
   const router = useRouter();
 
-  const [registration, setRegistration] = useState<RegistrationSuccess | null>(
-    null,
+  const savedRegistration = useSyncExternalStore(
+    subscribe,
+    registrationSnapshot,
+    serverSnapshot,
   );
-
-  const [isLoaded, setIsLoaded] = useState(false);
+  const registration = useMemo<RegistrationSuccess | null>(() => {
+    try {
+      return savedRegistration ? JSON.parse(savedRegistration) : null;
+    } catch {
+      return null;
+    }
+  }, [savedRegistration]);
+  const isLoaded = savedRegistration !== undefined;
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "instant",
-    });
-
-    try {
-      const storedData = sessionStorage.getItem("registration_success");
-
-      if (storedData) {
-        const parsedData = JSON.parse(storedData) as RegistrationSuccess;
-
-        setRegistration(parsedData);
-      }
-    } catch (error) {
-      console.error("[ThankYou] Failed to read registration data:", error);
-    } finally {
-      setIsLoaded(true);
-    }
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, []);
 
   if (!isLoaded) {
@@ -64,10 +65,10 @@ export default function ThankYouContent() {
           </p>
 
           <button
-            onClick={() => router.push(routes.home)}
+            onClick={() => router.push(routes.signIn)}
             className="cursor-pointer bg-[#c6090a] px-8 py-3 text-lg font-medium text-white transition hover:bg-[#333]"
           >
-            Back to Home
+            Sign In
           </button>
         </div>
       </div>
@@ -90,31 +91,32 @@ export default function ThankYouContent() {
 
         {/* Subscription Success */}
         <p className="mb-3 text-lg leading-relaxed text-gray-700">
-          Your <span className="font-semibold">{planName}</span> has been
-          activated successfully.
+          Your <span className="font-semibold">{planName}</span> is confirmed.
+          {registration.status === "PENDING"
+            ? " Your next term is scheduled."
+            : " Your subscription is active."}
         </p>
 
         {/* Email Verification Message */}
         <div className="mx-auto mb-8 mt-6 rounded-lg border border-red-100 bg-red-50 px-5 py-4">
           <p className="text-sm leading-6 text-gray-700">
-            Please check your email address{" "}
-            <span className="font-semibold text-[#c8050b]">{email}</span> and
-            click the verification link to verify your account.
+            Sign in with{" "}
+            <span className="font-semibold text-[#c8050b]">{email}</span> to
+            view your subscription and invoices.
           </p>
         </div>
 
         {/* Additional Information */}
         <p className="mb-8 text-sm leading-6 text-gray-500">
-          You will need to verify your email before you can log in and access
-          your subscription.
+          Your subscription details are available in your dashboard.
         </p>
 
         {/* Home Button */}
         <button
-          onClick={() => router.push(routes.home)}
+          onClick={() => router.push(routes.signIn)}
           className="cursor-pointer bg-[#c6090a] px-8 py-3 text-lg font-medium text-white transition hover:bg-[#333]"
         >
-          Back to Home
+          Sign In
         </button>
       </div>
     </div>

@@ -11,6 +11,7 @@ import { Magazine } from "@/types/models";
 import { getLatestSingleMagazines } from "@/services/magazine.service";
 import { siteConfig } from "@/config/site";
 import PopupSkeleton from "@/components/feedback/Skeletons/PopupSkeleton";
+import { logger } from "@/lib/logger";
 
 interface PopupProps {
   onClose: () => void;
@@ -35,7 +36,7 @@ const Popup = ({ onClose }: PopupProps) => {
           setSingleMagazine(res);
         }
       } catch (error) {
-        console.error("Error fetching magazines:", error);
+        logger.error("Error fetching magazines:", error);
       }
     };
 

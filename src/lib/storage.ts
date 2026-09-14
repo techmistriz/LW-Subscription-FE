@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from "@/config/constants";
+import { logger } from "@/lib/logger";
 
 const isBrowser = () => typeof window !== "undefined";
 
@@ -17,7 +18,7 @@ export const storage = {
     try {
       return JSON.parse(raw) as T;
     } catch {
-      console.error(`storage: failed to parse "${key}"`);
+      logger.error(`storage: failed to parse "${key}"`);
       return null;
     }
   },

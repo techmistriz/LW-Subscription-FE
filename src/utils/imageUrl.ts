@@ -1,4 +1,5 @@
 import { images } from "@/config/images";
+import { logger } from "@/lib/logger";
 
 export const getImageUrl = (
   image?: string | null,
@@ -12,7 +13,7 @@ export const getImageUrl = (
   }
 
   if (!baseUrl) {
-    console.warn("Base URL is missing for image:", image);
+    logger.warn("Base URL is missing for image:", image);
     return images.placeholder;
   }
 

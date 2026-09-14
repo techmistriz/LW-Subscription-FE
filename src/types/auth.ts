@@ -39,9 +39,12 @@ export interface RegisterPayload {
 export interface RegisterApiData {
   purchase_type?: string;
   membership_plan_id?: number;
-  payment?: PaymentDetails;
-  user?: User;
-  subscription?: Subscription;
+  payment: PaymentDetails | null;
+  user: User;
+  subscription: Subscription;
+  checkout_token: string;
+  checkout_error?: string;
+  payment_confirmed?: boolean;
 }
 
 export interface RegisterApiOriginal {
@@ -52,16 +55,7 @@ export interface RegisterApiOriginal {
   errors?: Record<string, string[]>;
 }
 
-export interface RegisterApiResponse {
-  headers: Record<string, unknown>;
-  original: RegisterApiOriginal;
-  exception?: unknown;
-}
-
-export interface RegisterResponse {
-  user: User;
-  response: RegisterApiResponse;
-}
+export type RegisterResponse = RegisterApiOriginal;
 
 /* ----------- RESET PASSWORD ----------- */
 

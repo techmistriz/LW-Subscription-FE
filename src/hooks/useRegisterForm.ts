@@ -1,19 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// import { setUser } from "@/store/slices/authSlice";
-// import { setSubscription } from "@/store/slices/subscriptionSlice";
 import { registerUser } from "@/services/auth.service";
 import { getMembershipPlans } from "../services/plan.service";
 import api from "@/network/axios";
-import { storage } from "@/lib/storage";
-import { usePayment } from "./usePayment";
+import { usePayment, REGISTRATION_CHECKOUT_KEY } from "./usePayment";
+import type { RegisterApiData } from "@/types/auth";
+import { extractErrorMessage } from "@/network/errorMessage";
 import { RegisterFormData } from "@/types/register.types";
 import type { SubscriptionPlan } from "@/types/models";
-import { useAppSelector } from "@/store/hooks";
 
 const initialForm: RegisterFormData = {
   first_name: "",
@@ -35,11 +32,19 @@ const initialForm: RegisterFormData = {
 };
 
 export function useRegisterForm() {
-  const router = useRouter();
-  // const dispatch = useAppDispatch();
-  const { handleRazorpayPayment } = usePayment();
-
-  const subscriptionData = useAppSelector((state) => state.subscription.active);
+  const { handleRegistrationPayment } = usePayment();
+  const [pendingCheckout, setPendingCheckout] = useState<{
+    subscription_id: number;
+    checkout_token: string;
+    email: string;
+  } | null>(() => {
+    try {
+      const saved = sessionStorage.getItem(REGISTRATION_CHECKOUT_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const [form, setForm] = useState<RegisterFormData>(initialForm);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
@@ -71,30 +76,6 @@ export function useRegisterForm() {
 
     fetchPlans();
   }, []);
-
-  /* ---------------- PRESELECT PLAN ---------------- */
-
-  useEffect(() => {
-    if (!plans.length) return;
-
-    if (subscriptionData?.plan_id) {
-      setForm((prev) => ({
-        ...prev,
-        plan: String(subscriptionData.plan_id),
-      }));
-
-      return;
-    }
-
-    const stored = storage.get<{ plan_id?: number }>("subscription", true);
-
-    if (stored?.plan_id) {
-      setForm((prev) => ({
-        ...prev,
-        plan: String(stored.plan_id),
-      }));
-    }
-  }, [subscriptionData, plans]);
 
   /* ---------------- HANDLE CHANGE ---------------- */
 
@@ -128,178 +109,63 @@ export function useRegisterForm() {
     }
   };
 
-  /* ---------------- CANCEL PENDING PAYMENT ---------------- */
-
-  const cancelPendingPayment = async () => {
+  const resumePayment = async () => {
+    if (!pendingCheckout || loading) return;
+    setLoading(true);
     try {
-      const response = await api.post("/payment/cancel-pending", {
-        email: form.email,
-        contact: form.contact,
-      });
-
-      return response.data;
-    } catch {
-      return null;
+      const res = await api.post<{
+        status: boolean;
+        data: RegisterApiData;
+        message: string;
+      }>("/auth/retry-payment", pendingCheckout);
+      if (!res.data.status) throw new Error(res.data.message);
+      await handleRegistrationPayment(
+        { ...res.data.data, checkout_token: pendingCheckout.checkout_token },
+        setProcessingPayment,
+      );
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    } finally {
+      setLoading(false);
     }
   };
 
-  /* ---------------- FORMAT DOB ---------------- */
-
-  const formatDateForAPI = (date: string): string => {
-    if (!date) return "";
-
-    const [year, month, day] = date.split("-");
-
-    return `${day}-${month}-${year}`;
-  };
-
-  /* ---------------- SUBMIT ---------------- */
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (loading) return;
+    if (pendingCheckout?.email === form.email) {
+      await resumePayment();
+      return;
+    }
     setLoading(true);
     setFieldErrors({});
-
     try {
       const selectedPlan = plans.find((p) => String(p.id) === form.plan);
-
-      if (!selectedPlan) {
-        throw new Error("Please select a plan");
-      }
-
-      const formattedDob = formatDateForAPI(form.dob);
-
-      const payload = {
+      if (!selectedPlan) throw new Error("Please select a plan");
+      const res = await registerUser({
         ...form,
-        dob: formattedDob,
         membership_plan_id: selectedPlan.id,
-      };
-
-      /* ---------------- REGISTER USER ---------------- */
-
-      let res;
-
-      try {
-        res = await registerUser(payload);
-      } catch (error: unknown) {
-        const isPendingPaymentError =
-          error instanceof Error &&
-          error.message === "Pending payment already exists";
-
-        if (!isPendingPaymentError) {
-          throw error;
-        }
-
-        toast.info("Cleaning up previous payment session...");
-
-        await cancelPendingPayment();
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        res = await registerUser(payload);
+      });
+      if (!res.status) {
+        setFieldErrors(res.errors ?? {});
+        throw new Error(res.message);
       }
-
-      console.log("[Register] API response:", res);
-
-      /* ---------------- API ERROR ---------------- */
-
-      const apiResponse = res?.response?.original;
-
-      console.log("[Register] API status:", apiResponse?.status);
-      console.log("[Register] API message:", apiResponse?.message);
-
-      if (apiResponse?.status === false) {
-        if (apiResponse?.errors) {
-          setFieldErrors(apiResponse.errors);
-        }
-
-        throw new Error(apiResponse?.message || "Registration failed");
-      }
-
-      /* ---------------- PAYMENT DATA ---------------- */
-
-      const responseData = apiResponse?.data;
-
-      console.log("[Register] responseData:", responseData);
-
-      const paymentData = responseData;
-
-      console.log("[Register] paymentData:", paymentData);
-
-      /* ---------------- PAID PLAN ---------------- */
-
-      if (paymentData?.payment) {
-        const payment = paymentData.payment;
-
-        const membershipPlanId =
-          paymentData.membership_plan_id ?? selectedPlan.id;
-
-        console.log("[Register] Payment flow triggered:", {
-          payment,
-          membershipPlanId,
-        });
-
-        if (!payment.razorpay_key) {
-          throw new Error("Razorpay key missing");
-        }
-
-        if (!payment.order_id) {
-          throw new Error("Razorpay order ID missing");
-        }
-
-        if (!payment.amount) {
-          throw new Error("Razorpay amount missing");
-        }
-
-        console.log("[Register] Opening Razorpay with:", {
-          key: payment.razorpay_key,
-          amount: payment.amount,
-          currency: payment.currency,
-          order_id: payment.order_id,
-        });
-
-        await handleRazorpayPayment(
-          payment,
-          selectedPlan,
-          null,
-          form,
-          setProcessingPayment,
-          membershipPlanId,
-        );
-
-        return;
-      }
-
-      /* ---------------- FREE PLAN ---------------- */
-      const userData = responseData?.user;
-      const newSubscription = responseData?.subscription;
-
-      if (userData && newSubscription) {
+      const data = res.data;
+      if (Number(data.subscription.total_amount) > 0) {
+        const saved = {
+          subscription_id: data.subscription.id,
+          checkout_token: data.checkout_token,
+          email: data.user.email ?? form.email,
+        };
         sessionStorage.setItem(
-          "registration_success",
-          JSON.stringify({
-            email: userData.email,
-            first_name: userData.first_name,
-            last_name: userData.last_name,
-            planName: newSubscription.plan?.name || selectedPlan.name,
-          }),
+          REGISTRATION_CHECKOUT_KEY,
+          JSON.stringify(saved),
         );
-
-        toast.success(
-          "Registration successful. Please check your email to verify your account.",
-        );
-
-        router.replace("/thankyou");
-        return;
+        setPendingCheckout(saved);
       }
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Registration failed";
-
-      console.error("[Register] Error:", err);
-
-      toast.error(message);
+      await handleRegistrationPayment(data, setProcessingPayment);
+    } catch (error) {
+      toast.error(extractErrorMessage(error, "Registration failed."));
     } finally {
       setLoading(false);
     }
@@ -313,6 +179,8 @@ export function useRegisterForm() {
     fieldErrors,
     processingPayment,
     registrationSuccess,
+    pendingCheckout,
+    resumePayment,
 
     selectedPlan: plans.find((p) => String(p.id) === form.plan),
 

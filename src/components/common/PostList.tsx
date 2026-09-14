@@ -40,8 +40,6 @@ export default function PostList({
       </div>
     );
   }
-  // console.log("Author Name", posts?.authors?.name);
-  //   console.log("Author Name", posts);
 
   return (
     <div className="space-y-6">

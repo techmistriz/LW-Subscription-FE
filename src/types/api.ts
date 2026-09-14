@@ -1,4 +1,4 @@
-import { PaymentDetails } from "./models";
+import { PaymentDetails, Subscription } from "./models";
 
 export type ApiResponse<T = unknown> =
   | {
@@ -32,13 +32,23 @@ export interface PaginatedResponse<T> {
 }
 
 export interface PaymentResponse {
-  status?: boolean;
-  message?: string;
-  data?: {
-    payment?: PaymentDetails;
-    razorpay_key?: string;
-    amount?: number;
-    currency?: string;
-    order_id?: string;
+  status: boolean;
+  message: string;
+  data: CheckoutData;
+}
+
+export interface CheckoutData {
+  subscription: Subscription;
+  payment: PaymentDetails | null;
+  payment_confirmed?: boolean;
+}
+
+export interface PaymentVerificationResponse {
+  status: boolean;
+  message: string;
+  data: {
+    subscription: Subscription;
+    payment_confirmed: boolean;
+    payment_status?: string;
   };
 }

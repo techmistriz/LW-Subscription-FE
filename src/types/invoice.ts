@@ -21,8 +21,8 @@ export interface Invoice {
   id: number;
   user_id: number;
   membership_plan_id: number;
-  start_date: string;
-  end_date: string;
+  start_date: string | null;
+  end_date: string | null;
   total_amount: string;
   subtotal_amount: string;
   tax_amount: string;
@@ -33,6 +33,8 @@ export interface Invoice {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  plan: InvoicePlan;
+  plan: InvoicePlan | null;
+  duration_value?: number;
+  duration_unit?: string;
   transaction: InvoiceTransaction | null;
 }

@@ -210,6 +210,7 @@ export interface User {
 /* ==================== PAYMENT ==================== */
 
 export interface PaymentDetails {
+  gateway?: string;
   amount: number;
   currency: string;
   order_id: string;

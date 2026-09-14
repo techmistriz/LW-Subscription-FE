@@ -4,30 +4,36 @@ import PageLoader from "@/components/feedback/Loader/PageLoader";
 import InvoicePage from "@/features/invoice/components/Invoice";
 import { getUserInvoices } from "@/services/invoice.service";
 import type { Invoice } from "@/types/invoice";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { logger } from "@/lib/logger";
+
+async function fetchInvoices() {
+  const res = await getUserInvoices();
+  if (!res.status || !res.data?.status) throw new Error(res.message);
+  return res.data.data;
+}
 
 export default function Page() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const refresh = useCallback(async () => {
+    setInvoices(await fetchInvoices());
+  }, []);
+
   useEffect(() => {
-    const fetchInvoices = async () => {
-      try {
-        const res = await getUserInvoices();
-
-        // console.log("Invoice", res);
-
-        if (res.data?.status) {
-          setInvoices(res.data.data);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+    let active = true;
+    fetchInvoices()
+      .then((data) => {
+        if (active) setInvoices(data);
+      })
+      .catch(logger.error)
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
     };
-
-    fetchInvoices();
   }, []);
 
   if (loading) {
@@ -38,5 +44,5 @@ export default function Page() {
     );
   }
 
-  return <InvoicePage invoices={invoices} />;
+  return <InvoicePage invoices={invoices} onRefresh={refresh} />;
 }

@@ -19,6 +19,8 @@ export default function RegisterForm() {
     handleSubmit,
     getError,
     setForm,
+    pendingCheckout,
+    resumePayment,
   } = useRegisterForm();
 
   if (processingPayment) {
@@ -97,6 +99,25 @@ export default function RegisterForm() {
       <Banner title="Subscribe" />
 
       <section className="m-auto max-w-6xl px-4 py-16">
+        {pendingCheckout && (
+          <div
+            className="mb-6 border border-amber-200 bg-amber-50 p-4 text-sm"
+            role="status"
+          >
+            <p>
+              Your account is saved. Complete the pending payment for{" "}
+              {pendingCheckout.email}, or sign in to view subscription history.
+            </p>
+            <button
+              type="button"
+              onClick={resumePayment}
+              disabled={loading}
+              className="mt-3 bg-[#c8050b] px-4 py-2 text-white disabled:opacity-50"
+            >
+              {loading ? "Please wait..." : "Resume payment"}
+            </button>
+          </div>
+        )}
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <PersonalDetailsForm

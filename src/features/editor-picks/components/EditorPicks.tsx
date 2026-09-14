@@ -8,6 +8,7 @@ import PageLoader from "@/components/feedback/Loader/PageLoader";
 import type { Post } from "@/types/models";
 import { siteConfig } from "@/config/site";
 import { PAGINATION } from "@/config/constants";
+import { logger } from "@/lib/logger";
 
 const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
@@ -24,7 +25,7 @@ export default function EditorPicks() {
         });
         setPosts(data || []);
       } catch (error) {
-        console.error("Editor Picks Error:", error);
+        logger.error("Editor Picks Error:", error);
         setPosts([]);
       } finally {
         setLoading(false); // Always set loading to false

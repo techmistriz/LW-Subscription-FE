@@ -19,6 +19,7 @@ import Pagination from "@/components/common/Pagination";
 
 import { Post } from "@/types/models";
 import { siteConfig } from "@/config/site";
+import { logger } from "@/lib/logger";
 
 const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 
@@ -63,7 +64,7 @@ export default function TagPage() {
         setLastPage(response.meta?.paging?.last_page ?? 1);
         setCurrentPage(page);
       } catch (error) {
-        console.error("Failed to fetch tag posts:", error);
+        logger.error("Failed to fetch tag posts:", error);
         setPosts([]);
         setLastPage(1);
       } finally {
@@ -79,7 +80,7 @@ export default function TagPage() {
       const data = await getYears();
       setYears(data ?? []);
     } catch (error) {
-      console.error("Failed to load years:", error);
+      logger.error("Failed to load years:", error);
     }
   }, []);
 

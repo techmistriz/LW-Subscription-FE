@@ -3,6 +3,7 @@ import { Magazine, Post } from "@/types/models";
 import axios from "axios";
 import api from "@/network/axios";
 import { PAGINATION } from "@/config/constants";
+import { logger } from "@/lib/logger";
 
 /*-----------------for magazine grid -----------------*/
 export async function getMagazines(
@@ -21,7 +22,7 @@ export async function getMagazines(
     const response = await api.get("/magazines", { params });
     return response.data;
   } catch (error) {
-    console.error("Error fetching magazines:", error);
+    logger.error("Error fetching magazines:", error);
 
     return {
       message: "Failed to fetch magazines",
@@ -83,7 +84,7 @@ export async function getLatestMagazines(options?: {
 
     return magazines;
   } catch (error) {
-    console.error("Error fetching latest magazines:", error);
+    logger.error("Error fetching latest magazines:", error);
     return [];
   }
 }
@@ -99,13 +100,11 @@ export async function getLatestSingleMagazines(): Promise<Magazine | null> {
       },
     });
 
-    // console.log("RAW API RESPONSE:", response.data);
-
     const magazines = response.data?.data ?? [];
 
     return magazines.length > 0 ? magazines[0] : null;
   } catch (error) {
-    console.error("Error fetching latest magazine:", error);
+    logger.error("Error fetching latest magazine:", error);
     return null;
   }
 }
@@ -122,7 +121,7 @@ export async function latestEdition(): Promise<LatestEditionResponse | null> {
 
     return result.data; // now matches { magazine, posts }
   } catch (error) {
-    console.error("Error fetching latest magazine:", error);
+    logger.error("Error fetching latest magazine:", error);
     return null;
   }
 }

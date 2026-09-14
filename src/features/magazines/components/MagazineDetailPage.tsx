@@ -9,6 +9,7 @@ import { stripInlineStyles } from "@/utils/toTitleCase";
 import LatestEdition from "@/features/home/components/LatestEdition";
 import SafeImage from "@/components/media/SafeImage";
 import { siteConfig } from "@/config/site";
+import { logger } from "@/lib/logger";
 
 const magazineBaseUrl = siteConfig.magazinesImageBaseUrl || "";
 
@@ -29,7 +30,7 @@ export default async function MagazineDetailPage({ params }: Props) {
       limit: 5,
     });
   } catch (error) {
-    console.error("Failed to fetch magazine:", error);
+    logger.error("Failed to fetch magazine:", error);
     notFound();
   }
 
@@ -42,7 +43,6 @@ export default async function MagazineDetailPage({ params }: Props) {
       ? stripInlineStyles(magazine.description)
       : "<p>Description not available.</p>";
 
-  // console.log("magazinee", magazine)
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
       {/*----------------- Main magazine content -----------------*/}

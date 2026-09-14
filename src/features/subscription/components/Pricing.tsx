@@ -11,15 +11,13 @@ import type { SubscriptionPlan } from "@/types/models";
 import {
   upgradePlan,
   verifySubscriptionPayment,
-  renewPlan,
+  buyNewPlan,
 } from "@/services/subscription.service";
 import { fetchProfile } from "@/store/slices/authSlice";
 import { storage } from "@/lib/storage";
 import PricingSkeleton from "@/components/feedback/Skeletons/PricingSkeleton";
-import {
-  RazorpayPaymentFailedResponse,
-  RazorpayPaymentResponse,
-} from "@/types/razorpay";
+import { completeCheckout } from "@/lib/paymentCheckout";
+import { extractErrorMessage } from "@/network/errorMessage";
 import { routes } from "@/config/routes";
 import { images } from "@/config/images";
 
@@ -117,93 +115,34 @@ export default function PricingCard() {
         return;
       }
 
-      const subscriptionId = activeSubscription?.id;
-      const subscriptionAmount = Number(activeSubscription?.amount || 0);
-      const subscriptionStatus = activeSubscription?.status?.toUpperCase();
-      const endDate = activeSubscription?.end_date;
-      const isExpiredByDate = endDate ? new Date(endDate) < new Date() : false;
-      const isExpired = subscriptionStatus === "EXPIRED" || isExpiredByDate;
-      const isFreePlan = subscriptionAmount === 0;
-      const hasSubscription = !!subscriptionId;
+      const hasPaidSubscription = Number(activeSubscription?.amount || 0) > 0;
+      const apiResponse = hasPaidSubscription
+        ? await upgradePlan(selectedPlan.id)
+        : await buyNewPlan(selectedPlan.id);
+      if (!apiResponse.status) throw new Error(apiResponse.message);
 
-      let purchaseType: "NEW" | "RENEW" | "UPGRADE";
-      let apiResponse;
-
-      if (!hasSubscription || (isFreePlan && isExpired)) {
-        purchaseType = "NEW";
-        apiResponse = await upgradePlan(selectedPlan.id);
-      } else if (!isFreePlan && isExpired) {
-        purchaseType = "RENEW";
-        apiResponse = await renewPlan(subscriptionId!);
-      } else {
-        purchaseType = "UPGRADE";
-        apiResponse = await upgradePlan(selectedPlan.id);
-      }
-
-      const paymentData = apiResponse?.data?.payment || apiResponse?.data;
-
-      if (!paymentData) {
-        toast.error("Payment initiation failed");
-        return;
-      }
-
-      const options = {
-        key: paymentData?.razorpay_key || process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-        amount: paymentData?.amount ?? 0,
-        currency: paymentData?.currency || "INR",
-        order_id: paymentData?.order_id ?? "",
-        name: "Lex Witness",
-        prefill: {
-          name: `${user?.first_name || ""} ${user?.last_name || ""}`,
-          email: user?.email,
-          contact: user?.contact,
-        },
-        theme: { color: "#c8050b" },
-        handler: async function (response: RazorpayPaymentResponse) {
-          setRedirectLoading(true);
-          try {
-            const verifyRes = await verifySubscriptionPayment({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              membership_plan_id: selectedPlan.id,
-              purchase_type: purchaseType,
-            });
-
-            if (verifyRes?.status) {
-              storage.set("just_paid", "true");
-              await dispatch(fetchProfile()).unwrap();
-              toast.success("Payment successful! 🎉");
-              router.push(routes.dashboard);
-            } else {
-              toast.error(verifyRes?.message || "Payment verification failed");
-            }
-          } catch (err: unknown) {
-            const message =
-              err instanceof Error
-                ? err.message
-                : "Payment verification failed";
-
-            toast.error(message);
-          } finally {
-            setRedirectLoading(false);
-          }
-        },
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.on(
-        "payment.failed",
-        (response: RazorpayPaymentFailedResponse) => {
-          toast.error(response.error?.description || "Payment failed");
-        },
+      const subscription = await completeCheckout(
+        apiResponse.data,
+        user ?? {},
+        (response) =>
+          verifySubscriptionPayment({
+            ...response,
+            subscription_id: apiResponse.data.subscription.id,
+          }),
+        setRedirectLoading,
       );
-      razorpay.open();
+      if (subscription) {
+        storage.set("just_paid", "true");
+        await dispatch(fetchProfile()).unwrap();
+        toast.success(
+          subscription.status === "ACTIVE"
+            ? "Subscription activated."
+            : "Payment confirmed. Your next term is scheduled.",
+        );
+        router.push(routes.dashboard);
+      }
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
-
-      toast.error(message);
+      toast.error(extractErrorMessage(error));
     } finally {
       setLoading(false);
     }

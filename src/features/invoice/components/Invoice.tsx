@@ -4,12 +4,54 @@ import React, { useState } from "react";
 import { CalendarDays, Download, Receipt } from "lucide-react";
 import { downloadInvoicePdf } from "@/services/invoice.service";
 import type { Invoice } from "@/types/invoice";
+import {
+  retrySubscriptionPayment,
+  verifySubscriptionPayment,
+} from "@/services/subscription.service";
+import { completeCheckout } from "@/lib/paymentCheckout";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchProfile } from "@/store/slices/authSlice";
+import { extractErrorMessage } from "@/network/errorMessage";
+import { toast } from "sonner";
 
 interface Props {
   invoices: Invoice[];
+  onRefresh: () => Promise<void>;
 }
 
-export default function InvoicePage({ invoices }: Props) {
+const isPaid = (invoice: Invoice) =>
+  Number(invoice.total_amount) === 0 ||
+  invoice.transaction?.payment_status === "SUCCESS";
+
+export default function InvoicePage({ invoices, onRefresh }: Props) {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const [payingId, setPayingId] = useState<number | null>(null);
+  const resumePayment = async (invoice: Invoice) => {
+    if (payingId) return;
+    setPayingId(invoice.id);
+    try {
+      const res = await retrySubscriptionPayment(invoice.id);
+      if (!res.status) throw new Error(res.message);
+      const subscription = await completeCheckout(
+        res.data,
+        user ?? {},
+        (response) =>
+          verifySubscriptionPayment({
+            ...response,
+            subscription_id: invoice.id,
+          }),
+      );
+      if (subscription) {
+        await Promise.all([onRefresh(), dispatch(fetchProfile()).unwrap()]);
+        toast.success("Payment confirmed.");
+      }
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    } finally {
+      setPayingId(null);
+    }
+  };
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
   const downloadInvoice = async (invoice: Invoice) => {
@@ -18,7 +60,7 @@ export default function InvoicePage({ invoices }: Props) {
 
       await downloadInvoicePdf(invoice.id);
     } catch (error) {
-      console.error(error);
+      toast.error(extractErrorMessage(error, "Could not download invoice."));
     } finally {
       setDownloadingId(null);
     }
@@ -31,7 +73,7 @@ export default function InvoicePage({ invoices }: Props) {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-10 ">
           <div>
             <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
-              Invoice History
+              Subscription History
             </h1>
 
             <p className="text-gray-500 mt-2 text-sm lg:text-base">
@@ -41,7 +83,7 @@ export default function InvoicePage({ invoices }: Props) {
 
           <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-6 min-w-[180px]">
             <div>
-              <p className="text-sm text-gray-500">Total Invoices</p>
+              <p className="text-sm text-gray-500">Subscriptions</p>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 ">
               {invoices.length}
@@ -68,7 +110,7 @@ export default function InvoicePage({ invoices }: Props) {
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <h2 className="text-lg font-semibold text-gray-900">
-                          {invoice.plan.name}
+                          {invoice.plan?.name ?? "Subscription"}
                         </h2>
 
                         <span
@@ -83,19 +125,21 @@ export default function InvoicePage({ invoices }: Props) {
                       </div>
 
                       <p className="text-sm text-gray-500 mt-1">
-                        Invoice #{invoice.id}
+                        Subscription #{invoice.id}
                       </p>
 
                       <div className="flex flex-wrap items-center gap-4 mt-3 text-sm">
                         <div className="flex items-center gap-1 text-gray-600">
                           <CalendarDays className="w-4 h-4" />
 
-                          {invoice.start_date}
+                          {invoice.start_date ?? "Starts after payment"}
                         </div>
 
                         <div className="text-gray-400">—</div>
 
-                        <div className="text-gray-600">{invoice.end_date}</div>
+                        <div className="text-gray-600">
+                          {invoice.end_date ?? "—"}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -104,7 +148,7 @@ export default function InvoicePage({ invoices }: Props) {
                   <div className="flex flex-col lg:items-end gap-3">
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wide">
-                        Total Paid
+                        {isPaid(invoice) ? "Total paid" : "Amount due"}
                       </p>
 
                       <h3 className="text-2xl font-bold text-[#c8050b]">
@@ -112,17 +156,28 @@ export default function InvoicePage({ invoices }: Props) {
                       </h3>
                     </div>
 
-                    <button
-                      onClick={() => downloadInvoice(invoice)}
-                      disabled={downloadingId === invoice.id}
-                      className="inline-flex items-center justify-center gap-2 bg-[#c8050b] hover:bg-[#ab0509] disabled:opacity-60 disabled:cursor-not-allowed text-white px-4 py-2.5  text-sm font-medium transition-all duration-200 cursor-pointer"
-                    >
-                      <Download className="w-4 h-4" />
-
-                      {downloadingId === invoice.id
-                        ? "Downloading..."
-                        : "Download"}
-                    </button>
+                    {isPaid(invoice) ? (
+                      <button
+                        onClick={() => downloadInvoice(invoice)}
+                        disabled={downloadingId === invoice.id}
+                        className="inline-flex items-center justify-center gap-2 bg-[#c8050b] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+                      >
+                        <Download className="w-4 h-4" />
+                        {downloadingId === invoice.id
+                          ? "Downloading..."
+                          : "Download invoice"}
+                      </button>
+                    ) : invoice.status === "PENDING" && invoice.transaction ? (
+                      <button
+                        onClick={() => resumePayment(invoice)}
+                        disabled={payingId !== null}
+                        className="bg-[#c8050b] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+                      >
+                        {payingId === invoice.id
+                          ? "Please wait..."
+                          : "Resume payment"}
+                      </button>
+                    ) : null}
                   </div>
                 </div>
 
@@ -140,7 +195,8 @@ export default function InvoicePage({ invoices }: Props) {
                     <p className="text-gray-500 text-xs mb-1">Duration</p>
 
                     <p className="font-medium text-gray-900">
-                      {invoice.plan.duration_value} {invoice.plan.duration_unit}
+                      {invoice.duration_value ?? invoice.plan?.duration_value}{" "}
+                      {invoice.duration_unit ?? invoice.plan?.duration_unit}
                     </p>
                   </div>
 
@@ -164,7 +220,9 @@ export default function InvoicePage({ invoices }: Props) {
                     <p className="text-gray-500 text-xs mb-1">Payment</p>
 
                     <p className="font-medium text-green-600">
-                      {invoice.transaction?.payment_status || "N/A"}
+                      {Number(invoice.total_amount) === 0
+                        ? "FREE"
+                        : invoice.transaction?.payment_status || "PENDING"}
                     </p>
                   </div>
                 </div>
@@ -204,11 +262,11 @@ export default function InvoicePage({ invoices }: Props) {
             </div>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-6">
-              No invoices found
+              No subscriptions found
             </h2>
 
             <p className="text-gray-500 mt-2">
-              Your billing invoices will appear here once payments are made.
+              Your subscriptions and payments will appear here.
             </p>
           </div>
         )}
