@@ -201,12 +201,9 @@ export default function ArticleDetailPage() {
       : (article.category?.slug ?? "");
 
   const categoryTitle = toTitleCase(rawCategory);
-  const fullHTML = formatArticleHTML(article.description || "");
-  const previewHTML = fullHTML
-    ?.replace(/<[^>]+>/g, "")
-    .split(" ")
-    .slice(0, 60)
-    .join(" ");
+  const fullHTML = formatArticleHTML(article.short_description || "");
+
+  const previewHTML = fullHTML?.replace(/<[^>]+>/g, "").trim();
 
   return (
     <section className="bg-white">
@@ -268,25 +265,57 @@ export default function ArticleDetailPage() {
             />
           </div>
         )}
-
         <div className="my-6">
           {isSubscribed ? (
-            <div
-              className="article-content text-[15px] leading-7.25 font-normal text-gray-800 text-justify"
-              dangerouslySetInnerHTML={{ __html: fullHTML }}
-            />
+            <>
+              {/* Full Description - Subscribers Only */}
+              <div
+                className="article-content text-[15px] leading-7.25 font-normal text-gray-800 text-justify"
+                dangerouslySetInnerHTML={{
+                  __html: formatArticleHTML(article.description || ""),
+                }}
+              />
+
+              {/* Reader Feedbacks - Subscribers Only */}
+              {Array.isArray(article.reader_feedbacks) &&
+                article.reader_feedbacks.some(
+                  (item) => item.reader_feedback,
+                ) && (
+                  <div className="my-12 space-y-8">
+                    {article.reader_feedbacks
+                      .filter((item) => item.reader_feedback)
+                      .map((item) => (
+                        <TestimonialCard
+                          key={item.id}
+                          data={{
+                            reader_feedback: item.reader_feedback,
+                            reader_name: item.reader_name,
+                            reader_designation: item.reader_designation,
+                            text_alignment:
+                              (item.text_aligment?.replace("text-", "") as
+                                "left" | "right" | "center") || "left",
+                          }}
+                        />
+                      ))}
+                  </div>
+                )}
+            </>
           ) : (
+            /* Short Description - Non Subscribers */
             <div className="text-center">
-              <p className="text-[17px] leading-7 text-gray-800 text-justify">
-                {previewHTML}...
+              <p className="text-[17px] leading-7 text-gray-800 text-justify line-clamp-4">
+                {previewHTML}
               </p>
+
               <div className="mt-6 p-6 border-2 border-gray-100">
                 <h2 className="text-xl font-semibold text-gray-800 mb-3">
                   Continue Reading
                 </h2>
+
                 <p className="text-gray-600 mb-4 text-sm">
                   Subscribe to unlock full access to this article.
                 </p>
+
                 <button
                   onClick={handleSubscribe}
                   className="bg-[#c8050b] text-white px-6 py-3 hover:bg-[#333] transition cursor-pointer"
@@ -297,27 +326,6 @@ export default function ArticleDetailPage() {
             </div>
           )}
         </div>
-
-        {Array.isArray(article.reader_feedbacks) &&
-          article.reader_feedbacks.some((item) => item.reader_feedback) && (
-            <div className="my-12 space-y-8">
-              {article.reader_feedbacks
-                .filter((item) => item.reader_feedback)
-                .map((item) => (
-                  <TestimonialCard
-                    key={item.id}
-                    data={{
-                      reader_feedback: item.reader_feedback,
-                      reader_name: item.reader_name,
-                      reader_designation: item.reader_designation,
-                      text_alignment:
-                        (item.text_aligment?.replace("text-", "") as
-                          "left" | "right" | "center") || "left",
-                    }}
-                  />
-                ))}
-            </div>
-          )}
 
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           {(article.tags?.length ?? 0) > 0 && (

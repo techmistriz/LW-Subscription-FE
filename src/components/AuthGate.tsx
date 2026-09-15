@@ -1,43 +1,48 @@
 "use client";
 
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import RegisterModal from "./overlay/PopupModal/Popup";
 
-import { useAppSelector } from "@/store/hooks";
+const POPUP_COOKIE = "register_seen";
 
 const AuthGate = () => {
   const pathname = usePathname();
+  const [showModal, setShowModal] = useState(false);
 
-  /* ---------------- AUTH ---------------- */
-  const { user, isInitialized } = useAppSelector((state) => state.auth);
+  useEffect(() => {
+    if (pathname !== "/") {
+      return;
+    }
 
-  const [showModal, setShowModal] = useState(true);
+    const hasSeen = document.cookie
+      .split("; ")
+      .some((cookie) => cookie.startsWith(`${POPUP_COOKIE}=`));
 
-  /* ---------------- WAIT FOR REDUX RESTORE ---------------- */
-  if (!isInitialized) return null;
+    if (!hasSeen) {
+      const timer = window.setTimeout(() => {
+        setShowModal(true);
+      }, 0);
 
-  /* ---------------- SHOW ONLY ON HOME PAGE ---------------- */
-  if (pathname !== "/") return null;
+      return () => window.clearTimeout(timer);
+    }
+  }, [pathname]);
 
-  /* ---------------- EXCLUDED ROUTES ---------------- */
-  const excludedRoutes = ["/sign-in", "/register", "/password-reset"];
+  const handleClose = () => {
+    document.cookie = `${POPUP_COOKIE}=true; path=/; SameSite=Lax`;
+    setShowModal(false);
+  };
 
-  if (excludedRoutes.includes(pathname)) return null;
-
-  /* ---------------- LOGGED IN ---------------- */
-  if (user) return null;
-
-  /* ---------------- MANUALLY CLOSED ---------------- */
-  if (!showModal) return null;
+  if (pathname !== "/" || !showModal) {
+    return null;
+  }
 
   return (
     <>
       <div className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-sm" />
 
-      <RegisterModal onClose={() => setShowModal(false)} />
+      <RegisterModal onClose={handleClose} />
     </>
   );
 };
