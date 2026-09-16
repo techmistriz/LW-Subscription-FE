@@ -17,5 +17,5 @@ export const siteConfig = {
 
   bannerBaseUrl: process.env.NEXT_PUBLIC_BANNER_BASE_URL || "",
 
-  defaultOgImage: "/og-image.png",
+  defaultOgImage: "/images/common/og-image.png",
 } as const;
