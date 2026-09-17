@@ -84,7 +84,7 @@ const Popup = ({ onClose }: PopupProps) => {
       }}
     >
       <motion.div
-        className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-white border border-gray-100 shadow-2xl rounded-lg md:rounded-none"
+        className="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-white border border-gray-100 shadow-2xl  md:rounded-none"
         initial={{
           opacity: 0,
           y: -100,
@@ -152,13 +152,13 @@ const Popup = ({ onClose }: PopupProps) => {
                   {magazineName}
                 </Link>
 
-                <div className="mt-6">
+                <div className="md:mt-6 mt-4">
                   <h2 className="text-xl md:text-2xl font-bold text-[#333]">
                     Your <span className="text-[#c8050b]">1st Month</span> is on
                     Us.
                   </h2>
 
-                  <div className="mt-4 space-y-3">
+                  <div className="md:mt-4 mt-2 md:space-y-3 space-y-2">
                     <p className="flex items-center gap-2 text-sm text-[#333]/70">
                       <span className="w-4 h-4 bg-[#c8050b]/10 text-[#c8050b] rounded-full flex items-center justify-center text-xs">
                         ✓
@@ -195,32 +195,43 @@ const Popup = ({ onClose }: PopupProps) => {
             </div>
 
             {/* BOTTOM CONTACT BAR */}
+            {/* BOTTOM CONTACT BAR */}
             <div className="border-t border-gray-200 mx-4 md:mx-10 px-4 md:px-6 py-5">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-10">
+              <div className="flex items-center justify-center gap-5 md:gap-10">
+                {/* Phone */}
                 <a
                   href="tel:7982771770"
-                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c8050b] transition"
+                  className="flex items-center gap-2 text-[#333] hover:text-[#c8050b] transition"
+                  aria-label="Call us"
                 >
-                  <FaPhoneAlt className="text-[#c8050b]" />
-                  <span>+91 7982771770</span>
+                  <FaPhoneAlt className="text-[#c8050b] text-[18px]" />
+                  <span className="hidden md:inline text-sm">
+                    +91 7982771770
+                  </span>
                 </a>
 
+                {/* Email */}
                 <a
                   href="mailto:info@witnesslive.in"
-                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#c8050b] transition"
+                  className="flex items-center gap-2 text-[#333] hover:text-[#c8050b] transition"
+                  aria-label="Email us"
                 >
-                  <FaEnvelope className="text-[#c8050b]" />
-                  <span>info@witnesslive.in</span>
+                  <FaEnvelope className="text-[#c8050b] text-[18px]" />
+                  <span className="hidden md:inline text-sm">
+                    info@witnesslive.in
+                  </span>
                 </a>
 
+                {/* WhatsApp */}
                 <a
                   href="https://wa.me/917982771770?text=Hi%2C%20I%20have%20a%20few%20questions%20about%20Lex%20Witness"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-[#333] hover:text-[#25D366] transition"
+                  className="flex items-center gap-2 text-[#333] hover:text-[#25D366] transition"
+                  aria-label="WhatsApp"
                 >
-                  <FaWhatsapp className="text-[#25D366] text-[16px]" />
-                  <span>WhatsApp</span>
+                  <FaWhatsapp className="text-[#25D366] text-[20px]" />
+                  <span className="hidden md:inline text-sm">WhatsApp</span>
                 </a>
               </div>
             </div>
