@@ -5,7 +5,7 @@ export const siteConfig = {
     process.env.NEXT_PUBLIC_API_BASE_URL ||
     "https://admin.lexwitness.com/api/v1",
 
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://lwsubscription.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://lexwitness.com",
 
   magazinesImageBaseUrl: process.env.NEXT_PUBLIC_MAGAZINES_BASE_URL || "",
 
