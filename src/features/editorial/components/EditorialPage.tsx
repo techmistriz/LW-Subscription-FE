@@ -16,7 +16,7 @@ export default async function EditorialPage() {
       <Banner title="Editorial" />
 
       <div className="mx-auto max-w-6xl px-6 py-8">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid gap-12 md:grid-cols-2 items-start">
           {/* Left Side - Editor Image */}
           <div className="relative mx-auto w-[80%] aspect-[4/5] overflow-hidden shadow-lg">
             <Image
@@ -40,8 +40,6 @@ export default async function EditorialPage() {
             </h3>
 
             <h3 className="text-[#c8050b]">{data.company_name}</h3>
-
-            {/* <h3 className="mb-5 text-gray-400">{data.place}</h3>   */}
 
             <div className="text-[15px] font-normal leading-relaxed text-gray-600">
               {data.description
