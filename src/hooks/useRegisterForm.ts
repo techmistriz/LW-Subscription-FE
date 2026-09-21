@@ -1,38 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { registerUser } from "@/services/auth.service";
 import { getMembershipPlans } from "../services/plan.service";
 import api from "@/network/axios";
 import { usePayment, REGISTRATION_CHECKOUT_KEY } from "./usePayment";
-import type { RegisterApiData } from "@/types/auth";
+
+import type { RegisterApiData, RegisterPayload } from "@/types/auth";
 import { extractErrorMessage } from "@/network/errorMessage";
 import { RegisterFormData } from "@/types/register.types";
 import type { SubscriptionPlan } from "@/types/models";
 
-const initialForm: RegisterFormData = {
-  first_name: "",
-  last_name: "",
-  email: "",
-  contact: "",
-  dob: "",
-  organisation: "",
-  gst_number: "",
-  address: "",
-  city: "",
-  pincode: "",
-  state: "",
-  country: "India",
-  password: "",
-  password_confirmation: "",
-  plan: "",
-  auto_renew: false,
-};
-
 export function useRegisterForm() {
   const { handleRegistrationPayment } = usePayment();
+
   const [pendingCheckout, setPendingCheckout] = useState<{
     subscription_id: number;
     checkout_token: string;
@@ -40,22 +23,16 @@ export function useRegisterForm() {
   } | null>(() => {
     try {
       const saved = sessionStorage.getItem(REGISTRATION_CHECKOUT_KEY);
+
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
     }
   });
 
-  const [form, setForm] = useState<RegisterFormData>(initialForm);
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   const [loading, setLoading] = useState(false);
   const [plansLoading, setPlansLoading] = useState(true);
-  const [registrationSuccess] = useState(false);
-
-  const [fieldErrors, setFieldErrors] = useState<{
-    [key: string]: string[];
-  }>({});
-
   const [processingPayment, setProcessingPayment] = useState(false);
 
   /* ---------------- FETCH PLANS ---------------- */
@@ -66,6 +43,7 @@ export function useRegisterForm() {
 
       try {
         const data = await getMembershipPlans();
+
         setPlans(data);
       } catch {
         toast.error("Failed to load plans");
@@ -77,50 +55,29 @@ export function useRegisterForm() {
     fetchPlans();
   }, []);
 
-  /* ---------------- HANDLE CHANGE ---------------- */
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value, type } = e.target;
-
-    if (name === "contact") {
-      const digits = value.replace(/\D/g, "").slice(0, 10);
-
-      setForm((prev) => ({
-        ...prev,
-        contact: digits,
-      }));
-
-      return;
-    }
-
-    setForm((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
-
-    if (fieldErrors[name]) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        [name]: [],
-      }));
-    }
-  };
+  /* ---------------- RESUME PAYMENT ---------------- */
 
   const resumePayment = async () => {
     if (!pendingCheckout || loading) return;
+
     setLoading(true);
+
     try {
       const res = await api.post<{
         status: boolean;
         data: RegisterApiData;
         message: string;
       }>("/auth/retry-payment", pendingCheckout);
-      if (!res.data.status) throw new Error(res.data.message);
+
+      if (!res.data.status) {
+        throw new Error(res.data.message);
+      }
+
       await handleRegistrationPayment(
-        { ...res.data.data, checkout_token: pendingCheckout.checkout_token },
+        {
+          ...res.data.data,
+          checkout_token: pendingCheckout.checkout_token,
+        },
         setProcessingPayment,
       );
     } catch (error) {
@@ -130,39 +87,84 @@ export function useRegisterForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  /* ---------------- SUBMIT REGISTRATION ---------------- */
+
+  const submitRegistration = async (formData: RegisterFormData) => {
     if (loading) return;
-    if (pendingCheckout?.email === form.email) {
+
+    /*
+     * If this email already has a pending checkout,
+     * resume that payment instead of creating another
+     * registration.
+     */
+    if (pendingCheckout?.email === formData.email) {
       await resumePayment();
       return;
     }
+
     setLoading(true);
-    setFieldErrors({});
+
     try {
-      const selectedPlan = plans.find((p) => String(p.id) === form.plan);
-      if (!selectedPlan) throw new Error("Please select a plan");
-      const res = await registerUser({
-        ...form,
+      /* ---------------- FIND SELECTED PLAN ---------------- */
+
+      const selectedPlan = plans.find(
+        (plan) => String(plan.id) === formData.plan,
+      );
+
+      if (!selectedPlan) {
+        throw new Error("Please select a plan");
+      }
+
+      /* ---------------- API PAYLOAD ---------------- */
+
+      const payload: RegisterPayload = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+        contact: formData.contact,
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
+        dob: formData.dob,
+        organisation: formData.organisation,
+        gst_number: formData.gst_number,
+        address: formData.address,
+        city: formData.city,
+        pincode: formData.pincode,
+        state: formData.state,
+        country: formData.country,
         membership_plan_id: selectedPlan.id,
-      });
+        auto_renew: formData.auto_renew,
+      };
+
+      /* ---------------- REGISTER USER ---------------- */
+
+      const res = await registerUser(payload);
+
       if (!res.status) {
-        setFieldErrors(res.errors ?? {});
         throw new Error(res.message);
       }
+
       const data = res.data;
+
+      /* ---------------- SAVE PENDING CHECKOUT ---------------- */
+
       if (Number(data.subscription.total_amount) > 0) {
         const saved = {
           subscription_id: data.subscription.id,
           checkout_token: data.checkout_token,
-          email: data.user.email ?? form.email,
+          email: data.user.email ?? formData.email,
         };
+
         sessionStorage.setItem(
           REGISTRATION_CHECKOUT_KEY,
           JSON.stringify(saved),
         );
+
         setPendingCheckout(saved);
       }
+
+      /* ---------------- HANDLE PAYMENT ---------------- */
+
       await handleRegistrationPayment(data, setProcessingPayment);
     } catch (error) {
       toast.error(extractErrorMessage(error, "Registration failed."));
@@ -172,24 +174,12 @@ export function useRegisterForm() {
   };
 
   return {
-    form,
     plans,
     loading,
     plansLoading,
-    fieldErrors,
     processingPayment,
-    registrationSuccess,
     pendingCheckout,
     resumePayment,
-
-    selectedPlan: plans.find((p) => String(p.id) === form.plan),
-
-    otherPlans: plans.filter((p) => String(p.id) !== form.plan),
-
-    handleChange,
-    handleSubmit,
-    setForm,
-
-    getError: (name: string) => fieldErrors[name]?.[0],
+    submitRegistration,
   };
 }

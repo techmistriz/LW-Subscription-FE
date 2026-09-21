@@ -1,19 +1,24 @@
 "use client";
 
-import { ChangeEvent } from "react";
 import FormInput from "./FormInput";
 import { RegisterFormData } from "@/types/register.types";
 
+import {
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+} from "react-hook-form";
+
 interface PersonalDetailsFormProps {
-  form: RegisterFormData;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  getError: (name: string) => string | undefined;
+  register: UseFormRegister<RegisterFormData>;
+  errors: FieldErrors<RegisterFormData>;
+  getValues: UseFormGetValues<RegisterFormData>;
 }
 
 export default function PersonalDetailsForm({
-  form,
-  onChange,
-  getError,
+  register,
+  errors,
+  getValues,
 }: PersonalDetailsFormProps) {
   return (
     <div className="bg-white p-8 border border-gray-200 shadow-sm rounded-xl">
@@ -22,42 +27,54 @@ export default function PersonalDetailsForm({
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* First Name */}
         <FormInput
           label="First Name *"
-          name="first_name"
-          value={form.first_name}
-          onChange={onChange}
-          error={getError("first_name")}
+          {...register("first_name", {
+            required: "First name is required",
+          })}
+          error={errors.first_name?.message}
           required
         />
 
+        {/* Last Name */}
         <FormInput
           label="Last Name *"
-          name="last_name"
-          value={form.last_name}
-          onChange={onChange}
-          error={getError("last_name")}
+          {...register("last_name", {
+            required: "Last name is required",
+          })}
+          error={errors.last_name?.message}
           required
         />
 
+        {/* Email */}
         <FormInput
           label="Email *"
           type="email"
-          name="email"
-          value={form.email}
-          onChange={onChange}
-          error={getError("email")}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Enter a valid email",
+            },
+          })}
+          error={errors.email?.message}
           required
           autoComplete="email"
           placeholder="Enter email"
         />
 
+        {/* Contact */}
         <FormInput
           label="Contact Number *"
-          name="contact"
-          value={form.contact}
-          onChange={onChange}
-          error={getError("contact")}
+          {...register("contact", {
+            required: "Contact number is required",
+            pattern: {
+              value: /^[0-9]{10}$/,
+              message: "Enter a valid 10 digit number",
+            },
+          })}
+          error={errors.contact?.message}
           required
           maxLength={10}
           inputMode="numeric"
@@ -65,100 +82,120 @@ export default function PersonalDetailsForm({
           placeholder="WhatsApp preferred"
         />
 
+        {/* DOB */}
         <FormInput
           label="Date of Birth *"
           type="date"
-          name="dob"
-          value={form.dob}
-          onChange={onChange}
-          error={getError("dob")}
+          {...register("dob", {
+            required: "Date of birth is required",
+          })}
+          error={errors.dob?.message}
           required
         />
 
+        {/* Organisation */}
         <FormInput
           label="Organisation Name"
-          name="organisation"
-          value={form.organisation}
-          onChange={onChange}
+          {...register("organisation")}
+          error={errors.organisation?.message}
         />
 
+        {/* GST */}
         <FormInput
           label="GST Number"
-          name="gst_number"
-          value={form.gst_number}
-          onChange={onChange}
-          error={getError("gst_number")}
+          {...register("gst_number", {
+            maxLength: {
+              value: 15,
+              message: "GST number cannot exceed 15 characters",
+            },
+          })}
+          error={errors.gst_number?.message}
           maxLength={15}
           autoComplete="off"
         />
 
-        <div className="md:col-span-1">
-          <FormInput
-            label="Address *"
-            name="address"
-            value={form.address}
-            onChange={onChange}
-            error={getError("address")}
-            required
-          />
-        </div>
-
+        {/* Address */}
         <FormInput
-          label="City *"
-          name="city"
-          value={form.city}
-          onChange={onChange}
-          error={getError("city")}
+          label="Address *"
+          {...register("address", {
+            required: "Address is required",
+          })}
+          error={errors.address?.message}
           required
         />
 
+        {/* City */}
+        <FormInput
+          label="City *"
+          {...register("city", {
+            required: "City is required",
+          })}
+          error={errors.city?.message}
+          required
+        />
+
+        {/* Pincode */}
         <FormInput
           label="Pincode *"
-          name="pincode"
-          value={form.pincode}
-          onChange={onChange}
-          error={getError("pincode")}
+          {...register("pincode", {
+            required: "Pincode is required",
+            pattern: {
+              value: /^[0-9]{6}$/,
+              message: "Enter a valid 6 digit pincode",
+            },
+          })}
+          error={errors.pincode?.message}
           required
           maxLength={6}
           inputMode="numeric"
           pattern="[0-9]*"
         />
 
+        {/* State */}
         <FormInput
           label="State *"
-          name="state"
-          value={form.state}
-          onChange={onChange}
-          error={getError("state")}
+          {...register("state", {
+            required: "State is required",
+          })}
+          error={errors.state?.message}
           required
         />
 
+        {/* Country */}
         <FormInput
           label="Country *"
-          name="country"
-          value={form.country}
-          onChange={onChange}
-          error={getError("country")}
+          {...register("country", {
+            required: "Country is required",
+          })}
+          error={errors.country?.message}
           required
         />
 
+        {/* Password */}
         <FormInput
           label="Password *"
           type="password"
-          name="password"
-          value={form.password}
-          onChange={onChange}
-          error={getError("password")}
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
+          })}
+          error={errors.password?.message}
           required
         />
 
+        {/* Confirm Password */}
         <FormInput
           label="Confirm Password *"
           type="password"
-          name="password_confirmation"
-          value={form.password_confirmation}
-          onChange={onChange}
-          error={getError("password_confirmation")}
+          {...register("password_confirmation", {
+            required: "Confirm password is required",
+            validate: (value) =>
+              value === getValues("password") || "Passwords do not match",
+          })}
+          error={errors.password_confirmation?.message}
           required
         />
       </div>

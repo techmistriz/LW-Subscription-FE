@@ -29,9 +29,15 @@ export interface RegisterPayload {
   password: string;
   password_confirmation: string;
   dob: string;
-  address: string;
+  organisation: string;
   gst_number: string;
+  address: string;
+  city: string;
+  pincode: string;
+  state: string;
+  country: string;
   membership_plan_id: number;
+  auto_renew: boolean;
 }
 
 /* ----------- REGISTER RESPONSE ----------- */
