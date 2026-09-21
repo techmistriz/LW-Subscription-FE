@@ -11,7 +11,6 @@ interface SubscriptionSummaryProps {
   formPlan: string;
   loading: boolean;
   onPlanSelect: (planId: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
 }
 
 export default function SubscriptionSummary({
@@ -20,48 +19,45 @@ export default function SubscriptionSummary({
   formPlan,
   loading,
   onPlanSelect,
-  onSubmit,
 }: SubscriptionSummaryProps) {
   const searchParams = useSearchParams();
 
   /* ---------------- PRESELECT PLAN FROM URL ---------------- */
+
   useEffect(() => {
     const planFromUrl = searchParams.get("plan");
 
     if (!planFromUrl) return;
 
-    // avoid overwriting user action
+    // Avoid overwriting user selection
     if (formPlan) return;
 
     onPlanSelect(planFromUrl);
   }, [searchParams, formPlan, onPlanSelect]);
 
   const price = Number(selectedPlan?.price || 0);
-
   const isFree = price === 0;
-
   const gst = isFree ? 0 : price * 0.18;
-
   const total = isFree ? 0 : price + gst;
 
   return (
-    <div className="bg-white p-6 border border-gray-200 shadow-sm rounded-xl sticky top-10 h-165.5 flex flex-col">
-      <h2 className="text-xl font-bold text-gray-800 uppercase tracking-tight border-b pb-4">
+    <div className="sticky top-10 flex h-165.5 flex-col rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h2 className="border-b pb-4 text-xl font-bold uppercase tracking-tight text-gray-800">
         Subscription Summary
       </h2>
 
-      <div className="space-y-4 max-h-105 overflow-y-auto pr-2 custom-scrollbar">
+      <div className="max-h-105 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
         {/* Selected Plan */}
-        <div className="min-h-22.5 mt-2">
+        <div className="mt-2 min-h-22.5">
           {selectedPlan ? (
             <div>
-              <h3 className="text-[11px] font-bold uppercase text-[#c8050b] mb-2 tracking-wider">
+              <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#c8050b]">
                 Selected Plan
               </h3>
 
-              <div className="p-4 rounded-xl border-2 border-[#c8050b] bg-red-50 shadow-md">
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-sm uppercase">
+              <div className="rounded-xl border-2 border-[#c8050b] bg-red-50 p-4 shadow-md">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold uppercase">
                     {selectedPlan.name}
                   </span>
 
@@ -74,26 +70,27 @@ export default function SubscriptionSummary({
               </div>
             </div>
           ) : (
-            <div className="text-xs text-gray-400 italic">No plan selected</div>
+            <div className="text-xs italic text-gray-400">No plan selected</div>
           )}
         </div>
 
         {/* Other Plans */}
         {otherPlans.length > 0 && (
           <div>
-            <h3 className="text-[11px] font-bold uppercase text-gray-400 mb-2 tracking-wider">
+            <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wider text-gray-400">
               Other Plans
             </h3>
 
             <div className="space-y-3">
               {otherPlans.map((plan) => (
-                <div
+                <button
                   key={plan.id}
+                  type="button"
                   onClick={() => onPlanSelect(String(plan.id))}
-                  className="cursor-pointer p-4 rounded-xl border-2 border-gray-100 hover:border-gray-200 transition-all"
+                  className="w-full cursor-pointer rounded-xl border-2 border-gray-100 p-4 text-left transition-all hover:border-gray-200"
                 >
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-sm uppercase">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold uppercase">
                       {plan.name}
                     </span>
 
@@ -101,7 +98,7 @@ export default function SubscriptionSummary({
                       ₹{plan.price}
                     </span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -110,9 +107,9 @@ export default function SubscriptionSummary({
 
       {/* Order Summary */}
       {formPlan && (
-        <div className="bg-gray-50 p-5 mt-4 rounded-xl space-y-3 border border-gray-100">
+        <div className="mt-4 space-y-3 rounded-xl border border-gray-100 bg-gray-50 p-5">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500 font-medium">Base Price</span>
+            <span className="font-medium text-gray-500">Base Price</span>
 
             <span className="font-bold">{isFree ? "FREE" : `₹${price}`}</span>
           </div>
@@ -120,7 +117,7 @@ export default function SubscriptionSummary({
           {/* GST */}
           {!isFree && (
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500 font-medium">GST (18%)</span>
+              <span className="font-medium text-gray-500">GST (18%)</span>
 
               <span className="font-bold text-red-600">
                 + ₹{gst.toFixed(2)}
@@ -128,7 +125,7 @@ export default function SubscriptionSummary({
             </div>
           )}
 
-          <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
+          <div className="flex items-center justify-between border-t border-gray-200 pt-3">
             <span className="text-xs font-bold uppercase text-gray-800">
               Total Payable
             </span>
@@ -140,18 +137,19 @@ export default function SubscriptionSummary({
 
           {/* Free Note */}
           {isFree && (
-            <p className="text-green-600 text-xs font-bold text-center uppercase tracking-wide">
+            <p className="text-center text-xs font-bold uppercase tracking-wide text-green-600">
               Free Plan – No charges applicable
             </p>
           )}
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="pt-6">
+      {/* Submit Button */}
+      <div className="pt-6">
         <button
           type="submit"
           disabled={loading || !selectedPlan}
-          className="w-full bg-[#c8050b] text-white py-3 cursor-pointer font-bold uppercase tracking-widest hover:bg-[#333] transition-all disabled:opacity-50 shadow-lg shadow-red-100"
+          className="w-full cursor-pointer bg-[#c8050b] py-3 font-bold uppercase tracking-widest text-white shadow-lg shadow-red-100 transition-all hover:bg-[#333] disabled:opacity-50"
         >
           {loading
             ? "Processing..."
@@ -160,10 +158,10 @@ export default function SubscriptionSummary({
               : "Pay Now"}
         </button>
 
-        {/* <p className="text-center text-[10px] text-gray-400 mt-3 italic font-bold uppercase tracking-tighter">
+        {/* <p className="mt-3 text-center text-[10px] font-bold uppercase italic tracking-tighter text-gray-400">
           Please verify your contact number to proceed
         </p> */}
-      </form>
+      </div>
     </div>
   );
 }

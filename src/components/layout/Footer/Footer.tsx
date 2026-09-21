@@ -10,6 +10,7 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { images } from "@/config/images";
 
 const Footer = () => {
   const date = new Date();
@@ -65,7 +66,7 @@ const Footer = () => {
             </div>
 
             <Image
-              src="https://lexwitness.com/wp-content/themes/lexwitness/images/logo-white.png"
+              src={images.logoWhite}
               alt="Lex Witness"
               width={200}
               height={68}
