@@ -376,7 +376,9 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             )}
 
             {errors.otp && (
-              <p className="mt-1 text-sm text-[#c8050b]">{errors.otp.message}</p>
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.otp.message}
+              </p>
             )}
           </div>
 
@@ -395,7 +397,9 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             />
 
             {errors.dob && (
-              <p className="mt-1 text-sm text-[#c8050b]">{errors.dob.message}</p>
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.dob.message}
+              </p>
             )}
           </div>
 

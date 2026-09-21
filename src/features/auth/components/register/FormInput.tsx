@@ -33,7 +33,9 @@ export default function FormInput({
       />
 
       {error && (
-        <p className="mt-1 text-[10px] font-bold uppercase text-[#c8050b]">{error}</p>
+        <p className="mt-1 text-[10px] font-bold uppercase text-[#c8050b]">
+          {error}
+        </p>
       )}
     </div>
   );
