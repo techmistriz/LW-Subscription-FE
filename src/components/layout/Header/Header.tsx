@@ -292,12 +292,7 @@ export default function Header() {
           <div className="w-full px-4 flex items-center justify-between">
             {/*----------------- LEFT LOGO -----------------*/}
             <div className="flex items-center gap-2 py-4">
-              <Image
-                src="https://lexwitness.com/wp-content/themes/lexwitness/images/favicon.png"
-                alt="Logo"
-                width={36}
-                height={36}
-              />
+              <Image src={images.favicon} alt="Logo" width={36} height={36} />
             </div>
 
             {/*----------------- RIGHT SIDE (USER + CLOSE) -----------------*/}
