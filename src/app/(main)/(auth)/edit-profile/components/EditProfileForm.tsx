@@ -1,8 +1,9 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
 import { fetchProfile } from "@/store/slices/authSlice";
 import { useAppDispatch } from "@/store/hooks";
@@ -24,6 +25,8 @@ type EditProfileFormProps = {
   user: EditableProfileUser;
 };
 
+type EditProfileFormValues = FormData & PasswordForm;
+
 export default function EditProfileForm({ user }: EditProfileFormProps) {
   const dispatch = useAppDispatch();
 
@@ -37,65 +40,62 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
   const initialData = createFormData(user);
 
-  const [formData, setFormData] = useState<FormData>(initialData);
-  const [initialFormData] = useState<FormData>(initialData);
-
-  const [passwordForm, setPasswordForm] = useState<PasswordForm>({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<EditProfileFormValues>({
+    defaultValues: {
+      ...initialData,
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    mode: "onSubmit",
   });
+
+  const contact = watch("contact");
+  const newPassword = watch("newPassword");
 
   const originalContact = user.contact ?? "";
 
-  const isContactChanged = formData.contact !== originalContact;
+  const isContactChanged = contact !== originalContact;
 
-  const hasFormChanged =
-    JSON.stringify({
-      ...formData,
-      otp: "",
-    }) !==
-    JSON.stringify({
-      ...initialFormData,
-      otp: "",
-    });
+  const watchedValues = watch();
 
-  const hasPasswordChanged =
-    passwordForm.newPassword.trim() !== "" ||
-    passwordForm.confirmPassword.trim() !== "";
-
-  const canUpdate = hasFormChanged || hasPasswordChanged;
-
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-      ...(name === "contact" ? { otp: "" } : {}),
-    }));
-
-    if (name === "contact") {
-      setOtpSent(false);
-    }
-  };
+  const canUpdate =
+    watchedValues.firstName !== initialData.firstName ||
+    watchedValues.lastName !== initialData.lastName ||
+    watchedValues.contact !== initialData.contact ||
+    watchedValues.dob !== initialData.dob ||
+    watchedValues.organisation !== initialData.organisation ||
+    watchedValues.gstNumber !== initialData.gstNumber ||
+    watchedValues.country !== initialData.country ||
+    watchedValues.state !== initialData.state ||
+    watchedValues.city !== initialData.city ||
+    watchedValues.pincode !== initialData.pincode ||
+    watchedValues.address !== initialData.address ||
+    Boolean(watchedValues.newPassword) ||
+    Boolean(watchedValues.confirmPassword);
 
   const handleContactChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
 
-    setFormData((previous) => ({
-      ...previous,
-      contact: value,
-      otp: "",
-    }));
+    setValue("contact", value, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+
+    setValue("otp", "");
 
     setOtpSent(false);
   };
 
   const handleSendOtp = async () => {
-    if (formData.contact.length !== 10) {
+    if (contact.length !== 10) {
       toast.error("Enter a valid mobile number");
       return;
     }
@@ -104,8 +104,8 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
     try {
       const response = await sendUpdateOtp({
-        email: formData.email,
-        contact: formData.contact,
+        email: watch("email"),
+        contact,
       });
 
       setOtpSent(true);
@@ -131,39 +131,50 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
     return () => window.clearInterval(timer);
   }, [countdown]);
 
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    setPasswordForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (isContactChanged && !formData.otp.trim()) {
+  const onSubmit = async (data: EditProfileFormValues) => {
+    if (isContactChanged && !data.otp.trim()) {
       toast.error("Please enter the OTP sent to your mobile number.");
       return;
     }
 
-    if (passwordForm.newPassword || passwordForm.confirmPassword) {
-      if (passwordForm.newPassword.length < 8) {
+    if (data.newPassword || data.confirmPassword) {
+      if (data.newPassword.length < 8) {
         toast.error("Password must be at least 8 characters.");
         return;
       }
 
-      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      if (data.newPassword !== data.confirmPassword) {
         toast.error("Passwords do not match.");
         return;
       }
     }
 
+    const passwordForm: PasswordForm = {
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
+      confirmPassword: data.confirmPassword,
+    };
+
+    const formData: FormData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      contact: data.contact,
+      otp: data.otp,
+      dob: data.dob,
+      organisation: data.organisation,
+      gstNumber: data.gstNumber,
+      country: data.country,
+      state: data.state,
+      city: data.city,
+      pincode: data.pincode,
+      address: data.address,
+    };
+
     const payload = createUpdatePayload(
       formData,
       passwordForm,
-      isContactChanged ? formData.otp : "",
+      isContactChanged ? data.otp : "",
     );
 
     setUpdating(true);
@@ -173,18 +184,21 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
       await dispatch(fetchProfile());
 
-      setFormData((previous) => ({
-        ...previous,
+      /**
+       * Reset React Hook Form after successful update.
+       * This also updates RHF's default values, so the form
+       * is considered clean again.
+       */
+      reset({
+        ...data,
         otp: "",
-      }));
-
-      setOtpSent(false);
-
-      setPasswordForm({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
+
+      setOtpSent(false);
+      setCountdown(0);
 
       toast.success(response.message || "Profile updated successfully");
     } catch (error: unknown) {
@@ -211,35 +225,50 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="grid grid-cols-1 gap-5 p-6 md:grid-cols-2"
         >
+          {/* First Name */}
           <div>
             <label className={labelClass}>
               First Name <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
               className={inputClass}
+              {...register("firstName", {
+                required: "First name is required",
+              })}
             />
+
+            {errors.firstName && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.firstName.message}
+              </p>
+            )}
           </div>
 
+          {/* Last Name */}
           <div>
             <label className={labelClass}>
               Last Name <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
               className={inputClass}
+              {...register("lastName", {
+                required: "Last name is required",
+              })}
             />
+
+            {errors.lastName && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.lastName.message}
+              </p>
+            )}
           </div>
 
+          {/* Email */}
           <div>
             <label className={labelClass}>
               Email <span className="text-[#c8050b]">*</span>
@@ -247,13 +276,21 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
             <input
               type="email"
-              name="email"
               readOnly
-              value={formData.email}
               className="h-11 w-full cursor-default rounded-lg border border-gray-300 bg-gray-50 px-4 text-sm text-[#333] outline-none"
+              {...register("email", {
+                required: "Email is required",
+              })}
             />
+
+            {errors.email && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
+          {/* Contact / OTP */}
           <div>
             <label className={labelClass}>
               {otpSent ? (
@@ -271,11 +308,16 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               <div className="flex gap-2">
                 <input
                   type="tel"
-                  name="contact"
                   maxLength={10}
-                  value={formData.contact}
-                  onChange={handleContactChange}
                   className={`${inputClass} flex-1`}
+                  {...register("contact", {
+                    required: "Contact number is required",
+                    pattern: {
+                      value: /^[0-9]{10}$/,
+                      message: "Enter a valid 10-digit mobile number",
+                    },
+                    onChange: handleContactChange,
+                  })}
                 />
 
                 {isContactChanged && (
@@ -296,21 +338,23 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             ) : (
               <>
                 <input
-                  name="otp"
                   maxLength={6}
                   inputMode="numeric"
-                  value={formData.otp}
-                  onChange={handleChange}
-                  className={inputClass}
                   placeholder="Enter OTP"
+                  className={inputClass}
+                  {...register("otp", {
+                    required: isContactChanged ? "OTP is required" : false,
+                    pattern: {
+                      value: /^[0-9]{6}$/,
+                      message: "Enter a valid 6-digit OTP",
+                    },
+                  })}
                 />
 
                 <div className="mt-2 flex items-center justify-between">
                   <p className="text-sm italic text-gray-500">
                     OTP sent to{" "}
-                    <span className="font-semibold text-[#333]">
-                      {formData.contact}
-                    </span>
+                    <span className="font-semibold text-[#333]">{contact}</span>
                   </p>
 
                   <button
@@ -324,8 +368,19 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
                 </div>
               </>
             )}
+
+            {errors.contact && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.contact.message}
+              </p>
+            )}
+
+            {errors.otp && (
+              <p className="mt-1 text-sm text-[#c8050b]">{errors.otp.message}</p>
+            )}
           </div>
 
+          {/* Date of Birth */}
           <div>
             <label className={labelClass}>
               Date of Birth <span className="text-[#c8050b]">*</span>
@@ -333,34 +388,38 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
             <input
               type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
               className={inputClass}
+              {...register("dob", {
+                // required: "Date of birth is required",
+              })}
             />
+
+            {errors.dob && (
+              <p className="mt-1 text-sm text-[#c8050b]">{errors.dob.message}</p>
+            )}
           </div>
 
+          {/* Organisation */}
           <div>
             <label className={labelClass}>Organisation Name</label>
 
-            <input
-              name="organisation"
-              value={formData.organisation}
-              onChange={handleChange}
-              className={inputClass}
-            />
+            <input className={inputClass} {...register("organisation")} />
           </div>
 
+          {/* New Password */}
           <div>
             <label className={labelClass}>New Password</label>
 
             <div className="relative">
               <input
-                name="newPassword"
                 type={showNewPassword ? "text" : "password"}
-                value={passwordForm.newPassword}
-                onChange={handlePasswordChange}
                 className={`${inputClass} pr-10`}
+                {...register("newPassword", {
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters.",
+                  },
+                })}
               />
 
               <button
@@ -371,18 +430,28 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
                 {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+
+            {errors.newPassword && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.newPassword.message}
+              </p>
+            )}
           </div>
 
+          {/* Confirm Password */}
           <div>
             <label className={labelClass}>Confirm Password</label>
 
             <div className="relative">
               <input
-                name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                value={passwordForm.confirmPassword}
-                onChange={handlePasswordChange}
                 className={`${inputClass} pr-10`}
+                {...register("confirmPassword", {
+                  validate: (value) =>
+                    !value ||
+                    value === newPassword ||
+                    "Passwords do not match.",
+                })}
               />
 
               <button
@@ -393,81 +462,120 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
+          {/* GST Number */}
           <div>
             <label className={labelClass}>GST Number</label>
 
             <input
-              name="gstNumber"
-              value={formData.gstNumber}
-              onChange={(e) =>
-                setFormData((previous) => ({
-                  ...previous,
-                  gstNumber: e.target.value.toUpperCase(),
-                }))
-              }
               className={inputClass}
               placeholder="22AAAAA0000A1Z5"
+              {...register("gstNumber", {
+                onChange: (e) => {
+                  const value = e.target.value.toUpperCase();
+
+                  setValue("gstNumber", value, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
+                },
+              })}
             />
           </div>
 
+          {/* Country */}
           <div>
             <label className={labelClass}>
               Country <span className="text-[#c8050b]">*</span>
             </label>
 
             <input
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
               className={inputClass}
+              {...register("country", {
+                required: "Country is required",
+              })}
             />
+
+            {errors.country && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.country.message}
+              </p>
+            )}
           </div>
 
+          {/* State / City / Pincode */}
           <div className="md:col-span-2">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {/* State */}
               <div>
                 <label className={labelClass}>
                   State <span className="text-[#c8050b]">*</span>
                 </label>
 
                 <input
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
                   className={inputClass}
+                  {...register("state", {
+                    required: "State is required",
+                  })}
                 />
+
+                {errors.state && (
+                  <p className="mt-1 text-sm text-[#c8050b]">
+                    {errors.state.message}
+                  </p>
+                )}
               </div>
 
+              {/* City */}
               <div>
                 <label className={labelClass}>
                   City <span className="text-[#c8050b]">*</span>
                 </label>
 
                 <input
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
                   className={inputClass}
+                  {...register("city", {
+                    required: "City is required",
+                  })}
                 />
+
+                {errors.city && (
+                  <p className="mt-1 text-sm text-[#c8050b]">
+                    {errors.city.message}
+                  </p>
+                )}
               </div>
 
+              {/* Pincode */}
               <div>
                 <label className={labelClass}>
                   Pincode <span className="text-[#c8050b]">*</span>
                 </label>
 
                 <input
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
                   className={inputClass}
+                  {...register("pincode", {
+                    required: "Pincode is required",
+                  })}
                 />
+
+                {errors.pincode && (
+                  <p className="mt-1 text-sm text-[#c8050b]">
+                    {errors.pincode.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
 
+          {/* Address */}
           <div className="md:col-span-2">
             <label className={labelClass}>
               Address <span className="text-[#c8050b]">*</span>
@@ -475,13 +583,20 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
             <textarea
               rows={3}
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
               className="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm text-[#333] placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-[#c8050b] focus:ring-2 focus:ring-[#c8050b]/20"
+              {...register("address", {
+                required: "Address is required",
+              })}
             />
+
+            {errors.address && (
+              <p className="mt-1 text-sm text-[#c8050b]">
+                {errors.address.message}
+              </p>
+            )}
           </div>
 
+          {/* Submit */}
           <div className="mt-2 flex justify-end gap-3 border-t border-[#c8050b] pt-5 md:col-span-2">
             <button
               type="submit"
