@@ -68,7 +68,7 @@ export default function InvoicePage({ invoices, onRefresh }: Props) {
 
   return (
     <div className="min-h-screen bg-[#f5f5f7]   py-10 ">
-      <div className="max-w-6xl mx-auto border border-gray-300 p-6 ">
+      <div className="max-w-[1126px] mx-auto border border-gray-300 p-6 ">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-10 ">
           <div>
@@ -81,7 +81,7 @@ export default function InvoicePage({ invoices, onRefresh }: Props) {
             </p>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm flex items-center gap-6 min-w-[180px]">
+          <div className="bg-white border border-gray-200 rounded px-5 py-2 shadow-sm flex items-center gap-6 min-w-[180px]">
             <div>
               <p className="text-sm text-gray-500">Subscriptions</p>
             </div>
@@ -96,14 +96,14 @@ export default function InvoicePage({ invoices, onRefresh }: Props) {
           {invoices.map((invoice) => (
             <div
               key={invoice.id}
-              className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
+              className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
             >
               <div className="p-5">
                 {/* Top Section */}
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
                   {/* Left */}
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#c8050b]/10 flex items-center justify-center shrink-0">
+                    <div className="w-12 h-12 rounded bg-[#c8050b]/10 flex items-center justify-center shrink-0">
                       <Receipt className="w-6 h-6 text-[#c8050b]" />
                     </div>
 
@@ -160,7 +160,7 @@ export default function InvoicePage({ invoices, onRefresh }: Props) {
                       <button
                         onClick={() => downloadInvoice(invoice)}
                         disabled={downloadingId === invoice.id}
-                        className="inline-flex items-center justify-center gap-2 bg-[#c8050b] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-60"
+                        className="inline-flex items-center justify-center gap-2 bg-[#c8050b] px-4 py-2.5 text-sm font-medium text-white disabled:opacity-60 cursor-pointer"
                       >
                         <Download className="w-4 h-4" />
                         {downloadingId === invoice.id

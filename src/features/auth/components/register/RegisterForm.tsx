@@ -6,27 +6,68 @@ import SubscriptionSummary from "./SubscriptionSummary";
 import SubscriptionSummarySkeleton from "@/components/feedback/Skeletons/SubscriptionSummary";
 import Banner from "@/components/common/Banner";
 import Image from "next/image";
+import { useForm, useWatch } from "react-hook-form";
+import { RegisterFormData } from "@/types/register.types";
+import { images } from "@/config/images";
 
 export default function RegisterForm() {
   const {
-    form,
+    plans,
     loading,
     plansLoading,
     processingPayment,
-    selectedPlan,
-    otherPlans,
-    handleChange,
-    handleSubmit,
-    getError,
-    setForm,
     pendingCheckout,
     resumePayment,
+    submitRegistration,
   } = useRegisterForm();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      contact: "",
+      dob: "",
+      organisation: "",
+      gst_number: "",
+      address: "",
+      city: "",
+      pincode: "",
+      state: "",
+      country: "",
+      password: "",
+      password_confirmation: "",
+      plan: "",
+      auto_renew: false,
+    },
+    mode: "onBlur",
+  });
+
+  const selectedPlanId = useWatch({
+    control,
+    name: "plan",
+  });
+
+  const selectedPlan = plans.find((plan) => String(plan.id) === selectedPlanId);
+
+  const otherPlans = plans.filter((plan) => String(plan.id) !== selectedPlanId);
+
+  const onSubmit = async (data: RegisterFormData) => {
+    await submitRegistration(data);
+  };
 
   if (processingPayment) {
     return (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
         <div className="w-[360px] max-w-full rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-2xl">
+          {/* Loader */}
           <div className="relative mb-6 flex justify-center">
             <div className="absolute h-16 w-16 animate-ping rounded-full bg-red-100" />
 
@@ -35,28 +76,32 @@ export default function RegisterForm() {
             </div>
           </div>
 
+          {/* Title */}
           <h2 className="text-lg font-semibold text-gray-900">
             Verifying Payment
           </h2>
 
+          {/* Description */}
           <p className="mt-2 text-sm leading-5 text-gray-500">
             Please wait while we confirm your transaction.
           </p>
 
+          {/* Progress */}
           <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-gray-100">
             <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c8050b]" />
           </div>
 
+          {/* Razorpay */}
           <div className="mt-6 flex items-center justify-center gap-2">
             <span className="text-xs text-gray-400">Secured by</span>
 
-            <div className="flex h-6 items-center rounded-md">
+            <div className="flex h-6 items-center rounded-md px-">
               <Image
-                src="/razorpay-logo.webp"
+                src={images.razorpayLogo}
                 alt="Razorpay"
                 width={72}
                 height={24}
-                className="h-6 w-auto object-contain"
+                className="h-18 w-auto object-contain"
               />
             </div>
           </div>
@@ -108,6 +153,7 @@ export default function RegisterForm() {
               Your account is saved. Complete the pending payment for{" "}
               {pendingCheckout.email}, or sign in to view subscription history.
             </p>
+
             <button
               type="button"
               onClick={resumePayment}
@@ -118,31 +164,33 @@ export default function RegisterForm() {
             </button>
           </div>
         )}
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <PersonalDetailsForm
-              form={form}
-              onChange={handleChange}
-              getError={getError}
-            />
-          </div>
 
-          <div className="lg:col-span-5">
-            <SubscriptionSummary
-              selectedPlan={selectedPlan}
-              otherPlans={otherPlans}
-              formPlan={form.plan}
-              loading={loading}
-              onPlanSelect={(planId) =>
-                setForm((prev) => ({
-                  ...prev,
-                  plan: planId,
-                }))
-              }
-              onSubmit={handleSubmit}
-            />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <PersonalDetailsForm
+                register={register}
+                errors={errors}
+                getValues={getValues}
+              />
+            </div>
+
+            <div className="lg:col-span-5">
+              <SubscriptionSummary
+                selectedPlan={selectedPlan}
+                otherPlans={otherPlans}
+                formPlan={selectedPlanId}
+                loading={loading}
+                onPlanSelect={(planId) => {
+                  setValue("plan", planId, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+              />
+            </div>
           </div>
-        </div>
+        </form>
       </section>
     </main>
   );

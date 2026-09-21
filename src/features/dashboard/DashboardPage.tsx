@@ -3,12 +3,14 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   ChevronDown,
   Calendar,
   Sparkles,
   CreditCard,
   FileText,
+  Pencil,
   RefreshCw,
   CalendarCheck,
 } from "lucide-react";
@@ -24,6 +26,7 @@ import type { Subscription } from "@/types/models";
 import { completeCheckout } from "@/lib/paymentCheckout";
 import { extractErrorMessage } from "@/network/errorMessage";
 import { toast } from "sonner";
+import { images } from "@/config/images";
 
 const getPendingActivationDate = (
   pendingSubscriptions: Subscription[],
@@ -201,8 +204,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 border border-gray-300 my-5">
+    <div className="min-h-[80vh]">
+      <div className="max-w-[1115px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-[#FAFBFC] border border-gray-300 my-10">
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -247,7 +250,7 @@ export default function Dashboard() {
 
         {/* Pending Upgrades Banner */}
         {hasPendingUpgrades && (
-          <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-[#c8050b] rounded-xl p-4 shadow-sm">
+          <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-[#c8050b]  p-4 shadow-sm">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -328,11 +331,20 @@ export default function Dashboard() {
         {/* Main Content Grid */}
         <div className="grid lg:grid-cols-2 gap-5">
           {/* User Details Card - Compact */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-4 py-2.5 border-b border-gray-100">
+          <div className="bg-white  shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <h2 className="font-semibold text-gray-800 text-sm">
                 Account Details
               </h2>
+
+              <Link
+                href="/edit-profile"
+                className="text-gray-400 hover:text-[#c8050b] transition-colors"
+                aria-label="Edit account details"
+                title="Edit account details"
+              >
+                <Pencil className="w-4 h-4" />
+              </Link>
             </div>
             <div className="p-4 space-y-3">
               <div className="flex justify-between items-center">
@@ -385,7 +397,7 @@ export default function Dashboard() {
           </div>
 
           {/* Current Plan Card - Compact like reference */}
-          <div className="bg-[#c8050b] rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-[#c8050b]  shadow-lg overflow-hidden">
             <div className="px-4 py-2.5 border-b border-white/20">
               <h2 className="font-semibold text-white text-sm">
                 YOUR CURRENT PLAN
@@ -475,7 +487,7 @@ export default function Dashboard() {
                 return (
                   <div
                     key={pendingPlan.id}
-                    className="group  bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+                    className="group  bg-white  border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                   >
                     <button
                       onClick={() => {
@@ -533,7 +545,7 @@ export default function Dashboard() {
                     >
                       <div className="overflow-hidden">
                         <div className="px-6 pb-6 pt-2">
-                          <div className="flex flex-col md:flex-row overflow-hidden border border-gray-200 rounded-2xl bg-white shadow-sm">
+                          <div className="flex flex-col md:flex-row overflow-hidden border border-gray-200  bg-white shadow-sm">
                             {/* LEFT SIDEBAR: THE STATS */}
                             <div className="w-full md:w-1/3 bg-gray-50/80 p-6 border-b md:border-b-0 md:border-r border-gray-200">
                               <div className="space-y-6">
@@ -546,7 +558,7 @@ export default function Dashboard() {
                                   </h3>
                                 </div>
 
-                                <div className="bg-gray-300 rounded-xl p-4 text-white shadow-lg shadow-gray-200">
+                                <div className="bg-gray-300 rounded p-4 text-white shadow-lg shadow-gray-200">
                                   <p className="text-[#333] text-xs font-medium">
                                     Total Payable
                                   </p>
@@ -660,29 +672,46 @@ export default function Dashboard() {
         )}
       </div>
       {renewLoading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-[360px] rounded-3xl bg-white p-8 text-center shadow-2xl border border-gray-100">
-            <div className="relative flex justify-center mb-6">
-              <div className="absolute w-16 h-16 rounded-full bg-red-100 animate-ping" />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="w-[360px] max-w-full rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-2xl">
+            {/* Loader */}
+            <div className="relative mb-6 flex justify-center">
+              <div className="absolute h-16 w-16 animate-ping rounded-full bg-red-100" />
 
-              <div className="relative w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
-                <div className="w-8 h-8 border-[3px] border-red-200 border-t-[#c8050b] rounded-full animate-spin" />
+              <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+                <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-red-200 border-t-[#c8050b]" />
               </div>
             </div>
 
+            {/* Title */}
             <h2 className="text-lg font-semibold text-gray-900">
               Verifying Payment
             </h2>
 
-            <p className="text-sm text-gray-500 mt-2">
+            {/* Description */}
+            <p className="mt-2 text-sm leading-5 text-gray-500">
               Please wait while we confirm your transaction.
             </p>
 
-            <div className="mt-5 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full w-1/3 bg-[#c8050b] animate-[slide_1.2s_linear_infinite]" />
+            {/* Progress */}
+            <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-gray-100">
+              <div className="h-full w-1/3 animate-[slide_1.2s_linear_infinite] rounded-full bg-[#c8050b]" />
             </div>
 
-            <p className="text-xs text-gray-400 mt-5">Secured by Razorpay</p>
+            {/* Razorpay */}
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <span className="text-xs text-gray-400">Secured by</span>
+
+              <div className="flex h-6 items-center rounded-md px-">
+                <Image
+                  src={images.razorpayLogo}
+                  alt="Razorpay"
+                  width={72}
+                  height={24}
+                  className="h-18 w-auto object-contain"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -746,7 +775,7 @@ function StatCard({
   alert,
 }: StatCardProps) {
   return (
-    <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+    <div className="bg-white rounded p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-gray-500 font-medium mb-1">{title}</p>

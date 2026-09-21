@@ -2,6 +2,9 @@ export const images = {
   avatar: "/images/common/avatar.jpg",
 
   logo: "/images/common/main-logo.png",
+  logoWhite: "/images/common/logo-white.png",
+
+  favicon: "/images/common/og-image.png",
 
   placeholder: "/images/common/placeholder.png",
 
