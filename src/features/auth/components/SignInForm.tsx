@@ -24,6 +24,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -149,6 +150,7 @@ export default function SignInForm() {
                   type="email"
                   value={email}
                   onChange={handleEmailChange}
+                  placeholder="Enter your email address"
                   disabled={loading}
                   autoComplete="email"
                   aria-invalid={Boolean(errors.email)}
@@ -186,6 +188,7 @@ export default function SignInForm() {
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
+                  placeholder="Enter your password"
                   disabled={loading}
                   autoComplete="current-password"
                   aria-invalid={Boolean(errors.password)}
@@ -208,6 +211,26 @@ export default function SignInForm() {
                     {errors.password}
                   </p>
                 )}
+              </div>
+
+              {/* REMEMBER ME */}
+
+              <div className="mb-4 flex items-center">
+                <input
+                  id="rememberMe"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  disabled={loading}
+                  className="h-4 w-4 cursor-pointer accent-[#c8050b]"
+                />
+
+                <label
+                  htmlFor="rememberMe"
+                  className="ml-2 cursor-pointer text-sm text-[#333333]"
+                >
+                  Remember me
+                </label>
               </div>
 
               {/* SUBMIT */}
