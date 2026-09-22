@@ -39,6 +39,7 @@ export default function SocialShare({ title = "" }: Props) {
       Icon: FaWhatsapp,
       label: "WhatsApp",
       color: "#25D366",
+      size: 20,
       href: `https://wa.me/?text=${encodeURIComponent(
         `${title} - ${shareUrl}`,
       )}`,
@@ -47,7 +48,7 @@ export default function SocialShare({ title = "" }: Props) {
 
   return (
     <div className="flex gap-2">
-      {socialIcons.map(({ Icon, label, href, color }) => (
+      {socialIcons.map(({ Icon, label, href, color, size = 18 }) => (
         <a
           key={label}
           href={href}
@@ -55,30 +56,23 @@ export default function SocialShare({ title = "" }: Props) {
           rel="noopener noreferrer"
           aria-label={`Share on ${label}`}
           className="
-            group
-            flex h-8 w-8 items-center justify-center
-            rounded-md
-            border border-gray-200
-            bg-white/10
-            backdrop-blur-md
-            shadow-[0_4px_10px_rgba(0,0,0,0.08)]
-            transition-all duration-300
-            hover:-translate-y-1
-            hover:border-[#c8050b]
-            hover:shadow-[0_0_0_3px_rgba(201,6,10,0.15),0_8px_20px_rgba(201,6,10,0.12)]
-          "
-          onMouseEnter={(e) => {
-            const icon = e.currentTarget.querySelector("svg");
-            if (icon) icon.style.color = color;
-          }}
-          onMouseLeave={(e) => {
-            const icon = e.currentTarget.querySelector("svg");
-            if (icon) icon.style.color = "#333";
-          }}
+      group
+      flex h-8 w-8 items-center justify-center
+      rounded-md
+      border border-gray-200
+      bg-white/10
+      backdrop-blur-md
+      shadow-[0_4px_10px_rgba(0,0,0,0.08)]
+      transition-all duration-300
+      hover:-translate-y-1
+      hover:border-[#c8050b]
+      hover:shadow-[0_0_0_3px_rgba(201,6,10,0.15),0_8px_20px_rgba(201,6,10,0.12)]
+    "
         >
           <Icon
-            size={18}
-            className="text-[#333] transition-all duration-300 group-hover:scale-110"
+            size={size}
+            style={{ color }}
+            className="transition-transform duration-300 group-hover:scale-110"
           />
         </a>
       ))}
