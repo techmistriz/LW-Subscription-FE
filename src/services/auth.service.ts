@@ -2,9 +2,20 @@ import api from "@/network/axios";
 import { extractErrorMessage } from "@/network/errorMessage";
 import { RegisterPayload, RegisterResponse } from "@/types/auth";
 
-export async function loginUser(email: string, password: string) {
+export async function loginUser(
+  email: string,
+  password: string,
+  remember_me: boolean,
+) {
   try {
-    const res = await api.post("/auth/login", { email, password });
+    const payload = {
+      email,
+      password,
+      remember_me,
+    };
+
+    const res = await api.post("/auth/login", payload);
+
     return res.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error, "Login failed"));
@@ -63,7 +74,7 @@ export async function logoutApi() {
   }
 }
 
-//  Verify email
+// Verify email
 export async function verifyEmailApi(data: { email: string; token: string }) {
   try {
     const res = await api.post("/auth/email/verify", data);

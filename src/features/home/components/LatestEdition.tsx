@@ -24,11 +24,13 @@ export default function LatestEdition({ magazines }: Props) {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {magazines.map((magazine) => (
+        {magazines.map((magazine, index) => (
           <Link
             key={magazine.id}
             href={`/magazines/${magazine.slug}`}
-            className="bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center  hover:shadow-gray-400 hover:shadow-md cursor-pointer"
+            className={`bg-[#F8F8F8] border shadow-md border-gray-300 flex flex-col items-center hover:shadow-gray-400 hover:shadow-md cursor-pointer ${
+              index === 5 ? "block lg:hidden" : ""
+            }`}
           >
             <div className="relative w-full aspect-3/4">
               <SafeImage

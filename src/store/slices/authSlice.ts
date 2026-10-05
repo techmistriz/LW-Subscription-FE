@@ -57,11 +57,19 @@ const initialState: AuthState = {
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (
-    { email, password }: { email: string; password: string },
+    {
+      email,
+      password,
+      remember_me,
+    }: {
+      email: string;
+      password: string;
+      remember_me: boolean;
+    },
     { rejectWithValue },
   ) => {
     try {
-      const res = await loginApi(email, password);
+      const res = await loginApi(email, password, remember_me);
       const token = res?.token || res?.data?.token;
 
       if (!token) {

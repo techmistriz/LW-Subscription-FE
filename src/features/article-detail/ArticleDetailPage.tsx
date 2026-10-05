@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getArticleBySlug, getRelatedPosts } from "@/services/post.service";
+import { getRelatedPosts } from "@/services/post.service";
 import { getProfile } from "@/services/auth.service";
 import { toTitleCase } from "@/utils/toTitleCase";
 
@@ -28,14 +28,15 @@ import { images } from "@/config/images";
 const postBaseUrl = siteConfig.postsImageBaseUrl || "";
 const authorImg = siteConfig.authorImageBaseUrl || "";
 
-export default function ArticleDetailPage() {
-  const { slug } = useParams<{ category: string; slug: string }>();
+type Props = {
+  article: Article;
+};
+
+export default function ArticleDetailPage({ article }: Props) {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const [article, setArticle] = useState<Article | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const { user } = useAppSelector((state) => state.auth);
   const subscription = useAppSelector((state) => state.subscription.active);
@@ -52,42 +53,6 @@ export default function ArticleDetailPage() {
     storage.set("scrollToPricing", "true");
     router.push(routes.subscription);
   };
-
-  /* ---------------- FETCH ARTICLE ---------------- */
-  useEffect(() => {
-    let active = true;
-
-    async function fetchArticle() {
-      if (!slug) return;
-
-      setLoading(true);
-      setArticle(null);
-      setRelatedPosts([]);
-
-      try {
-        const articleData = await getArticleBySlug(slug);
-        if (!active) return;
-
-        if (!articleData) {
-          setArticle(null);
-          return;
-        }
-
-        setArticle(articleData);
-        document.title = `${articleData.title} | Lex Witness`;
-      } catch {
-        // getArticleBySlug throws on 404 / API failure — treat as "not found"
-        if (active) setArticle(null);
-      } finally {
-        if (active) setLoading(false);
-      }
-    }
-
-    fetchArticle();
-    return () => {
-      active = false;
-    };
-  }, [slug]);
 
   /* ---------------- FETCH RELATED POSTS ---------------- */
   useEffect(() => {
@@ -175,26 +140,6 @@ export default function ArticleDetailPage() {
     };
   }, [user, dispatch]);
 
-  /* ---------------- LOADING UI ---------------- */
-  if (loading) {
-    return (
-      <section className="bg-white min-h-screen">
-        <div className="max-w-6xl mx-auto px-4 py-10">
-          <div className="animate-pulse space-y-6">
-            <div className="h-6 w-32 bg-gray-200 rounded" />
-            <div className="h-12 w-3/4 bg-gray-200 rounded" />
-            <div className="h-96 bg-gray-200 rounded" />
-            <div className="h-48 bg-gray-200 rounded" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (!article) {
-    notFound();
-  }
-
   const rawCategory =
     typeof article.category === "string"
       ? article.category
@@ -207,21 +152,21 @@ export default function ArticleDetailPage() {
 
   return (
     <section className="bg-white">
-      <article className="lg:col-span-9">
+      <article className="w-full min-w-0 lg:col-span-9">
         <Link href={`/category/${rawCategory}`}>
-          <p className="text-[#c8050b] font-semibold text-lg uppercase cursor-pointer mb-2">
+          <p className="text-sm md:text-lg text-[#c8050b] font-semibold uppercase cursor-pointer mb-2">
             {categoryTitle}
           </p>
         </Link>
 
-        <h1 className="text-2xl lg:text-[22px] font-semibold leading-snug">
+        <h1 className="text-lg md:text-2xl lg:text-[22px] font-semibold leading-snug">
           {article.title}
         </h1>
 
         <div className="w-10 h-1 bg-[#c8050b] mb-1" />
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-[#333333]">
+          <div className="flex flex-wrap items-center gap-2 text-xs md:text-sm text-[#333333]">
             {(article.authors?.length ?? 0) > 0 ? (
               article?.authors?.map((author, index) => (
                 <div key={author.id} className="flex items-center gap-2">
@@ -303,7 +248,7 @@ export default function ArticleDetailPage() {
           ) : (
             /* Short Description - Non Subscribers */
             <div className="text-center">
-              <p className="text-[17px] leading-7 text-gray-800 text-justify line-clamp-4">
+              <p className="text-sm sm:text-[17px] leading-6 sm:leading-7 text-gray-800 text-left sm:text-justify line-clamp-4">
                 {previewHTML}
               </p>
 

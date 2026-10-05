@@ -96,6 +96,7 @@ export default function SignInForm() {
         loginRedux({
           email: email.trim(),
           password,
+          remember_me: rememberMe,
         }),
       ).unwrap();
 

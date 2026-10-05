@@ -291,9 +291,13 @@ export default function Header() {
         <div className="h-20 border-b border-[#808080] flex items-center">
           <div className="w-full px-4 flex items-center justify-between">
             {/*----------------- LEFT LOGO -----------------*/}
-            <div className="flex items-center gap-2 py-4">
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 py-4"
+            >
               <Image src={images.favicon} alt="Logo" width={36} height={36} />
-            </div>
+            </Link>
 
             {/*----------------- RIGHT SIDE (USER + CLOSE) -----------------*/}
             <div className="flex items-center gap-4">

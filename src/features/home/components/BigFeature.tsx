@@ -11,10 +11,7 @@ export default function BigFeature({ post }: { post?: Post }) {
   const imageUrl = post.image ? `${baseUrl}${post.image}` : undefined;
 
   return (
-    <div
-      className="lg:col-span-6 relative overflow-hidden"
-      style={{ height: "384px" }}
-    >
+    <div className="lg:col-span-6 relative overflow-hidden aspect-[3/2] lg:aspect-auto lg:h-[384px]">
       <SafeImage
         src={imageUrl}
         alt={post.title || "Post image"}
@@ -35,14 +32,14 @@ export default function BigFeature({ post }: { post?: Post }) {
 
       <Link
         href={`/category/${post?.category?.slug}`}
-        className="absolute top-0 left-0 bg-[#c8050b] text-white text-md px-2 py-1 z-10"
+        className="absolute top-0 left-0 bg-[#c8050b] text-white text-xs sm:text-md px-2 py-1 z-10"
       >
         {post.category?.name}
       </Link>
 
-      <div className="absolute bottom-6 left-6 right-6 text-white z-10">
+      <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 text-white z-10">
         <Link href={`/${post.slug}`}>
-          <h2 className="text-[20px] font-medium leading-7.5 line-clamp-3">
+          <h2 className="text-[14px] sm:text-[20px] font-medium leading-5 sm:leading-7.5 line-clamp-3">
             {post.title}
           </h2>
         </Link>
