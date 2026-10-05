@@ -27,7 +27,7 @@ export default async function MagazineDetailPage({ params }: Props) {
     magazine = await getSingleMagazine(slug);
     latestMagazines = await getLatestMagazines({
       skipId: magazine.id,
-      limit: 5,
+      limit: 6,
     });
   } catch (error) {
     logger.error("Failed to fetch magazine:", error);
@@ -47,10 +47,10 @@ export default async function MagazineDetailPage({ params }: Props) {
     <section className="max-w-6xl mx-auto px-4 py-10">
       {/*----------------- Main magazine content -----------------*/}
       <section className="flex justify-center">
-        <div className="flex flex-col md:flex-row gap-8 items-center max-w-5xl w-full">
+        <div className="flex w-full max-w-5xl flex-col items-center gap-3 md:flex-row md:items-start md:gap-8">
           {/*----------------- Magazine cover image -----------------*/}
-          <div className="w-full sm:w-80 md:w-72 shrink-0 mb-4 lg:mb-0 md:mb-0">
-            <div className="relative w-full aspect-3/4">
+          <div className="w-full shrink-0 sm:w-80 md:w-72">
+            <div className="relative aspect-3/4 w-full">
               <SafeImage
                 src={
                   magazine.image
@@ -67,20 +67,22 @@ export default async function MagazineDetailPage({ params }: Props) {
           </div>
 
           {/*----------------- Magazine details -----------------*/}
-          <div className="space-y-2 -mt-18 flex-1">
+          <div className="w-full flex-1 space-y-2">
             {magazine.magazine_name && (
-              <h1 className="font-semibold text-2xl">
+              <h1 className="md:text-2xl font-semibold">
                 {magazine.magazine_name}
               </h1>
             )}
-            <p className=" border-gray-300 text-lg">{magazine.title}</p>
-            <hr className="h-0.5 bg-gray-300 border-0" />
+
+            <p className="md:text-lg text-sm">{magazine.title}</p>
+
+            <hr className="h-0.5 border-0 bg-gray-300" />
 
             <p className="text-[#c8050b]">Magazine Details</p>
 
             {/*----------------- Magazine description -----------------*/}
             <div
-              className="prose max-w-none text-gray-700 text-sm"
+              className="prose max-w-none text-sm text-gray-700"
               dangerouslySetInnerHTML={{ __html: safeDescription }}
             />
 
@@ -96,7 +98,7 @@ export default async function MagazineDetailPage({ params }: Props) {
             </p>
 
             {/*----------------- Subscribe button -----------------*/}
-            <button className="bg-[#c8050b] hover:bg-[#333333] text-white px-6 py-2 cursor-pointer transition-colors">
+            <button className="cursor-pointer bg-[#c8050b] px-6 py-2 text-white transition-colors hover:bg-[#333333]">
               <Link href="/subscription">Subscribe now</Link>
             </button>
           </div>

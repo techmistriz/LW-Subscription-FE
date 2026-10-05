@@ -16,8 +16,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
         return (
           <div
             key={post.id}
-            className="lg:col-span-3 relative overflow-hidden"
-            style={{ height: "188px" }}
+            className="lg:col-span-3 relative overflow-hidden aspect-[3/2] lg:aspect-auto lg:h-[188px]"
           >
             {/* Image */}
             <SafeImage
@@ -47,7 +46,7 @@ export function MiddleCards({ posts }: { posts: Post[] }) {
             </Link>
 
             {/* Content */}
-            <div className="absolute bottom-3 left-6 right-6 text-white z-10">
+            <div className="absolute bottom-2 left-3 right-3 sm:bottom-3 sm:left-6 sm:right-6 text-white z-10">
               <Link href={`/${post.slug}`}>
                 <h2 className="text-[14px] leading-snug text-white line-clamp-3">
                   {post.title}
