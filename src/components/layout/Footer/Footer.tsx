@@ -65,14 +65,21 @@ const Footer = () => {
               </div>
             </div>
 
-            <Image
-              src={images.logoWhite}
-              alt="Lex Witness"
-              width={200}
-              height={68}
-              className="mb-6 w-48 h-auto object-contain -ml-2 "
-              priority
-            />
+            <Link
+              href="/"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
+              <Image
+                src={images.logoWhite}
+                alt="Lex Witness"
+                width={200}
+                height={68}
+                className="mb-6 w-48 h-auto object-contain -ml-2"
+                priority
+              />
+            </Link>
 
             <div className="text-sm text-[#E2E2E2] my-4">
               {/* <p className="font-semibold text-white">Address:</p> */}

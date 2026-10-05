@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { FaLinkedinIn, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
@@ -8,7 +9,15 @@ interface Props {
 }
 
 export default function SocialShare({ title = "" }: Props) {
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareUrl = useSyncExternalStore(
+    () => () => {},
+    () => window.location.href,
+    () => "",
+  );
+
+  if (!shareUrl) {
+    return null;
+  }
 
   const socialIcons = [
     {
@@ -39,7 +48,6 @@ export default function SocialShare({ title = "" }: Props) {
       Icon: FaWhatsapp,
       label: "WhatsApp",
       color: "#25D366",
-      size: 20,
       href: `https://wa.me/?text=${encodeURIComponent(
         `${title} - ${shareUrl}`,
       )}`,
@@ -47,8 +55,8 @@ export default function SocialShare({ title = "" }: Props) {
   ];
 
   return (
-    <div className="flex gap-2">
-      {socialIcons.map(({ Icon, label, href, color, size = 18 }) => (
+    <div className="flex gap-1.5 sm:gap-2">
+      {socialIcons.map(({ Icon, label, href, color }) => (
         <a
           key={label}
           href={href}
@@ -56,23 +64,30 @@ export default function SocialShare({ title = "" }: Props) {
           rel="noopener noreferrer"
           aria-label={`Share on ${label}`}
           className="
-      group
-      flex h-8 w-8 items-center justify-center
-      rounded-md
-      border border-gray-200
-      bg-white/10
-      backdrop-blur-md
-      shadow-[0_4px_10px_rgba(0,0,0,0.08)]
-      transition-all duration-300
-      hover:-translate-y-1
-      hover:border-[#c8050b]
-      hover:shadow-[0_0_0_3px_rgba(201,6,10,0.15),0_8px_20px_rgba(201,6,10,0.12)]
-    "
+            group
+            flex h-7 w-7 sm:h-8 sm:w-8
+            items-center justify-center
+            rounded-md
+            border border-gray-200
+            bg-white/10
+            backdrop-blur-md
+            shadow-[0_4px_10px_rgba(0,0,0,0.08)]
+            transition-all duration-300
+            hover:-translate-y-1
+            hover:border-[#c8050b]
+            hover:shadow-[0_0_0_3px_rgba(201,6,10,0.15),0_8px_20px_rgba(201,6,10,0.12)]
+          "
         >
           <Icon
-            size={size}
+            size={15}
+            className="sm:hidden transition-transform duration-300 group-hover:scale-110"
             style={{ color }}
-            className="transition-transform duration-300 group-hover:scale-110"
+          />
+
+          <Icon
+            size={18}
+            className="hidden sm:block transition-transform duration-300 group-hover:scale-110"
+            style={{ color }}
           />
         </a>
       ))}

@@ -1,5 +1,7 @@
 import { CONTENT, PAGINATION } from "@/config/constants";
+import { logger } from "@/lib/logger";
 import api from "@/network/axios";
+import axios from "axios";
 import { cache } from "react";
 
 interface GetPostsParams {
@@ -24,14 +26,54 @@ export async function getPosts({
 }
 
 export const getArticleBySlug = cache(async (slug: string) => {
-  const response = await api.get(`/posts/${slug}`);
-  const data = response.data;
+  logger.info(" Article API request", {
+    slug,
+    endpoint: `/posts/${slug}`,
+  });
 
-  if (!data?.status || !data?.data) {
-    return null;
+  try {
+    const response = await api.get(`/posts/${slug}`);
+
+    logger.info(" Article API success", {
+      slug,
+      status: response.status,
+    });
+
+    const data = response.data;
+
+    if (!data?.status || !data?.data) {
+      logger.warn("⚠️ Article API returned invalid data", {
+        slug,
+        data,
+      });
+
+      return null;
+    }
+
+    return data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      logger.error(" Article API error", {
+        slug,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        response: error.response?.data,
+        message: error.message,
+      });
+    } else if (error instanceof Error) {
+      logger.error(" Article API error", {
+        slug,
+        message: error.message,
+      });
+    } else {
+      logger.error(" Article API error", {
+        slug,
+        error,
+      });
+    }
+
+    throw error;
   }
-
-  return data.data;
 });
 
 export async function getRelatedPosts(params: {
@@ -42,6 +84,7 @@ export async function getRelatedPosts(params: {
   const response = await api.get("/posts", {
     params: { ...params, limit: PAGINATION.DEFAULT_LIMIT },
   });
+
   return response.data?.data || [];
 }
 
@@ -56,5 +99,6 @@ export async function getEditorPicksPosts(params?: {
       latest: 1,
     },
   });
+
   return response.data?.data || [];
 }

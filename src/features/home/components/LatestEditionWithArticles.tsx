@@ -33,14 +33,14 @@ export default function LatestEditionWithArticles({
       </div>
 
       {/* CENTER COLUMN */}
-      <div className="lg:col-span-6 order-3 lg:order-2 px-2 sm:px-4 md:mt-15 lg:mt-15">
+      <div className="lg:col-span-6 order-3 lg:order-2 px- sm:px-4 md:mt-15 lg:mt-15">
         <div className="overflow-hidden">
           <RelatedMagazineArticles articles={posts} />
         </div>
       </div>
 
       {/* RIGHT COLUMN */}
-      <div className="-my-8  lg:col-span-3 order-2 lg:order-3 lg:-ml-3.75 lg:mt-2">
+      <div className="-my-8 lg:col-span-3 order-2 lg:order-3 lg:-ml-3.75 lg:mt-2">
         <NirmalaSitaraman />
       </div>
     </div>

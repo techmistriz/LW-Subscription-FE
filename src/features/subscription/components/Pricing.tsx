@@ -208,7 +208,7 @@ export default function PricingCard() {
                 className="relative cursor-pointer group pt-4"
               >
                 {plan.tag && !disableFreePlan && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
                     <span
                       className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-md ${
                         plan.tag === "Most Popular" || plan.tag === "Best Value"
@@ -336,7 +336,7 @@ export default function PricingCard() {
           })}
         </div>
 
-        <div className="flex justify-center mt-10 md:mt-14 px-2">
+        <div className="flex justify-center mt-10 md:mt-14 px-4">
           <button
             onClick={handleSubscribe}
             disabled={loading}
