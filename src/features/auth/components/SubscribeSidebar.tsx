@@ -1,52 +1,36 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
-import { subscribeUser } from "@/services/subscribe.service";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import { subscribeUser } from "@/services/subscribe.service";
 import type { SubscribePayload } from "@/services/subscribe.service";
 
 function SubscribeSidebar() {
-  const [form, setForm] = useState<SubscribePayload>({
-    name: "",
-    email: "",
-    contact: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<SubscribePayload>({
+    defaultValues: {
+      name: "",
+      email: "",
+      contact: "",
+    },
   });
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setMessage(null);
-    setError(null);
-
+  const handleFormSubmit = async (form: SubscribePayload) => {
     try {
       await subscribeUser(form);
 
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
-
       toast.success("Subscribed successfully!");
-      setForm({ name: "", email: "", contact: "" });
+      reset();
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Subscription failed";
 
       toast.error(message);
-
-      setTimeout(() => {
-        setError(null);
-      }, 3000);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -56,20 +40,16 @@ function SubscribeSidebar() {
       <div className="w-15 h-1 bg-[#c8050b] mb-3"></div>
 
       <div className="w-full bg-[#2f2f2f] p-4 h-80">
-        <div className="min-h-6  ">
-          {message && <p className="text-white text-sm mb-1">{message}</p>}
-          {error && <p className="text-white text-sm mb-1">{error}</p>}
-        </div>
-        <form onSubmit={handleSubmit}>
+        <div className="min-h-6"></div>
+
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <input
             className="w-full h-12 mb-5 p-2 bg-white text-black text-sm"
             placeholder="Enter Your Name"
             required
             type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            disabled={loading}
+            disabled={isSubmitting}
+            {...register("name")}
           />
 
           <input
@@ -77,10 +57,8 @@ function SubscribeSidebar() {
             placeholder="Enter Your Email"
             required
             type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            disabled={loading}
+            disabled={isSubmitting}
+            {...register("email")}
           />
 
           <input
@@ -89,18 +67,16 @@ function SubscribeSidebar() {
             required
             type="tel"
             maxLength={10}
-            name="contact"
-            value={form.contact}
-            onChange={handleChange}
-            disabled={loading}
+            disabled={isSubmitting}
+            {...register("contact")}
           />
 
           <button
             type="submit"
-            disabled={loading}
-            className="bg-[#c8050b] w-1/2 border flex justify-center cursor-pointer text-white  py-3 mx-auto text-sm hover:bg-[#444] disabled:opacity-50"
+            disabled={isSubmitting}
+            className="bg-[#c8050b] w-1/2 border flex justify-center cursor-pointer text-white py-3 mx-auto text-sm hover:bg-[#444] disabled:opacity-50"
           >
-            {loading ? "SUBMITTING..." : "SUBMIT"}
+            {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
           </button>
         </form>
       </div>
