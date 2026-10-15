@@ -361,7 +361,7 @@ export default function Header() {
             <div className="flex items-center justify-end">
               <div className="flex gap-2 ml-4 justify-end items-end">
                 <a
-                  href="#"
+                  href="https://www.linkedin.com/company/lexwitness/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative group w-8 h-8 rounded-lg flex items-center justify-center border border-[#0A66C2] text-white bg-[#0A66C2] shadow-md overflow-hidden transition-transform hover:scale-105"
