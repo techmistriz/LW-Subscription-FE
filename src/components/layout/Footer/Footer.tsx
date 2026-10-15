@@ -147,7 +147,7 @@ const Footer = () => {
                     },
                     {
                       icon: FaLinkedinIn,
-                      href: "#",
+                      href: "https://www.linkedin.com/company/lexwitness/",
                     },
                   ].map((item, i) => {
                     const Icon = item.icon;
