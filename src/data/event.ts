@@ -3,7 +3,7 @@ import { images } from "@/config/images";
 export const events = [
   {
     id: 1,
-    title: "IT Legal Summit",
+    title: "The IT Legal Summit",
     description:
       "India's premier summit focusing on IT, Data Protection, FinTech, Gaming, and emerging technology laws.",
     logo: images.logo,
@@ -11,7 +11,7 @@ export const events = [
   },
   {
     id: 2,
-    title: "Real Estate & Construction Legal Summit",
+    title: "The Real Estate & Construction Legal Summit",
     description:
       "A platform for legal discussions on infrastructure, real estate, construction, and regulatory developments.",
     logo: images.logo,
@@ -19,7 +19,7 @@ export const events = [
   },
   {
     id: 3,
-    title: "Media, Advertising & Entertainment Legal Summit",
+    title: "The Media, Advertising & Entertainment Legal Summit",
     description:
       "Legal insights into media, OTT, advertising, entertainment, and digital content industries.",
     logo: images.logo,
@@ -27,7 +27,7 @@ export const events = [
   },
   {
     id: 4,
-    title: "Banking & Finance Legal Summit",
+    title: "The Banking & Finance Legal Summit",
     description:
       "Focused on banking regulations, fintech innovations, compliance, and financial sector developments.",
     logo: images.logo,
@@ -35,7 +35,7 @@ export const events = [
   },
   {
     id: 5,
-    title: "Pharma Legal & Compliance Summit",
+    title: "The Pharma Legal & Compliance Summit",
     description:
       "Bringing together legal and compliance professionals from pharma, healthcare, and medical devices sectors.",
     logo: images.logo,
@@ -43,7 +43,7 @@ export const events = [
   },
   {
     id: 6,
-    title: "Grand Masters Summit",
+    title: "The Grand Masters Summit Series",
     description:
       "A prestigious gathering of General Counsels and legal leaders across multiple industries.",
     logo: images.logo,
