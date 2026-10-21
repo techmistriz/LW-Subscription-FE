@@ -15,8 +15,8 @@ export default function EventsPage() {
         <div className="w-16 h-0.5 bg-[#c8050b] mx-auto mt-4"></div>
 
         <p className="mt-2 text-base text-gray-600 leading-relaxed max-w-2xl mx-auto">
-          Industry-leading legal summits connecting professionals, policymakers,
-          and business leaders.
+          Industry-leading legal summits connecting <br /> professionals,
+          policymakers, and business leaders.
         </p>
       </div>
 
